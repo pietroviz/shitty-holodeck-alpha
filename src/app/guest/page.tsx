@@ -59,7 +59,7 @@ export default function GuestPage() {
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Try the Simulators
+          Try the Experiences
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -69,19 +69,19 @@ export default function GuestPage() {
           >
             <div className="flex justify-between items-start mb-3">
               <h3 className="text-lg font-semibold text-gray-900">
-                Example Simulator
+                Example Experience
               </h3>
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-800">
                 live
               </span>
             </div>
             <p className="text-gray-600 text-sm">
-              Try out the example simulator as a guest.
+              Try out the example experience as a guest.
             </p>
           </Link>
 
           <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex items-center justify-center text-gray-400">
-            <span className="text-sm">More simulators coming soon...</span>
+            <span className="text-sm">More experiences coming soon...</span>
           </div>
         </div>
 

@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 
 /**
- * Example Simulator Page
+ * Example Experience Page
  *
- * This is a template showing how to structure a simulator page.
- * Replace this with your actual simulator logic.
+ * This is a template showing how to structure an experience page.
+ * Replace this with your actual experience logic.
  */
-export default function ExampleSimulator() {
+export default function ExampleExperience() {
   const [input, setInput] = useState(50);
   const [result, setResult] = useState<number | null>(null);
 
@@ -29,10 +29,10 @@ export default function ExampleSimulator() {
         </Link>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Example Simulator
+          Example Experience
         </h1>
         <p className="text-gray-600 mb-8">
-          This is a placeholder. Replace with your actual simulator.
+          This is a placeholder. Replace with your actual experience.
         </p>
 
         <div className="bg-white rounded-xl shadow-sm border p-6 space-y-6">

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pietro's Simulator Lab",
-  description: "Interactive simulators and tools by Pietro",
+  title: "Shitty Holodeck (Alpha)",
+  description: "Interactive simulators and experiences",
 };
 
 export default function RootLayout({

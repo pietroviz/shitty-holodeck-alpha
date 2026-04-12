@@ -31,7 +31,7 @@ export default async function DashboardPage() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
-            Pietro&apos;s Simulator Lab
+            Shitty Holodeck (Alpha)
           </Link>
           <div className="flex items-center gap-4">
             <div className="text-right">
@@ -54,25 +54,25 @@ export default async function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Your Simulators
+          Your Experiences
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Placeholder cards - replace with your actual simulators */}
-          <SimulatorCard
-            title="Simulator 1"
-            description="Drop your first simulator here"
+          <ExperienceCard
+            title="Experience 1"
+            description="Drop your first experience here"
             href="/simulators/example"
             status="placeholder"
           />
-          <SimulatorCard
-            title="Simulator 2"
-            description="Drop your second simulator here"
+          <ExperienceCard
+            title="Experience 2"
+            description="Drop your second experience here"
             href="/simulators/example"
             status="placeholder"
           />
           <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex items-center justify-center text-gray-400 hover:text-gray-500 hover:border-gray-400 transition-colors cursor-pointer">
-            <span className="text-lg">+ Add Simulator</span>
+            <span className="text-lg">+ Add Experience</span>
           </div>
         </div>
       </main>
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
   );
 }
 
-function SimulatorCard({
+function ExperienceCard({
   title,
   description,
   href,

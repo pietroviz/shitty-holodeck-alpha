@@ -154,7 +154,7 @@ export default function AccountSetupPage() {
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="e.g. Pietro Gagliano"
+              placeholder="e.g. Jane Doe"
               required
               autoFocus
               className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"

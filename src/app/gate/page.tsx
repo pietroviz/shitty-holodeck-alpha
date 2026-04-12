@@ -52,7 +52,7 @@ export default function GatePage() {
           <>
             <div className="text-center">
               <h1 className="text-2xl font-bold text-white">
-                Pietro&apos;s Simulator Lab
+                Shitty Holodeck (Alpha)
               </h1>
               <p className="mt-2 text-sm text-gray-400">
                 This site is in private beta. Enter the password to continue.
