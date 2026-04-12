@@ -10,16 +10,22 @@ export default function Home() {
         <p className="text-xl text-gray-600">
           A collection of interactive simulators and tools.
         </p>
-        <div className="flex gap-4 justify-center pt-4">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <Link
             href="/dashboard"
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-center"
           >
             Go to Dashboard
           </Link>
           <Link
+            href="/guest"
+            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors text-center"
+          >
+            Try as Guest
+          </Link>
+          <Link
             href="/auth/login"
-            className="px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-300 transition-colors"
+            className="px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-300 transition-colors text-center"
           >
             Sign In
           </Link>

@@ -28,6 +28,7 @@ export type SimulationRun = {
   id: string;
   simulator_id: string;
   user_id: string | null;
+  guest_id: string | null;
   input_data: Record<string, unknown>;
   output_data: Record<string, unknown>;
   created_at: string;
