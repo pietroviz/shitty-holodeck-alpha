@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function GatePage() {
   const [password, setPassword] = useState("");
@@ -21,6 +22,13 @@ export default function GatePage() {
     });
 
     if (res.ok) {
+      // Gate passed — now silently sign into Supabase too
+      const supabase = createClient();
+      await supabase.auth.signInWithPassword({
+        email: "pbgagliano@gmail.com",
+        password,
+      });
+
       router.push("/");
       router.refresh();
     } else {

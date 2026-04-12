@@ -17,18 +17,6 @@ export default function Home() {
           >
             Go to Dashboard
           </Link>
-          <Link
-            href="/guest"
-            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors text-center"
-          >
-            Try as Guest
-          </Link>
-          <Link
-            href="/auth/login"
-            className="px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-300 transition-colors text-center"
-          >
-            Sign In
-          </Link>
         </div>
       </div>
     </div>
