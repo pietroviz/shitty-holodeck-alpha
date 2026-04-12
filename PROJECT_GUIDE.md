@@ -229,6 +229,61 @@ The project uses "experiences" (not "simulators") in all user-facing text, thoug
 
 ---
 
+## Adding New Experiences (Merging New Content)
+
+This skeleton is designed to have new experiences slotted in. Here's where things go:
+
+### Page routes
+New experience pages go in `src/app/simulators/` (or preferably `src/app/experiences/` for new routes). Each experience gets its own folder with a `page.tsx`:
+```
+src/app/experiences/
+  ├── my-cool-thing/
+  │   └── page.tsx        # The experience's main page
+  ├── another-one/
+  │   └── page.tsx
+  └── ...
+```
+The existing `/simulators/example/page.tsx` is a working template showing the basic structure.
+
+### Components
+Shared or reusable components go in `src/components/`. Experience-specific components can live in the experience's own folder:
+```
+src/app/experiences/my-cool-thing/
+  ├── page.tsx
+  ├── SomeWidget.tsx      # Component specific to this experience
+  └── utils.ts            # Helpers specific to this experience
+```
+
+### Styles
+The project uses Tailwind CSS 4 — styles are applied via utility classes in JSX. Global styles live in `src/app/globals.css` but should rarely need changes.
+
+### Database
+If an experience needs to store data, use the existing `simulators` table (add a row with a slug matching the route) and `simulation_runs` table (stores per-run input/output as flexible JSONB). The `config` column on `simulators` is a JSONB catch-all for experience-specific settings.
+
+### API routes
+If an experience needs a server-side endpoint, add it under `src/app/api/`. Follow the existing patterns in `api/feedback/route.ts` or `api/gate/route.ts`.
+
+### What NOT to touch during a merge
+These files form the auth/infrastructure layer and should not be overwritten:
+- `middleware.ts` — gate + session refresh logic
+- `src/lib/supabase/*` — Supabase client setup
+- `src/app/gate/page.tsx` — password gate
+- `src/app/auth/*` — login, setup, callback flows
+- `src/app/api/gate/route.ts` — gate API
+- `src/app/api/auth/*` — auth API routes
+- `src/components/FeedbackTab.tsx` — feedback widget
+- `.env.local` — secrets (should already exist on each machine)
+- `CLAUDE.md`, `AGENTS.md`, `PROJECT_GUIDE.md` — session context files
+
+### Environment setup on a new machine
+1. Clone the repo: `git clone https://github.com/pietroviz/shitty-holodeck-alpha.git`
+2. Install dependencies: `npm install`
+3. Create `.env.local` from `.env.local.example` and fill in the Supabase keys
+4. Run locally: `npm run dev`
+5. Push to deploy: `git push origin main` (Vercel auto-deploys)
+
+---
+
 ## Known Issues & Gotchas
 
 1. **Supabase dashboard renders black** in browser automation sessions. Workaround: use the Management API (`api.supabase.com/v1/projects/...`) or execute JavaScript in the dashboard page context.
