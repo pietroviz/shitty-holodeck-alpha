@@ -12,19 +12,40 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
+  // Fetch profile for display name
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, username, full_name")
+    .eq("id", user.id)
+    .single();
+
+  // If no username set, redirect to setup
+  if (!profile?.username) {
+    redirect("/auth/setup");
+  }
+
+  const displayName = profile?.full_name || profile?.display_name || user.email;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+          <Link href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
+            Pietro&apos;s Simulator Lab
+          </Link>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user.email}</span>
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">{displayName}</p>
+              {profile?.username && (
+                <p className="text-xs text-gray-500">@{profile.username}</p>
+              )}
+            </div>
             <form action="/api/auth/signout" method="POST">
               <button
                 type="submit"
-                className="text-sm text-red-600 hover:text-red-800"
+                className="text-sm text-gray-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
               >
-                Sign Out
+                Sign out
               </button>
             </form>
           </div>

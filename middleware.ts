@@ -4,13 +4,19 @@ import { updateSession } from "@/lib/supabase/middleware";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Always allow access to the gate page, its API, and static assets
+  // Always allow access to the gate page, its API, auth routes, and static assets
   if (
     pathname === "/gate" ||
     pathname === "/api/gate" ||
+    pathname.startsWith("/auth/") ||
+    pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon")
   ) {
+    // Still run session refresh for auth routes so cookies stay fresh
+    if (pathname.startsWith("/auth/") || pathname.startsWith("/api/auth/")) {
+      return await updateSession(request);
+    }
     return NextResponse.next();
   }
 
