@@ -33,3 +33,11 @@ export type SimulationRun = {
   output_data: Record<string, unknown>;
   created_at: string;
 };
+
+export type Feedback = {
+  id: string;
+  user_id: string | null;
+  page_url: string | null;
+  message: string;
+  created_at: string;
+};
