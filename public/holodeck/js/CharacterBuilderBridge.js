@@ -190,11 +190,11 @@ export class CharacterBuilderBridge {
         scene.add(grid);
 
         // 1 m reference square (cyan outline on the floor)
-        const refPts = [[-0.5,0.002,-0.5],[0.5,0.002,-0.5],[0.5,0.002,0.5],[-0.5,0.002,0.5],[-0.5,0.002,-0.5]]
+        const refPts = [[-0.5,0.005,-0.5],[0.5,0.005,-0.5],[0.5,0.005,0.5],[-0.5,0.005,0.5],[-0.5,0.005,-0.5]]
             .map(p => new THREE.Vector3(...p));
         scene.add(new THREE.Line(
             new THREE.BufferGeometry().setFromPoints(refPts),
-            new THREE.LineBasicMaterial({ color: 0x00D9D9, opacity: 0.6, transparent: true }),
+            new THREE.LineBasicMaterial({ color: 0x00D9D9 }),
         ));
 
         // Keep renderer sized to container
