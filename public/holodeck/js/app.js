@@ -557,6 +557,19 @@ const SORT_ORDERS = [
     { key: 'za',     label: 'Z → A'         },
 ];
 
+/** Extract unique subcategories from loaded assets for dynamic dropdown. */
+function _extractSubcategories(items) {
+    const cats = new Map();
+    for (const it of items) {
+        const cat = it._category || it.meta?.category || '';
+        if (cat) {
+            const key = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
+            cats.set(key, (cats.get(key) || 0) + 1);
+        }
+    }
+    return [...cats.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+}
+
 function sortedItems(items) {
     const q = S.panelSearchQuery.toLowerCase();
     let list = q
@@ -567,6 +580,16 @@ function sortedItems(items) {
             return name.includes(q) || type.includes(q) || tags.includes(q);
           })
         : [...items];
+
+    // Filter by subcategory if one is actively selected
+    const cat = S.panelCategory;
+    if (cat && cat !== 'All' && !cat.startsWith('All ') && !cat.startsWith('My ')) {
+        list = list.filter(it => {
+            const itemCat = it._category || it.meta?.category || '';
+            return itemCat.toLowerCase() === cat.toLowerCase();
+        });
+    }
+
     switch (S.sortOrder) {
         case 'az':     list.sort((a,b) => (a.name||'').localeCompare(b.name||'')); break;
         case 'za':     list.sort((a,b) => (b.name||'').localeCompare(a.name||'')); break;
@@ -621,9 +644,23 @@ function renderPanel() {
                    </div>`
                 : `<div class="panel-filter-wrap" id="panel-filter-wrap">
                        <select class="panel-category-select" id="panel-category-select">
-                           ${(PANEL_CATEGORIES[panelLabel] || [panelLabel]).map(cat =>
-                               `<option value="${cat}" ${cat === S.panelCategory ? 'selected' : ''}>${cat}</option>`
-                           ).join('')}
+                           ${(() => {
+                               const subcats = _extractSubcategories(panelItems);
+                               const _isMyStuff = panelSource === 'mystuff';
+                               const typeLabel = panelLabel;
+                               let opts = `<option value="All"${!S.panelCategory || S.panelCategory === 'All' ? ' selected' : ''}>All</option>`;
+                               for (const [name, count] of subcats) {
+                                   opts += `<option value="${name}"${S.panelCategory === name ? ' selected' : ''}>${name} (${count})</option>`;
+                               }
+                               if (_isMyStuff) {
+                                   opts += `<option disabled>───────</option>`;
+                                   opts += `<option value="All ${typeLabel}">Browse All ${typeLabel}</option>`;
+                               } else {
+                                   opts += `<option disabled>───────</option>`;
+                                   opts += `<option value="My ${typeLabel}">My ${typeLabel}</option>`;
+                               }
+                               return opts;
+                           })()}
                        </select>
                    </div>`
             }
@@ -882,31 +919,47 @@ function renderPanel() {
     if (catSelect) {
         catSelect.addEventListener('change', async () => {
             const val = catSelect.value;
-            S.panelCategory = val;
 
-            // Determine if this is a "My X" selection
-            const isMySelection = val.startsWith('My ');
-
-            // Re-load items based on selection
-            panelLoading = true;
-            panelItems = [];
-            S.selectedIndex = -1;
-            render();
-
-            try {
-                if (isMySelection) {
-                    panelSource = 'mystuff';
-                    panelItems = await loadUserAssets(S.panelLabel);
-                } else {
-                    panelSource = 'explore';
-                    panelItems = await loadGlobalAssets(S.panelLabel);
-                }
-            } catch (err) {
-                console.warn('Failed to load:', err);
+            // "My X" → switch to user assets and reload
+            if (val.startsWith('My ')) {
+                S.panelCategory = 'All';
+                panelLoading = true;
                 panelItems = [];
+                S.selectedIndex = -1;
+                panelSource = 'mystuff';
+                render();
+                try {
+                    panelItems = await loadUserAssets(S.panelLabel);
+                } catch (err) {
+                    console.warn('Failed to load:', err);
+                    panelItems = [];
+                }
+                panelLoading = false;
+                render();
             }
-            panelLoading = false;
-            render();
+            // "All X" (e.g., "All Characters") → switch back to explore/global assets
+            else if (val.startsWith('All ') && val !== 'All') {
+                S.panelCategory = 'All';
+                panelLoading = true;
+                panelItems = [];
+                S.selectedIndex = -1;
+                panelSource = 'explore';
+                render();
+                try {
+                    panelItems = await loadGlobalAssets(S.panelLabel);
+                } catch (err) {
+                    console.warn('Failed to load:', err);
+                    panelItems = [];
+                }
+                panelLoading = false;
+                render();
+            }
+            // Subcategory filter — no reload needed, just re-render
+            else {
+                S.panelCategory = val;
+                S.selectedIndex = -1;
+                render();
+            }
         });
     }
 
@@ -1017,7 +1070,7 @@ async function openPanel(label, source = 'explore') {
     S.panelSearchQuery = '';
     S.itemMenuOpenId   = null;
     S.selectedIndex    = -1;
-    S.panelCategory    = source === 'mystuff' ? `My ${label}` : `All ${label}`;
+    S.panelCategory    = 'All';
     render();
 
     // Load assets in background
@@ -1513,5 +1566,43 @@ function init() {
     // ── Initial render ──────────────────────────
     render();
 }
+
+/* ══════════════════════════════════════════════════════════
+   FEEDBACK CONTEXT  — exposes current state to the parent
+   frame so the feedback tab can capture what the user is
+   looking at when they submit a note.
+   ══════════════════════════════════════════════════════════ */
+window.__getHolodeckContext = () => {
+    const parts = [];
+
+    // Section / mode
+    if (S.builderMode) {
+        // In a builder
+        const asset = S.previewAsset || S.lastSavedAsset;
+        const name  = asset?.name || 'Untitled';
+        const type  = asset?.type || '';
+        const label = TYPE_TO_LABEL[type] || type || 'Unknown';
+        parts.push(`${label} Builder`);
+        parts.push(`Editing "${name}"`);
+    } else if (S.panelOpen && _panelNav.section) {
+        // Browsing a section
+        const section = _panelNav.sectionLabel || _panelNav.section;
+        parts.push(section);
+        if (_panelNav.category) parts.push(_panelNav.category);
+        if (S.panelCategory && S.panelCategory !== 'All') {
+            parts.push(S.panelCategory);
+        }
+        if (S.previewAsset) {
+            parts.push(`Viewing "${S.previewAsset.name || 'Untitled'}"`);
+        }
+    } else if (S.isNew) {
+        parts.push('Create New');
+        if (S.createType) parts.push(S.createType);
+    } else {
+        parts.push('Explore (Home)');
+    }
+
+    return parts.join(' > ');
+};
 
 document.addEventListener('DOMContentLoaded', init);

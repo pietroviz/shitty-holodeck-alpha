@@ -3,6 +3,33 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+function getHolodeckContext(): string {
+  try {
+    const iframe = document.querySelector("iframe") as HTMLIFrameElement;
+    if (!iframe?.contentWindow) return "";
+    const ctx = (iframe.contentWindow as any).__getHolodeckContext?.();
+    return typeof ctx === "string" ? ctx : "";
+  } catch {
+    return "";
+  }
+}
+
+function getBrowserInfo(): string {
+  try {
+    const ua = navigator.userAgent;
+    let browser = "Unknown";
+    if (ua.includes("Firefox/")) browser = "Firefox";
+    else if (ua.includes("Edg/")) browser = "Edge";
+    else if (ua.includes("Chrome/")) browser = "Chrome";
+    else if (ua.includes("Safari/")) browser = "Safari";
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    return `${browser} (${w}x${h})`;
+  } catch {
+    return "";
+  }
+}
+
 export default function FeedbackTab() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -10,6 +37,7 @@ export default function FeedbackTab() {
     "idle"
   );
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [holodeckContext, setHolodeckContext] = useState("");
 
   useEffect(() => {
     const supabase = createClient();
@@ -18,8 +46,12 @@ export default function FeedbackTab() {
     });
   }, []);
 
-  // Don't render at all if not logged in
-  if (!isLoggedIn) return null;
+  // When panel opens, capture holodeck context
+  useEffect(() => {
+    if (isOpen) {
+      setHolodeckContext(getHolodeckContext());
+    }
+  }, [isOpen]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,12 +60,19 @@ export default function FeedbackTab() {
     setStatus("sending");
 
     try {
+      const contextParts: string[] = [];
+      if (holodeckContext) contextParts.push(holodeckContext);
+      contextParts.push(`URL: ${window.location.pathname}`);
+      const browserInfo = getBrowserInfo();
+      if (browserInfo) contextParts.push(`Browser: ${browserInfo}`);
+
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: message.trim(),
           pageUrl: window.location.href,
+          context: contextParts.join("\n"),
         }),
       });
 
@@ -58,7 +97,7 @@ export default function FeedbackTab() {
         <button
           onClick={() => setIsOpen(true)}
           className="fixed right-0 top-1/2 -translate-y-1/2 z-50
-            bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium
+            bg-[#00D9D9] hover:bg-[#00B8B8] text-[#1A2332] text-sm font-medium
             px-2 py-3 rounded-l-lg shadow-lg transition-colors
             writing-vertical"
           style={{
@@ -76,7 +115,7 @@ export default function FeedbackTab() {
       {isOpen && (
         <div
           className="fixed right-0 top-1/2 -translate-y-1/2 z-50
-            w-72 bg-gray-900 border border-gray-700 rounded-l-xl shadow-2xl
+            w-72 bg-[#1E2530] border border-[#2A3240] rounded-l-xl shadow-2xl
             p-4 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
@@ -85,7 +124,7 @@ export default function FeedbackTab() {
             </span>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-400 hover:text-white text-lg leading-none"
+              className="text-[#5A6676] hover:text-white text-lg leading-none"
               aria-label="Close feedback form"
             >
               &times;
@@ -99,23 +138,29 @@ export default function FeedbackTab() {
               placeholder="What did you notice?"
               maxLength={2000}
               rows={4}
-              className="w-full bg-gray-800 border border-gray-600 rounded-lg
-                text-white text-sm p-2.5 placeholder-gray-500
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              className="w-full bg-[#2A3240] border border-[#2A3240] rounded-lg
+                text-white text-sm p-2.5 placeholder-[#5A6676]
+                focus:outline-none focus:ring-2 focus:ring-[#00D9D9] focus:border-transparent
                 resize-none"
               autoFocus
             />
 
+            {holodeckContext && (
+              <p className="text-[#5A6676] text-xs truncate" title={holodeckContext}>
+                {holodeckContext}
+              </p>
+            )}
+
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 text-xs">
+              <span className="text-[#5A6676] text-xs">
                 {message.length}/2000
               </span>
 
               <button
                 type="submit"
                 disabled={!message.trim() || status === "sending"}
-                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700
-                  disabled:text-gray-500 text-white text-sm font-medium rounded-lg
+                className="px-4 py-1.5 bg-[#00D9D9] hover:bg-[#00B8B8] disabled:bg-[#2A3240]
+                  disabled:text-[#5A6676] text-[#1A2332] text-sm font-medium rounded-lg
                   transition-colors"
               >
                 {status === "sending"
@@ -129,9 +174,11 @@ export default function FeedbackTab() {
             </div>
           </form>
 
-          <p className="text-gray-600 text-xs">
-            Page: {typeof window !== "undefined" ? window.location.pathname : ""}
-          </p>
+          {!isLoggedIn && (
+            <p className="text-[#5A6676] text-xs">
+              Submitting as guest
+            </p>
+          )}
         </div>
       )}
     </>
