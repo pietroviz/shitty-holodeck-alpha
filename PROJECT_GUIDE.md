@@ -284,50 +284,6 @@ These files form the auth/infrastructure layer and should not be overwritten:
 
 ---
 
-## GitHub Authentication Setup (One-Time, Per Machine)
-
-Without this setup, pushing to GitHub from the terminal will fail or require pasting tokens manually. This only needs to be done once per computer.
-
-### Prerequisites
-- macOS with Terminal access
-- A GitHub account (Pietro's: @pietroviz)
-
-### Step 1: Install Homebrew (if not already installed)
-Open Terminal (Applications → Utilities → Terminal, or search "Terminal" in Spotlight) and paste:
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-Follow the prompts. If it says Homebrew is already installed, skip to Step 2.
-
-### Step 2: Install the GitHub CLI
-```
-brew install gh
-```
-
-### Step 3: Log in to GitHub
-```
-gh auth login
-```
-This runs in Terminal but walks you through it interactively:
-1. It asks "What account?" → pick **GitHub.com** (use arrow keys, press Enter)
-2. It asks "Preferred protocol?" → pick **HTTPS**
-3. It asks "Authenticate Git?" → pick **Yes**
-4. It asks "How to authenticate?" → pick **Login with a web browser**
-5. It shows a short code (like `A1B2-C3D4`) and opens your browser automatically
-6. Paste that code into the GitHub page in your browser and click "Authorize"
-7. Terminal will confirm you're logged in
-
-After this, `git push` and `git pull` will just work from any session on that machine — no more token workarounds.
-
-### Verifying it worked
-Run this in Terminal to confirm:
-```
-gh auth status
-```
-It should show your GitHub username and say "Logged in to github.com".
-
----
-
 ## Known Issues & Gotchas
 
 1. **Supabase dashboard renders black** in browser automation sessions. Workaround: use the Management API (`api.supabase.com/v1/projects/...`) or execute JavaScript in the dashboard page context.
