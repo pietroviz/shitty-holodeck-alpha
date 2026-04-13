@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBox — Simbox 3D Asset Builder</title>
+<style>
+/* ───────────────────────────────────────────────
+   RESET & BASE
+─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+:root {
+  --app-panel-bg: #0d1b2e;
+  --app-stage-bg: #1a1a2e;
+  --app-panel-width: 400px;
+  --app-accent: #00c4be;
+  --app-accent-hover: #00a8a3;
+  --app-text: #ffffff;
+  --app-text-muted: #8a9ab8;
+  --app-border: rgba(255,255,255,0.08);
+  --app-surface: rgba(255,255,255,0.06);
+  --app-surface-hover: rgba(255,255,255,0.10);
+  --app-input-bg: #ffffff;
+  --app-radius: 12px;
+  --app-radius-sm: 8px;
+  --app-danger: #d95763;
+}
+
+/* ───────────────────────────────────────────────
+   LAYOUT
+─────────────────────────────────────────────── */
+#app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+#panel {
+  width: var(--app-panel-width);
+  min-width: var(--app-panel-width);
+  background: var(--app-panel-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+  border-right: 1px solid var(--app-border);
+  position: relative;
+}
+
+#stage {
+  flex: 1;
+  background: var(--app-stage-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ───────────────────────────────────────────────
+   PANEL HEADER
+─────────────────────────────────────────────── */
+#panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  color: var(--app-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.12s;
+  min-width: 70px;
+  justify-content: center;
+}
+.header-btn:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+#btn-done {
+  background: var(--app-accent);
+  color: #fff;
+  border-color: transparent;
+}
+#btn-done:hover { background: var(--app-accent-hover); }
+
+#panel-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--app-text);
+  letter-spacing: -0.01em;
+  flex: 1;
+  text-align: center;
+}
+
+/* ───────────────────────────────────────────────
+   PANEL BODY — SCROLLABLE AREA
+─────────────────────────────────────────────── */
+#panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+#panel-body::-webkit-scrollbar { width: 5px; }
+#panel-body::-webkit-scrollbar-track { background: transparent; }
+#panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+/* ───────────────────────────────────────────────
+   TABS (Editing mode)
+─────────────────────────────────────────────── */
+#tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--app-border);
+  flex-shrink: 0;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--app-text); }
+.tab-btn.active { color: var(--app-accent); border-bottom-color: var(--app-accent); }
+
+.tab-content { display: none; padding: 14px; }
+.tab-content.active { display: block; }
+
+/* ───────────────────────────────────────────────
+   FORM ELEMENTS
+─────────────────────────────────────────────── */
+.field-group {
+  margin-bottom: 14px;
+}
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.field-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-input:focus { border-color: var(--app-accent); }
+textarea.field-input { resize: vertical; min-height: 60px; font-family: inherit; }
+
+.field-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Range slider */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.slider-row label {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--app-accent);
+  height: 4px;
+}
+.slider-row .slider-val {
+  font-size: 11px;
+  color: var(--app-text);
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────────────────────────────────────────
+   BROWSE / GALLERY
+─────────────────────────────────────────────── */
+#gallery-list {
+  padding: 8px;
+}
+.gallery-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border: 1px solid transparent;
+  margin-bottom: 4px;
+}
+.gallery-item:hover { background: var(--app-surface-hover); border-color: var(--app-border); }
+.gallery-item.active { background: var(--app-surface-hover); border-color: var(--app-accent); }
+.gallery-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-thumb-placeholder {
+  font-size: 24px;
+  color: var(--app-text-muted);
+}
+.gallery-info {
+  flex: 1;
+  min-width: 0;
+}
+.gallery-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gallery-meta {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  margin-top: 2px;
+}
+.gallery-tags {
+  font-size: 10px;
+  color: var(--app-accent);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gallery-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.gallery-action-btn {
+  background: none;
+  border: 1px solid var(--app-border);
+  color: var(--app-text-muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+.gallery-action-btn:hover { color: var(--app-text); border-color: var(--app-text-muted); }
+.gallery-action-btn.edit:hover { color: var(--app-accent); border-color: var(--app-accent); }
+.gallery-action-btn.delete:hover { color: #e74c3c; border-color: #e74c3c; }
+
+/* ───────────────────────────────────────────────
+   SEARCH BAR
+─────────────────────────────────────────────── */
+#search-bar {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--app-border);
+  display: none;
+}
+#search-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  color: var(--app-text);
+  font-size: 13px;
+  outline: none;
+}
+#search-input:focus { border-color: var(--app-accent); }
+#search-input::placeholder { color: var(--app-text-muted); }
+
+/* Category dropdown */
+#gallery-categories {
+  padding: 6px 14px 2px;
+  flex-shrink: 0;
+  display: none;
+}
+body.state-browse #gallery-categories,
+body.state-search #gallery-categories { display: block; }
+#gallery-category-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 12px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9ab8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+#gallery-category-select:focus { border-color: var(--app-accent); }
+#gallery-category-select option {
+  background: var(--app-panel-bg);
+  color: var(--app-text);
+}
+
+/* ───────────────────────────────────────────────
+   COLOUR SWATCHES
+─────────────────────────────────────────────── */
+.swatch-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.12s;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.selected { border-color: var(--app-accent); box-shadow: 0 0 0 2px var(--app-accent); }
+
+.colour-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+.colour-role:last-child { border-bottom: none; }
+.role-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+.role-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-text);
+  flex: 1;
+}
+.role-hex {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  font-family: monospace;
+}
+
+/* ───────────────────────────────────────────────
+   PRIMITIVE PALETTE
+─────────────────────────────────────────────── */
+.prim-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 4px 0;
+}
+.prim-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  cursor: pointer;
+  transition: all 0.12s;
+  color: var(--app-text);
+}
+.prim-btn:hover { background: var(--app-surface-hover); border-color: var(--app-accent); }
+.prim-icon { font-size: 20px; line-height: 1; }
+.prim-name { font-size: 9px; color: var(--app-text-muted); text-align: center; line-height: 1.2; }
+
+/* ───────────────────────────────────────────────
+   SHAPE LIST (editing mode)
+─────────────────────────────────────────────── */
+.shape-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--app-radius-sm);
+  cursor: pointer;
+  transition: background 0.12s;
+  margin-bottom: 2px;
+}
+.shape-list-item:hover { background: var(--app-surface-hover); }
+.shape-list-item.selected { background: rgba(0,196,190,0.15); border: 1px solid var(--app-accent); }
+.shape-list-icon { font-size: 16px; width: 24px; text-align: center; }
+.shape-list-name { font-size: 12px; color: var(--app-text); flex: 1; }
+.shape-list-actions {
+  display: flex;
+  gap: 4px;
+}
+.shape-list-actions button {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 4px;
+  color: var(--app-text-muted);
+  font-size: 10px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.shape-list-actions button:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+/* ───────────────────────────────────────────────
+   PROPERTIES PANEL
+─────────────────────────────────────────────── */
+.prop-section {
+  margin-bottom: 16px;
+}
+.prop-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--app-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.xyz-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.xyz-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.xyz-field label {
+  font-size: 10px;
+  color: var(--app-text-muted);
+  font-weight: 600;
+}
+.xyz-field input {
+  width: 100%;
+  padding: 5px 6px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 4px;
+  color: var(--app-text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+}
+.xyz-field input:focus { border-color: var(--app-accent); }
+
+/* ───────────────────────────────────────────────
+   PROMPT BAR
+─────────────────────────────────────────────── */
+/* Gradient fade at bottom of stage — sits behind prompt bar & item row */
+#stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(26,26,46,0) 0%, rgba(26,26,46,0.8) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+#item-name-row, #prompt-bar { position: relative; z-index: 2; }
+
+#prompt-bar {
+  padding: 12px 24px 20px;
+  flex-shrink: 0;
+  max-width: calc(720px + 48px); /* same constraint as item-name-row */
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+#prompt-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px 10px 10px 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+#prompt-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #222;
+  background: transparent;
+  min-width: 0;
+}
+#prompt-input::placeholder { color: #aaa; }
+#prompt-input.generating { pointer-events: none; opacity: 0.5; }
+
+/* New toggle switch */
+.new-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.15s;
+  user-select: none;
+}
+.new-switch:hover { background: rgba(0,0,0,0.04); }
+.new-switch-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+.new-switch.active .new-switch-label { color: var(--app-accent); }
+.new-switch-track {
+  width: 34px;
+  height: 18px;
+  border-radius: 10px;
+  background: #d0d0d0;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.new-switch.active .new-switch-track { background: var(--app-accent); }
+.new-switch-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.new-switch.active .new-switch-thumb { transform: translateX(16px); }
+
+/* Create-mode dim overlay — dims everything except the prompt bar */
+#create-dim-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 18;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+body.create-mode #create-dim-overlay { display: block; }
+body.create-mode #prompt-bar { position: relative; z-index: 20; }
+body.create-mode #item-name-row { position: relative; z-index: 20; }
+
+#btn-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--app-accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+#btn-send:hover { background: var(--app-accent-hover); }
+#btn-send.generating {
+  pointer-events: none;
+  opacity: 0.7;
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,196,190,0.3); }
+  50% { box-shadow: 0 0 12px 4px rgba(0,196,190,0.5); }
+}
+#btn-send svg { width: 18px; height: 18px; fill: #fff; }
+
+/* ───────────────────────────────────────────────
+   STAGE CONTROLS
+─────────────────────────────────────────────── */
+#stage-top-bar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 15;
+  display: flex;
+  gap: 6px;
+}
+.stage-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(13,27,46,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--app-border);
+  color: var(--app-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.stage-btn:hover { background: rgba(13,27,46,0.9); color: var(--app-text); }
+
+/* Item name row — below viewport, above prompt. Aligned to prompt card. */
+#item-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 24px;
+  flex-shrink: 0;
+  max-width: calc(720px + 48px); /* match prompt-card max-width + left/right padding */
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+#item-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+}
+#item-name-display {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--app-text);
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#item-name-display:hover { opacity: 0.8; }
+#item-name-display.create-new { color: var(--app-accent); font-style: italic; }
+#item-right-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+#item-element-count {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  white-space: nowrap;
+}
+
+#btn-edit-stage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  color: var(--app-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+#btn-edit-stage:hover { background: var(--app-surface-hover); color: var(--app-text); border-color: var(--app-accent); }
+
+/* ───────────────────────────────────────────────
+   3D VIEWPORT
+─────────────────────────────────────────────── */
+#viewport {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+#viewport canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* (spinner removed — using .generating class on send button instead) */
+
+/* ───────────────────────────────────────────────
+   STATE VISIBILITY
+─────────────────────────────────────────────── */
+body.state-closed #panel { display: none; }
+body.state-closed #btn-edit-stage { display: flex; }
+body.state-browse #panel { display: flex; }
+body.state-browse #btn-edit-stage { display: flex; }
+body.state-search #panel { display: flex; }
+body.state-search #btn-edit-stage { display: flex; }
+body.state-search #search-bar { display: block; }
+body.state-editing #panel { display: flex; }
+body.state-editing #btn-edit-stage { display: none; }
+body.state-properties #panel { display: flex; }
+body.state-properties #btn-edit-stage { display: none; }
+
+body.state-closed #stage-top-bar { display: flex; }
+body.state-browse #stage-top-bar { display: none; }
+body.state-search #stage-top-bar { display: none; }
+body.state-editing #stage-top-bar { display: none; }
+body.state-properties #stage-top-bar { display: none; }
+
+/* Search dim overlay */
+body.state-search #viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(20,30,45,0.95);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  color: var(--app-text);
+  font-size: 13px;
+  padding: 10px 20px;
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Delete button */
+.btn-delete {
+  width: 100%;
+  padding: 10px;
+  background: rgba(217,87,99,0.15);
+  border: 1px solid var(--app-danger);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-danger);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.12s;
+}
+.btn-delete:hover { background: rgba(217,87,99,0.3); }
+
+/* Category label */
+.cat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--app-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 0 4px;
+}
+
+/* Attach points editor */
+.attach-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+.attach-row:last-child { border-bottom: none; }
+.attach-name {
+  font-size: 12px;
+  color: var(--app-text);
+  min-width: 60px;
+  font-weight: 600;
+}
+.attach-coords {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  font-family: monospace;
+  flex: 1;
+}
+.attach-remove {
+  background: none;
+  border: none;
+  color: var(--app-danger);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+
+.small-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.small-btn:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+/* Empty state */
+.empty-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--app-text-muted);
+  font-size: 13px;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 52px;
+  left: 14px;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  z-index: 50;
+  min-width: 180px;
+  padding: 4px;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.dropdown-menu.open { display: block; }
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--app-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+.dropdown-item:hover { background: var(--app-surface-hover); }
+.dropdown-item.danger { color: var(--app-danger); }
+</style>
+</head>
+<body class="state-closed">
+
+<div id="app">
+  <!-- ═══ LEFT PANEL ═══ -->
+  <div id="panel">
+    <div id="panel-header">
+      <button id="btn-cancel" class="header-btn">Cancel</button>
+      <span id="panel-title">Browse</span>
+      <button id="btn-done" class="header-btn" style="display:none;">Done</button>
+      <button id="btn-search" class="header-btn" style="display:none;">&#128269;</button>
+    </div>
+
+    <div id="search-bar">
+      <input id="search-input" type="text" placeholder="Search props…">
+    </div>
+
+    <div id="tab-bar" style="display:none;">
+      <button class="tab-btn active" data-tab="file">File</button>
+      <button class="tab-btn" data-tab="bounds">Bounds</button>
+      <button class="tab-btn" data-tab="shapes">Shapes</button>
+      <button class="tab-btn" data-tab="colours">Colours</button>
+    </div>
+
+    <div id="panel-body">
+      <!-- Category dropdown -->
+      <div id="gallery-categories">
+        <select id="gallery-category-select"></select>
+      </div>
+      <!-- Browse / Gallery content injected here -->
+      <div id="gallery-list"></div>
+
+      <!-- Editing tabs -->
+      <div id="tab-file" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Name</label>
+          <input id="field-name" class="field-input" type="text" placeholder="Prop name">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <textarea id="field-desc" class="field-input" placeholder="Describe this prop…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tags</label>
+          <input id="field-tags" class="field-input" type="text" placeholder="tag1, tag2, tag3">
+        </div>
+      </div>
+
+      <div id="tab-bounds" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Anchor Point</label>
+          <div class="xyz-row">
+            <div class="xyz-field"><label>X</label><input id="anchor-x" type="number" step="0.1" value="0"></div>
+            <div class="xyz-field"><label>Y</label><input id="anchor-y" type="number" step="0.1" value="0"></div>
+            <div class="xyz-field"><label>Z</label><input id="anchor-z" type="number" step="0.1" value="0"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Background Colour</label>
+          <div class="swatch-grid" id="bg-swatches"></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Attach Points</label>
+          <div id="attach-list"></div>
+          <button class="small-btn" id="btn-add-attach" style="margin-top:8px;">+ Add Point</button>
+        </div>
+      </div>
+
+      <div id="tab-shapes" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Add Primitive</label>
+          <div id="prim-palette" class="prim-grid"></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Elements</label>
+          <div id="shape-list"></div>
+        </div>
+      </div>
+
+      <div id="tab-colours" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Colour Roles</label>
+          <div id="colour-roles"></div>
+        </div>
+        <div class="field-group" style="margin-top:16px;">
+          <label class="field-label">Palette — DawnBringer 32</label>
+          <div class="swatch-grid" id="role-palette"></div>
+        </div>
+        <button class="small-btn" id="btn-randomize-colours" style="margin-top:10px;">Randomize</button>
+      </div>
+
+      <!-- Properties panel -->
+      <div id="tab-properties" class="tab-content">
+        <div id="prop-shape-info"></div>
+        <div class="prop-section">
+          <div class="prop-section-title">Position</div>
+          <div class="xyz-row">
+            <div class="xyz-field"><label>X</label><input id="prop-px" type="number" step="0.05"></div>
+            <div class="xyz-field"><label>Y</label><input id="prop-py" type="number" step="0.05"></div>
+            <div class="xyz-field"><label>Z</label><input id="prop-pz" type="number" step="0.05"></div>
+          </div>
+        </div>
+        <div class="prop-section">
+          <div class="prop-section-title">Rotation</div>
+          <div class="xyz-row">
+            <div class="xyz-field"><label>X°</label><input id="prop-rx" type="number" step="1"></div>
+            <div class="xyz-field"><label>Y°</label><input id="prop-ry" type="number" step="1"></div>
+            <div class="xyz-field"><label>Z°</label><input id="prop-rz" type="number" step="1"></div>
+          </div>
+        </div>
+        <div class="prop-section">
+          <div class="prop-section-title">Shape Parameters</div>
+          <div id="prop-shape-params"></div>
+        </div>
+        <div class="prop-section">
+          <div class="prop-section-title">Layer</div>
+          <div class="field-row" style="gap:4px;">
+            <button class="small-btn" id="prop-layer-up">↑ Up</button>
+            <button class="small-btn" id="prop-layer-down">↓ Down</button>
+          </div>
+        </div>
+        <button class="btn-delete" id="prop-delete">Delete Shape</button>
+      </div>
+    </div>
+
+    <!-- Dropdown menu for hamburger -->
+    <div class="dropdown-menu" id="hamburger-menu">
+      <button class="dropdown-item" id="menu-new">New Prop</button>
+      <button class="dropdown-item" id="menu-duplicate">Duplicate</button>
+      <button class="dropdown-item" id="menu-export">Export JSON</button>
+      <button class="dropdown-item" id="menu-import">Import JSON</button>
+      <button class="dropdown-item danger" id="menu-delete">Delete Prop</button>
+    </div>
+  </div>
+
+  <!-- ═══ 3D STAGE ═══ -->
+  <div id="stage">
+    <div id="stage-top-bar">
+      <button class="stage-btn" id="btn-hamburger" title="Menu">☰</button>
+    </div>
+    <button class="stage-btn" id="btn-reset-view" title="Reset View" style="position:absolute;top:12px;right:12px;z-index:15;">⟲</button>
+    <div id="viewport"></div>
+    <div id="item-name-row">
+      <img id="item-thumb" src="" alt="" style="display:none;">
+      <span id="item-name-display">No prop loaded</span>
+      <div id="item-right-group">
+        <span id="item-element-count"></span>
+        <button id="btn-edit-stage">Edit</button>
+      </div>
+    </div>
+    <div id="create-dim-overlay"></div>
+    <div id="prompt-bar">
+      <div id="prompt-card">
+        <div class="new-switch" id="btn-new-toggle" title="Toggle create new mode">
+          <span class="new-switch-label">New</span>
+          <div class="new-switch-track"><div class="new-switch-thumb"></div></div>
+        </div>
+        <input id="prompt-input" type="text" placeholder="Describe a 3D prop…">
+        <button id="btn-send">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ═══ IMPORT MAP ═══ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { loadPrimitives, PRIMITIVES, getPrimitive, buildMesh, getPrimitivesByCategory } from './primitives.js';
+
+// ═══════════════════════════════════════════════════════════════
+//  CONSTANTS & CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+const DB_NAME = 'propbox_assets';
+const DB_STORE = 'props';
+const DB_VERSION = 1;
+const ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+
+// ═══════════════════════════════════════════════════════════════
+//  APP STATE
+// ═══════════════════════════════════════════════════════════════
+
+const state = {
+  mode: 'closed',           // closed | browse | search | editing | properties
+  currentAsset: null,       // the loaded asset object
+  preEditSnapshot: null,    // for cancel/revert
+  selectedElementId: null,  // id of selected shape element
+  isCreateMode: false,      // prompt: create vs modify
+  editingRole: null,        // which colour role is being edited
+  assets: [],               // all saved assets from IndexedDB
+  palette: null,            // DB32 palette data
+  systemPrompt: '',         // AI system prompt text
+  apiKey: localStorage.getItem('propbox_api_key') || '',
+};
+
+let galleryDisplayedAssets = [];   // Currently visible assets in gallery (for arrow nav)
+let activeCategory = 'all';        // Category filter for gallery dropdown
+
+// Category labels for nice display
+const CATEGORY_LABELS = {
+  'all': 'All',
+  'my-stuff': 'My Stuff',
+  'nature': 'Nature',
+  'urban': 'Urban',
+  'interior': 'Interior',
+  'fantasy': 'Fantasy',
+  'environment': 'Environment',
+  'headwear': 'Headwear & Hair',
+  'items': 'Props & Items',
+  'panels': 'Panels',
+};
+
+// Default colour assignments
+const DEFAULT_COLORS = {
+  primary: '#5b6ee1',
+  secondary: '#df7126',
+  tertiary: '#222034',
+};
+const DEFAULT_BG = '#1a1a2e';
+
+// ═══════════════════════════════════════════════════════════════
+//  THREE.JS SCENE
+// ═══════════════════════════════════════════════════════════════
+
+let scene, camera, renderer, controls;
+let sceneGroup;         // holds all asset meshes
+let gridHelper;
+let raycaster, pointer;
+let meshToElementId = new Map();  // mesh.uuid -> element id
+
+function initThree() {
+  const container = document.getElementById('viewport');
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(DEFAULT_BG);
+
+  camera = new THREE.PerspectiveCamera(50, w / h, 0.05, 100);
+  camera.position.set(3, 2.5, 4);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  container.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.zoomSpeed = 5.0;
+  controls.minDistance = 0.15;
+  controls.maxDistance = 40;
+  controls.target.set(0, 0.5, 0);
+  controls.update();
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  dirLight.position.set(5, 8, 5);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.set(1024, 1024);
+  scene.add(dirLight);
+
+  const fillLight = new THREE.DirectionalLight(0x8888ff, 0.3);
+  fillLight.position.set(-3, 2, -4);
+  scene.add(fillLight);
+
+  // Grid
+  gridHelper = new THREE.GridHelper(10, 20, 0x444466, 0x333355);
+  scene.add(gridHelper);
+
+  // Scene group for asset meshes
+  sceneGroup = new THREE.Group();
+  scene.add(sceneGroup);
+
+  // Raycaster for picking
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+
+  // Events
+  window.addEventListener('resize', onResize);
+
+  // Click vs drag detection on viewport — only fire click if mouse didn't move much
+  let _vpMouseDown = null;
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+    _vpMouseDown = { x: e.clientX, y: e.clientY };
+  });
+  renderer.domElement.addEventListener('pointerup', (e) => {
+    if (!_vpMouseDown) return;
+    const dx = e.clientX - _vpMouseDown.x;
+    const dy = e.clientY - _vpMouseDown.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    _vpMouseDown = null;
+    if (dist < 5) onViewportClick(e); // only if barely moved (not a drag/orbit)
+  });
+
+  animate();
+}
+
+function onResize() {
+  const container = document.getElementById('viewport');
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CAMERA FRAMING
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_CAM_POS = new THREE.Vector3(3, 2.5, 4);
+const DEFAULT_CAM_TARGET = new THREE.Vector3(0, 0.5, 0);
+
+/**
+ * Auto-fit camera to the bounding box of the current sceneGroup contents.
+ * Always approaches from a consistent 3/4 front-right view (about 30° right, 25° elevated)
+ * so every prop presents the same way when loaded.
+ */
+function autoFrameCamera() {
+  if (sceneGroup.children.length === 0) return;
+
+  const box = new THREE.Box3().setFromObject(sceneGroup);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z);
+
+  // Distance needed to fit the object based on camera FOV
+  const fov = camera.fov * (Math.PI / 180);
+  let distance = (maxDim / 2) / Math.tan(fov / 2);
+  distance = Math.max(distance * 1.8, 1.2); // comfortable framing with padding
+
+  // Consistent 3/4 front-right view: ~30° right of center, ~25° elevation
+  // This gives a nice angle showing front face + right side + top
+  const azimuth = Math.PI * 0.18;   // ~32° right of front
+  const elevation = Math.PI * 0.14;  // ~25° above horizontal
+  const dir = new THREE.Vector3(
+    Math.sin(azimuth) * Math.cos(elevation),
+    Math.sin(elevation),
+    Math.cos(azimuth) * Math.cos(elevation)
+  ).normalize();
+
+  camera.position.copy(center).addScaledVector(dir, distance);
+  controls.target.copy(center);
+  controls.update();
+}
+
+/**
+ * Reset camera to the default view position.
+ */
+function resetCameraView() {
+  if (sceneGroup.children.length > 0) {
+    autoFrameCamera();
+  } else {
+    camera.position.copy(DEFAULT_CAM_POS);
+    controls.target.copy(DEFAULT_CAM_TARGET);
+    controls.update();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SCENE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+
+function clearScene() {
+  while (sceneGroup.children.length > 0) {
+    const child = sceneGroup.children[0];
+    if (child.geometry) child.geometry.dispose();
+    if (child.material) child.material.dispose();
+    sceneGroup.remove(child);
+  }
+  meshToElementId.clear();
+}
+
+/**
+ * Normalize an element descriptor to the format buildMesh() expects.
+ * Batch-imported props use { type, px, py, ... } flat format,
+ * while AI-generated / editor props use { primitiveId, params: { px, py, ... } }.
+ */
+function normalizeElement(el) {
+  // Already in standard format
+  if (el.primitiveId && el.params) return el;
+
+  const isBatchFormat = !!el.type && !el.primitiveId;
+  const primitiveId = el.primitiveId || el.type;
+
+  // Extract shape params from flat element (everything except metadata fields)
+  const { id, type: _type, zIndex: _z, ...flatParams } = el;
+  const params = { ...flatParams };
+
+  // Batch props stored rotation in radians; buildMesh expects degrees
+  if (isBatchFormat) {
+    if (params.rx) params.rx = params.rx * 180 / Math.PI;
+    if (params.ry) params.ry = params.ry * 180 / Math.PI;
+    if (params.rz) params.rz = params.rz * 180 / Math.PI;
+  }
+
+  return {
+    id: el.id,
+    primitiveId,
+    zIndex: el.zIndex || 0,
+    params,
+  };
+}
+
+function rebuildScene() {
+  clearScene();
+  if (!state.currentAsset) return;
+
+  const asset = state.currentAsset;
+  const colorMap = asset.payload?._editor?.color_assignments || asset.payload?.color_assignments || DEFAULT_COLORS;
+
+  // Update scene background
+  scene.background = new THREE.Color(asset.payload?.background_color || DEFAULT_BG);
+
+  const elements = asset.payload?._editor?.elements || [];
+  for (const rawEl of elements) {
+    const el = normalizeElement(rawEl);
+    const mesh = buildMesh(el, colorMap);
+    mesh.userData.elementId = el.id;
+    meshToElementId.set(mesh.uuid, el.id);
+
+    // Highlight selected
+    if (el.id === state.selectedElementId) {
+      mesh.material = mesh.material.clone();
+      mesh.material.emissive = new THREE.Color(0x00c4be);
+      mesh.material.emissiveIntensity = 0.3;
+    }
+
+    sceneGroup.add(mesh);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  VIEWPORT CLICK — SHAPE PICKING
+// ═══════════════════════════════════════════════════════════════
+
+function onViewportClick(event) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(sceneGroup.children, false);
+
+  // Browse / Search mode: clicking on the prop enters edit mode
+  if (state.mode === 'browse' || state.mode === 'search' || state.mode === 'closed') {
+    if (intersects.length > 0 && state.currentAsset) {
+      state.preEditSnapshot = deepClone(state.currentAsset);
+      setState('editing');
+    }
+    return;
+  }
+
+  // Editing / Properties mode: clicking picks individual shapes
+  if (state.mode === 'editing' || state.mode === 'properties') {
+    if (intersects.length > 0) {
+      const hit = intersects[0].object;
+      const elId = meshToElementId.get(hit.uuid);
+      if (elId) {
+        state.selectedElementId = elId;
+        setState('properties');
+        rebuildScene();
+        renderPropertiesPanel();
+        renderShapeList();
+      }
+    } else if (state.mode === 'properties') {
+      state.selectedElementId = null;
+      setState('editing');
+      rebuildScene();
+      renderShapeList();
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INDEXEDDB
+// ═══════════════════════════════════════════════════════════════
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(DB_STORE)) {
+        db.createObjectStore(DB_STORE, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function loadAllAssets() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const store = tx.objectStore(DB_STORE);
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveAsset(asset) {
+  asset.meta.modified = new Date().toISOString();
+  // Generate thumbnail
+  asset.meta.thumbnail = generateThumbnail();
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    const store = tx.objectStore(DB_STORE);
+    store.put(asset);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function deleteAsset(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    const store = tx.objectStore(DB_STORE);
+    store.delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+/**
+ * Generate a square thumbnail by rendering into a temporary square viewport.
+ */
+function generateThumbnail() {
+  try {
+    const thumbSize = 128;
+    // Save current renderer size
+    const prevSize = renderer.getSize(new THREE.Vector2());
+    const prevAspect = camera.aspect;
+
+    // Temporarily resize to square
+    renderer.setSize(thumbSize, thumbSize);
+    camera.aspect = 1;
+    camera.updateProjectionMatrix();
+
+    renderer.render(scene, camera);
+    const dataUrl = renderer.domElement.toDataURL('image/png');
+
+    // Restore original size
+    renderer.setSize(prevSize.x, prevSize.y);
+    camera.aspect = prevAspect;
+    camera.updateProjectionMatrix();
+
+    return dataUrl;
+  } catch {
+    return null;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTO-IMPORT BATCH PROPS
+// ═══════════════════════════════════════════════════════════════
+
+async function autoImportBatchProps() {
+  try {
+    const manifestRes = await fetch('./assets/props/manifest.json');
+    if (!manifestRes.ok) return; // No manifest = no batch props
+    const manifest = await manifestRes.json();
+
+    const db = await openDB();
+
+    // Get existing IDs to skip duplicates
+    const existingIds = await new Promise((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, 'readonly');
+      const req = tx.objectStore(DB_STORE).getAllKeys();
+      req.onsuccess = () => resolve(new Set(req.result));
+      req.onerror = () => reject(req.error);
+    });
+
+    let imported = 0;
+    for (const [catId, cat] of Object.entries(manifest.categories)) {
+      for (const file of cat.files) {
+        try {
+          const res = await fetch(`./assets/props/${catId}/${file}`);
+          if (!res.ok) continue;
+          const prop = await res.json();
+          if (existingIds.has(prop.id)) continue; // Already imported
+          await new Promise((resolve, reject) => {
+            const tx = db.transaction(DB_STORE, 'readwrite');
+            tx.objectStore(DB_STORE).put(prop);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+          });
+          imported++;
+        } catch (e) {
+          console.warn(`Failed to import ${file}:`, e);
+        }
+      }
+    }
+    if (imported > 0) console.log(`Auto-imported ${imported} batch props`);
+  } catch (e) {
+    // Manifest not found or fetch failed — that's fine, skip silently
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ASSET FACTORY
+// ═══════════════════════════════════════════════════════════════
+
+function createBlankAsset() {
+  const ts = new Date().toISOString();
+  const id = 'prop_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  return {
+    id,
+    type: 'prop',
+    name: 'New Prop',
+    tags: [],
+    meta: {
+      created: ts,
+      modified: ts,
+      origin: 'user',
+      origin_ref: null,
+      creator: 'local-user',
+      version: 1,
+      thumbnail: null,
+    },
+    payload: {
+      description: '',
+      format: 'mesh',
+      color_roles_used: ['primary', 'secondary', 'tertiary'],
+      color_assignments: { ...DEFAULT_COLORS },
+      background_color: DEFAULT_BG,
+      palette_id: 'db32',
+      anchor_point: { x: 0, y: 0, z: 0 },
+      attach_points: {},
+      layer: null,
+      z_index: 0,
+      _editor: {
+        elements: [],
+        color_assignments: { ...DEFAULT_COLORS },
+      },
+    },
+  };
+}
+
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  UI STATE MACHINE
+// ═══════════════════════════════════════════════════════════════
+
+function setState(newMode) {
+  const body = document.body;
+  body.classList.remove('state-closed', 'state-browse', 'state-search', 'state-editing', 'state-properties');
+  body.classList.add(`state-${newMode}`);
+  state.mode = newMode;
+
+  const btnCancel = document.getElementById('btn-cancel');
+  const btnDone = document.getElementById('btn-done');
+  const btnSearch = document.getElementById('btn-search');
+  const panelTitle = document.getElementById('panel-title');
+  const tabBar = document.getElementById('tab-bar');
+  const searchBar = document.getElementById('search-bar');
+  const galleryList = document.getElementById('gallery-list');
+
+  // Reset visibility
+  btnCancel.style.display = 'flex';
+  btnDone.style.display = 'none';
+  btnSearch.style.display = 'none';
+  tabBar.style.display = 'none';
+  searchBar.style.display = 'none';
+
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  galleryList.style.display = 'none';
+
+  switch (newMode) {
+    case 'closed':
+      btnCancel.style.display = 'none';
+      break;
+
+    case 'browse':
+      panelTitle.textContent = 'Browse';
+      btnSearch.style.display = 'flex';
+      galleryList.style.display = 'block';
+      renderGallery();
+      break;
+
+    case 'search':
+      panelTitle.textContent = 'Search';
+      searchBar.style.display = 'block';
+      galleryList.style.display = 'block';
+      document.getElementById('search-input').focus();
+      renderGallery();
+      break;
+
+    case 'editing':
+      panelTitle.textContent = 'Edit';
+      btnDone.style.display = 'flex';
+      tabBar.style.display = 'flex';
+      state.selectedElementId = null;
+      activateTab('file');
+      break;
+
+    case 'properties':
+      panelTitle.textContent = 'Properties';
+      document.getElementById('tab-properties').classList.add('active');
+      renderPropertiesPanel();
+      break;
+  }
+
+  // Trigger resize for viewport
+  setTimeout(onResize, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════════════
+
+function activateTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(`tab-${tabId}`);
+  if (target) target.classList.add('active');
+
+  if (tabId === 'file') renderFileTab();
+  if (tabId === 'bounds') renderBoundsTab();
+  if (tabId === 'shapes') renderShapesTab();
+  if (tabId === 'colours') renderColoursTab();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CATEGORY HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+function getAssetCategory(asset) {
+  if (!asset.meta?.origin || asset.meta.origin === 'user') return 'my-stuff';
+  return asset.meta.origin_ref || 'unknown';
+}
+
+function renderCategoryDropdown(allAssets) {
+  const select = document.getElementById('gallery-category-select');
+  if (!select) return;
+
+  // Count assets per category
+  const counts = {};
+  for (const a of allAssets) {
+    const cat = getAssetCategory(a);
+    counts[cat] = (counts[cat] || 0) + 1;
+  }
+
+  // Build ordered category list: All, My Stuff, then sorted batch categories
+  const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'my-stuff', label: 'My Stuff' },
+  ];
+  const batchCats = new Set();
+  for (const a of allAssets) {
+    const cat = getAssetCategory(a);
+    if (cat !== 'my-stuff') batchCats.add(cat);
+  }
+  for (const catId of [...batchCats].sort()) {
+    categories.push({ id: catId, label: CATEGORY_LABELS[catId] || catId.charAt(0).toUpperCase() + catId.slice(1) });
+  }
+
+  select.innerHTML = '';
+  for (const cat of categories) {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    const count = cat.id === 'all' ? allAssets.length : (counts[cat.id] || 0);
+    opt.textContent = count > 0 ? `${cat.label} (${count})` : cat.label;
+    if (cat.id === activeCategory) opt.selected = true;
+    select.appendChild(opt);
+  }
+}
+
+function filterByCategory(assets) {
+  if (activeCategory === 'all') return assets;
+  return assets.filter(a => getAssetCategory(a) === activeCategory);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GALLERY RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function renderGallery(filter = '') {
+  const container = document.getElementById('gallery-list');
+  container.innerHTML = '';
+
+  // Render category dropdown using ALL assets (so counts stay accurate)
+  renderCategoryDropdown(state.assets);
+
+  // Start with all assets sorted
+  let assets = [...state.assets].sort((a, b) =>
+    new Date(b.meta.modified) - new Date(a.meta.modified)
+  );
+
+  // Apply category filter
+  assets = filterByCategory(assets);
+
+  // Apply text search filter
+  if (filter) {
+    const q = filter.toLowerCase();
+    assets = assets.filter(a =>
+      a.name.toLowerCase().includes(q) ||
+      (a.tags || []).some(t => t.toLowerCase().includes(q))
+    );
+  }
+
+  // Track displayed assets for arrow key navigation
+  galleryDisplayedAssets = assets;
+
+  // Update panel header with count
+  const panelTitle = document.getElementById('panel-title');
+  if (state.mode === 'browse' || state.mode === 'search') {
+    const label = state.mode === 'search' ? 'Search' : 'Browse';
+    panelTitle.textContent = `${label} (${assets.length})`;
+  }
+
+  if (assets.length === 0) {
+    container.innerHTML = activeCategory === 'my-stuff'
+      ? '<div class="empty-msg">No saved assets yet. Create something to save it here!</div>'
+      : '<div class="empty-msg">No props in this category.</div>';
+    return;
+  }
+
+  for (const asset of assets) {
+    const elCount = asset.payload?._editor?.elements?.length || 0;
+    const item = document.createElement('div');
+    item.className = 'gallery-item' + (state.currentAsset?.id === asset.id ? ' active' : '');
+    item.dataset.assetId = asset.id;
+    item.innerHTML = `
+      <div class="gallery-thumb">
+        ${asset.meta.thumbnail ? `<img src="${asset.meta.thumbnail}">` : '<span class="gallery-thumb-placeholder">◆</span>'}
+      </div>
+      <div class="gallery-info">
+        <div class="gallery-name">${escHtml(asset.name)}</div>
+        <div class="gallery-meta">${elCount} element${elCount !== 1 ? 's' : ''}</div>
+        <div class="gallery-tags">${(asset.tags || []).join(', ')}</div>
+      </div>
+      <div class="gallery-actions">
+        <button class="gallery-action-btn edit" data-id="${asset.id}" title="Edit">✎</button>
+        <button class="gallery-action-btn delete" data-id="${asset.id}" title="Delete">✕</button>
+      </div>
+    `;
+    // Card click loads the asset
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.gallery-action-btn')) return;
+      loadAsset(asset.id);
+    });
+    // Edit button
+    item.querySelector('.gallery-action-btn.edit').addEventListener('click', (e) => {
+      e.stopPropagation();
+      loadAsset(asset.id);
+      state.preEditSnapshot = deepClone(state.currentAsset);
+      setState('editing');
+    });
+    // Delete button
+    item.querySelector('.gallery-action-btn.delete').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm(`Delete "${asset.name}"?`)) return;
+      await deleteAsset(asset.id);
+      state.assets = await loadAllAssets();
+      if (state.currentAsset?.id === asset.id) {
+        state.currentAsset = null;
+        clearScene();
+        scene.background = new THREE.Color(DEFAULT_BG);
+        updateItemNameRow();
+      }
+      renderGallery();
+    });
+    container.appendChild(item);
+  }
+}
+
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ASSET LOADING
+// ═══════════════════════════════════════════════════════════════
+
+function loadAsset(id) {
+  const asset = state.assets.find(a => a.id === id);
+  if (!asset) return;
+  state.currentAsset = deepClone(asset);
+  state.selectedElementId = null;
+  rebuildScene();
+  autoFrameCamera();
+  updateItemNameRow();
+  renderGallery();
+}
+
+function loadAssetObject(asset) {
+  state.currentAsset = asset;
+  state.selectedElementId = null;
+  rebuildScene();
+  autoFrameCamera();
+  updateItemNameRow();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ITEM NAME ROW & TOAST
+// ═══════════════════════════════════════════════════════════════
+
+function updateItemNameRow() {
+  const nameEl = document.getElementById('item-name-display');
+  const countEl = document.getElementById('item-element-count');
+  const thumbEl = document.getElementById('item-thumb');
+
+  if (state.currentAsset) {
+    nameEl.textContent = state.currentAsset.name || 'Untitled';
+    nameEl.classList.toggle('create-new', state.isCreateMode);
+    const elCount = state.currentAsset.payload?._editor?.elements?.length || 0;
+    countEl.textContent = `${elCount} element${elCount !== 1 ? 's' : ''}`;
+
+    // Use the saved thumbnail from the asset (same as gallery list view)
+    const savedThumb = state.currentAsset.meta?.thumbnail;
+    if (savedThumb) {
+      thumbEl.src = savedThumb;
+      thumbEl.style.display = 'block';
+    } else {
+      thumbEl.style.display = 'none';
+    }
+  } else {
+    nameEl.textContent = state.isCreateMode ? '+ New Prop' : 'No prop loaded';
+    nameEl.classList.toggle('create-new', state.isCreateMode);
+    countEl.textContent = '';
+    thumbEl.style.display = 'none';
+  }
+}
+
+function showToast(message, duration = 2000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TAB RENDERERS
+// ═══════════════════════════════════════════════════════════════
+
+function renderFileTab() {
+  if (!state.currentAsset) return;
+  document.getElementById('field-name').value = state.currentAsset.name || '';
+  document.getElementById('field-desc').value = state.currentAsset.payload?.description || '';
+  document.getElementById('field-tags').value = (state.currentAsset.tags || []).join(', ');
+}
+
+function renderBoundsTab() {
+  if (!state.currentAsset) return;
+  const anchor = state.currentAsset.payload?.anchor_point || { x: 0, y: 0, z: 0 };
+  document.getElementById('anchor-x').value = anchor.x;
+  document.getElementById('anchor-y').value = anchor.y;
+  document.getElementById('anchor-z').value = anchor.z;
+
+  // Background swatches
+  const bgContainer = document.getElementById('bg-swatches');
+  bgContainer.innerHTML = '';
+  if (state.palette) {
+    for (const c of state.palette.colors) {
+      const sw = document.createElement('div');
+      sw.className = 'swatch' + (state.currentAsset.payload?.background_color === c.hex ? ' selected' : '');
+      sw.style.background = c.hex;
+      sw.title = c.name;
+      sw.addEventListener('click', () => {
+        state.currentAsset.payload.background_color = c.hex;
+        scene.background = new THREE.Color(c.hex);
+        renderBoundsTab();
+      });
+      bgContainer.appendChild(sw);
+    }
+  }
+
+  // Attach points
+  renderAttachPoints();
+}
+
+function renderAttachPoints() {
+  const container = document.getElementById('attach-list');
+  container.innerHTML = '';
+  const pts = state.currentAsset?.payload?.attach_points || {};
+  for (const [name, pt] of Object.entries(pts)) {
+    const row = document.createElement('div');
+    row.className = 'attach-row';
+    row.innerHTML = `
+      <span class="attach-name">${escHtml(name)}</span>
+      <span class="attach-coords">(${pt.x}, ${pt.y}, ${pt.z})${pt.nx !== undefined ? ` n(${pt.nx},${pt.ny},${pt.nz})` : ''}</span>
+      <button class="attach-remove" data-name="${escHtml(name)}">✕</button>
+    `;
+    row.querySelector('.attach-remove').addEventListener('click', () => {
+      delete state.currentAsset.payload.attach_points[name];
+      renderAttachPoints();
+    });
+    container.appendChild(row);
+  }
+}
+
+function renderShapesTab() {
+  renderPrimitivePalette();
+  renderShapeList();
+}
+
+function renderPrimitivePalette() {
+  const container = document.getElementById('prim-palette');
+  container.innerHTML = '';
+  const cats = getPrimitivesByCategory();
+  for (const [catName, prims] of Object.entries(cats)) {
+    const label = document.createElement('div');
+    label.className = 'cat-label';
+    label.textContent = catName;
+    label.style.gridColumn = '1 / -1';
+    container.appendChild(label);
+    for (const p of prims) {
+      const btn = document.createElement('button');
+      btn.className = 'prim-btn';
+      btn.innerHTML = `<span class="prim-icon">${p.icon}</span><span class="prim-name">${p.name}</span>`;
+      btn.addEventListener('click', () => addPrimitive(p.id));
+      container.appendChild(btn);
+    }
+  }
+}
+
+function renderShapeList() {
+  const container = document.getElementById('shape-list');
+  container.innerHTML = '';
+  const elements = state.currentAsset?.payload?._editor?.elements || [];
+  if (elements.length === 0) {
+    container.innerHTML = '<div class="empty-msg" style="padding:20px 0;">No shapes yet. Click a primitive above to add one.</div>';
+    return;
+  }
+  for (const el of elements) {
+    const prim = getPrimitive(el.primitiveId);
+    const item = document.createElement('div');
+    item.className = 'shape-list-item' + (el.id === state.selectedElementId ? ' selected' : '');
+    item.innerHTML = `
+      <span class="shape-list-icon">${prim?.icon || '?'}</span>
+      <span class="shape-list-name">${prim?.name || el.primitiveId} — ${el.id}</span>
+    `;
+    item.addEventListener('click', () => {
+      state.selectedElementId = el.id;
+      setState('properties');
+      rebuildScene();
+      renderPropertiesPanel();
+    });
+    container.appendChild(item);
+  }
+}
+
+function renderColoursTab() {
+  if (!state.currentAsset) return;
+  const colorMap = state.currentAsset.payload._editor.color_assignments;
+
+  // Roles
+  const rolesContainer = document.getElementById('colour-roles');
+  rolesContainer.innerHTML = '';
+  for (const role of ['primary', 'secondary', 'tertiary']) {
+    const row = document.createElement('div');
+    row.className = 'colour-role';
+    row.innerHTML = `
+      <div class="role-swatch" style="background:${colorMap[role]}" data-role="${role}"></div>
+      <span class="role-label">${role.charAt(0).toUpperCase() + role.slice(1)}</span>
+      <span class="role-hex">${colorMap[role]}</span>
+    `;
+    row.querySelector('.role-swatch').addEventListener('click', () => {
+      state.editingRole = role;
+      renderColoursTab();
+    });
+    rolesContainer.appendChild(row);
+  }
+
+  // Palette swatches
+  const palContainer = document.getElementById('role-palette');
+  palContainer.innerHTML = '';
+  if (state.palette && state.editingRole) {
+    for (const c of state.palette.colors) {
+      const sw = document.createElement('div');
+      sw.className = 'swatch' + (colorMap[state.editingRole] === c.hex ? ' selected' : '');
+      sw.style.background = c.hex;
+      sw.title = c.name;
+      sw.addEventListener('click', () => {
+        colorMap[state.editingRole] = c.hex;
+        state.currentAsset.payload.color_assignments[state.editingRole] = c.hex;
+        rebuildScene();
+        renderColoursTab();
+      });
+      palContainer.appendChild(sw);
+    }
+  } else if (!state.editingRole) {
+    palContainer.innerHTML = '<div class="empty-msg" style="padding:10px 0;font-size:11px;">Click a colour role swatch above to change it.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PROPERTIES PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function renderPropertiesPanel() {
+  const el = getSelectedElement();
+  if (!el) return;
+
+  const prim = getPrimitive(el.primitiveId);
+  const p = { ...prim?.defaults, ...el.params };
+
+  // Info
+  document.getElementById('prop-shape-info').innerHTML = `
+    <div style="font-size:14px;font-weight:700;color:var(--app-text);margin-bottom:12px;">
+      ${prim?.icon || '?'} ${prim?.name || el.primitiveId}
+      <span style="font-size:11px;color:var(--app-text-muted);font-weight:400;margin-left:8px;">${el.id}</span>
+    </div>
+  `;
+
+  // Position
+  document.getElementById('prop-px').value = p.px ?? 0;
+  document.getElementById('prop-py').value = p.py ?? 0;
+  document.getElementById('prop-pz').value = p.pz ?? 0;
+
+  // Rotation
+  document.getElementById('prop-rx').value = p.rx ?? 0;
+  document.getElementById('prop-ry').value = p.ry ?? 0;
+  document.getElementById('prop-rz').value = p.rz ?? 0;
+
+  // Shape params
+  const paramsContainer = document.getElementById('prop-shape-params');
+  paramsContainer.innerHTML = '';
+  if (prim?.params) {
+    for (const param of prim.params) {
+      if (['fill', 'metalness', 'roughness', 'opacity'].includes(param.key)) {
+        // Render fill as token picker, material props as sliders
+        if (param.key === 'fill') {
+          const row = document.createElement('div');
+          row.className = 'field-group';
+          row.innerHTML = `<label class="field-label">Colour Role</label>`;
+          const btnRow = document.createElement('div');
+          btnRow.style.cssText = 'display:flex;gap:6px;';
+          for (const role of ['primary', 'secondary', 'tertiary']) {
+            const colorMap = state.currentAsset.payload._editor.color_assignments;
+            const btn = document.createElement('button');
+            btn.className = 'small-btn';
+            btn.style.cssText = `border:2px solid ${p.fill === role ? 'var(--app-accent)' : 'transparent'};`;
+            btn.innerHTML = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${colorMap[role]};"></span> ${role}`;
+            btn.addEventListener('click', () => {
+              el.params.fill = role;
+              rebuildScene();
+              renderPropertiesPanel();
+            });
+            btnRow.appendChild(btn);
+          }
+          row.appendChild(btnRow);
+          paramsContainer.appendChild(row);
+        } else {
+          // Material slider
+          const val = p[param.key] ?? param.min ?? 0;
+          paramsContainer.appendChild(makeSlider(param.label, param.key, val, param.min, param.max, param.step, (v) => {
+            el.params[param.key] = v;
+            rebuildScene();
+          }));
+        }
+      } else {
+        // Shape-specific param slider
+        const val = p[param.key] ?? param.min ?? 0;
+        paramsContainer.appendChild(makeSlider(param.label, param.key, val, param.min, param.max, param.step, (v) => {
+          el.params[param.key] = v;
+          rebuildScene();
+        }));
+      }
+    }
+  }
+}
+
+function makeSlider(label, key, value, min, max, step, onChange) {
+  const row = document.createElement('div');
+  row.className = 'slider-row';
+  row.innerHTML = `
+    <label>${label}</label>
+    <input type="range" min="${min}" max="${max}" step="${step || 0.05}" value="${value}">
+    <span class="slider-val">${Number(value).toFixed(2)}</span>
+  `;
+  const input = row.querySelector('input');
+  const valSpan = row.querySelector('.slider-val');
+  input.addEventListener('input', () => {
+    const v = parseFloat(input.value);
+    valSpan.textContent = v.toFixed(2);
+    onChange(v);
+  });
+  return row;
+}
+
+function getSelectedElement() {
+  if (!state.selectedElementId || !state.currentAsset) return null;
+  return state.currentAsset.payload._editor.elements.find(e => e.id === state.selectedElementId);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SHAPE OPERATIONS
+// ═══════════════════════════════════════════════════════════════
+
+function addPrimitive(primitiveId) {
+  if (!state.currentAsset) return;
+  const prim = getPrimitive(primitiveId);
+  if (!prim) return;
+
+  const id = 'el_' + Math.random().toString(36).slice(2, 8);
+  const elements = state.currentAsset.payload._editor.elements;
+  const newEl = {
+    id,
+    primitiveId,
+    zIndex: elements.length,
+    params: { ...prim.defaults },
+  };
+  elements.push(newEl);
+  state.selectedElementId = id;
+  setState('properties');
+  rebuildScene();
+  renderPropertiesPanel();
+}
+
+function deleteSelectedElement() {
+  if (!state.selectedElementId || !state.currentAsset) return;
+  const elements = state.currentAsset.payload._editor.elements;
+  const idx = elements.findIndex(e => e.id === state.selectedElementId);
+  if (idx >= 0) elements.splice(idx, 1);
+  state.selectedElementId = null;
+  setState('editing');
+  rebuildScene();
+  activateTab('shapes');
+}
+
+function moveElementLayer(direction) {
+  if (!state.selectedElementId || !state.currentAsset) return;
+  const elements = state.currentAsset.payload._editor.elements;
+  const idx = elements.findIndex(e => e.id === state.selectedElementId);
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= elements.length) return;
+  [elements[idx], elements[newIdx]] = [elements[newIdx], elements[idx]];
+  // Update zIndex
+  elements.forEach((el, i) => el.zIndex = i);
+  rebuildScene();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FILE TAB — LIVE SYNC
+// ═══════════════════════════════════════════════════════════════
+
+function syncFileFields() {
+  if (!state.currentAsset) return;
+  state.currentAsset.name = document.getElementById('field-name').value.trim() || 'Untitled';
+  state.currentAsset.payload.description = document.getElementById('field-desc').value.trim();
+  state.currentAsset.tags = document.getElementById('field-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+}
+
+function syncAnchorFields() {
+  if (!state.currentAsset) return;
+  state.currentAsset.payload.anchor_point = {
+    x: parseFloat(document.getElementById('anchor-x').value) || 0,
+    y: parseFloat(document.getElementById('anchor-y').value) || 0,
+    z: parseFloat(document.getElementById('anchor-z').value) || 0,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AI INTEGRATION
+// ═══════════════════════════════════════════════════════════════
+
+async function sendPrompt(text) {
+  if (!text.trim()) return;
+  if (!state.apiKey) {
+    state.apiKey = prompt('Enter your Anthropic API key:');
+    if (!state.apiKey) return;
+    localStorage.setItem('propbox_api_key', state.apiKey);
+  }
+
+  const sendBtn = document.getElementById('btn-send');
+  const promptInput = document.getElementById('prompt-input');
+  sendBtn.classList.add('generating');
+  promptInput.classList.add('generating');
+
+  try {
+    // Build messages
+    const messages = [];
+    if (state.isCreateMode) {
+      messages.push({
+        role: 'user',
+        content: `Create a new 3D prop asset based on this description: "${text}"\n\nReturn ONLY valid JSON, no markdown fencing.`,
+      });
+    } else if (state.currentAsset) {
+      const currentState = {
+        name: state.currentAsset.name,
+        elements: state.currentAsset.payload._editor.elements,
+        color_assignments: state.currentAsset.payload._editor.color_assignments,
+        anchor_point: state.currentAsset.payload.anchor_point,
+        attach_points: state.currentAsset.payload.attach_points,
+        background_color: state.currentAsset.payload.background_color,
+      };
+      messages.push({
+        role: 'user',
+        content: `Here is the current 3D asset state:\n${JSON.stringify(currentState, null, 2)}\n\nModify this asset based on the following instruction: "${text}"\n\nReturn the complete updated JSON with all fields (name, description, tags, frame_preset, background_color, color_assignments, anchor_point, attach_points, elements). Return ONLY valid JSON, no markdown fencing.`,
+      });
+    } else {
+      // No current asset — treat as create
+      messages.push({
+        role: 'user',
+        content: `Create a new 3D prop asset based on this description: "${text}"\n\nReturn ONLY valid JSON, no markdown fencing.`,
+      });
+    }
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': state.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: ANTHROPIC_MODEL,
+        max_tokens: 4096,
+        system: state.systemPrompt,
+        messages,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`API error ${response.status}: ${err}`);
+    }
+
+    const data = await response.json();
+    const content = data.content?.[0]?.text || '';
+
+    // Parse JSON from response
+    let parsed;
+    try {
+      // Try to extract JSON from possible markdown fencing
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+      parsed = JSON.parse(jsonMatch ? jsonMatch[1].trim() : content.trim());
+    } catch (e) {
+      console.error('Failed to parse AI response:', content);
+      alert('Failed to parse AI response. Check console for details.');
+      return;
+    }
+
+    // Apply the response
+    if (state.isCreateMode || !state.currentAsset) {
+      const asset = createBlankAsset();
+      asset.name = parsed.name || 'AI Generated Prop';
+      asset.tags = parsed.tags || [];
+      asset.payload.description = parsed.description || '';
+      asset.payload.color_assignments = parsed.color_assignments || { ...DEFAULT_COLORS };
+      asset.payload.background_color = parsed.background_color || DEFAULT_BG;
+      asset.payload.anchor_point = parsed.anchor_point || { x: 0, y: 0, z: 0 };
+      asset.payload.attach_points = parsed.attach_points || {};
+      asset.payload._editor.elements = parsed.elements || [];
+      asset.payload._editor.color_assignments = parsed.color_assignments || { ...DEFAULT_COLORS };
+
+      state.currentAsset = asset;
+      state.isCreateMode = false;
+      updateNewToggle();
+      rebuildScene();
+      updateItemNameRow();
+
+      // Auto-save
+      await saveAsset(asset);
+      state.assets = await loadAllAssets();
+      showToast(`Created "${asset.name}"`);
+    } else {
+      // Modify existing
+      if (parsed.name) state.currentAsset.name = parsed.name;
+      if (parsed.tags) state.currentAsset.tags = parsed.tags;
+      if (parsed.description) state.currentAsset.payload.description = parsed.description;
+      if (parsed.color_assignments) {
+        state.currentAsset.payload.color_assignments = parsed.color_assignments;
+        state.currentAsset.payload._editor.color_assignments = parsed.color_assignments;
+      }
+      if (parsed.background_color) state.currentAsset.payload.background_color = parsed.background_color;
+      if (parsed.anchor_point) state.currentAsset.payload.anchor_point = parsed.anchor_point;
+      if (parsed.attach_points) state.currentAsset.payload.attach_points = parsed.attach_points;
+      if (parsed.elements) state.currentAsset.payload._editor.elements = parsed.elements;
+
+      rebuildScene();
+      updateItemNameRow();
+
+      // Auto-save
+      await saveAsset(state.currentAsset);
+      state.assets = await loadAllAssets();
+      showToast('Asset updated');
+    }
+
+  } catch (err) {
+    console.error('AI error:', err);
+    showToast('AI request failed — check console');
+    alert('AI request failed: ' + err.message);
+  } finally {
+    sendBtn.classList.remove('generating');
+    promptInput.classList.remove('generating');
+  }
+}
+
+function updateNewToggle() {
+  const toggle = document.getElementById('btn-new-toggle');
+  const input = document.getElementById('prompt-input');
+  if (state.isCreateMode) {
+    toggle.classList.add('active');
+    document.body.classList.add('create-mode');
+    input.placeholder = 'Describe a new 3D prop to create…';
+    input.focus();
+  } else {
+    toggle.classList.remove('active');
+    document.body.classList.remove('create-mode');
+    input.placeholder = 'Describe a 3D prop…';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ARROW KEY NAVIGATION (browse mode)
+// ═══════════════════════════════════════════════════════════════
+
+function setupKeyboardNav() {
+  document.addEventListener('keydown', (e) => {
+    // Skip if focus is in an input field
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+    const isArrow = ['ArrowUp', 'ArrowDown'].includes(e.key);
+
+    // Browse/search mode: arrow up/down steps through gallery with live preview
+    if ((state.mode === 'browse' || state.mode === 'search') && isArrow && galleryDisplayedAssets.length > 0) {
+      e.preventDefault();
+      const currentIdx = galleryDisplayedAssets.findIndex(a => a.id === state.currentAsset?.id);
+      let nextIdx;
+      if (e.key === 'ArrowDown') {
+        nextIdx = currentIdx < 0 ? 0 : Math.min(currentIdx + 1, galleryDisplayedAssets.length - 1);
+      } else {
+        nextIdx = currentIdx <= 0 ? 0 : currentIdx - 1;
+      }
+      const asset = galleryDisplayedAssets[nextIdx];
+      loadAsset(asset.id);
+
+      // Update active highlight & scroll into view
+      const container = document.getElementById('gallery-list');
+      container.querySelectorAll('.gallery-item').forEach(c => c.classList.remove('active'));
+      const cards = container.querySelectorAll('.gallery-item');
+      if (cards[nextIdx]) {
+        cards[nextIdx].classList.add('active');
+        cards[nextIdx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // Escape closes panel or exits mode
+    if (e.key === 'Escape') {
+      if (state.mode === 'search') setState('browse');
+      else if (state.mode === 'browse') setState('closed');
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  THUMBNAIL GENERATION — batch generate for items without thumbs
+// ═══════════════════════════════════════════════════════════════
+
+async function generateAllThumbnails() {
+  const assetsNeedingThumbs = state.assets.filter(a => !a.meta?.thumbnail);
+  if (assetsNeedingThumbs.length === 0) return;
+
+  // Save current asset so we can restore it
+  const savedAsset = state.currentAsset ? deepClone(state.currentAsset) : null;
+
+  const db = await openDB();
+  let generated = 0;
+
+  for (const asset of assetsNeedingThumbs) {
+    try {
+      // Temporarily load the asset to render it
+      state.currentAsset = deepClone(asset);
+      rebuildScene();
+
+      // Render one frame and capture
+      renderer.render(scene, camera);
+      const thumbData = renderer.domElement.toDataURL('image/png');
+
+      // Update the asset in DB
+      asset.meta.thumbnail = thumbData;
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put(asset);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+      generated++;
+    } catch (e) {
+      console.warn(`Failed to generate thumbnail for ${asset.name}:`, e);
+    }
+  }
+
+  // Restore original asset
+  if (savedAsset) {
+    state.currentAsset = savedAsset;
+    rebuildScene();
+  } else {
+    state.currentAsset = null;
+    clearScene();
+    scene.background = new THREE.Color(DEFAULT_BG);
+  }
+
+  if (generated > 0) {
+    console.log(`Generated ${generated} thumbnails`);
+    // Refresh assets list to include new thumbnails
+    state.assets = await loadAllAssets();
+    renderGallery();
+    updateItemNameRow();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  EVENT WIRING
+// ═══════════════════════════════════════════════════════════════
+
+function wireEvents() {
+  // Hamburger → Browse or Menu
+  document.getElementById('btn-hamburger').addEventListener('click', () => {
+    const hmenu = document.getElementById('hamburger-menu');
+    if (hmenu.classList.contains('open')) {
+      hmenu.classList.remove('open');
+    } else if (state.mode === 'closed') {
+      setState('browse');
+    } else {
+      hmenu.classList.toggle('open');
+    }
+  });
+
+  // Edit button on stage
+  document.getElementById('btn-reset-view').addEventListener('click', () => {
+    resetCameraView();
+  });
+
+  document.getElementById('btn-edit-stage').addEventListener('click', () => {
+    if (!state.currentAsset) {
+      state.currentAsset = createBlankAsset();
+      rebuildScene();
+    }
+    state.preEditSnapshot = deepClone(state.currentAsset);
+    setState('editing');
+  });
+
+  // Cancel
+  document.getElementById('btn-cancel').addEventListener('click', () => {
+    if (state.mode === 'properties') {
+      state.selectedElementId = null;
+      setState('editing');
+      rebuildScene();
+      activateTab('shapes');
+    } else if (state.mode === 'editing' && state.preEditSnapshot) {
+      state.currentAsset = state.preEditSnapshot;
+      state.preEditSnapshot = null;
+      rebuildScene();
+      setState('closed');
+    } else if (state.mode === 'search') {
+      setState('browse');
+    } else {
+      setState('closed');
+    }
+  });
+
+  // Done
+  document.getElementById('btn-done').addEventListener('click', async () => {
+    syncFileFields();
+    syncAnchorFields();
+    if (state.currentAsset) {
+      await saveAsset(state.currentAsset);
+      state.assets = await loadAllAssets();
+      updateItemNameRow();
+      showToast('Saved');
+    }
+    state.preEditSnapshot = null;
+    setState('closed');
+  });
+
+  // Search
+  document.getElementById('btn-search').addEventListener('click', () => {
+    setState('search');
+  });
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    renderGallery(e.target.value);
+  });
+
+  // Category dropdown
+  document.getElementById('gallery-category-select').addEventListener('change', (e) => {
+    activeCategory = e.target.value;
+    const searchInput = document.getElementById('search-input');
+    renderGallery(searchInput?.value || '');
+  });
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+  });
+
+  // File field sync
+  ['field-name', 'field-desc', 'field-tags'].forEach(id => {
+    document.getElementById(id).addEventListener('input', syncFileFields);
+  });
+
+  // Anchor field sync
+  ['anchor-x', 'anchor-y', 'anchor-z'].forEach(id => {
+    document.getElementById(id).addEventListener('change', syncAnchorFields);
+  });
+
+  // Properties — position/rotation
+  ['prop-px', 'prop-py', 'prop-pz', 'prop-rx', 'prop-ry', 'prop-rz'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => {
+      const el = getSelectedElement();
+      if (!el) return;
+      el.params.px = parseFloat(document.getElementById('prop-px').value) || 0;
+      el.params.py = parseFloat(document.getElementById('prop-py').value) || 0;
+      el.params.pz = parseFloat(document.getElementById('prop-pz').value) || 0;
+      el.params.rx = parseFloat(document.getElementById('prop-rx').value) || 0;
+      el.params.ry = parseFloat(document.getElementById('prop-ry').value) || 0;
+      el.params.rz = parseFloat(document.getElementById('prop-rz').value) || 0;
+      rebuildScene();
+    });
+  });
+
+  // Layer controls
+  document.getElementById('prop-layer-up').addEventListener('click', () => moveElementLayer(1));
+  document.getElementById('prop-layer-down').addEventListener('click', () => moveElementLayer(-1));
+
+  // Delete shape
+  document.getElementById('prop-delete').addEventListener('click', deleteSelectedElement);
+
+  // Add attach point
+  document.getElementById('btn-add-attach').addEventListener('click', () => {
+    if (!state.currentAsset) return;
+    const name = prompt('Attach point name (e.g., top, bottom, left_hand):');
+    if (!name) return;
+    if (!state.currentAsset.payload.attach_points) state.currentAsset.payload.attach_points = {};
+    state.currentAsset.payload.attach_points[name] = { x: 0, y: 0, z: 0, nx: 0, ny: 1, nz: 0 };
+    renderAttachPoints();
+  });
+
+  // Randomize colours
+  document.getElementById('btn-randomize-colours').addEventListener('click', () => {
+    if (!state.palette || !state.currentAsset) return;
+    const colors = state.palette.colors;
+    const pick = () => colors[Math.floor(Math.random() * colors.length)].hex;
+    const ca = { primary: pick(), secondary: pick(), tertiary: pick() };
+    state.currentAsset.payload.color_assignments = { ...ca };
+    state.currentAsset.payload._editor.color_assignments = { ...ca };
+    rebuildScene();
+    renderColoursTab();
+  });
+
+  // Prompt bar
+  document.getElementById('btn-send').addEventListener('click', () => {
+    const input = document.getElementById('prompt-input');
+    sendPrompt(input.value);
+    input.value = '';
+  });
+  document.getElementById('prompt-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('btn-send').click();
+    }
+  });
+  document.getElementById('btn-new-toggle').addEventListener('click', () => {
+    state.isCreateMode = !state.isCreateMode;
+    updateNewToggle();
+  });
+
+  // Close hamburger menu on click outside
+  const hmenu = document.getElementById('hamburger-menu');
+  document.addEventListener('click', (e) => {
+    if (!hmenu.contains(e.target) && e.target.id !== 'btn-hamburger') {
+      hmenu.classList.remove('open');
+    }
+  });
+
+  // Menu items
+  document.getElementById('menu-new').addEventListener('click', () => {
+    state.currentAsset = createBlankAsset();
+    rebuildScene();
+    state.preEditSnapshot = deepClone(state.currentAsset);
+    setState('editing');
+    hmenu.classList.remove('open');
+  });
+
+  document.getElementById('menu-duplicate').addEventListener('click', async () => {
+    if (!state.currentAsset) return;
+    const dup = deepClone(state.currentAsset);
+    dup.id = 'prop_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    dup.name += ' (Copy)';
+    dup.meta.created = new Date().toISOString();
+    dup.meta.modified = new Date().toISOString();
+    await saveAsset(dup);
+    state.assets = await loadAllAssets();
+    loadAsset(dup.id);
+    hmenu.classList.remove('open');
+  });
+
+  document.getElementById('menu-export').addEventListener('click', () => {
+    if (!state.currentAsset) return;
+    const json = JSON.stringify(state.currentAsset, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${state.currentAsset.name.replace(/\s+/g, '_').toLowerCase()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    hmenu.classList.remove('open');
+  });
+
+  document.getElementById('menu-import').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const asset = JSON.parse(text);
+        if (!asset.id) asset.id = 'prop_' + Date.now();
+        if (!asset.meta) asset.meta = { created: new Date().toISOString(), modified: new Date().toISOString() };
+        await saveAsset(asset);
+        state.assets = await loadAllAssets();
+        loadAsset(asset.id);
+        setState('browse');
+      } catch (err) {
+        alert('Failed to import: ' + err.message);
+      }
+    });
+    input.click();
+    hmenu.classList.remove('open');
+  });
+
+  document.getElementById('menu-delete').addEventListener('click', async () => {
+    if (!state.currentAsset) return;
+    if (!confirm(`Delete "${state.currentAsset.name}"?`)) return;
+    await deleteAsset(state.currentAsset.id);
+    state.assets = await loadAllAssets();
+    state.currentAsset = null;
+    clearScene();
+    scene.background = new THREE.Color(DEFAULT_BG);
+    setState('browse');
+    hmenu.classList.remove('open');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+
+async function init() {
+  // Load palette
+  try {
+    const palRes = await fetch('./assets/palettes/db32.json');
+    state.palette = await palRes.json();
+  } catch (e) {
+    console.warn('Failed to load palette:', e);
+  }
+
+  // Load system prompt
+  try {
+    const spRes = await fetch('./assets/system-prompt.md');
+    state.systemPrompt = await spRes.text();
+  } catch (e) {
+    console.warn('Failed to load system prompt:', e);
+  }
+
+  // Load primitives
+  await loadPrimitives();
+
+  // Init Three.js
+  initThree();
+
+  // Auto-import batch props from manifest (idempotent — skips already-imported)
+  await autoImportBatchProps();
+
+  // Load saved assets
+  state.assets = await loadAllAssets();
+
+  // Load most recent asset if any
+  if (state.assets.length > 0) {
+    const sorted = [...state.assets].sort((a, b) =>
+      new Date(b.meta.modified) - new Date(a.meta.modified)
+    );
+    loadAsset(sorted[0].id);
+  }
+
+  // Wire events
+  wireEvents();
+  setupKeyboardNav();
+
+  // Start in closed mode
+  setState('closed');
+  updateItemNameRow();
+
+  // Regenerate all thumbnails as square (non-blocking)
+  // Clear old rectangular thumbs so they get re-rendered as squares
+  setTimeout(async () => {
+    const db = await openDB();
+    let cleared = 0;
+    for (const asset of state.assets) {
+      if (asset.meta?.thumbnail && !asset.meta?._thumbV2) {
+        asset.meta.thumbnail = null;
+        asset.meta._thumbV2 = true;
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(DB_STORE, 'readwrite');
+          tx.objectStore(DB_STORE).put(asset);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+        cleared++;
+      }
+    }
+    if (cleared > 0) {
+      state.assets = await loadAllAssets();
+    }
+    await generateAllThumbnails();
+  }, 200);
+}
+
+init();
+</script>
+</body>
+</html>

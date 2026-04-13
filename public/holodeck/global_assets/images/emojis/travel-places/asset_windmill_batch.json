@@ -1,0 +1,141 @@
+{
+  "id": "asset_windmill_batch",
+  "type": "asset",
+  "name": "Windmill",
+  "tags": [
+    "emoji",
+    "building",
+    "windmill",
+    "farm",
+    "rural"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.323Z",
+    "modified": "2026-03-28T15:22:15.323Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A traditional windmill",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#222034",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 460
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "w": 80,
+            "h": 200,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 210,
+            "r": 55,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 150,
+            "w": 20,
+            "h": 100,
+            "rotation": 45,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 150,
+            "w": 20,
+            "h": 100,
+            "rotation": 135,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 195,
+            "r": 10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 420,
+            "w": 40,
+            "h": 50,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#222034",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

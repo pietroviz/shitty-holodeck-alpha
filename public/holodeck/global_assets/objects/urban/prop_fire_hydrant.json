@@ -1,0 +1,116 @@
+{
+  "id": "prop_fire_hydrant",
+  "type": "prop",
+  "name": "Fire Hydrant",
+  "tags": [
+    "urban",
+    "safety",
+    "equipment",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "urban",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Red fire hydrant with nozzles",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "type": "cylinder",
+          "px": 0,
+          "py": 0.4,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radiusTop": 0.15,
+          "radiusBottom": 0.18,
+          "height": 0.8,
+          "fill": "primary",
+          "metalness": 0.3,
+          "roughness": 0.6,
+          "opacity": 1,
+          "id": "el_1"
+        },
+        {
+          "type": "hemisphere",
+          "px": 0,
+          "py": 0.8,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.15,
+          "fill": "primary",
+          "metalness": 0.3,
+          "roughness": 0.6,
+          "opacity": 1,
+          "id": "el_2"
+        },
+        {
+          "type": "cylinder",
+          "px": -0.15,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0.5,
+          "rz": 0,
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.15,
+          "fill": "secondary",
+          "metalness": 0.7,
+          "roughness": 0.2,
+          "opacity": 1,
+          "id": "el_3"
+        },
+        {
+          "type": "cylinder",
+          "px": 0.15,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": -0.5,
+          "rz": 0,
+          "radiusTop": 0.05,
+          "radiusBottom": 0.05,
+          "height": 0.15,
+          "fill": "secondary",
+          "metalness": 0.7,
+          "roughness": 0.2,
+          "opacity": 1,
+          "id": "el_4"
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#323c39"
+      }
+    }
+  }
+}

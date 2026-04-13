@@ -1,0 +1,159 @@
+{
+  "id": "asset_rainbow_flag_batch",
+  "type": "asset",
+  "name": "Rainbow Flag",
+  "tags": [
+    "emoji",
+    "flag",
+    "rainbow",
+    "pride"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.263Z",
+    "modified": "2026-03-28T07:33:47.263Z",
+    "origin": "batch",
+    "origin_ref": "flags",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A colorful rainbow flag",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "#222034",
+      "primary",
+      "#df7126",
+      "secondary",
+      "#6abe30",
+      "tertiary",
+      "#76428a"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#fbf236",
+      "tertiary": "#639bff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 170,
+      "y": 320
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 170,
+            "cy": 260,
+            "length": 200,
+            "angle": 90,
+            "thickness": 6,
+            "fill": "#222034"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 195,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 217,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "#df7126",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 239,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 261,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "#6abe30",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 283,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 305,
+            "w": 200,
+            "h": 22,
+            "rotation": 0,
+            "fill": "#76428a",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#fbf236",
+        "tertiary": "#639bff"
+      }
+    }
+  }
+}

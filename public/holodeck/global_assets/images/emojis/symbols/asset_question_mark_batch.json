@@ -1,0 +1,108 @@
+{
+  "id": "asset_question_mark_batch",
+  "type": "asset",
+  "name": "Question Mark",
+  "tags": [
+    "emoji",
+    "symbol",
+    "question",
+    "help"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.254Z",
+    "modified": "2026-03-28T07:33:47.254Z",
+    "origin": "batch",
+    "origin_ref": "symbols",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A question mark symbol",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#76428a",
+      "secondary": "#ffffff",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 160,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "r": 55,
+            "startAngle": -160,
+            "endAngle": 60,
+            "thickness": 16,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "length": 35,
+            "angle": 90,
+            "thickness": 16,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#76428a",
+        "secondary": "#ffffff",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

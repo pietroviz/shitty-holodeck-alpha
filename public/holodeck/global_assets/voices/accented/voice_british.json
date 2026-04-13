@@ -1,0 +1,46 @@
+{
+  "id": "voice_british",
+  "type": "voice",
+  "name": "British",
+  "tags": ["accented", "british", "english", "refined"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Refined British Received Pronunciation accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-rp",
+      "variant": "m3",
+      "speed": 155,
+      "pitch": 42,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 28,
+      "lipColor": "#b07070",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e0c8b0",
+      "scalpColor": "#4a3a2a",
+      "captionSize": 18,
+      "presetKey": "british",
+      "previewText": "Good day! I speak with proper British received pronunciation."
+    }
+  }
+}

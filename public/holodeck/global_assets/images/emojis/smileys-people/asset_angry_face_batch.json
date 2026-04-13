@@ -1,0 +1,131 @@
+{
+  "id": "asset_angry_face_batch",
+  "type": "asset",
+  "name": "Angry Face",
+  "tags": [
+    "emoji",
+    "smiley",
+    "angry",
+    "mad"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.202Z",
+    "modified": "2026-03-28T07:33:47.202Z",
+    "origin": "batch",
+    "origin_ref": "smileys-people",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A red-tinted angry face with furrowed brows",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#d95763",
+      "secondary": "#222034",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 200,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 190,
+            "cy": 230,
+            "r": 18,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 322,
+            "cy": 230,
+            "r": 18,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 190,
+            "cy": 200,
+            "length": 50,
+            "angle": 25,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 322,
+            "cy": 200,
+            "length": 50,
+            "angle": 155,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "r": 50,
+            "startAngle": -155,
+            "endAngle": -25,
+            "thickness": 5,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d95763",
+        "secondary": "#222034",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

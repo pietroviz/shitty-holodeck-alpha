@@ -1,0 +1,53 @@
+{
+  "id": "char_ai_aria",
+  "type": "character",
+  "name": "AI-ARIA",
+  "tags": [
+    "sci-fi",
+    "ai",
+    "non-binary",
+    "digital"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Sentient AI that has surpassed its programming.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "tall",
+      "faceWidthPreset": "moderate",
+      "headShape": "star",
+      "bodyShape": "cylinder",
+      "facePlacement": "high",
+      "scalpColor": "#00ccff",
+      "skinColor": "#d0e8ff",
+      "torsoColor": "#0044aa",
+      "bottomColor": "#002266",
+      "eyeIrisColor": "#00ffff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "roundedSquare",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

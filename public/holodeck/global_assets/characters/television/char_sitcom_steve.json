@@ -1,0 +1,53 @@
+{
+  "id": "char_sitcom_steve",
+  "type": "character",
+  "name": "Sitcom Steve",
+  "tags": [
+    "television",
+    "sitcom",
+    "male",
+    "comedy"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "television",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "The lovable dad who always has a corny joke ready.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "barrel",
+      "facePlacement": "mid",
+      "scalpColor": "#8a6a4a",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#4a8a4a",
+      "bottomColor": "#4a6a8a",
+      "eyeIrisColor": "#6a8a4a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_mustache",
+      "facialHairColor": "#8a6a4a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

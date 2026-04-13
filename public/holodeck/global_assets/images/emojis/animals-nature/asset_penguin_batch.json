@@ -1,0 +1,216 @@
+{
+  "id": "asset_penguin_batch",
+  "type": "asset",
+  "name": "Penguin",
+  "tags": [
+    "emoji",
+    "animal",
+    "penguin",
+    "bird"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.216Z",
+    "modified": "2026-03-28T07:33:47.216Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A tuxedo-wearing penguin",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#222034",
+      "secondary": "#ffffff",
+      "tertiary": "#df7126"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 450
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "rx": 110,
+            "ry": 150,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "rx": 75,
+            "ry": 110,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 195,
+            "r": 80,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 230,
+            "cy": 185,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 282,
+            "cy": 185,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 230,
+            "cy": 185,
+            "r": 7,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 282,
+            "cy": 185,
+            "r": 7,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 215,
+            "r": 16,
+            "rotation": 180,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 150,
+            "cy": 310,
+            "rx": 30,
+            "ry": 55,
+            "rotation": 20,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 362,
+            "cy": 310,
+            "rx": 30,
+            "ry": 55,
+            "rotation": 340,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 230,
+            "cy": 435,
+            "rx": 28,
+            "ry": 12,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 282,
+            "cy": 435,
+            "rx": 28,
+            "ry": 12,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 11
+        }
+      ],
+      "color_assignments": {
+        "primary": "#222034",
+        "secondary": "#ffffff",
+        "tertiary": "#df7126"
+      }
+    }
+  }
+}

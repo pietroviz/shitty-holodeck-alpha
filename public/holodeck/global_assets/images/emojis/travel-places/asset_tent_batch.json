@@ -1,0 +1,98 @@
+{
+  "id": "asset_tent_batch",
+  "type": "asset",
+  "name": "Tent",
+  "tags": [
+    "emoji",
+    "travel",
+    "tent",
+    "camping"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.238Z",
+    "modified": "2026-03-28T07:33:47.238Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A camping tent",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#df7126",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 400
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "r": 170,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 140,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 360,
+            "r": 50,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#df7126",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

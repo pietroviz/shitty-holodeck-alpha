@@ -1,0 +1,131 @@
+{
+  "id": "asset_geyser_vent_batch",
+  "type": "asset",
+  "name": "Geyser Vent",
+  "tags": [
+    "natural-props",
+    "geyser",
+    "vent",
+    "steam",
+    "volcanic",
+    "thermal"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A geothermal geyser vent",
+    "format": "svg",
+    "viewBox": "94 40 324 432",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#595652",
+      "tertiary": "#f4f4f4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait3",
+    "anchor_point": {
+      "x": 256,
+      "y": 390
+    },
+    "natural_size": {
+      "w": 324,
+      "h": 432
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 370,
+            "rx": 50,
+            "ry": 20,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 360,
+            "rx": 30,
+            "ry": 12,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "rx": 20,
+            "ry": 30,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 250,
+            "cy": 240,
+            "rx": 25,
+            "ry": 35,
+            "rotation": -5,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 262,
+            "cy": 180,
+            "rx": 30,
+            "ry": 40,
+            "rotation": 3,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#595652",
+        "tertiary": "#f4f4f4"
+      }
+    }
+  }
+}

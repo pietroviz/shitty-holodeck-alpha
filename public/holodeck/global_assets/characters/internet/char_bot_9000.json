@@ -1,0 +1,53 @@
+{
+  "id": "char_bot_9000",
+  "type": "character",
+  "name": "Bot 9000",
+  "tags": [
+    "internet",
+    "bot",
+    "non-binary",
+    "ai"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Friendly AI chatbot that definitely passes the Turing test.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "hexagon",
+      "bodyShape": "cylinder",
+      "facePlacement": "mid",
+      "scalpColor": "#4a9ac0",
+      "skinColor": "#5a7a9a",
+      "torsoColor": "#2a4a6a",
+      "bottomColor": "#1a2a4a",
+      "eyeIrisColor": "#00ccff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "roundedSquare",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_square_glasses",
+      "glassesColor": "#4a9ac0"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_hacker_zero",
+  "type": "character",
+  "name": "Hacker Zero",
+  "tags": [
+    "internet",
+    "hacker",
+    "non-binary",
+    "cyber"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Anonymous hacker fighting for digital freedom.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "diamond",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#00ff00",
+      "skinColor": "#e8d8c8",
+      "torsoColor": "#1a1a1a",
+      "bottomColor": "#0a0a0a",
+      "eyeIrisColor": "#00ff00",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#00ff00",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_sunglasses",
+      "glassesColor": "#00ff00"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "char_valkyrie_skald",
+  "type": "character",
+  "name": "Valkyrie Skald",
+  "tags": [
+    "fantasy",
+    "valkyrie",
+    "female"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Fierce warrior maiden descended from the heavens.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#e8d080",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#c0c0c0",
+      "bottomColor": "#4a4a6a",
+      "eyeIrisColor": "#6a8ac0",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#e8d080",
+      "hatStyle": "prop_viking_helmet",
+      "hatColor": "#c0c0c0",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

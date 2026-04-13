@@ -1,0 +1,46 @@
+{
+  "id": "mus_battle_arena",
+  "type": "music",
+  "name": "Battle Arena",
+  "tags": ["action", "combat", "aggressive"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Aggressive combat theme with heavy drums and sharp metallic synth stabs",
+    "engine": "strudel",
+    "bpm": 155,
+    "key": "Eb",
+    "scale": "natural minor",
+    "pattern": "Battle-ready drums with aggressive bass and stabbing synth",
+    "layers": [
+      {
+        "name": "drum_perc_hit",
+        "pattern": "Eb2 Eb2 Bb1 Eb2",
+        "gain": 0.78
+      },
+      {
+        "name": "bass_deep_aggressive",
+        "pattern": "Eb3 Gb3 Bb3 Eb4 Gb4",
+        "gain": 0.7
+      },
+      {
+        "name": "lead_pluck_stab",
+        "pattern": "Bb5 Eb5 Gb5 Bb5 Eb5",
+        "gain": 0.78
+      },
+      {
+        "name": "texture_noise_punch",
+        "pattern": "Gb5 Bb5 Eb5 Gb5",
+        "gain": 0.55
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.5,
+    "fade_out": 1.2,
+    "mood_color": "#B22222"
+  }
+}

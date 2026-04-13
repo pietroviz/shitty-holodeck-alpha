@@ -1,0 +1,95 @@
+{
+  "id": "asset_fishing_rod_batch",
+  "type": "asset",
+  "name": "Fishing Rod",
+  "tags": [
+    "emoji",
+    "activity",
+    "fishing",
+    "outdoor"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.309Z",
+    "modified": "2026-03-28T15:22:15.309Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A fishing rod with line",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#222034",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 460
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "length": 300,
+            "angle": 110,
+            "thickness": 6,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 154,
+            "cy": 105,
+            "length": 200,
+            "angle": 180,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 154,
+            "cy": 305,
+            "r": 15,
+            "startAngle": -90,
+            "endAngle": 90,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#222034",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

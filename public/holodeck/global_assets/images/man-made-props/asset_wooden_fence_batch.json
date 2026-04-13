@@ -1,0 +1,145 @@
+{
+  "id": "asset_wooden_fence_batch",
+  "type": "asset",
+  "name": "Wooden Fence",
+  "tags": [
+    "man-made-props",
+    "fence",
+    "wood",
+    "barrier",
+    "farm",
+    "western"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A section of wooden plank fence",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#8f563b",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "w": 400,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "w": 400,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 120,
+            "cy": 280,
+            "w": 20,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 200,
+            "cy": 280,
+            "w": 20,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 280,
+            "cy": 280,
+            "w": 20,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 360,
+            "cy": 280,
+            "w": 20,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#8f563b",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

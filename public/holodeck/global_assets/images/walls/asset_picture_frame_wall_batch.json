@@ -1,0 +1,101 @@
+{
+  "id": "asset_picture_frame_wall_batch",
+  "type": "asset",
+  "name": "Picture Frame Wall",
+  "tags": [
+    "wall",
+    "walls",
+    "picture",
+    "frame",
+    "art",
+    "interior"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "walls",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wall with a hung picture frame",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#8f563b",
+      "tertiary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 460,
+            "h": 260,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "w": 100,
+            "h": 80,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 385,
+            "length": 460,
+            "angle": 0,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#8f563b",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

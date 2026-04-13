@@ -1,0 +1,198 @@
+{
+  "id": "prop_flask",
+  "type": "prop",
+  "name": "Bubbling Flask",
+  "tags": [
+    "items",
+    "potion",
+    "flask",
+    "science"
+  ],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "items",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A glass flask with bubbling potion and cork stopper",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#5fcde4",
+      "secondary": "#d95763",
+      "tertiary": "#8a6f30"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": -0.6,
+      "z": 0
+    },
+    "attach_points": {
+      "grip": {
+        "x": 0,
+        "y": -0.55,
+        "z": 0,
+        "nx": 0,
+        "ny": -1,
+        "nz": 0
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_flask_body",
+          "primitiveId": "rounded-box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.4,
+            "height": 0.8,
+            "depth": 0.35,
+            "bevelRadius": 0.06,
+            "px": 0,
+            "py": -0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.1,
+            "opacity": 0.7
+          }
+        },
+        {
+          "id": "el_liquid",
+          "primitiveId": "rounded-box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.35,
+            "height": 0.5,
+            "depth": 0.3,
+            "bevelRadius": 0.05,
+            "px": 0,
+            "py": -0.3,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.5,
+            "roughness": 0.3,
+            "opacity": 0.8
+          }
+        },
+        {
+          "id": "el_neck",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "radiusTop": 0.12,
+            "radiusBottom": 0.16,
+            "height": 0.25,
+            "px": 0,
+            "py": 0.35,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.5,
+            "roughness": 0.15,
+            "opacity": 0.7
+          }
+        },
+        {
+          "id": "el_cork",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "radiusTop": 0.1,
+            "radiusBottom": 0.1,
+            "height": 0.12,
+            "px": 0,
+            "py": 0.48,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.2,
+            "roughness": 0.8,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_bubble_1",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.08,
+            "px": -0.12,
+            "py": 0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.4,
+            "opacity": 0.6
+          }
+        },
+        {
+          "id": "el_bubble_2",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.06,
+            "px": 0.1,
+            "py": -0.05,
+            "pz": 0.1,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.4,
+            "opacity": 0.5
+          }
+        },
+        {
+          "id": "el_bubble_3",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.05,
+            "px": -0.08,
+            "py": -0.2,
+            "pz": -0.1,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.4,
+            "opacity": 0.5
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#5fcde4",
+        "secondary": "#d95763",
+        "tertiary": "#8a6f30"
+      }
+    }
+  }
+}

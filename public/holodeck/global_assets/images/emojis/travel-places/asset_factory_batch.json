@@ -1,0 +1,153 @@
+{
+  "id": "asset_factory_batch",
+  "type": "asset",
+  "name": "Factory",
+  "tags": [
+    "emoji",
+    "building",
+    "factory",
+    "industrial"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.319Z",
+    "modified": "2026-03-28T15:22:15.319Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "An industrial factory with smokestacks",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#696a6a",
+      "secondary": "#222034",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 280,
+            "cy": 310,
+            "w": 260,
+            "h": 140,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 160,
+            "cy": 240,
+            "w": 30,
+            "h": 80,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 210,
+            "cy": 250,
+            "w": 30,
+            "h": 60,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 300,
+            "cy": 310,
+            "w": 40,
+            "h": 50,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 370,
+            "cy": 310,
+            "w": 40,
+            "h": 50,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 160,
+            "cy": 190,
+            "r": 15,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 155,
+            "cy": 165,
+            "r": 20,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#696a6a",
+        "secondary": "#222034",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

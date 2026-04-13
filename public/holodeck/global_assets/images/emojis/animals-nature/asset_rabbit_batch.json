@@ -1,0 +1,167 @@
+{
+  "id": "asset_rabbit_batch",
+  "type": "asset",
+  "name": "Rabbit",
+  "tags": [
+    "emoji",
+    "animal",
+    "rabbit",
+    "bunny"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.283Z",
+    "modified": "2026-03-28T15:22:15.283Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cute bunny rabbit",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#222034",
+      "tertiary": "#d77bba"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "rx": 100,
+            "ry": 120,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 210,
+            "cy": 140,
+            "rx": 28,
+            "ry": 80,
+            "rotation": 350,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 302,
+            "cy": 140,
+            "rx": 28,
+            "ry": 80,
+            "rotation": 10,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 210,
+            "cy": 140,
+            "rx": 14,
+            "ry": 50,
+            "rotation": 350,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 302,
+            "cy": 140,
+            "rx": 14,
+            "ry": 50,
+            "rotation": 10,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 225,
+            "cy": 290,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 287,
+            "cy": 290,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "rx": 12,
+            "ry": 8,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#222034",
+        "tertiary": "#d77bba"
+      }
+    }
+  }
+}

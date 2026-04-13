@@ -1,0 +1,53 @@
+{
+  "id": "char_diplomat_chen",
+  "type": "character",
+  "name": "Diplomat Chen",
+  "tags": [
+    "sci-fi",
+    "diplomat",
+    "male",
+    "politics"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Interstellar diplomat negotiating peace between warring species.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#2a2a2a",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a4a6a",
+      "bottomColor": "#2a2a4a",
+      "eyeIrisColor": "#4a3a2a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_mustache",
+      "facialHairColor": "#2a2a2a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

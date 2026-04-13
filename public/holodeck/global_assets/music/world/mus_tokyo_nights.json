@@ -1,0 +1,46 @@
+{
+  "id": "mus_tokyo_nights",
+  "type": "music",
+  "name": "Tokyo Nights",
+  "tags": ["world", "urban", "fusion"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Modern Tokyo fusion with traditional instruments and electronic beats",
+    "engine": "strudel",
+    "bpm": 120,
+    "key": "F#m",
+    "scale": "minor pentatonic",
+    "pattern": "Tokyo fusion with synth and traditional elements",
+    "layers": [
+      {
+        "name": "drum_beat_modern",
+        "pattern": "F#2 F#2 C#2 F#2",
+        "gain": 0.7
+      },
+      {
+        "name": "pad_synth_neon",
+        "pattern": "F#3 A3 C#4 F#4 A4",
+        "gain": 0.62
+      },
+      {
+        "name": "melody_lead_fusion",
+        "pattern": "C#5 F#5 A5 C#5 F#5",
+        "gain": 0.72
+      },
+      {
+        "name": "texture_ambient_urban",
+        "pattern": "A5 C#5 F#5 A5",
+        "gain": 0.48
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.2,
+    "fade_out": 2.0,
+    "mood_color": "#FF69B4"
+  }
+}

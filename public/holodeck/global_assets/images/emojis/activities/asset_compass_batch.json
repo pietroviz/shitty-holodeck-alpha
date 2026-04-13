@@ -1,0 +1,120 @@
+{
+  "id": "asset_compass_batch",
+  "type": "asset",
+  "name": "Compass",
+  "tags": [
+    "emoji",
+    "activity",
+    "compass",
+    "navigation",
+    "explore"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.317Z",
+    "modified": "2026-03-28T15:22:15.317Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A navigational compass",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#222034",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 160,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 140,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 256,
+            "cy": 200,
+            "r": 40,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 256,
+            "cy": 312,
+            "r": 40,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#222034",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "id": "prop_crate",
+  "type": "prop",
+  "name": "Wooden Crate",
+  "tags": [
+    "urban",
+    "storage",
+    "cargo",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "urban",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wooden shipping crate with slats",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "type": "box",
+          "px": 0,
+          "py": 0.35,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.8,
+          "height": 0.7,
+          "depth": 0.8,
+          "fill": "primary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1,
+          "id": "el_1"
+        },
+        {
+          "type": "box",
+          "px": -0.35,
+          "py": 0.35,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.1,
+          "height": 0.7,
+          "depth": 0.8,
+          "fill": "secondary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1,
+          "id": "el_2"
+        },
+        {
+          "type": "box",
+          "px": 0.35,
+          "py": 0.35,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.1,
+          "height": 0.7,
+          "depth": 0.8,
+          "fill": "secondary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1,
+          "id": "el_3"
+        },
+        {
+          "type": "box",
+          "px": 0,
+          "py": 0.05,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.8,
+          "height": 0.1,
+          "depth": 0.8,
+          "fill": "secondary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1,
+          "id": "el_4"
+        },
+        {
+          "type": "box",
+          "px": 0,
+          "py": 0.65,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.8,
+          "height": 0.1,
+          "depth": 0.8,
+          "fill": "secondary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1,
+          "id": "el_5"
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#d9a066"
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "prop_candle_batch",
+  "type": "prop",
+  "name": "Candle",
+  "tags": [
+    "interior",
+    "decoration",
+    "lighting",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "interior",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A decorative candle with flame and torus base",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#663931",
+      "secondary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_base",
+          "type": "torus",
+          "px": 0,
+          "py": 0.05,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.2,
+          "tube": 0.03,
+          "fill": "primary",
+          "metalness": 0.2,
+          "roughness": 0.6,
+          "opacity": 1
+        },
+        {
+          "id": "el_body",
+          "type": "cylinder",
+          "px": 0,
+          "py": 0.25,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radiusTop": 0.08,
+          "radiusBottom": 0.08,
+          "height": 0.4,
+          "fill": "primary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1
+        },
+        {
+          "id": "el_flame",
+          "type": "cone",
+          "px": 0,
+          "py": 0.75,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.05,
+          "height": 0.2,
+          "fill": "secondary",
+          "metalness": 0,
+          "roughness": 0.5,
+          "opacity": 0.9
+        }
+      ],
+      "color_assignments": {
+        "primary": "#663931",
+        "secondary": "#d9a066"
+      }
+    }
+  }
+}

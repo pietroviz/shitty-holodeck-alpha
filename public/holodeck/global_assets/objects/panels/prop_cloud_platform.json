@@ -1,0 +1,204 @@
+{
+  "id": "prop_cloud_platform",
+  "type": "prop",
+  "name": "Cloud Platform",
+  "tags": [
+    "panels",
+    "environment",
+    "cloud",
+    "fantasy",
+    "sky"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Fluffy cloud platform panel - fantasy cloud kingdom",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#cbdbfc",
+      "tertiary": "#639bff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_base_slab",
+          "primitiveId": "rounded-box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 3,
+            "y": 0.5,
+            "z": 3,
+            "r": 0.3,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cloud_puff_1",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.8,
+            "py": 0.35,
+            "pz": 0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.6,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cloud_puff_2",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.7,
+            "py": 0.32,
+            "pz": -0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.55,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cloud_puff_3",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1.2,
+            "py": 0.28,
+            "pz": -1,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cloud_puff_4",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 1.3,
+            "py": 0.25,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.45,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_soft_bottom_1",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.2,
+            "py": -0.15,
+            "pz": -0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.4,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_soft_bottom_2",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1,
+            "py": -0.12,
+            "pz": 0.6,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.35,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#cbdbfc",
+        "tertiary": "#639bff"
+      }
+    }
+  }
+}

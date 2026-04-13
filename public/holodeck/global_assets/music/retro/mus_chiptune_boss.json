@@ -1,0 +1,50 @@
+{
+  "id": "mus_chiptune_boss",
+  "type": "music",
+  "name": "Chiptune Boss",
+  "tags": [
+    "retro",
+    "epic",
+    "intense"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Intense chiptune boss battle theme with arpeggiated leads and driving beat",
+    "engine": "strudel",
+    "bpm": 155,
+    "key": "F#m",
+    "scale": "minor pentatonic",
+    "pattern": "Intense chiptune with driving beat and arpeggio",
+    "layers": [
+      {
+        "name": "drum_beat_intense",
+        "pattern": "F#2 F#2 C#2 F#2",
+        "gain": 0.7
+      },
+      {
+        "name": "bass_sub_deep",
+        "pattern": "F#3 A3 C#4 F#4 A4",
+        "gain": 0.62
+      },
+      {
+        "name": "arp_ascending_fast",
+        "pattern": "C#5 F#5 A5 C#5 F#5 A5",
+        "gain": 0.75
+      },
+      {
+        "name": "melody_lead_stab",
+        "pattern": "A5 C#5 F#5 A5",
+        "gain": 0.58
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.6,
+    "fade_out": 1.2,
+    "mood_color": "#FF3333"
+  }
+}

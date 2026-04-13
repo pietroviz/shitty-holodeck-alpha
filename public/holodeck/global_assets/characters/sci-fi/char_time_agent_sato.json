@@ -1,0 +1,53 @@
+{
+  "id": "char_time_agent_sato",
+  "type": "character",
+  "name": "Time Agent Sato",
+  "tags": [
+    "sci-fi",
+    "time-travel",
+    "female",
+    "agent"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Temporal agent who protects the timeline from paradoxes.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#1a1a1a",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a4a4a",
+      "bottomColor": "#1a1a1a",
+      "eyeIrisColor": "#8a8aff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#1a1a1a",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_sunglasses",
+      "glassesColor": "#c0c0ff"
+    }
+  }
+}

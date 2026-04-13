@@ -1,0 +1,20 @@
+{
+  "id": "diamond",
+  "name": "Diamond",
+  "category": "polygon",
+  "icon": "◆",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "r": 130,
+    "fill": "primary",
+    "stroke": "none",
+    "strokeWidth": 0
+  },
+  "params": [
+    { "key": "r", "label": "Size", "type": "range", "min": 10, "max": 240 },
+    { "key": "fill", "label": "Fill", "type": "token" },
+    { "key": "stroke", "label": "Stroke", "type": "token" },
+    { "key": "strokeWidth", "label": "Stroke Width", "type": "range", "min": 0, "max": 20 }
+  ]
+}

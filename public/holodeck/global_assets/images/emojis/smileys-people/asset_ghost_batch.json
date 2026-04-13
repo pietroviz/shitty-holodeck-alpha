@@ -1,0 +1,160 @@
+{
+  "id": "asset_ghost_batch",
+  "type": "asset",
+  "name": "Ghost",
+  "tags": [
+    "emoji",
+    "smiley",
+    "ghost",
+    "spooky"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.205Z",
+    "modified": "2026-03-28T07:33:47.205Z",
+    "origin": "batch",
+    "origin_ref": "smileys-people",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cute cartoon ghost",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#222034",
+      "tertiary": "#d77bba"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 440
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "rx": 130,
+            "ry": 170,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 190,
+            "cy": 430,
+            "r": 50,
+            "startAngle": -180,
+            "endAngle": 0,
+            "thickness": 50,
+            "fill": "primary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 270,
+            "cy": 430,
+            "r": 50,
+            "startAngle": -180,
+            "endAngle": 0,
+            "thickness": 50,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 215,
+            "cy": 230,
+            "r": 25,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 297,
+            "cy": 230,
+            "r": 25,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 223,
+            "cy": 224,
+            "r": 8,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 305,
+            "cy": 224,
+            "r": 8,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "rx": 22,
+            "ry": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#222034",
+        "tertiary": "#d77bba"
+      }
+    }
+  }
+}

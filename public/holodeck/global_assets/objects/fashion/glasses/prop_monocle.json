@@ -1,0 +1,192 @@
+{
+  "id": "prop_monocle",
+  "type": "prop",
+  "name": "Monocle",
+  "tags": ["glasses", "eyewear", "monocle", "fancy", "vintage"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A distinguished monocle for the right eye with a dangling chain.",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary"],
+    "color_assignments": {
+      "primary": "#d4a843",
+      "secondary": "#b8962e"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Monocle frame (right eye)",
+          "primitive": "torus",
+          "params": {
+            "radius": 0.065,
+            "tubeRadius": 0.014,
+            "px": 0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.85,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Monocle lens",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.055,
+            "px": 0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.05,
+            "opacity": 0.1
+          }
+        },
+        {
+          "comment": "Chain link 1",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.12,
+            "py": -0.08,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 2",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.115,
+            "py": -0.105,
+            "pz": 0.038,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 3",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.11,
+            "py": -0.13,
+            "pz": 0.035,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 4",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.105,
+            "py": -0.155,
+            "pz": 0.032,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 5",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.1,
+            "py": -0.18,
+            "pz": 0.028,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 6",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.095,
+            "py": -0.205,
+            "pz": 0.024,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Chain link 7",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.008,
+            "px": 0.09,
+            "py": -0.23,
+            "pz": 0.02,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d4a843",
+        "secondary": "#b8962e"
+      }
+    }
+  }
+}

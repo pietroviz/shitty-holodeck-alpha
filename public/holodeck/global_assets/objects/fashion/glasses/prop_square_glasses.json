@@ -1,0 +1,245 @@
+{
+  "id": "prop_square_glasses",
+  "type": "prop",
+  "name": "Square Glasses",
+  "tags": ["glasses", "eyewear", "square", "rectangular"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Rectangular square-framed glasses with clean geometric lines.",
+    "format": "mesh",
+    "color_roles_used": ["primary"],
+    "color_assignments": {
+      "primary": "#1a1a1a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Left frame top",
+          "primitive": "box",
+          "params": {
+            "width": 0.13,
+            "height": 0.012,
+            "depth": 0.012,
+            "px": -0.12,
+            "py": 0.045,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left frame bottom",
+          "primitive": "box",
+          "params": {
+            "width": 0.13,
+            "height": 0.012,
+            "depth": 0.012,
+            "px": -0.12,
+            "py": -0.045,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left frame left side",
+          "primitive": "box",
+          "params": {
+            "width": 0.012,
+            "height": 0.1,
+            "depth": 0.012,
+            "px": -0.185,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left frame right side",
+          "primitive": "box",
+          "params": {
+            "width": 0.012,
+            "height": 0.1,
+            "depth": 0.012,
+            "px": -0.055,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right frame top",
+          "primitive": "box",
+          "params": {
+            "width": 0.13,
+            "height": 0.012,
+            "depth": 0.012,
+            "px": 0.12,
+            "py": 0.045,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right frame bottom",
+          "primitive": "box",
+          "params": {
+            "width": 0.13,
+            "height": 0.012,
+            "depth": 0.012,
+            "px": 0.12,
+            "py": -0.045,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right frame left side",
+          "primitive": "box",
+          "params": {
+            "width": 0.012,
+            "height": 0.1,
+            "depth": 0.012,
+            "px": 0.055,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right frame right side",
+          "primitive": "box",
+          "params": {
+            "width": 0.012,
+            "height": 0.1,
+            "depth": 0.012,
+            "px": 0.185,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Nose bridge",
+          "primitive": "box",
+          "params": {
+            "width": 0.05,
+            "height": 0.012,
+            "depth": 0.012,
+            "px": 0,
+            "py": 0.02,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left temple arm",
+          "primitive": "box",
+          "params": {
+            "width": 0.01,
+            "height": 0.01,
+            "depth": 0.2,
+            "px": -0.185,
+            "py": 0.03,
+            "pz": -0.06,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right temple arm",
+          "primitive": "box",
+          "params": {
+            "width": 0.01,
+            "height": 0.01,
+            "depth": 0.2,
+            "px": 0.185,
+            "py": 0.03,
+            "pz": -0.06,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.4,
+            "roughness": 0.4,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#1a1a1a"
+      }
+    }
+  }
+}

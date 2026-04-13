@@ -1,0 +1,127 @@
+{
+  "id": "prop_wizard_hat",
+  "type": "prop",
+  "name": "Wizard Hat",
+  "tags": ["headwear", "magical", "fantasy"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "headwear",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Tall pointed wizard hat with stars and mystical accents",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#3f3f74",
+      "secondary": "#fbf236",
+      "tertiary": "#5fcde4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {
+      "head_top": { "x": 0, "y": 1.3, "z": 0, "nx": 0, "ny": 1, "nz": 0 },
+      "head_base": { "x": 0, "y": 0, "z": 0, "nx": 0, "ny": -1, "nz": 0 }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_brim",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "px": 0, "py": 0.1, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.5, "height": 0.1,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_cone",
+          "primitiveId": "cone",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 0.7, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.35, "height": 1.2,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_tip",
+          "primitiveId": "cone",
+          "zIndex": 2,
+          "params": {
+            "px": 0, "py": 1.3, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.1, "height": 0.25,
+            "fill": "secondary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_star_upper",
+          "primitiveId": "star",
+          "zIndex": 3,
+          "params": {
+            "px": 0, "py": 1.0, "pz": 0.3,
+            "rx": 0, "ry": 0, "rz": 45,
+            "radius": 0.15, "height": 0.08,
+            "fill": "secondary",
+            "metalness": 0.6, "roughness": 0.3, "opacity": 1
+          }
+        },
+        {
+          "id": "el_star_middle",
+          "primitiveId": "star",
+          "zIndex": 4,
+          "params": {
+            "px": -0.35, "py": 0.55, "pz": 0.1,
+            "rx": 0, "ry": 0, "rz": 30,
+            "radius": 0.12, "height": 0.06,
+            "fill": "secondary",
+            "metalness": 0.6, "roughness": 0.3, "opacity": 1
+          }
+        },
+        {
+          "id": "el_star_lower",
+          "primitiveId": "star",
+          "zIndex": 5,
+          "params": {
+            "px": 0.3, "py": 0.4, "pz": 0.2,
+            "rx": 0, "ry": 0, "rz": 60,
+            "radius": 0.1, "height": 0.06,
+            "fill": "secondary",
+            "metalness": 0.6, "roughness": 0.3, "opacity": 1
+          }
+        },
+        {
+          "id": "el_crystal_accent",
+          "primitiveId": "sphere",
+          "zIndex": 6,
+          "params": {
+            "px": 0, "py": 0.3, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.08,
+            "fill": "tertiary",
+            "metalness": 0.8, "roughness": 0.1, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#3f3f74",
+        "secondary": "#fbf236",
+        "tertiary": "#5fcde4"
+      }
+    }
+  }
+}

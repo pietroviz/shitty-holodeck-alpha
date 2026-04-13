@@ -1,0 +1,46 @@
+{
+  "id": "mus_tension_rising",
+  "type": "music",
+  "name": "Tension Rising",
+  "tags": ["cinematic", "suspenseful", "intense"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Building orchestral tension with dissonant harmonies and accelerating rhythmic drive",
+    "engine": "strudel",
+    "bpm": 115,
+    "key": "Cm",
+    "scale": "natural minor",
+    "pattern": "Tension-building pad with dark bass and driving percussion",
+    "layers": [
+      {
+        "name": "drum_beat_driving",
+        "pattern": "C2 C2 G2 C2",
+        "gain": 0.7
+      },
+      {
+        "name": "bass_tense_deep",
+        "pattern": "C3 Eb3 G3 C4 Eb4",
+        "gain": 0.62
+      },
+      {
+        "name": "melody_arp_ascending",
+        "pattern": "G4 Bb4 C5 Eb5 G5 Bb5",
+        "gain": 0.68
+      },
+      {
+        "name": "texture_noise_drone",
+        "pattern": "Eb5 G5 Bb5 Eb5",
+        "gain": 0.48
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.2,
+    "fade_out": 2.0,
+    "mood_color": "#8B0000"
+  }
+}

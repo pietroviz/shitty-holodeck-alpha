@@ -1,0 +1,53 @@
+{
+  "id": "char_tech_bro_tyler",
+  "type": "character",
+  "name": "Tech Bro Tyler",
+  "tags": [
+    "internet",
+    "tech",
+    "male",
+    "startup"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Silicon Valley disruptor with a hoodie and a pitch deck.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#6a4a2a",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#4a4a4a",
+      "bottomColor": "#2a2a3a",
+      "eyeIrisColor": "#4a6a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_soul_patch",
+      "facialHairColor": "#6a4a2a",
+      "glassesStyle": "prop_round_glasses",
+      "glassesColor": "#1a1a1a"
+    }
+  }
+}

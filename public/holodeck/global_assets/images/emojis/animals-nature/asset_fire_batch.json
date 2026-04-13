@@ -1,0 +1,116 @@
+{
+  "id": "asset_fire_batch",
+  "type": "asset",
+  "name": "Fire",
+  "tags": [
+    "emoji",
+    "nature",
+    "fire",
+    "flame",
+    "hot"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.295Z",
+    "modified": "2026-03-28T15:22:15.295Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A dancing flame",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#ac3232",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "rx": 100,
+            "ry": 140,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 230,
+            "cy": 220,
+            "rx": 50,
+            "ry": 100,
+            "rotation": 340,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "rx": 55,
+            "ry": 90,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "rx": 30,
+            "ry": 50,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#ac3232",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

@@ -32,7 +32,7 @@ export default function AccountSetupPage() {
         .then(({ data }) => {
           if (data?.username) {
             // Already set up — go to dashboard
-            router.push("/dashboard");
+            router.push("/");
           } else {
             setChecking(false);
           }
@@ -122,26 +122,26 @@ export default function AccountSetupPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/");
   };
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-        <p className="text-gray-400 text-sm">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#1A2332]">
+        <p className="text-[#5A6676] text-sm">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-      <div className="max-w-sm w-full space-y-6 p-8 bg-gray-800/50 backdrop-blur rounded-2xl border border-gray-700 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#1A2332]">
+      <div className="max-w-sm w-full space-y-6 p-8 bg-[#1E2530] rounded-2xl border border-[#2A3240] shadow-2xl">
         <div className="text-center">
           <div className="text-3xl mb-2">&#128075;</div>
           <h1 className="text-2xl font-bold text-white">
             Welcome! Let&apos;s set up your account
           </h1>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-[#5A6676]">
             Just a couple quick things and you&apos;re all set.
           </p>
         </div>
@@ -157,7 +157,7 @@ export default function AccountSetupPage() {
               placeholder="e.g. Jane Doe"
               required
               autoFocus
-              className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 bg-[#2A3240] border border-[#2A3240] rounded-lg text-white placeholder-[#5A6676] focus:ring-2 focus:ring-[#00D9D9] focus:border-transparent outline-none"
             />
           </div>
           <div>
@@ -165,7 +165,7 @@ export default function AccountSetupPage() {
               Username
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A6676] text-sm">
                 @
               </span>
               <input
@@ -178,11 +178,11 @@ export default function AccountSetupPage() {
                 required
                 minLength={3}
                 maxLength={24}
-                className="w-full pl-8 pr-10 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full pl-8 pr-10 py-3 bg-[#2A3240] border border-[#2A3240] rounded-lg text-white placeholder-[#5A6676] focus:ring-2 focus:ring-[#00D9D9] focus:border-transparent outline-none"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
                 {usernameStatus === "checking" && (
-                  <span className="text-gray-400">...</span>
+                  <span className="text-[#5A6676]">...</span>
                 )}
                 {usernameStatus === "available" && (
                   <span className="text-green-400">&#10003;</span>
@@ -192,7 +192,7 @@ export default function AccountSetupPage() {
                 )}
               </span>
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-[#5A6676]">
               Lowercase letters, numbers, and underscores only
             </p>
             {usernameStatus === "taken" && (
@@ -207,7 +207,7 @@ export default function AccountSetupPage() {
           <button
             type="submit"
             disabled={loading || usernameStatus === "taken" || usernameStatus === "checking"}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-[#00D9D9] hover:bg-[#00B8B8] text-[#1A2332] font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Saving..." : "Let's go"}
           </button>

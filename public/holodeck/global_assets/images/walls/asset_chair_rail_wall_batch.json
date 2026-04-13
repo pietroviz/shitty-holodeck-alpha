@@ -1,0 +1,115 @@
+{
+  "id": "asset_chair_rail_wall_batch",
+  "type": "asset",
+  "name": "Chair Rail Wall",
+  "tags": [
+    "wall",
+    "walls",
+    "chair",
+    "rail",
+    "divided",
+    "interior"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "walls",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wall divided by a horizontal chair rail",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#d9a066",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 200,
+            "w": 460,
+            "h": 140,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "w": 460,
+            "h": 120,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 268,
+            "w": 460,
+            "h": 10,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 385,
+            "length": 460,
+            "angle": 0,
+            "thickness": 6,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#d9a066",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

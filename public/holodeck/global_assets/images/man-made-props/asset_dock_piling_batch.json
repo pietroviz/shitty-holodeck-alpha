@@ -1,0 +1,113 @@
+{
+  "id": "asset_dock_piling_batch",
+  "type": "asset",
+  "name": "Dock Piling",
+  "tags": [
+    "man-made-props",
+    "dock",
+    "piling",
+    "pier",
+    "wood",
+    "harbor"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A wooden dock support piling",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#663931",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "tall",
+    "anchor_point": {
+      "x": 256,
+      "y": 440
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "w": 30,
+            "h": 300,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 135,
+            "rx": 20,
+            "ry": 8,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "length": 30,
+            "angle": 0,
+            "thickness": 4,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 350,
+            "length": 30,
+            "angle": 0,
+            "thickness": 4,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#663931",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

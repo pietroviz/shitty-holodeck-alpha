@@ -1,0 +1,52 @@
+{
+  "id": "char_paladin_auric",
+  "type": "character",
+  "name": "Paladin Auric",
+  "tags": [
+    "fantasy",
+    "paladin",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Holy paladin whose faith is his shield.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#d4a843",
+      "skinColor": "#6b4226",
+      "torsoColor": "#d4a843",
+      "bottomColor": "#ffffff",
+      "eyeIrisColor": "#d4a843",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_helmet",
+      "hatColor": "#d4a843",
+      "facialHairStyle": "prop_goatee",
+      "facialHairColor": "#1a1a1a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

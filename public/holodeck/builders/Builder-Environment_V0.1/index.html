@@ -1,0 +1,3207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnvironmentBuilder — Simbox Environment Builder</title>
+<style>
+/* ───────────────────────────────────────────────
+   RESET & BASE
+─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+:root {
+  --app-panel-bg: #0d1b2e;
+  --app-stage-bg: #1a1a2e;
+  --app-panel-width: 400px;
+  --app-accent: #00c4be;
+  --app-accent-hover: #00a8a3;
+  --app-text: #ffffff;
+  --app-text-muted: #8a9ab8;
+  --app-border: rgba(255,255,255,0.08);
+  --app-surface: rgba(255,255,255,0.06);
+  --app-surface-hover: rgba(255,255,255,0.10);
+  --app-input-bg: #ffffff;
+  --app-radius: 12px;
+  --app-radius-sm: 8px;
+  --app-danger: #d95763;
+}
+
+/* ───────────────────────────────────────────────
+   LAYOUT
+─────────────────────────────────────────────── */
+#app { display: flex; width: 100vw; height: 100vh; }
+
+#panel {
+  width: var(--app-panel-width);
+  min-width: var(--app-panel-width);
+  background: var(--app-panel-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+  border-right: 1px solid var(--app-border);
+  position: relative;
+}
+
+#stage {
+  flex: 1;
+  background: var(--app-stage-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ───────────────────────────────────────────────
+   PANEL HEADER
+─────────────────────────────────────────────── */
+#panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  color: var(--app-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.12s;
+  min-width: 70px;
+  justify-content: center;
+}
+.header-btn:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+#btn-done { background: var(--app-accent); color: #fff; border-color: transparent; }
+#btn-done:hover { background: var(--app-accent-hover); }
+
+#panel-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--app-text);
+  letter-spacing: -0.01em;
+  flex: 1;
+  text-align: center;
+}
+
+/* ───────────────────────────────────────────────
+   PANEL BODY
+─────────────────────────────────────────────── */
+#panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+#panel-body::-webkit-scrollbar { width: 5px; }
+#panel-body::-webkit-scrollbar-track { background: transparent; }
+#panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+/* ───────────────────────────────────────────────
+   TABS
+─────────────────────────────────────────────── */
+#tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--app-border);
+  flex-shrink: 0;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--app-text); }
+.tab-btn.active { color: var(--app-accent); border-bottom-color: var(--app-accent); }
+
+.tab-content { display: none; padding: 14px; }
+.tab-content.active { display: block; }
+
+/* ───────────────────────────────────────────────
+   FORM ELEMENTS
+─────────────────────────────────────────────── */
+.field-group { margin-bottom: 14px; }
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--app-text-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.field-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-input:focus { border-color: var(--app-accent); }
+textarea.field-input { resize: vertical; min-height: 60px; font-family: inherit; }
+
+.field-row { display: flex; gap: 8px; align-items: center; }
+.field-select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9ab8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.field-select:focus { border-color: var(--app-accent); }
+.field-select option { background: var(--app-panel-bg); color: var(--app-text); }
+
+/* Slider */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.slider-row label {
+  font-size: 11px;
+  color: var(--app-text-muted);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--app-accent);
+  height: 4px;
+}
+.slider-row .slider-val {
+  font-size: 11px;
+  color: var(--app-text);
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────────────────────────────────────────
+   BROWSE / GALLERY
+─────────────────────────────────────────────── */
+#gallery-list { padding: 8px; }
+.gallery-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border: 1px solid transparent;
+  margin-bottom: 4px;
+}
+.gallery-item:hover { background: var(--app-surface-hover); border-color: var(--app-border); }
+.gallery-item.active { background: var(--app-surface-hover); border-color: var(--app-accent); }
+.gallery-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-thumb-placeholder { font-size: 24px; color: var(--app-text-muted); }
+.gallery-info { flex: 1; min-width: 0; }
+.gallery-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gallery-meta { font-size: 11px; color: var(--app-text-muted); margin-top: 2px; }
+.gallery-tags {
+  font-size: 10px;
+  color: var(--app-accent);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gallery-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.gallery-action-btn {
+  background: none;
+  border: 1px solid var(--app-border);
+  color: var(--app-text-muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+.gallery-action-btn:hover { color: var(--app-text); border-color: var(--app-text-muted); }
+.gallery-action-btn.edit:hover { color: var(--app-accent); border-color: var(--app-accent); }
+.gallery-action-btn.delete:hover { color: #e74c3c; border-color: #e74c3c; }
+
+/* ───────────────────────────────────────────────
+   SEARCH BAR
+─────────────────────────────────────────────── */
+#search-bar { padding: 10px 14px; border-bottom: 1px solid var(--app-border); display: none; }
+#search-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  color: var(--app-text);
+  font-size: 13px;
+  outline: none;
+}
+#search-input:focus { border-color: var(--app-accent); }
+#search-input::placeholder { color: var(--app-text-muted); }
+
+/* Category dropdown */
+#gallery-categories { padding: 6px 14px 2px; flex-shrink: 0; display: none; }
+body.state-browse #gallery-categories,
+body.state-search #gallery-categories { display: block; }
+#gallery-category-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 12px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9ab8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+#gallery-category-select:focus { border-color: var(--app-accent); }
+#gallery-category-select option { background: var(--app-panel-bg); color: var(--app-text); }
+
+/* ───────────────────────────────────────────────
+   COLOUR SWATCHES
+─────────────────────────────────────────────── */
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.12s;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.selected { border-color: var(--app-accent); box-shadow: 0 0 0 2px var(--app-accent); }
+
+.colour-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+.colour-role:last-child { border-bottom: none; }
+.role-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+.role-label { font-size: 12px; font-weight: 600; color: var(--app-text); flex: 1; }
+.role-hex { font-size: 11px; color: var(--app-text-muted); font-family: monospace; }
+
+/* ───────────────────────────────────────────────
+   PROP BROWSER (inside Props tab)
+─────────────────────────────────────────────── */
+.prop-browser-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--app-radius-sm);
+  cursor: pointer;
+  transition: background 0.12s;
+  margin-bottom: 2px;
+}
+.prop-browser-item:hover { background: var(--app-surface-hover); }
+.prop-browser-icon { font-size: 14px; width: 20px; text-align: center; color: var(--app-text-muted); }
+.prop-browser-name { font-size: 12px; color: var(--app-text); flex: 1; }
+.prop-browser-add {
+  background: var(--app-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.prop-browser-item:hover .prop-browser-add { opacity: 1; }
+
+/* Placed props list */
+.placed-prop-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--app-radius-sm);
+  cursor: pointer;
+  transition: background 0.12s;
+  margin-bottom: 2px;
+}
+.placed-prop-item:hover { background: var(--app-surface-hover); }
+.placed-prop-item.selected { background: rgba(0,196,190,0.15); border: 1px solid var(--app-accent); }
+.placed-prop-icon { font-size: 16px; width: 24px; text-align: center; }
+.placed-prop-name { font-size: 12px; color: var(--app-text); flex: 1; }
+.placed-prop-pos { font-size: 10px; color: var(--app-text-muted); font-family: monospace; }
+.placed-prop-actions { display: flex; gap: 4px; }
+.placed-prop-actions button {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 4px;
+  color: var(--app-text-muted);
+  font-size: 10px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.placed-prop-actions button:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+/* ───────────────────────────────────────────────
+   PROPERTIES PANEL
+─────────────────────────────────────────────── */
+.prop-section { margin-bottom: 16px; }
+.prop-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--app-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.xyz-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.xyz-field { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.xyz-field label { font-size: 10px; color: var(--app-text-muted); font-weight: 600; }
+.xyz-field input {
+  width: 100%;
+  padding: 5px 6px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 4px;
+  color: var(--app-text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+}
+.xyz-field input:focus { border-color: var(--app-accent); }
+
+/* ───────────────────────────────────────────────
+   PROMPT BAR
+─────────────────────────────────────────────── */
+#stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  background: linear-gradient(to bottom, rgba(13,27,46,0) 0%, rgba(13,27,46,0.85) 70%, rgba(13,27,46,0.95) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+#item-name-row, #prompt-bar { position: relative; z-index: 2; }
+
+#prompt-bar {
+  padding: 12px 24px 20px;
+  flex-shrink: 0;
+  max-width: calc(720px + 48px);
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#prompt-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px 10px 10px 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+#prompt-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #222;
+  background: transparent;
+  min-width: 0;
+}
+#prompt-input::placeholder { color: #aaa; }
+#prompt-input.generating { pointer-events: none; opacity: 0.5; }
+
+.new-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.15s;
+  user-select: none;
+}
+.new-switch:hover { background: rgba(0,0,0,0.04); }
+.new-switch-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+.new-switch.active .new-switch-label { color: var(--app-accent); }
+.new-switch-track {
+  width: 34px;
+  height: 18px;
+  border-radius: 10px;
+  background: #d0d0d0;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.new-switch.active .new-switch-track { background: var(--app-accent); }
+.new-switch-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.new-switch.active .new-switch-thumb { transform: translateX(16px); }
+
+#create-dim-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 18;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+body.create-mode #create-dim-overlay { display: block; }
+body.create-mode #prompt-bar { position: relative; z-index: 20; }
+body.create-mode #item-name-row { position: relative; z-index: 20; }
+
+#btn-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--app-accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+#btn-send:hover { background: var(--app-accent-hover); }
+#btn-send.generating {
+  pointer-events: none;
+  opacity: 0.7;
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,196,190,0.3); }
+  50% { box-shadow: 0 0 12px 4px rgba(0,196,190,0.5); }
+}
+#btn-send svg { width: 18px; height: 18px; fill: #fff; }
+
+/* ───────────────────────────────────────────────
+   STAGE CONTROLS
+─────────────────────────────────────────────── */
+#stage-top-bar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 15;
+  display: flex;
+  gap: 6px;
+}
+.stage-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(13,27,46,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--app-border);
+  color: var(--app-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.stage-btn:hover { background: rgba(13,27,46,0.9); color: var(--app-text); }
+
+/* Item name row */
+#item-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 24px;
+  flex-shrink: 0;
+  max-width: calc(720px + 48px);
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+}
+#item-name-display {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--app-text);
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#item-name-display:hover { opacity: 0.8; }
+#item-name-display.create-new { color: var(--app-accent); font-style: italic; }
+#item-right-group { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+#item-element-count { font-size: 11px; color: var(--app-text-muted); white-space: nowrap; }
+
+#btn-edit-stage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--app-accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+#btn-edit-stage:hover { background: #00d6d0; color: #fff; }
+
+/* ───────────────────────────────────────────────
+   3D VIEWPORT
+─────────────────────────────────────────────── */
+#viewport { flex: 1; min-height: 0; position: absolute; inset: 0; overflow: hidden; }
+#viewport canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* ───────────────────────────────────────────────
+   STATE VISIBILITY
+─────────────────────────────────────────────── */
+body.state-closed #panel { display: none; }
+body.state-closed #btn-edit-stage { display: flex; }
+body.state-browse #panel { display: flex; }
+body.state-browse #btn-edit-stage { display: flex; }
+body.state-search #panel { display: flex; }
+body.state-search #btn-edit-stage { display: flex; }
+body.state-search #search-bar { display: block; }
+body.state-editing #panel { display: flex; }
+body.state-editing #btn-edit-stage { display: none; }
+body.state-properties #panel { display: flex; }
+body.state-properties #btn-edit-stage { display: none; }
+
+body.state-closed #stage-top-bar { display: flex; }
+body.state-browse #stage-top-bar { display: none; }
+body.state-search #stage-top-bar { display: none; }
+body.state-editing #stage-top-bar { display: none; }
+body.state-properties #stage-top-bar { display: none; }
+
+body.state-search #viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(20,30,45,0.95);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  color: var(--app-text);
+  font-size: 13px;
+  padding: 10px 20px;
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.btn-delete {
+  width: 100%;
+  padding: 10px;
+  background: rgba(217,87,99,0.15);
+  border: 1px solid var(--app-danger);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-danger);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.12s;
+}
+.btn-delete:hover { background: rgba(217,87,99,0.3); }
+
+.small-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.small-btn:hover { background: var(--app-surface-hover); color: var(--app-text); }
+
+.empty-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--app-text-muted);
+  font-size: 13px;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 52px;
+  left: 14px;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  z-index: 50;
+  min-width: 200px;
+  padding: 4px;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.dropdown-menu.open { display: block; }
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--app-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+.dropdown-item:hover { background: var(--app-surface-hover); }
+.dropdown-item.danger { color: var(--app-danger); }
+
+/* Prop library filter */
+#prop-lib-filter {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 6px;
+  color: var(--app-text);
+  font-size: 12px;
+  outline: none;
+  margin-bottom: 8px;
+}
+#prop-lib-filter:focus { border-color: var(--app-accent); }
+#prop-lib-filter::placeholder { color: var(--app-text-muted); }
+
+#prop-lib-category {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  font-size: 11px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9ab8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+  margin-bottom: 6px;
+}
+#prop-lib-category option { background: var(--app-panel-bg); color: var(--app-text); }
+
+#prop-lib-list { max-height: 200px; overflow-y: auto; }
+#prop-lib-list::-webkit-scrollbar { width: 4px; }
+#prop-lib-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+/* Section divider */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--app-border);
+  margin: 14px 0;
+}
+</style>
+</head>
+<body class="state-closed">
+
+<div id="app">
+  <!-- LEFT PANEL -->
+  <div id="panel">
+    <div id="panel-header">
+      <button id="btn-cancel" class="header-btn">Cancel</button>
+      <span id="panel-title">Browse</span>
+      <button id="btn-done" class="header-btn" style="display:none;">Done</button>
+      <button id="btn-search" class="header-btn" style="display:none;">&#128269;</button>
+    </div>
+
+    <div id="search-bar">
+      <input id="search-input" type="text" placeholder="Search environments...">
+    </div>
+
+    <div id="tab-bar" style="display:none;">
+      <button class="tab-btn active" data-tab="file">File</button>
+      <button class="tab-btn" data-tab="scene">Scene</button>
+      <button class="tab-btn" data-tab="props">Props</button>
+      <button class="tab-btn" data-tab="colours">Colours</button>
+    </div>
+
+    <div id="panel-body">
+      <!-- Category dropdown (browse/search mode) -->
+      <div id="gallery-categories">
+        <select id="gallery-category-select"></select>
+      </div>
+      <div id="gallery-list"></div>
+
+      <!-- FILE TAB -->
+      <div id="tab-file" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Name</label>
+          <input id="field-name" class="field-input" type="text" placeholder="Environment name">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description</label>
+          <textarea id="field-desc" class="field-input" placeholder="Describe this environment..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tags</label>
+          <input id="field-tags" class="field-input" type="text" placeholder="forest, night, foggy">
+        </div>
+      </div>
+
+      <!-- SCENE TAB -->
+      <div id="tab-scene" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Sky Preset</label>
+          <select id="sky-preset" class="field-select">
+            <option value="dawn">Dawn</option>
+            <option value="day" selected>Day</option>
+            <option value="dusk">Dusk</option>
+            <option value="night">Night</option>
+          </select>
+        </div>
+        <div class="slider-row"><label>Sun Elevation</label><input id="sun-elevation" type="range" min="0" max="90" value="60"><span class="slider-val">60</span></div>
+        <div class="slider-row"><label>Sun Azimuth</label><input id="sun-azimuth" type="range" min="0" max="360" value="180"><span class="slider-val">180</span></div>
+        <div class="slider-row"><label>Sun Intensity</label><input id="sun-intensity" type="range" min="0" max="200" value="120"><span class="slider-val">1.2</span></div>
+        <div class="slider-row"><label>Ambient</label><input id="ambient-intensity" type="range" min="0" max="100" value="70"><span class="slider-val">0.7</span></div>
+        <hr class="section-divider">
+        <div class="field-group">
+          <label class="field-label">Ground</label>
+          <select id="ground-style" class="field-select">
+            <option value="flat">Flat</option>
+            <option value="grid" selected>Grid</option>
+            <option value="checker">Checkerboard</option>
+          </select>
+        </div>
+        <div class="slider-row"><label>Ground Size</label><input id="ground-size" type="range" min="10" max="100" value="40"><span class="slider-val">40</span></div>
+        <div class="field-group">
+          <label class="field-label">Ground Colour</label>
+          <div class="swatch-grid" id="ground-swatches"></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Ground Texture</label>
+          <select id="ground-texture" class="field-select">
+            <option value="none">None (solid colour)</option>
+          </select>
+        </div>
+        <hr class="section-divider">
+        <div class="field-group">
+          <label class="field-label">Walls</label>
+          <select id="wall-layout" class="field-select">
+            <option value="none">None</option>
+            <option value="room" selected>Room (3 walls)</option>
+            <option value="set">Set (2 walls, corner)</option>
+            <option value="alley">Alley (2 parallel walls)</option>
+            <option value="arena">Arena (circular)</option>
+          </select>
+        </div>
+        <div class="slider-row"><label>Wall Height</label><input id="wall-height" type="range" min="1" max="10" value="3" step="0.5"><span class="slider-val">3</span></div>
+        <div class="field-group">
+          <label class="field-label">Wall Colour</label>
+          <div class="swatch-grid" id="wall-swatches"></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Wall Texture</label>
+          <select id="wall-texture" class="field-select">
+            <option value="none">None (solid colour)</option>
+          </select>
+        </div>
+        <hr class="section-divider">
+        <div class="slider-row"><label>Fog Density</label><input id="fog-density" type="range" min="0" max="100" value="20"><span class="slider-val">20</span></div>
+      </div>
+
+      <!-- PROPS TAB -->
+      <div id="tab-props" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Add from Library</label>
+          <select id="prop-lib-category">
+            <option value="all">All Categories</option>
+          </select>
+          <input id="prop-lib-filter" type="text" placeholder="Search props...">
+          <div id="prop-lib-list"></div>
+        </div>
+        <hr class="section-divider">
+        <div class="field-group">
+          <label class="field-label">Placed Props</label>
+          <div id="placed-props-list"></div>
+        </div>
+      </div>
+
+      <!-- COLOURS TAB -->
+      <div id="tab-colours" class="tab-content">
+        <div class="field-group">
+          <label class="field-label">Colour Roles</label>
+          <div id="colour-roles"></div>
+        </div>
+        <div class="field-group" style="margin-top:16px;">
+          <label class="field-label">Palette — DawnBringer 32</label>
+          <div class="swatch-grid" id="role-palette"></div>
+        </div>
+        <button class="small-btn" id="btn-randomize-colours" style="margin-top:10px;">Randomize</button>
+      </div>
+
+      <!-- PROPERTIES PANEL (selected prop) -->
+      <div id="tab-properties" class="tab-content">
+        <div id="prop-info" style="font-size:13px;font-weight:600;color:var(--app-text);margin-bottom:12px;"></div>
+        <div class="prop-section">
+          <div class="prop-section-title">Position</div>
+          <div class="xyz-row">
+            <div class="xyz-field"><label>X</label><input id="prop-px" type="number" step="0.5"></div>
+            <div class="xyz-field"><label>Y</label><input id="prop-py" type="number" step="0.5"></div>
+            <div class="xyz-field"><label>Z</label><input id="prop-pz" type="number" step="0.5"></div>
+          </div>
+        </div>
+        <div class="prop-section">
+          <div class="prop-section-title">Rotation</div>
+          <div class="xyz-row">
+            <div class="xyz-field"><label>X</label><input id="prop-rx" type="number" step="5"></div>
+            <div class="xyz-field"><label>Y</label><input id="prop-ry" type="number" step="5"></div>
+            <div class="xyz-field"><label>Z</label><input id="prop-rz" type="number" step="5"></div>
+          </div>
+        </div>
+        <div class="prop-section">
+          <div class="prop-section-title">Scale</div>
+          <div class="slider-row"><label>Scale</label><input id="prop-scale" type="range" min="10" max="300" value="100"><span class="slider-val">1.0</span></div>
+        </div>
+        <div class="field-row" style="gap:4px;margin-top:8px;">
+          <button class="small-btn" id="prop-duplicate">Duplicate</button>
+          <button class="small-btn" id="prop-back">Back</button>
+        </div>
+        <button class="btn-delete" id="prop-delete-btn">Delete Prop</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3D STAGE -->
+  <div id="stage">
+    <div id="stage-top-bar">
+      <button class="stage-btn" id="btn-hamburger" title="Menu">&#9776;</button>
+      <!-- Dropdown menu (inside stage so visible in closed state) -->
+      <div class="dropdown-menu" id="hamburger-menu">
+        <button class="dropdown-item" id="menu-browse">Browse Library</button>
+        <button class="dropdown-item" id="menu-new">New Environment</button>
+        <button class="dropdown-item" id="menu-duplicate">Duplicate</button>
+        <button class="dropdown-item" id="menu-export">Export JSON</button>
+        <button class="dropdown-item" id="menu-import">Import JSON</button>
+        <button class="dropdown-item" id="menu-seed">Seed Library (100 environments)</button>
+        <button class="dropdown-item" id="menu-thumbs">Generate Thumbnails</button>
+        <button class="dropdown-item danger" id="menu-delete">Delete Environment</button>
+      </div>
+    </div>
+    <button class="stage-btn" id="btn-reset-view" title="Reset View" style="position:absolute;top:12px;right:12px;z-index:15;">&#10226;</button>
+    <div id="viewport"></div>
+    <div id="item-name-row">
+      <span id="item-name-display">No environment loaded</span>
+      <div id="item-right-group">
+        <span id="item-element-count"></span>
+        <button id="btn-edit-stage">Edit</button>
+      </div>
+    </div>
+    <div id="create-dim-overlay"></div>
+    <div id="prompt-bar">
+      <div id="prompt-card">
+        <div class="new-switch" id="btn-new-toggle" title="Toggle create new mode">
+          <span class="new-switch-label">New</span>
+          <div class="new-switch-track"><div class="new-switch-thumb"></div></div>
+        </div>
+        <input id="prompt-input" type="text" placeholder="Describe an environment...">
+        <button id="btn-send">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Import Map -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { loadPrimitives, buildMesh, buildPropGroup } from './primitives.js';
+import { assetToTexture } from './svgRenderer.js';
+
+// ═══════════════════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+
+const DB_NAME = 'envbuilder_assets';
+const DB_STORE = 'environments';
+const DB_VERSION = 1;
+const ANTHROPIC_MODEL = 'claude-opus-4-6';
+
+// DawnBringer 32 palette
+const DB32 = [
+  '#000000','#222034','#45283c','#663931','#8f563b','#df7126','#d9a066','#eec39a',
+  '#fbf236','#99e550','#6abe30','#37946e','#4b692f','#524b24','#323c39','#3f3f74',
+  '#306082','#5b6ee1','#639bff','#5fcde4','#cbdbfc','#ffffff','#9badb7','#847e87',
+  '#696a6a','#595652','#76428a','#ac3232','#d95763','#d77bba','#8f974a','#8a6f30',
+];
+
+const SKY_PRESETS = {
+  dawn:  { topColor:'#2a1a4e', bottomColor:'#f4a460', sunColor:'#ff8844', ambientIntensity:0.5, sunIntensity:0.9, sunElevation:10, fogColor:'#d4a070' },
+  day:   { topColor:'#1a5faa', bottomColor:'#87ceeb', sunColor:'#ffffee', ambientIntensity:0.7, sunIntensity:1.2, sunElevation:60, fogColor:'#c8dde8' },
+  dusk:  { topColor:'#1a2a5e', bottomColor:'#f4a460', sunColor:'#ff6633', ambientIntensity:0.45, sunIntensity:0.8, sunElevation:8, fogColor:'#c8b89a' },
+  night: { topColor:'#0a0a20', bottomColor:'#151535', sunColor:'#aaaadd', ambientIntensity:0.4, sunIntensity:0.5, sunElevation:35, fogColor:'#101025' },
+};
+
+const DEFAULT_ENV = {
+  sky: { preset:'day', topColor:'#1a5faa', bottomColor:'#87ceeb', sunColor:'#ffffee',
+         ambientIntensity:0.7, sunIntensity:1.2, sunElevation:60, sunAzimuth:180,
+         fogEnabled:true, fogColor:'#c8dde8', fogNear:15, fogFar:50 },
+  ground: { style:'grid', color:'#595652', size:20, textureId:null },
+  walls: { layout:'room', height:3, color:'#696a6a', textureId:null },
+  props: [],
+  characterMarkers: [
+    { x: 0,    z: 0,    facingDeg: 180, label: 'A' },
+    { x: -1.2, z: 0.8,  facingDeg: 160, label: 'B' },
+    { x: 1.2,  z: 0.8,  facingDeg: 200, label: 'C' },
+  ],
+  color_assignments: { primary:'#4b692f', secondary:'#8f563b', tertiary:'#639bff' },
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  APP STATE
+// ═══════════════════════════════════════════════════════════════
+
+const state = {
+  mode: 'closed',
+  currentEnv: null,
+  preEditSnapshot: null,
+  selectedPropIdx: -1,
+  isCreateMode: false,
+  editingRole: null,
+  environments: [],
+  assetManifest: [],
+  assetCache: {},
+  palette: DB32,
+  systemPrompt: '',
+  apiKey: localStorage.getItem('envbuilder_api_key') || '',
+};
+
+let activeCategory = 'all';
+let propLibCategory = 'all';
+let galleryDisplayedEnvs = [];
+
+// ═══════════════════════════════════════════════════════════════
+//  THREE.JS SCENE
+// ═══════════════════════════════════════════════════════════════
+
+let scene, camera, renderer, controls;
+let skyMesh, sunMesh, sunGlow;
+let groundMesh, groundGrid;
+let ambientLight, dirLight, fillLight, stageLight, stageLightHelper, hemiLight;
+let wallGroup, propsGroup, markersGroup, stageGridObj, stageOutlineObj;
+let raycaster, pointer;
+
+function initThree() {
+  const container = document.getElementById('viewport');
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color('#1a1a2e');
+
+  camera = new THREE.PerspectiveCamera(50, w / h, 0.05, 500);
+  camera.position.set(0, 6, 9);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.6;
+  container.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.zoomSpeed = 3.0;
+  controls.minDistance = 2;
+  controls.maxDistance = 200;
+  controls.target.set(0, 0, 0);
+  controls.update();
+
+  // Lighting
+  ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+  scene.add(ambientLight);
+
+  dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  dirLight.position.set(5, 8, 5);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.set(2048, 2048);
+  dirLight.shadow.camera.near = 0.5;
+  dirLight.shadow.camera.far = 50;
+  dirLight.shadow.camera.left = -8;
+  dirLight.shadow.camera.right = 8;
+  dirLight.shadow.camera.top = 8;
+  dirLight.shadow.camera.bottom = -8;
+  scene.add(dirLight);
+
+  fillLight = new THREE.DirectionalLight(0x8888ff, 0.35);
+  fillLight.position.set(-3, 2, -4);
+  scene.add(fillLight);
+
+  // Hemisphere light — sky/ground colour fill for natural wrap-around lighting
+  hemiLight = new THREE.HemisphereLight(0xaaccff, 0x444422, 0.5);
+  scene.add(hemiLight);
+
+  // Stage point light — hovers above centre of stage for local illumination
+  stageLight = new THREE.PointLight(0xffffff, 2.0, 0, 0);
+  stageLight.position.set(0, 3.5, 0);
+  scene.add(stageLight);
+
+  // Visible light bulb (small emissive sphere)
+  const bulbGeo = new THREE.SphereGeometry(0.08, 8, 8);
+  const bulbMat = new THREE.MeshBasicMaterial({ color: 0xffffee });
+  stageLightHelper = new THREE.Mesh(bulbGeo, bulbMat);
+  stageLightHelper.position.copy(stageLight.position);
+  scene.add(stageLightHelper);
+
+  // Sky dome
+  const skyGeo = new THREE.SphereGeometry(300, 32, 16);
+  const skyMat = new THREE.ShaderMaterial({
+    uniforms: {
+      topColor: { value: new THREE.Color('#1a5faa') },
+      bottomColor: { value: new THREE.Color('#87ceeb') },
+    },
+    vertexShader: `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPos.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 topColor;
+      uniform vec3 bottomColor;
+      varying vec3 vWorldPosition;
+      void main() {
+        float h = normalize(vWorldPosition).y;
+        float t = clamp(h * 0.5 + 0.5, 0.0, 1.0);
+        t = t * t * (3.0 - 2.0 * t);
+        gl_FragColor = vec4(mix(bottomColor, topColor, t), 1.0);
+      }
+    `,
+    side: THREE.BackSide,
+    depthWrite: false,
+  });
+  skyMesh = new THREE.Mesh(skyGeo, skyMat);
+  scene.add(skyMesh);
+
+  // Sun disc
+  const sunGeo = new THREE.SphereGeometry(5, 16, 16);
+  const sunMat = new THREE.MeshBasicMaterial({ color: '#ffffcc' });
+  sunMesh = new THREE.Mesh(sunGeo, sunMat);
+  scene.add(sunMesh);
+
+  // Sun glow
+  const glowCanvas = document.createElement('canvas');
+  glowCanvas.width = 128;
+  glowCanvas.height = 128;
+  const gctx = glowCanvas.getContext('2d');
+  const gradient = gctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gradient.addColorStop(0, 'rgba(255,255,200,0.6)');
+  gradient.addColorStop(0.4, 'rgba(255,220,150,0.2)');
+  gradient.addColorStop(1, 'rgba(255,200,100,0.0)');
+  gctx.fillStyle = gradient;
+  gctx.fillRect(0, 0, 128, 128);
+  const glowMat = new THREE.SpriteMaterial({
+    map: new THREE.CanvasTexture(glowCanvas),
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite: false,
+  });
+  sunGlow = new THREE.Sprite(glowMat);
+  sunGlow.scale.set(30, 30, 1);
+  scene.add(sunGlow);
+
+  // Ground
+  groundMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 20),
+    new THREE.MeshStandardMaterial({ color: '#4a6741', roughness: 0.9 })
+  );
+  groundMesh.rotation.x = -Math.PI / 2;
+  groundMesh.receiveShadow = true;
+  scene.add(groundMesh);
+
+  groundGrid = new THREE.GridHelper(20, 20, 0x444466, 0x333355);
+  scene.add(groundGrid);
+
+  // Wall group
+  wallGroup = new THREE.Group();
+  scene.add(wallGroup);
+
+  // Props group
+  propsGroup = new THREE.Group();
+  scene.add(propsGroup);
+
+  // Stage reference grid — 5×5 area, slightly raised, always visible
+  stageGridObj = new THREE.GridHelper(5, 5, 0x00c4be, 0x006660);
+  stageGridObj.position.y = 0.02;
+  stageGridObj.material.transparent = true;
+  stageGridObj.material.opacity = 0.4;
+  stageGridObj.material.depthWrite = false;
+  scene.add(stageGridObj);
+
+  // Stage boundary outline — thin box frame showing the 5×5 edge
+  const edgeGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(5, 0.01, 5));
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0x00c4be, transparent: true, opacity: 0.6 });
+  stageOutlineObj = new THREE.LineSegments(edgeGeo, edgeMat);
+  stageOutlineObj.position.y = 0.03;
+  scene.add(stageOutlineObj);
+
+  // Character markers group
+  markersGroup = new THREE.Group();
+  scene.add(markersGroup);
+  buildCharacterMarkers();
+
+  // Raycaster
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+
+  // Resize handler
+  const onResize = () => {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  };
+  window.addEventListener('resize', onResize);
+  new ResizeObserver(onResize).observe(container);
+
+  // Click handler for prop selection
+  renderer.domElement.addEventListener('click', (e) => {
+    if (state.mode !== 'editing' && state.mode !== 'properties') return;
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(propsGroup.children, true);
+    if (hits.length > 0) {
+      let obj = hits[0].object;
+      while (obj.parent && obj.parent !== propsGroup) obj = obj.parent;
+      const idx = propsGroup.children.indexOf(obj);
+      if (idx >= 0) selectPlacedProp(idx);
+    }
+  });
+
+  // Animation loop
+  (function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  })();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SCENE UPDATE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function updateSky(sky) {
+  skyMesh.material.uniforms.topColor.value.set(sky.topColor);
+  skyMesh.material.uniforms.bottomColor.value.set(sky.bottomColor);
+  sunMesh.material.color.set(sky.sunColor);
+
+  // Sun position
+  const dist = 200;
+  const elRad = THREE.MathUtils.degToRad(sky.sunElevation);
+  const azRad = THREE.MathUtils.degToRad(sky.sunAzimuth);
+  const y = dist * Math.sin(elRad);
+  const xz = dist * Math.cos(elRad);
+  const x = xz * Math.sin(azRad);
+  const z = xz * Math.cos(azRad);
+  sunMesh.position.set(x, y, z);
+  sunGlow.position.copy(sunMesh.position);
+
+  // Lighting — enforce minimum brightness so scenes are always readable
+  ambientLight.intensity = Math.max(sky.ambientIntensity, 0.6);
+  ambientLight.color.set(0xffffff); // always white ambient
+  dirLight.intensity = Math.max(sky.sunIntensity, 0.6);
+  dirLight.position.copy(sunMesh.position).normalize().multiplyScalar(15);
+
+  // Always blend sunColor toward white so directional light stays visible
+  const sunCol = new THREE.Color(sky.sunColor);
+  sunCol.lerp(new THREE.Color(0xffffff), 0.4);
+  dirLight.color.copy(sunCol);
+
+  // Fill light — opposite side from sun, keeps shadows from going full black
+  fillLight.position.copy(dirLight.position).negate().setY(3);
+  fillLight.intensity = Math.max(0.5, sky.sunIntensity * 0.45);
+  fillLight.color.set(0xccccff);
+
+  // Hemisphere light — warm ground / cool sky fill
+  hemiLight.color.set(0xaaccff);
+  hemiLight.groundColor.set(0x886644);
+  hemiLight.intensity = 0.5;
+
+  // Stage light — always-on local illumination, stronger for darker scenes
+  const avgBrightness = (sky.ambientIntensity + sky.sunIntensity) / 2;
+  stageLight.intensity = avgBrightness < 0.6 ? 3.0 : 1.5;
+  stageLight.color.set(0xffffff);
+
+  // Fog
+  if (sky.fogEnabled && sky.fogNear < sky.fogFar) {
+    scene.fog = new THREE.Fog(sky.fogColor, sky.fogNear, sky.fogFar);
+  } else {
+    scene.fog = null;
+  }
+}
+
+async function updateGround(ground) {
+  // Remove old
+  scene.remove(groundMesh);
+  scene.remove(groundGrid);
+  groundMesh.geometry.dispose();
+  groundMesh.material.dispose();
+
+  const size = ground.size;
+  groundMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(size, size),
+    new THREE.MeshStandardMaterial({ color: ground.color, roughness: 0.9 })
+  );
+  groundMesh.rotation.x = -Math.PI / 2;
+  groundMesh.receiveShadow = true;
+  scene.add(groundMesh);
+
+  if (groundGrid) groundGrid.removeFromParent();
+
+  // Apply 2D texture if set
+  if (ground.textureId && ground.textureId !== 'none') {
+    const asset = await loadAsset(ground.textureId);
+    if (asset) {
+      const tex = await assetToTexture(asset, 512);
+      if (tex) {
+        const repeat = Math.max(2, Math.round(size / 8));
+        tex.repeat.set(repeat, repeat);
+        groundMesh.material.map = tex;
+        groundMesh.material.color.set('#ffffff');
+        groundMesh.material.needsUpdate = true;
+      }
+    }
+    groundGrid = null;
+  } else if (ground.style === 'grid') {
+    groundGrid = new THREE.GridHelper(size, Math.round(size), 0x444466, 0x333355);
+    scene.add(groundGrid);
+  } else if (ground.style === 'checker') {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    const tiles = 16;
+    const ts = 512 / tiles;
+    const c1 = ground.color;
+    const c2 = shiftColor(ground.color, -30);
+    for (let r = 0; r < tiles; r++) {
+      for (let c = 0; c < tiles; c++) {
+        ctx.fillStyle = (r + c) % 2 === 0 ? c1 : c2;
+        ctx.fillRect(c * ts, r * ts, ts, ts);
+      }
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    groundMesh.material.map = tex;
+    groundMesh.material.needsUpdate = true;
+    groundGrid = null;
+  } else {
+    groundGrid = null;
+  }
+}
+
+function shiftColor(hex, amount) {
+  let c = parseInt(hex.replace('#', ''), 16);
+  let r = Math.max(0, Math.min(255, ((c >> 16) & 0xff) + amount));
+  let g = Math.max(0, Math.min(255, ((c >> 8) & 0xff) + amount));
+  let b = Math.max(0, Math.min(255, (c & 0xff) + amount));
+  return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
+async function updateWalls(walls) {
+  // Clear existing walls
+  while (wallGroup.children.length) {
+    const c = wallGroup.children[0];
+    c.geometry?.dispose();
+    c.material?.dispose();
+    wallGroup.remove(c);
+  }
+
+  if (walls.layout === 'none') return;
+
+  const WALL_SIZE = 7; // 5×5 stage + 1m buffer on each side
+  const h = walls.height;
+  const color = walls.color;
+  const wallSize = WALL_SIZE;
+  const half = wallSize / 2;
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.85 });
+
+  // Apply 2D wall texture if set
+  if (walls.textureId && walls.textureId !== 'none') {
+    const asset = await loadAsset(walls.textureId);
+    if (asset) {
+      const tex = await assetToTexture(asset, 512);
+      if (tex) {
+        const wallTex = tex.clone();
+        wallTex.wrapS = THREE.RepeatWrapping;
+        wallTex.wrapT = THREE.RepeatWrapping;
+        wallTex.repeat.set(Math.max(1, Math.round(WALL_SIZE / 2)), Math.max(1, Math.round(h / 2)));
+        mat.map = wallTex;
+        mat.color.set('#ffffff');
+        mat.needsUpdate = true;
+      }
+    }
+  }
+
+  if (walls.layout === 'room') {
+    // Three walls — back, left, right — open front for camera
+    const back = new THREE.Mesh(new THREE.BoxGeometry(wallSize, h, 0.3), mat.clone());
+    back.position.set(0, h / 2, -half);
+    back.castShadow = true;
+    back.receiveShadow = true;
+    wallGroup.add(back);
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.3, h, wallSize), mat.clone());
+    left.position.set(-half, h / 2, 0);
+    left.castShadow = true;
+    left.receiveShadow = true;
+    wallGroup.add(left);
+    const right = new THREE.Mesh(new THREE.BoxGeometry(0.3, h, wallSize), mat.clone());
+    right.position.set(half, h / 2, 0);
+    right.castShadow = true;
+    right.receiveShadow = true;
+    wallGroup.add(right);
+  } else if (walls.layout === 'set') {
+    // Two walls meeting at back-left corner
+    const back = new THREE.Mesh(new THREE.BoxGeometry(wallSize, h, 0.3), mat.clone());
+    back.position.set(0, h / 2, -half);
+    back.castShadow = true;
+    back.receiveShadow = true;
+    wallGroup.add(back);
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.3, h, wallSize), mat.clone());
+    left.position.set(-half, h / 2, 0);
+    left.castShadow = true;
+    left.receiveShadow = true;
+    wallGroup.add(left);
+  } else if (walls.layout === 'alley') {
+    const alleyHalf = wallSize * 0.4;
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.3, h, wallSize), mat.clone());
+    left.position.set(-alleyHalf, h / 2, 0);
+    left.castShadow = true;
+    wallGroup.add(left);
+    const right = new THREE.Mesh(new THREE.BoxGeometry(0.3, h, wallSize), mat.clone());
+    right.position.set(alleyHalf, h / 2, 0);
+    right.castShadow = true;
+    wallGroup.add(right);
+  } else if (walls.layout === 'arena') {
+    const segments = 16;
+    const radius = wallSize * 0.4;
+    for (let i = 0; i < segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const segW = 2 * radius * Math.sin(Math.PI / segments);
+      const seg = new THREE.Mesh(new THREE.BoxGeometry(segW, h, 0.3), mat.clone());
+      seg.position.set(radius * Math.sin(angle), h / 2, radius * Math.cos(angle));
+      seg.rotation.y = angle;
+      seg.castShadow = true;
+      wallGroup.add(seg);
+    }
+  }
+}
+
+// ── Character Floor Markers (TV set marks) ──────────────────
+
+const MARKER_COLORS = ['#d95763', '#6daa2c', '#639bff'];
+const DEFAULT_MARKERS = [
+  { x: 0,    z: 0,    facingDeg: 180, label: 'A' },  // centre, facing camera
+  { x: -1.2, z: 0.8,  facingDeg: 160, label: 'B' },  // stage left
+  { x: 1.2,  z: 0.8,  facingDeg: 200, label: 'C' },  // stage right
+];
+
+function buildCharacterMarkers() {
+  while (markersGroup.children.length) {
+    const c = markersGroup.children[0];
+    c.traverse(m => { m.geometry?.dispose(); m.material?.dispose(); });
+    markersGroup.remove(c);
+  }
+
+  const markers = state.currentEnv?.payload?.characterMarkers || DEFAULT_MARKERS;
+  for (let i = 0; i < markers.length; i++) {
+    const mk = { ...markers[i], color: MARKER_COLORS[i] || '#888888' };
+    const group = new THREE.Group();
+    group.position.set(mk.x, 0, mk.z);
+
+    const ghostMat = new THREE.MeshStandardMaterial({
+      color: mk.color, transparent: true, opacity: 0.25,
+      roughness: 0.6, metalness: 0.0, depthWrite: false
+    });
+
+    // Body — capsule (pill shape), ~0.8m tall torso
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.5, 8, 12), ghostMat.clone());
+    body.position.y = 0.55;
+    group.add(body);
+
+    // Head — sphere sitting on top of body
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 8), ghostMat.clone());
+    head.position.y = 1.05;
+    group.add(head);
+
+    // Nose bump — small sphere on front of head to show facing direction
+    const noseMat = new THREE.MeshStandardMaterial({
+      color: mk.color, transparent: true, opacity: 0.45,
+      roughness: 0.5, depthWrite: false
+    });
+    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 6), noseMat);
+    nose.position.set(0, 1.05, -0.14);
+    group.add(nose);
+
+    // Foot ring on the ground — subtle floor marker
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: mk.color, side: THREE.DoubleSide, transparent: true, opacity: 0.5, depthWrite: false
+    });
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.25, 24), ringMat);
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = 0.01;
+    group.add(ring);
+
+    // Label letter — sprite floating above head
+    const canvas = document.createElement('canvas');
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = mk.color;
+    ctx.font = 'bold 48px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(mk.label, 32, 32);
+    const labelTex = new THREE.CanvasTexture(canvas);
+    const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true, opacity: 0.85, depthWrite: false });
+    const sprite = new THREE.Sprite(labelMat);
+    sprite.scale.set(0.3, 0.3, 1);
+    sprite.position.set(0, 1.35, 0);
+    group.add(sprite);
+
+    // Rotate entire group to face the right direction
+    // facingDeg: 0=north(-Z), 90=east(+X), 180=south(+Z), 270=west(-X)
+    // Three.js default "forward" is -Z, so facingDeg=0 needs no rotation
+    group.rotation.y = THREE.MathUtils.degToRad(mk.facingDeg);
+    markersGroup.add(group);
+  }
+}
+
+async function updateProps(props) {
+  // Clear existing
+  while (propsGroup.children.length) {
+    const c = propsGroup.children[0];
+    c.traverse(m => { m.geometry?.dispose(); m.material?.dispose(); });
+    propsGroup.remove(c);
+  }
+
+  for (const p of props) {
+    const asset = await loadAsset(p.assetId);
+    if (!asset) {
+      // Fallback cube
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 0.5, 0.5),
+        new THREE.MeshStandardMaterial({ color: 0xff00ff })
+      );
+      mesh.position.set(p.position.x, p.position.y, p.position.z);
+      mesh.userData.propData = p;
+      propsGroup.add(mesh);
+      continue;
+    }
+
+    const group = buildPropGroup(asset);
+    group.position.set(p.position.x, p.position.y, p.position.z);
+    group.rotation.set(
+      (p.rotation?.x || 0) * Math.PI / 180,
+      (p.rotation?.y || 0) * Math.PI / 180,
+      (p.rotation?.z || 0) * Math.PI / 180
+    );
+    const s = p.scale || 1;
+    group.scale.set(s, s, s);
+    group.userData.propData = p;
+    propsGroup.add(group);
+  }
+}
+
+async function loadAsset(assetId) {
+  if (state.assetCache[assetId]) return state.assetCache[assetId];
+
+  const manifest = state.assetManifest.find(a => a.id === assetId);
+  if (!manifest) return null;
+
+  try {
+    const res = await fetch(manifest.path);
+    const data = await res.json();
+    state.assetCache[assetId] = data;
+    return data;
+  } catch (e) {
+    console.warn(`Failed to load asset: ${assetId}`, e);
+    return null;
+  }
+}
+
+function applyEnvironment(env) {
+  const p = env.payload;
+  // Migrate old layouts
+  if (p.walls.layout === 'set') p.walls.layout = 'room';
+  updateSky(p.sky);
+  updateGround(p.ground);
+  updateWalls(p.walls);
+  updateProps(p.props);
+  buildCharacterMarkers();
+
+  // Update UI
+  syncUIFromEnv(env);
+
+  // Auto-capture thumbnail after scene renders (skip during batch)
+  if (!batchingThumbnails) {
+    requestAnimationFrame(() => {
+      renderer.render(scene, camera);
+      if (env.meta && !env.meta.thumbnail) {
+        env.meta.thumbnail = captureThumbnail();
+        saveEnvironment(env);
+      }
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INDEXEDDB STORAGE
+// ═══════════════════════════════════════════════════════════════
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(DB_STORE)) {
+        db.createObjectStore(DB_STORE, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function loadAllEnvironments() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const store = tx.objectStore(DB_STORE);
+    const req = store.getAll();
+    req.onsuccess = () => {
+      state.environments = req.result || [];
+      resolve(state.environments);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveEnvironment(env) {
+  env.meta.modified = new Date().toISOString();
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(env);
+    tx.oncomplete = () => {
+      const idx = state.environments.findIndex(e => e.id === env.id);
+      if (idx >= 0) state.environments[idx] = env;
+      else state.environments.push(env);
+      resolve();
+    };
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function deleteEnvironment(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).delete(id);
+    tx.oncomplete = () => {
+      state.environments = state.environments.filter(e => e.id !== id);
+      resolve();
+    };
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  THUMBNAIL CAPTURE
+// ═══════════════════════════════════════════════════════════════
+
+function captureThumbnail(size = 128) {
+  // Hide helpers
+  markersGroup.visible = false;
+  stageGridObj.visible = false;
+  stageOutlineObj.visible = false;
+  stageLightHelper.visible = false;
+
+  // Render one frame
+  renderer.render(scene, camera);
+
+  // Capture to small canvas
+  const thumbCanvas = document.createElement('canvas');
+  thumbCanvas.width = size;
+  thumbCanvas.height = size;
+  const ctx = thumbCanvas.getContext('2d');
+  const src = renderer.domElement;
+  // Crop to square from centre of the viewport
+  const srcSize = Math.min(src.width, src.height);
+  const sx = (src.width - srcSize) / 2;
+  const sy = (src.height - srcSize) / 2;
+  ctx.drawImage(src, sx, sy, srcSize, srcSize, 0, 0, size, size);
+
+  // Restore helpers
+  markersGroup.visible = true;
+  stageGridObj.visible = true;
+  stageOutlineObj.visible = true;
+  stageLightHelper.visible = true;
+
+  return thumbCanvas.toDataURL('image/jpeg', 0.7);
+}
+
+let batchingThumbnails = false;
+
+async function generateAllThumbnails() {
+  batchingThumbnails = true;
+  const envs = await loadAllEnvironments();
+  let count = 0;
+  for (const env of envs) {
+    if (env.meta?.thumbnail) continue;
+    // Apply scene directly (skipping auto-thumbnail)
+    const p = env.payload;
+    if (p.walls.layout === 'set') p.walls.layout = 'room';
+    updateSky(p.sky);
+    await updateGround(p.ground);
+    await updateWalls(p.walls);
+    await updateProps(p.props);
+    // Wait for scene to settle (2 frames)
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => requestAnimationFrame(r));
+    renderer.render(scene, camera);
+    env.meta.thumbnail = captureThumbnail();
+    await saveEnvironment(env);
+    count++;
+    console.log(`Thumbnail ${count}: ${env.name}`);
+  }
+  batchingThumbnails = false;
+  state.environments = await loadAllEnvironments();
+  renderGallery();
+  return count;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ENVIRONMENT FACTORY
+// ═══════════════════════════════════════════════════════════════
+
+function createNewEnvironment(name = 'New Environment') {
+  return {
+    id: 'env_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    type: 'environment',
+    name,
+    tags: [],
+    meta: {
+      created: new Date().toISOString(),
+      modified: new Date().toISOString(),
+      origin: 'user',
+      creator: 'local-user',
+      version: 1,
+      thumbnail: null,
+    },
+    payload: JSON.parse(JSON.stringify(DEFAULT_ENV)),
+  };
+}
+
+function generateInstanceId() {
+  return 'inst_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  UI WIRING
+// ═══════════════════════════════════════════════════════════════
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+function setState(mode) {
+  state.mode = mode;
+  document.body.className = `state-${mode}`;
+  if (state.isCreateMode) document.body.classList.add('create-mode');
+
+  const panelTitle = $('#panel-title');
+  const btnCancel = $('#btn-cancel');
+  const btnDone = $('#btn-done');
+  const btnSearch = $('#btn-search');
+  const tabBar = $('#tab-bar');
+  const galleryList = $('#gallery-list');
+
+  // Reset visibility
+  btnDone.style.display = 'none';
+  btnSearch.style.display = 'none';
+  tabBar.style.display = 'none';
+  galleryList.style.display = 'none';
+
+  // Hide all tabs
+  $$('.tab-content').forEach(t => t.classList.remove('active'));
+
+  if (mode === 'browse') {
+    panelTitle.textContent = 'Environments';
+    btnSearch.style.display = '';
+    galleryList.style.display = '';
+    renderGallery();
+  } else if (mode === 'search') {
+    panelTitle.textContent = 'Search';
+    btnSearch.style.display = '';
+    galleryList.style.display = '';
+    $('#search-input').focus();
+  } else if (mode === 'editing') {
+    panelTitle.textContent = state.currentEnv?.name || 'Editing';
+    btnDone.style.display = '';
+    tabBar.style.display = '';
+    activateTab('file');
+  } else if (mode === 'properties') {
+    panelTitle.textContent = 'Prop Properties';
+    btnDone.style.display = '';
+    tabBar.style.display = '';
+    $('#tab-properties').classList.add('active');
+  }
+}
+
+function activateTab(tabName) {
+  $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+  $$('.tab-content').forEach(t => t.classList.remove('active'));
+  const tab = $(`#tab-${tabName}`);
+  if (tab) tab.classList.add('active');
+
+  if (tabName === 'props') renderPropLibrary();
+  if (tabName === 'props') renderPlacedProps();
+  if (tabName === 'colours') renderColourRoles();
+}
+
+// Tab buttons
+$$('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (state.mode === 'properties') setState('editing');
+    activateTab(btn.dataset.tab);
+  });
+});
+
+// Cancel button
+$('#btn-cancel').addEventListener('click', () => {
+  if (state.mode === 'properties') {
+    setState('editing');
+    activateTab('props');
+    return;
+  }
+  if (state.mode === 'editing' && state.preEditSnapshot) {
+    state.currentEnv = JSON.parse(state.preEditSnapshot);
+    applyEnvironment(state.currentEnv);
+    state.preEditSnapshot = null;
+  }
+  setState(state.mode === 'search' ? 'browse' : 'closed');
+});
+
+// Done button
+$('#btn-done').addEventListener('click', async () => {
+  if (!state.currentEnv) return;
+  // Save edits from UI
+  syncEnvFromUI();
+  await saveEnvironment(state.currentEnv);
+  state.preEditSnapshot = null;
+  toast('Environment saved');
+  setState('closed');
+});
+
+// Search button
+$('#btn-search').addEventListener('click', () => {
+  setState(state.mode === 'search' ? 'browse' : 'search');
+});
+
+// Search input
+$('#search-input').addEventListener('input', () => renderGallery());
+
+// Edit button on stage
+$('#btn-edit-stage').addEventListener('click', () => {
+  if (!state.currentEnv) {
+    state.currentEnv = createNewEnvironment();
+    applyEnvironment(state.currentEnv);
+  }
+  state.preEditSnapshot = JSON.stringify(state.currentEnv);
+  setState('editing');
+});
+
+// Hamburger
+$('#btn-hamburger').addEventListener('click', () => {
+  $('#hamburger-menu').classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#btn-hamburger') && !e.target.closest('#hamburger-menu')) {
+    $('#hamburger-menu').classList.remove('open');
+  }
+});
+
+// Hamburger menu items
+$('#menu-browse').addEventListener('click', () => {
+  $('#hamburger-menu').classList.remove('open');
+  setState('browse');
+});
+
+$('#menu-new').addEventListener('click', () => {
+  $('#hamburger-menu').classList.remove('open');
+  state.currentEnv = createNewEnvironment();
+  applyEnvironment(state.currentEnv);
+  updateItemRow();
+  state.preEditSnapshot = JSON.stringify(state.currentEnv);
+  setState('editing');
+});
+
+$('#menu-duplicate').addEventListener('click', async () => {
+  $('#hamburger-menu').classList.remove('open');
+  if (!state.currentEnv) return;
+  const dup = JSON.parse(JSON.stringify(state.currentEnv));
+  dup.id = 'env_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  dup.name += ' (copy)';
+  dup.meta.created = new Date().toISOString();
+  dup.meta.modified = new Date().toISOString();
+  await saveEnvironment(dup);
+  state.currentEnv = dup;
+  applyEnvironment(dup);
+  updateItemRow();
+  toast('Duplicated');
+});
+
+$('#menu-export').addEventListener('click', () => {
+  $('#hamburger-menu').classList.remove('open');
+  if (!state.currentEnv) return;
+  const blob = new Blob([JSON.stringify(state.currentEnv, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${state.currentEnv.name.replace(/\s+/g, '_')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported');
+});
+
+$('#menu-import').addEventListener('click', () => {
+  $('#hamburger-menu').classList.remove('open');
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const text = await file.text();
+    try {
+      const env = JSON.parse(text);
+      if (!env.payload) throw new Error('Invalid environment file');
+      env.id = 'env_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      await saveEnvironment(env);
+      state.currentEnv = env;
+      applyEnvironment(env);
+      updateItemRow();
+      toast('Imported');
+    } catch (err) {
+      toast('Import failed: ' + err.message);
+    }
+  };
+  input.click();
+});
+
+$('#menu-seed').addEventListener('click', async () => {
+  $('#hamburger-menu').classList.remove('open');
+  if (!confirm('Import seed environments into your library? (Existing environments will be kept.)')) return;
+  try {
+    toast('Importing environments...');
+    const [res1, res2] = await Promise.all([
+      fetch('./assets/seed-environments.json'),
+      fetch('./assets/seed-environments-2.json'),
+    ]);
+    const seeds = [...await res1.json(), ...await res2.json()];
+    // Skip seeds already in library (by name)
+    const existing = await loadAllEnvironments();
+    const existingNames = new Set(existing.map(e => e.name));
+    let imported = 0;
+    for (const seed of seeds) {
+      if (existingNames.has(seed.name)) continue;
+      const env = {
+        id: 'env_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        name: seed.name,
+        description: seed.description || '',
+        tags: seed.tags || [],
+        meta: {
+          created: new Date().toISOString(),
+          modified: new Date().toISOString(),
+          origin: 'seed',
+          creator: 'system',
+          version: 1,
+          thumbnail: null,
+        },
+        payload: {
+          sky: { ...DEFAULT_ENV.sky, ...seed.sky },
+          ground: { ...DEFAULT_ENV.ground, ...seed.ground },
+          walls: { ...DEFAULT_ENV.walls, ...seed.walls },
+          props: (seed.props || []).map(p => ({
+            instanceId: 'inst_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            assetId: p.assetId,
+            position: p.position || { x: 0, y: 0, z: 0 },
+            rotation: p.rotation || { x: 0, y: 0, z: 0 },
+            scale: p.scale || 1,
+          })),
+          characterMarkers: seed.characterMarkers || DEFAULT_ENV.characterMarkers,
+          color_assignments: seed.color_assignments || DEFAULT_ENV.color_assignments,
+        },
+      };
+      await saveEnvironment(env);
+      imported++;
+    }
+    // Reload environment list
+    state.environments = await loadAllEnvironments();
+    // Load the first imported one
+    if (state.environments.length > 0) {
+      state.currentEnv = state.environments[0];
+      applyEnvironment(state.currentEnv);
+    }
+    updateItemRow();
+    toast(`Imported ${imported} environments!`);
+  } catch (err) {
+    console.error('Seed import failed:', err);
+    toast('Seed import failed: ' + err.message);
+  }
+});
+
+$('#menu-thumbs').addEventListener('click', async () => {
+  $('#hamburger-menu').classList.remove('open');
+  toast('Generating thumbnails...');
+  const count = await generateAllThumbnails();
+  // Restore current env
+  if (state.currentEnv) applyEnvironment(state.currentEnv);
+  toast(`Generated ${count} thumbnails!`);
+});
+
+$('#menu-delete').addEventListener('click', async () => {
+  $('#hamburger-menu').classList.remove('open');
+  if (!state.currentEnv) return;
+  if (!confirm(`Delete "${state.currentEnv.name}"?`)) return;
+  await deleteEnvironment(state.currentEnv.id);
+  state.currentEnv = null;
+  clearScene();
+  updateItemRow();
+  toast('Deleted');
+});
+
+// Reset view
+$('#btn-reset-view').addEventListener('click', () => {
+  camera.position.set(0, 6, 9);
+  controls.target.set(0, 0, 0);
+  controls.update();
+});
+
+// New toggle
+$('#btn-new-toggle').addEventListener('click', () => {
+  state.isCreateMode = !state.isCreateMode;
+  $('#btn-new-toggle').classList.toggle('active', state.isCreateMode);
+  document.body.classList.toggle('create-mode', state.isCreateMode);
+  if (state.isCreateMode) {
+    $('#item-name-display').classList.add('create-new');
+    $('#item-name-display').textContent = '+ New Environment';
+  } else {
+    $('#item-name-display').classList.remove('create-new');
+    updateItemRow();
+  }
+});
+
+// Gallery category
+$('#gallery-category-select').addEventListener('change', (e) => {
+  activeCategory = e.target.value;
+  renderGallery();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  SCENE TAB SLIDERS
+// ═══════════════════════════════════════════════════════════════
+
+function wireSlider(id, displayFn, changeFn) {
+  const input = $(`#${id}`);
+  const val = input.nextElementSibling;
+  input.addEventListener('input', () => {
+    val.textContent = displayFn(input.value);
+    if (state.currentEnv) changeFn(Number(input.value));
+  });
+}
+
+wireSlider('sun-elevation', v => v, v => {
+  state.currentEnv.payload.sky.sunElevation = v;
+  updateSky(state.currentEnv.payload.sky);
+});
+wireSlider('sun-azimuth', v => v, v => {
+  state.currentEnv.payload.sky.sunAzimuth = v;
+  updateSky(state.currentEnv.payload.sky);
+});
+wireSlider('sun-intensity', v => (v / 100).toFixed(1), v => {
+  state.currentEnv.payload.sky.sunIntensity = v / 100;
+  updateSky(state.currentEnv.payload.sky);
+});
+wireSlider('ambient-intensity', v => (v / 100).toFixed(1), v => {
+  state.currentEnv.payload.sky.ambientIntensity = v / 100;
+  updateSky(state.currentEnv.payload.sky);
+});
+wireSlider('ground-size', v => v, v => {
+  state.currentEnv.payload.ground.size = v;
+  updateGround(state.currentEnv.payload.ground);
+});
+wireSlider('wall-height', v => v, v => {
+  state.currentEnv.payload.walls.height = v;
+  updateWalls(state.currentEnv.payload.walls);
+});
+wireSlider('fog-density', v => v, v => {
+  const sky = state.currentEnv.payload.sky;
+  if (v === 0) {
+    sky.fogEnabled = false;
+  } else {
+    sky.fogEnabled = true;
+    sky.fogNear = Math.max(1, 80 - v * 0.7);
+    sky.fogFar = Math.max(sky.fogNear + 10, 150 - v * 1.2);
+  }
+  updateSky(sky);
+});
+
+// Sky preset
+$('#sky-preset').addEventListener('change', (e) => {
+  if (!state.currentEnv) return;
+  const preset = SKY_PRESETS[e.target.value];
+  const sky = state.currentEnv.payload.sky;
+  Object.assign(sky, preset);
+  sky.preset = e.target.value;
+  sky.sunAzimuth = sky.sunAzimuth || 180;
+  sky.fogEnabled = true;
+  sky.fogNear = 30;
+  sky.fogFar = 100;
+  updateSky(sky);
+  syncUIFromEnv(state.currentEnv);
+});
+
+// Ground style
+$('#ground-style').addEventListener('change', (e) => {
+  if (!state.currentEnv) return;
+  state.currentEnv.payload.ground.style = e.target.value;
+  updateGround(state.currentEnv.payload.ground);
+});
+
+// Wall layout
+$('#wall-layout').addEventListener('change', (e) => {
+  if (!state.currentEnv) return;
+  state.currentEnv.payload.walls.layout = e.target.value;
+  updateWalls(state.currentEnv.payload.walls);
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  SWATCH GRIDS
+// ═══════════════════════════════════════════════════════════════
+
+function renderSwatchGrid(containerId, selectedColor, onSelect) {
+  const container = $(`#${containerId}`);
+  container.innerHTML = '';
+  DB32.forEach(hex => {
+    const sw = document.createElement('div');
+    sw.className = 'swatch' + (hex === selectedColor ? ' selected' : '');
+    sw.style.background = hex;
+    sw.addEventListener('click', () => {
+      container.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+      onSelect(hex);
+    });
+    container.appendChild(sw);
+  });
+}
+
+function initSwatches() {
+  renderSwatchGrid('ground-swatches', '#4a6741', (hex) => {
+    if (!state.currentEnv) return;
+    state.currentEnv.payload.ground.color = hex;
+    updateGround(state.currentEnv.payload.ground);
+  });
+  renderSwatchGrid('wall-swatches', '#696a6a', (hex) => {
+    if (!state.currentEnv) return;
+    state.currentEnv.payload.walls.color = hex;
+    updateWalls(state.currentEnv.payload.walls);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TEXTURE DROPDOWNS
+// ═══════════════════════════════════════════════════════════════
+
+function populateTextureDropdowns() {
+  // Ground textures: textures + textures-materials
+  const groundSelect = $('#ground-texture');
+  const wallSelect = $('#wall-texture');
+
+  const groundTextures = state.assetManifest.filter(a =>
+    a.dimension === '2D' && (a.kind === 'textures' || a.kind === 'textures-materials')
+  );
+  const wallTextures = state.assetManifest.filter(a =>
+    a.dimension === '2D' && (a.kind === 'walls' || a.kind === 'textures')
+  );
+
+  // Clear and repopulate
+  groundSelect.innerHTML = '<option value="none">None (solid colour)</option>';
+  groundTextures.sort((a, b) => a.name.localeCompare(b.name)).forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.id;
+    opt.textContent = a.name;
+    groundSelect.appendChild(opt);
+  });
+
+  wallSelect.innerHTML = '<option value="none">None (solid colour)</option>';
+  wallTextures.sort((a, b) => a.name.localeCompare(b.name)).forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.id;
+    opt.textContent = a.name;
+    wallSelect.appendChild(opt);
+  });
+}
+
+$('#ground-texture').addEventListener('change', (e) => {
+  if (!state.currentEnv) return;
+  state.currentEnv.payload.ground.textureId = e.target.value === 'none' ? null : e.target.value;
+  updateGround(state.currentEnv.payload.ground);
+});
+
+$('#wall-texture').addEventListener('change', (e) => {
+  if (!state.currentEnv) return;
+  state.currentEnv.payload.walls.textureId = e.target.value === 'none' ? null : e.target.value;
+  updateWalls(state.currentEnv.payload.walls);
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  COLOUR ROLES
+// ═══════════════════════════════════════════════════════════════
+
+function renderColourRoles() {
+  const container = $('#colour-roles');
+  container.innerHTML = '';
+  if (!state.currentEnv) return;
+  const ca = state.currentEnv.payload.color_assignments || {};
+  ['primary', 'secondary', 'tertiary'].forEach(role => {
+    const row = document.createElement('div');
+    row.className = 'colour-role';
+    const sw = document.createElement('div');
+    sw.className = 'role-swatch';
+    sw.style.background = ca[role] || '#888';
+    sw.addEventListener('click', () => {
+      state.editingRole = role;
+      renderRolePalette();
+    });
+    const label = document.createElement('span');
+    label.className = 'role-label';
+    label.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    const hex = document.createElement('span');
+    hex.className = 'role-hex';
+    hex.textContent = ca[role] || '';
+    row.append(sw, label, hex);
+    container.appendChild(row);
+  });
+  renderRolePalette();
+}
+
+function renderRolePalette() {
+  const container = $('#role-palette');
+  container.innerHTML = '';
+  const ca = state.currentEnv?.payload?.color_assignments || {};
+  const sel = state.editingRole ? ca[state.editingRole] : null;
+  DB32.forEach(hex => {
+    const sw = document.createElement('div');
+    sw.className = 'swatch' + (hex === sel ? ' selected' : '');
+    sw.style.background = hex;
+    sw.addEventListener('click', () => {
+      if (!state.editingRole || !state.currentEnv) return;
+      state.currentEnv.payload.color_assignments[state.editingRole] = hex;
+      renderColourRoles();
+      // Re-render props with new colors
+      updateProps(state.currentEnv.payload.props);
+    });
+    container.appendChild(sw);
+  });
+}
+
+$('#btn-randomize-colours').addEventListener('click', () => {
+  if (!state.currentEnv) return;
+  const ca = state.currentEnv.payload.color_assignments;
+  const pick = () => DB32[Math.floor(Math.random() * DB32.length)];
+  ca.primary = pick();
+  ca.secondary = pick();
+  ca.tertiary = pick();
+  renderColourRoles();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  GALLERY
+// ═══════════════════════════════════════════════════════════════
+
+function renderGallery() {
+  const list = $('#gallery-list');
+  list.innerHTML = '';
+
+  let envs = [...state.environments];
+
+  // Search filter
+  const query = state.mode === 'search' ? $('#search-input').value.toLowerCase().trim() : '';
+  if (query) {
+    envs = envs.filter(e =>
+      e.name.toLowerCase().includes(query) ||
+      (e.tags || []).some(t => t.toLowerCase().includes(query))
+    );
+  }
+
+  // Category filter
+  if (activeCategory === 'mine') {
+    envs = envs.filter(e => e.meta?.origin !== 'seed');
+  } else if (activeCategory !== 'all') {
+    envs = envs.filter(e => getEnvCategory(e) === activeCategory);
+  }
+
+  galleryDisplayedEnvs = envs;
+
+  if (envs.length === 0) {
+    list.innerHTML = '<div class="empty-msg">No environments yet. Use the prompt bar or menu to create one!</div>';
+    return;
+  }
+
+  envs.forEach(env => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item' + (state.currentEnv?.id === env.id ? ' active' : '');
+
+    const thumbSrc = env.meta?.thumbnail;
+    item.innerHTML = `
+      <div class="gallery-thumb">${thumbSrc ? `<img src="${thumbSrc}" style="width:100%;height:100%;object-fit:cover;">` : '<span class="gallery-thumb-placeholder">&#127758;</span>'}</div>
+      <div class="gallery-info">
+        <div class="gallery-name">${esc(env.name)}</div>
+        <div class="gallery-meta">${env.payload?.props?.length || 0} props</div>
+        <div class="gallery-tags">${(env.tags || []).join(', ')}</div>
+      </div>
+      <div class="gallery-actions">
+        <button class="gallery-action-btn edit" title="Edit">&#9998;</button>
+        <button class="gallery-action-btn delete" title="Delete">&#10005;</button>
+      </div>
+    `;
+
+    // Click to load
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.gallery-action-btn')) return;
+      state.currentEnv = env;
+      applyEnvironment(env);
+      updateItemRow();
+      renderGallery();
+    });
+
+    // Edit button
+    item.querySelector('.edit').addEventListener('click', () => {
+      state.currentEnv = env;
+      applyEnvironment(env);
+      updateItemRow();
+      state.preEditSnapshot = JSON.stringify(env);
+      setState('editing');
+    });
+
+    // Delete button
+    item.querySelector('.delete').addEventListener('click', async () => {
+      if (!confirm(`Delete "${env.name}"?`)) return;
+      await deleteEnvironment(env.id);
+      if (state.currentEnv?.id === env.id) {
+        state.currentEnv = null;
+        clearScene();
+        updateItemRow();
+      }
+      renderGallery();
+      toast('Deleted');
+    });
+
+    list.appendChild(item);
+  });
+
+  // Update category dropdown
+  updateCategoryDropdown();
+}
+
+// Fixed environment categories with keyword mapping
+const ENV_CATEGORIES = [
+  { id: 'all',      label: 'All Environments' },
+  { id: 'mine',     label: 'My Environments' },
+  { id: 'nature',   label: 'Nature',   keywords: ['forest','tree','woods','garden','park','meadow','jungle','swamp','field','pond','lake','river','nature','grove','clearing','wilderness','woodland'] },
+  { id: 'interior', label: 'Interior', keywords: ['room','cabin','house','home','kitchen','bedroom','office','shop','store','restaurant','cafe','bar','pub','tavern','inn','library','studio','apartment','indoor','cozy','cosy','living','attic','basement','cellar','lodge'] },
+  { id: 'urban',    label: 'Urban',    keywords: ['city','street','town','urban','alley','road','market','plaza','square','parking','station','downtown','corner','block','sidewalk','rooftop','warehouse','factory','construction'] },
+  { id: 'fantasy',  label: 'Fantasy',  keywords: ['castle','dungeon','dragon','magic','wizard','medieval','kingdom','throne','tower','temple','shrine','ruins','ancient','mystic','enchanted','fairy','elf','goblin','crypt','lair','portal','haunted','graveyard','cemetery'] },
+  { id: 'coastal',  label: 'Coastal',  keywords: ['beach','dock','pier','island','ocean','sea','shore','coast','harbor','harbour','tropical','lagoon','cove','reef','lighthouse','boardwalk','marina'] },
+  { id: 'desert',   label: 'Desert',   keywords: ['desert','sand','arid','canyon','mesa','oasis','dune','dry','wasteland','savanna','steppe','badlands','volcanic','lava'] },
+  { id: 'winter',   label: 'Winter',   keywords: ['snow','ice','arctic','frozen','winter','cold','glacier','tundra','blizzard','frost','alpine','mountain','peak','summit'] },
+  { id: 'rural',    label: 'Rural',    keywords: ['farm','village','countryside','barn','windmill','cottage','ranch','pasture','vineyard','orchard','harvest','mill','stable','campsite','camp','bonfire'] },
+];
+
+function getEnvCategory(env) {
+  const text = [env.name, env.description, ...(env.tags || [])].join(' ').toLowerCase();
+  for (const cat of ENV_CATEGORIES) {
+    if (cat.id === 'all') continue;
+    if (cat.keywords?.some(kw => text.includes(kw))) return cat.id;
+  }
+  return 'other';
+}
+
+function updateCategoryDropdown() {
+  const select = $('#gallery-category-select');
+  // Count environments per category
+  const counts = {};
+  let mineCount = 0;
+  state.environments.forEach(e => {
+    const cat = getEnvCategory(e);
+    counts[cat] = (counts[cat] || 0) + 1;
+    if (e.meta?.origin !== 'seed') mineCount++;
+  });
+
+  select.innerHTML = '';
+  for (const cat of ENV_CATEGORIES) {
+    const count = cat.id === 'all' ? state.environments.length
+                : cat.id === 'mine' ? mineCount
+                : (counts[cat.id] || 0);
+    if (cat.id !== 'all' && cat.id !== 'mine' && count === 0) continue; // hide empty categories
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = `${cat.label} (${count})`;
+    if (cat.id === activeCategory) opt.selected = true;
+    select.appendChild(opt);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PROP LIBRARY BROWSER
+// ═══════════════════════════════════════════════════════════════
+
+function renderPropLibrary() {
+  const list = $('#prop-lib-list');
+  list.innerHTML = '';
+
+  // Filter to only 3D props (not primitives or palettes)
+  let props = state.assetManifest.filter(a =>
+    a.dimension === '3D' && a.kind === 'props'
+  );
+
+  // Category filter
+  if (propLibCategory !== 'all') {
+    props = props.filter(a => a.category === propLibCategory);
+  }
+
+  // Search filter
+  const query = $('#prop-lib-filter').value.toLowerCase().trim();
+  if (query) {
+    props = props.filter(a =>
+      a.name.toLowerCase().includes(query) ||
+      (a.tags || []).some(t => t.toLowerCase().includes(query))
+    );
+  }
+
+  // Limit display
+  props.slice(0, 50).forEach(asset => {
+    const item = document.createElement('div');
+    item.className = 'prop-browser-item';
+    item.innerHTML = `
+      <span class="prop-browser-icon">&#9670;</span>
+      <span class="prop-browser-name">${esc(asset.name)}</span>
+      <button class="prop-browser-add">+ Add</button>
+    `;
+    item.querySelector('.prop-browser-add').addEventListener('click', (e) => {
+      e.stopPropagation();
+      addPropToScene(asset.id);
+    });
+    list.appendChild(item);
+  });
+
+  if (props.length === 0) {
+    list.innerHTML = '<div class="empty-msg" style="padding:10px;">No matching props</div>';
+  }
+
+  // Update category dropdown
+  updatePropLibCategories();
+}
+
+function updatePropLibCategories() {
+  const select = $('#prop-lib-category');
+  const cats = new Set();
+  state.assetManifest
+    .filter(a => a.dimension === '3D' && a.kind === 'props')
+    .forEach(a => cats.add(a.category));
+  select.innerHTML = '<option value="all">All Categories</option>';
+  [...cats].sort().forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+    if (c === propLibCategory) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+$('#prop-lib-category').addEventListener('change', (e) => {
+  propLibCategory = e.target.value;
+  renderPropLibrary();
+});
+
+$('#prop-lib-filter').addEventListener('input', () => renderPropLibrary());
+
+async function addPropToScene(assetId) {
+  if (!state.currentEnv) return;
+  const prop = {
+    instanceId: generateInstanceId(),
+    assetId,
+    position: { x: 0, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1.0,
+  };
+  state.currentEnv.payload.props.push(prop);
+  await updateProps(state.currentEnv.payload.props);
+  renderPlacedProps();
+  updateItemRow();
+  toast('Prop added');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PLACED PROPS LIST
+// ═══════════════════════════════════════════════════════════════
+
+function renderPlacedProps() {
+  const list = $('#placed-props-list');
+  list.innerHTML = '';
+  if (!state.currentEnv) return;
+
+  const props = state.currentEnv.payload.props;
+  if (props.length === 0) {
+    list.innerHTML = '<div class="empty-msg" style="padding:10px;">No props placed yet</div>';
+    return;
+  }
+
+  props.forEach((p, idx) => {
+    const manifest = state.assetManifest.find(a => a.id === p.assetId);
+    const name = manifest?.name || p.assetId;
+    const item = document.createElement('div');
+    item.className = 'placed-prop-item' + (idx === state.selectedPropIdx ? ' selected' : '');
+    item.innerHTML = `
+      <span class="placed-prop-icon">&#9670;</span>
+      <span class="placed-prop-name">${esc(name)}</span>
+      <span class="placed-prop-pos">(${p.position.x.toFixed(1)}, ${p.position.z.toFixed(1)})</span>
+      <div class="placed-prop-actions">
+        <button title="Delete">&#10005;</button>
+      </div>
+    `;
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.placed-prop-actions')) return;
+      selectPlacedProp(idx);
+    });
+    item.querySelector('.placed-prop-actions button').addEventListener('click', async () => {
+      props.splice(idx, 1);
+      if (state.selectedPropIdx === idx) state.selectedPropIdx = -1;
+      await updateProps(props);
+      renderPlacedProps();
+      updateItemRow();
+    });
+    list.appendChild(item);
+  });
+}
+
+function selectPlacedProp(idx) {
+  state.selectedPropIdx = idx;
+  const prop = state.currentEnv.payload.props[idx];
+  if (!prop) return;
+
+  // Highlight in scene
+  propsGroup.children.forEach((child, i) => {
+    child.traverse(m => {
+      if (m.isMesh) {
+        m.material.emissive = i === idx ? new THREE.Color(0x003333) : new THREE.Color(0x000000);
+      }
+    });
+  });
+
+  // Show properties
+  const manifest = state.assetManifest.find(a => a.id === prop.assetId);
+  $('#prop-info').textContent = manifest?.name || prop.assetId;
+  $('#prop-px').value = prop.position.x;
+  $('#prop-py').value = prop.position.y;
+  $('#prop-pz').value = prop.position.z;
+  $('#prop-rx').value = prop.rotation?.x || 0;
+  $('#prop-ry').value = prop.rotation?.y || 0;
+  $('#prop-rz').value = prop.rotation?.z || 0;
+  $('#prop-scale').value = (prop.scale || 1) * 100;
+  $('#prop-scale').nextElementSibling.textContent = (prop.scale || 1).toFixed(1);
+
+  setState('properties');
+  renderPlacedProps();
+}
+
+// Property inputs
+['prop-px','prop-py','prop-pz','prop-rx','prop-ry','prop-rz'].forEach(id => {
+  $(`#${id}`).addEventListener('input', () => updateSelectedProp());
+});
+
+$('#prop-scale').addEventListener('input', () => {
+  const v = Number($('#prop-scale').value) / 100;
+  $('#prop-scale').nextElementSibling.textContent = v.toFixed(1);
+  updateSelectedProp();
+});
+
+function updateSelectedProp() {
+  if (state.selectedPropIdx < 0 || !state.currentEnv) return;
+  const prop = state.currentEnv.payload.props[state.selectedPropIdx];
+  if (!prop) return;
+  prop.position.x = Number($('#prop-px').value) || 0;
+  prop.position.y = Number($('#prop-py').value) || 0;
+  prop.position.z = Number($('#prop-pz').value) || 0;
+  prop.rotation = {
+    x: Number($('#prop-rx').value) || 0,
+    y: Number($('#prop-ry').value) || 0,
+    z: Number($('#prop-rz').value) || 0,
+  };
+  prop.scale = Number($('#prop-scale').value) / 100;
+
+  // Update scene object
+  const obj = propsGroup.children[state.selectedPropIdx];
+  if (obj) {
+    obj.position.set(prop.position.x, prop.position.y, prop.position.z);
+    obj.rotation.set(
+      prop.rotation.x * Math.PI / 180,
+      prop.rotation.y * Math.PI / 180,
+      prop.rotation.z * Math.PI / 180
+    );
+    obj.scale.setScalar(prop.scale);
+  }
+}
+
+$('#prop-duplicate').addEventListener('click', async () => {
+  if (state.selectedPropIdx < 0 || !state.currentEnv) return;
+  const orig = state.currentEnv.payload.props[state.selectedPropIdx];
+  const dup = JSON.parse(JSON.stringify(orig));
+  dup.instanceId = generateInstanceId();
+  dup.position.x += 2;
+  state.currentEnv.payload.props.push(dup);
+  await updateProps(state.currentEnv.payload.props);
+  selectPlacedProp(state.currentEnv.payload.props.length - 1);
+  renderPlacedProps();
+  toast('Duplicated');
+});
+
+$('#prop-back').addEventListener('click', () => {
+  state.selectedPropIdx = -1;
+  propsGroup.children.forEach(child => {
+    child.traverse(m => { if (m.isMesh) m.material.emissive = new THREE.Color(0); });
+  });
+  setState('editing');
+  activateTab('props');
+});
+
+$('#prop-delete-btn').addEventListener('click', async () => {
+  if (state.selectedPropIdx < 0 || !state.currentEnv) return;
+  state.currentEnv.payload.props.splice(state.selectedPropIdx, 1);
+  state.selectedPropIdx = -1;
+  await updateProps(state.currentEnv.payload.props);
+  setState('editing');
+  activateTab('props');
+  updateItemRow();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  SYNC UI <-> ENV
+// ═══════════════════════════════════════════════════════════════
+
+function syncUIFromEnv(env) {
+  if (!env) return;
+  const p = env.payload;
+
+  // File tab
+  $('#field-name').value = env.name;
+  $('#field-desc').value = p.description || '';
+  $('#field-tags').value = (env.tags || []).join(', ');
+
+  // Sky
+  $('#sky-preset').value = p.sky.preset || 'day';
+  setSlider('sun-elevation', p.sky.sunElevation, v => v);
+  setSlider('sun-azimuth', p.sky.sunAzimuth, v => v);
+  setSlider('sun-intensity', p.sky.sunIntensity * 100, v => (v / 100).toFixed(1));
+  setSlider('ambient-intensity', p.sky.ambientIntensity * 100, v => (v / 100).toFixed(1));
+
+  // Ground
+  $('#ground-style').value = p.ground.style;
+  setSlider('ground-size', p.ground.size, v => v);
+  renderSwatchGrid('ground-swatches', p.ground.color, (hex) => {
+    p.ground.color = hex;
+    updateGround(p.ground);
+  });
+  $('#ground-texture').value = p.ground.textureId || 'none';
+
+  // Walls
+  $('#wall-layout').value = p.walls.layout;
+  setSlider('wall-height', p.walls.height, v => v);
+  renderSwatchGrid('wall-swatches', p.walls.color, (hex) => {
+    p.walls.color = hex;
+    updateWalls(p.walls);
+  });
+  $('#wall-texture').value = p.walls.textureId || 'none';
+
+  // Fog
+  const fogDensity = p.sky.fogEnabled ? Math.round((150 - p.sky.fogFar) / 1.2) : 0;
+  setSlider('fog-density', Math.max(0, Math.min(100, fogDensity)), v => v);
+
+  updateItemRow();
+}
+
+function syncEnvFromUI() {
+  if (!state.currentEnv) return;
+  state.currentEnv.name = $('#field-name').value || 'Untitled';
+  state.currentEnv.payload.description = $('#field-desc').value;
+  state.currentEnv.tags = $('#field-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+}
+
+function setSlider(id, value, displayFn) {
+  const input = $(`#${id}`);
+  input.value = value;
+  input.nextElementSibling.textContent = displayFn(value);
+}
+
+function updateItemRow() {
+  const name = state.currentEnv?.name || 'No environment loaded';
+  const propCount = state.currentEnv?.payload?.props?.length || 0;
+  $('#item-name-display').textContent = name;
+  $('#item-name-display').classList.remove('create-new');
+  $('#item-element-count').textContent = propCount ? `${propCount} props` : '';
+}
+
+function clearScene() {
+  updateSky(DEFAULT_ENV.sky);
+  updateGround(DEFAULT_ENV.ground);
+  updateWalls(DEFAULT_ENV.walls);
+  while (propsGroup.children.length) {
+    const c = propsGroup.children[0];
+    c.traverse(m => { m.geometry?.dispose(); m.material?.dispose(); });
+    propsGroup.remove(c);
+  }
+  updateItemRow();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LLM INTEGRATION
+// ═══════════════════════════════════════════════════════════════
+
+async function loadSystemPrompt() {
+  try {
+    const res = await fetch('./assets/system-prompt.md');
+    state.systemPrompt = await res.text();
+  } catch (e) {
+    console.warn('Could not load system prompt:', e);
+    state.systemPrompt = 'You are an environment designer. Respond with a JSON environment config.';
+  }
+}
+
+// Keyword → category mapping for smart prop filtering
+const CATEGORY_KEYWORDS = {
+  nature: ['forest','tree','trees','woods','garden','park','nature','outdoor','field','meadow','jungle','swamp','pond','lake','river','mountain','hill','cave','beach','island','farm'],
+  interior: ['room','house','home','cabin','kitchen','bedroom','living','office','shop','store','restaurant','cafe','bar','pub','tavern','inn','library','studio','apartment','cozy','cosy','indoor'],
+  urban: ['city','street','town','urban','alley','road','sidewalk','downtown','market','plaza','square','parking','station','corner','block','building'],
+  fantasy: ['castle','dungeon','dragon','magic','wizard','medieval','kingdom','throne','tower','temple','shrine','ruins','ancient','mystic','enchanted','fairy','elf','goblin'],
+  environment: ['desert','snow','ice','winter','arctic','tropical','volcanic','space','alien','underwater','ocean','sky','cloud','cemetery','graveyard','wasteland'],
+  items: ['weapon','sword','shield','potion','chest','treasure','food','drink','tool','instrument','book','scroll','gem','crystal','key','lantern','candle','torch'],
+  headwear: ['hat','helmet','crown','hood','mask','headband','cap','tiara'],
+  panels: ['wall','panel','door','window','gate','fence','barrier','sign','banner','flag','shelf','frame'],
+};
+
+function filterPropsForPrompt(userMessage) {
+  const allProps = state.assetManifest.filter(a => a.dimension === '3D' && a.kind === 'props');
+  const msg = userMessage.toLowerCase();
+
+  // Find matching categories from user message
+  const matchedCats = new Set();
+  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (keywords.some(kw => msg.includes(kw))) matchedCats.add(cat);
+  }
+
+  // Always include nature + interior (most broadly useful)
+  matchedCats.add('nature');
+  matchedCats.add('interior');
+
+  // Filter props to matched categories, plus any whose name matches a word in the message
+  const msgWords = msg.split(/\s+/);
+  const filtered = allProps.filter(a => {
+    if (matchedCats.has(a.category)) return true;
+    const name = a.name.toLowerCase();
+    return msgWords.some(w => w.length > 3 && name.includes(w));
+  });
+
+  // If we filtered too aggressively, fall back to all
+  if (filtered.length < 20) return allProps;
+  return filtered;
+}
+
+function buildLLMPrompt(userMessage = '') {
+  let prompt = state.systemPrompt;
+
+  // Inject props — filtered by relevance and grouped by category
+  const props = filterPropsForPrompt(userMessage);
+  const grouped = {};
+  for (const a of props) {
+    const cat = a.category || 'other';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(`${a.id}: ${a.name}`);
+  }
+  const propList = Object.entries(grouped)
+    .map(([cat, items]) => `**${cat}**: ${items.join(', ')}`)
+    .join('\n');
+  prompt = prompt.replace('{{PROP_LIBRARY}}', propList);
+
+  // Inject available 2D textures (compact format)
+  const groundTextures = state.assetManifest
+    .filter(a => a.dimension === '2D' && (a.kind === 'textures' || a.kind === 'textures-materials'))
+    .map(a => `${a.id}: ${a.name}`)
+    .join(', ');
+  const wallTextures = state.assetManifest
+    .filter(a => a.dimension === '2D' && (a.kind === 'walls' || a.kind === 'textures'))
+    .map(a => `${a.id}: ${a.name}`)
+    .join(', ');
+  prompt = prompt.replace('{{GROUND_TEXTURES}}', groundTextures || '(none available)');
+  prompt = prompt.replace('{{WALL_TEXTURES}}', wallTextures || '(none available)');
+
+  // Inject palette (compact single line)
+  const paletteStr = DB32.map((hex, i) => `${i}:${hex}`).join(' ');
+  prompt = prompt.replace('{{PALETTE}}', paletteStr);
+
+  return prompt;
+}
+
+function ensureApiKey() {
+  if (state.apiKey) return true;
+  const key = prompt('Enter your Anthropic API key:');
+  if (!key) return false;
+  state.apiKey = key;
+  localStorage.setItem('envbuilder_api_key', key);
+  return true;
+}
+
+async function sendToLLM(userMessage) {
+  if (!ensureApiKey()) return null;
+
+  const systemPrompt = buildLLMPrompt(userMessage);
+  let userContent = userMessage;
+
+  // If modifying, include current state (compact — no pretty-print)
+  if (!state.isCreateMode && state.currentEnv) {
+    const envState = JSON.stringify(state.currentEnv.payload);
+    userContent = `Current state: ${envState}\n\nRequest: ${userMessage}`;
+  }
+
+  const body = {
+    model: ANTHROPIC_MODEL,
+    max_tokens: 2048,
+    stream: true,
+    system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
+    messages: [
+      { role: 'user', content: userContent },
+      { role: 'assistant', content: '{' },
+    ],
+  };
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': state.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`API error ${res.status}: ${err}`);
+    }
+
+    // Stream the response for faster perceived speed
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // keep incomplete line in buffer
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6);
+        if (data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if (evt.type === 'content_block_delta' && evt.delta?.text) {
+            fullText += evt.delta.text;
+          }
+        } catch {}
+      }
+    }
+
+    // Prepend the '{' from assistant prefill
+    return parseEnvResponse('{' + fullText);
+  } catch (e) {
+    console.error('LLM error:', e);
+    toast('AI error: ' + e.message);
+    return null;
+  }
+}
+
+function parseEnvResponse(text) {
+  try {
+    // Try extracting from code block first
+    const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const jsonStr = codeMatch ? codeMatch[1] : text;
+    return JSON.parse(jsonStr.trim());
+  } catch (e) {
+    console.error('Failed to parse AI response:', e, text);
+    toast('Failed to parse AI response');
+    return null;
+  }
+}
+
+// Prompt bar send
+$('#btn-send').addEventListener('click', handleSend);
+$('#prompt-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    handleSend();
+  }
+});
+
+async function handleSend() {
+  const input = $('#prompt-input');
+  const message = input.value.trim();
+  if (!message) return;
+
+  const sendBtn = $('#btn-send');
+  sendBtn.classList.add('generating');
+  input.classList.add('generating');
+  input.value = 'Generating...';
+
+  try {
+    const result = await sendToLLM(message);
+    if (!result) return;
+
+    if (state.isCreateMode || !state.currentEnv) {
+      // Create new environment
+      const env = createNewEnvironment(result.name || 'AI Environment');
+      env.tags = result.tags || [];
+      env.payload = {
+        ...DEFAULT_ENV,
+        ...result,
+        description: result.description || '',
+      };
+      // Ensure nested objects have defaults
+      env.payload.sky = { ...DEFAULT_ENV.sky, ...result.sky };
+      env.payload.ground = { ...DEFAULT_ENV.ground, ...result.ground };
+      env.payload.walls = { ...DEFAULT_ENV.walls, ...result.walls };
+      env.payload.props = (result.props || []).map(p => ({
+        instanceId: generateInstanceId(),
+        assetId: p.assetId,
+        position: p.position || { x: 0, y: 0, z: 0 },
+        rotation: p.rotation || { x: 0, y: 0, z: 0 },
+        scale: p.scale || 1,
+      }));
+      env.payload.color_assignments = result.color_assignments || DEFAULT_ENV.color_assignments;
+      env.meta.origin = 'ai';
+
+      state.currentEnv = env;
+      await saveEnvironment(env);
+      applyEnvironment(env);
+
+      // Exit create mode
+      state.isCreateMode = false;
+      $('#btn-new-toggle').classList.remove('active');
+      document.body.classList.remove('create-mode');
+    } else {
+      // Modify existing
+      const env = state.currentEnv;
+      if (result.sky) env.payload.sky = { ...env.payload.sky, ...result.sky };
+      if (result.ground) env.payload.ground = { ...env.payload.ground, ...result.ground };
+      if (result.walls) env.payload.walls = { ...env.payload.walls, ...result.walls };
+      if (result.props) {
+        env.payload.props = (result.props || []).map(p => ({
+          instanceId: p.instanceId || generateInstanceId(),
+          assetId: p.assetId,
+          position: p.position || { x: 0, y: 0, z: 0 },
+          rotation: p.rotation || { x: 0, y: 0, z: 0 },
+          scale: p.scale || 1,
+        }));
+      }
+      if (result.color_assignments) env.payload.color_assignments = result.color_assignments;
+      if (result.name) env.name = result.name;
+      if (result.tags) env.tags = result.tags;
+
+      await saveEnvironment(env);
+      applyEnvironment(env);
+    }
+
+    toast('Environment generated!');
+  } finally {
+    sendBtn.classList.remove('generating');
+    input.classList.remove('generating');
+    input.value = '';
+    input.placeholder = 'Describe an environment...';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════════════
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+
+async function init() {
+  initThree();
+
+  // Load primitives
+  await loadPrimitives();
+
+  // Load asset manifest
+  try {
+    const res = await fetch('./asset-manifest.json');
+    const manifest = await res.json();
+    state.assetManifest = manifest.assets || [];
+    console.log(`Loaded ${state.assetManifest.length} assets from manifest`);
+  } catch (e) {
+    console.warn('Could not load asset manifest:', e);
+  }
+
+  // Load system prompt
+  await loadSystemPrompt();
+
+  // Load saved environments
+  await loadAllEnvironments();
+
+  // Init swatches and texture dropdowns
+  initSwatches();
+  populateTextureDropdowns();
+
+  // Always apply a default greybox scene on startup
+  const defaultEnv = createNewEnvironment('Default Scene');
+  defaultEnv.payload.sky = { ...DEFAULT_ENV.sky };
+  defaultEnv.payload.ground = { style: 'grid', color: '#595652', size: 20, textureId: null };
+  defaultEnv.payload.walls = { layout: 'room', height: 3, color: '#696a6a', textureId: null };
+  state.currentEnv = defaultEnv;
+  applyEnvironment(defaultEnv);
+
+  updateItemRow();
+
+  // Open browse if we have environments, otherwise closed
+  setState(state.environments.length > 0 ? 'closed' : 'closed');
+
+  // Arrow key navigation + Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+    const isArrow = ['ArrowUp', 'ArrowDown'].includes(e.key);
+
+    // Browse/search mode: arrow keys step through gallery with live preview
+    if ((state.mode === 'browse' || state.mode === 'search') && isArrow && galleryDisplayedEnvs.length > 0) {
+      e.preventDefault();
+      const currentIdx = galleryDisplayedEnvs.findIndex(env => env.id === state.currentEnv?.id);
+      let nextIdx;
+      if (e.key === 'ArrowDown') {
+        nextIdx = currentIdx < 0 ? 0 : Math.min(currentIdx + 1, galleryDisplayedEnvs.length - 1);
+      } else {
+        nextIdx = currentIdx <= 0 ? 0 : currentIdx - 1;
+      }
+      const env = galleryDisplayedEnvs[nextIdx];
+      state.currentEnv = env;
+      applyEnvironment(env);
+      updateItemRow();
+
+      // Update active highlight & scroll into view
+      const container = document.getElementById('gallery-list');
+      container.querySelectorAll('.gallery-item').forEach(c => c.classList.remove('active'));
+      const cards = container.querySelectorAll('.gallery-item');
+      if (cards[nextIdx]) {
+        cards[nextIdx].classList.add('active');
+        cards[nextIdx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // Escape closes panel or exits mode
+    if (e.key === 'Escape') {
+      if (state.mode === 'properties') { setState('editing'); activateTab('props'); }
+      else if (state.mode === 'search') setState('browse');
+      else if (state.mode === 'browse') setState('closed');
+      else if (state.mode === 'editing') {
+        if (state.preEditSnapshot) {
+          state.currentEnv = JSON.parse(state.preEditSnapshot);
+          applyEnvironment(state.currentEnv);
+          state.preEditSnapshot = null;
+        }
+        setState('closed');
+      }
+    }
+  });
+
+  console.log('EnvironmentBuilder V2 initialized');
+}
+
+init();
+</script>
+</body>
+</html>

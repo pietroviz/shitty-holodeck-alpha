@@ -1,0 +1,229 @@
+{
+  "id": "prop_dirt_diamond",
+  "type": "prop",
+  "name": "Dirt Diamond",
+  "tags": [
+    "panels",
+    "environment",
+    "terrain",
+    "baseball",
+    "sports"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Baseball infield dirt panel with white line marker",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#ffffff",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_box_0",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 3,
+            "height": 0.2,
+            "depth": 3,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_box_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.12,
+            "pz": -0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 0.08,
+            "height": 0.02,
+            "depth": 1.2,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_box_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.12,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 0.08,
+            "height": 0.02,
+            "depth": 1.2,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_box_3",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.7,
+            "py": 0.12,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 1,
+            "height": 0.02,
+            "depth": 0.08,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_box_4",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.7,
+            "py": 0.12,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 1,
+            "height": 0.02,
+            "depth": 0.08,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_5",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.2,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.15,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_6",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1,
+            "py": 0.15,
+            "pz": 0.9,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.125,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_7",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.8,
+            "py": 0.15,
+            "pz": -0.7,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.1,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#ffffff",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

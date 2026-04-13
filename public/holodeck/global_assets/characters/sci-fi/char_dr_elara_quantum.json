@@ -1,0 +1,53 @@
+{
+  "id": "char_dr_elara_quantum",
+  "type": "character",
+  "name": "Dr. Elara Quantum",
+  "tags": [
+    "sci-fi",
+    "scientist",
+    "female",
+    "research"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Brilliant physicist who cracked faster-than-light travel.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#c0c0c0",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#ffffff",
+      "bottomColor": "#4a4a6a",
+      "eyeIrisColor": "#8a4ac0",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#c0c0c0",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_round_glasses",
+      "glassesColor": "#c0c0c0"
+    }
+  }
+}

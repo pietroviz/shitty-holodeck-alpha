@@ -1,0 +1,101 @@
+{
+  "id": "asset_meat_batch",
+  "type": "asset",
+  "name": "Meat",
+  "tags": [
+    "emoji",
+    "food",
+    "meat",
+    "steak"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.305Z",
+    "modified": "2026-03-28T15:22:15.305Z",
+    "origin": "batch",
+    "origin_ref": "food-drink",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A juicy steak or meat cut",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#222034",
+      "tertiary": "#d95763"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 280
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "rx": 150,
+            "ry": 80,
+            "rotation": 10,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 265,
+            "rx": 110,
+            "ry": 55,
+            "rotation": 5,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 230,
+            "cy": 255,
+            "rx": 30,
+            "ry": 18,
+            "rotation": 350,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#222034",
+        "tertiary": "#d95763"
+      }
+    }
+  }
+}

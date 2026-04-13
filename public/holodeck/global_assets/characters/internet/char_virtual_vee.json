@@ -1,0 +1,53 @@
+{
+  "id": "char_virtual_vee",
+  "type": "character",
+  "name": "Virtual Vee",
+  "tags": [
+    "internet",
+    "vtuber",
+    "non-binary",
+    "avatar"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Virtual YouTuber with a digital persona.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#00ccff",
+      "skinColor": "#e8d8c8",
+      "torsoColor": "#ff44cc",
+      "bottomColor": "#4444ff",
+      "eyeIrisColor": "#ff44cc",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "wideOval",
+      "lipColor": "#ff44cc",
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#00ccff",
+      "hatStyle": "prop_fox_ears",
+      "hatColor": "#00ccff",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "id": "asset_rainbow_batch",
+  "type": "asset",
+  "name": "Rainbow",
+  "tags": [
+    "emoji",
+    "weather",
+    "rainbow",
+    "colorful"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.294Z",
+    "modified": "2026-03-28T15:22:15.294Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A colorful rainbow arc",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#fbf236",
+      "tertiary": "#5b6ee1"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 350
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 180,
+            "startAngle": -170,
+            "endAngle": -10,
+            "thickness": 25,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 150,
+            "startAngle": -170,
+            "endAngle": -10,
+            "thickness": 25,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 120,
+            "startAngle": -170,
+            "endAngle": -10,
+            "thickness": 25,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#fbf236",
+        "tertiary": "#5b6ee1"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "voice_russian",
+  "type": "voice",
+  "name": "Russian",
+  "tags": ["accented", "russian", "eastern-european", "commanding"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Deep commanding Eastern European-inspired voice using Russian accent engine.",
+    "format": "voice_state",
+    "state": {
+      "language": "pl",
+      "variant": "m1",
+      "speed": 135,
+      "pitch": 35,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 75,
+      "audioLead": 20,
+      "lipColor": "#a05555",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#c8b090",
+      "scalpColor": "#3a3025",
+      "captionSize": 18,
+      "presetKey": "russian",
+      "previewText": "Greetings comrade. I speak with deep Eastern accent."
+    }
+  }
+}

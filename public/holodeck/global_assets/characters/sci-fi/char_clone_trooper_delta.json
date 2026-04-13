@@ -1,0 +1,53 @@
+{
+  "id": "char_clone_trooper_delta",
+  "type": "character",
+  "name": "Clone Trooper Delta",
+  "tags": [
+    "sci-fi",
+    "clone",
+    "male",
+    "soldier"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "One of millions, yet uniquely battle-hardened.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#4a3a2a",
+      "skinColor": "#c8a06a",
+      "torsoColor": "#e0e0e0",
+      "bottomColor": "#c0c0c0",
+      "eyeIrisColor": "#4a3a2a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_helmet",
+      "hatColor": "#e0e0e0",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "id": "asset_concrete_barrier_batch",
+  "type": "asset",
+  "name": "Concrete Barrier",
+  "tags": [
+    "man-made-props",
+    "barrier",
+    "concrete",
+    "jersey",
+    "road",
+    "safety"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A concrete jersey barrier",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#847e87",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 325
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "w": 180,
+            "h": 60,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 140,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#847e87",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

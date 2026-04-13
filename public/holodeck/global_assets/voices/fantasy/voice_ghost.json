@@ -1,0 +1,46 @@
+{
+  "id": "voice_ghost",
+  "type": "voice",
+  "name": "Ghost",
+  "tags": ["fantasy", "ghost", "breathy", "spooky"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Breathy, distant ghost voice with wobble and reverb.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "whisperf",
+      "speed": 130,
+      "pitch": 60,
+      "volume": 100,
+      "amplitude": 40,
+      "wordgap": 6,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 50,
+      "audioLead": 70,
+      "lipColor": "#aaaacc",
+      "lipThickness": 2,
+      "showLips": true,
+      "showTeeth": false,
+      "showTongue": false,
+      "faceColor": "#d0d0e8",
+      "scalpColor": "#9090b0",
+      "captionSize": 16,
+      "presetKey": "ghost",
+      "previewText": "I wander these halls forever, searching for the living."
+    }
+  }
+}

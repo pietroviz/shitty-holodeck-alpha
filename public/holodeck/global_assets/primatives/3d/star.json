@@ -1,0 +1,23 @@
+{
+  "id": "star",
+  "name": "Star",
+  "category": "decorative",
+  "icon": "★",
+  "defaults": {
+    "px": 0, "py": 0, "pz": 0,
+    "rx": 0, "ry": 0, "rz": 0,
+    "points": 5, "outerRadius": 0.6, "innerRadius": 0.25, "depth": 0.2,
+    "fill": "secondary",
+    "metalness": 0.1, "roughness": 0.7, "opacity": 1
+  },
+  "params": [
+    { "key": "points", "label": "Points", "type": "range", "min": 3, "max": 12, "step": 1 },
+    { "key": "outerRadius", "label": "Outer Radius", "type": "range", "min": 0.1, "max": 2, "step": 0.05 },
+    { "key": "innerRadius", "label": "Inner Radius", "type": "range", "min": 0.05, "max": 1.5, "step": 0.05 },
+    { "key": "depth", "label": "Depth", "type": "range", "min": 0.02, "max": 1, "step": 0.02 },
+    { "key": "fill", "label": "Colour", "type": "token" },
+    { "key": "metalness", "label": "Metalness", "type": "range", "min": 0, "max": 1, "step": 0.05 },
+    { "key": "roughness", "label": "Roughness", "type": "range", "min": 0, "max": 1, "step": 0.05 },
+    { "key": "opacity", "label": "Opacity", "type": "range", "min": 0.1, "max": 1, "step": 0.05 }
+  ]
+}

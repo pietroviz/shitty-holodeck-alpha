@@ -1,0 +1,89 @@
+{
+  "id": "asset_flat_rock_batch",
+  "type": "asset",
+  "name": "Flat Rock",
+  "tags": [
+    "natural-props",
+    "rock",
+    "flat",
+    "stepping",
+    "stone",
+    "ground"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A flat stepping stone",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#9badb7",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 300
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "rx": 100,
+            "ry": 35,
+            "rotation": -3,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 240,
+            "cy": 260,
+            "rx": 30,
+            "ry": 12,
+            "rotation": 5,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#9badb7",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

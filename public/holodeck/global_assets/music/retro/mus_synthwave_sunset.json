@@ -1,0 +1,46 @@
+{
+  "id": "mus_synthwave_sunset",
+  "type": "music",
+  "name": "Synthwave Sunset",
+  "tags": ["retro", "synthwave", "dreamy"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Retro synthwave groove with lush pad textures and ethereal melody",
+    "engine": "strudel",
+    "bpm": 130,
+    "key": "A",
+    "scale": "major",
+    "pattern": "Synthwave with lush pad and shimmering lead",
+    "layers": [
+      {
+        "name": "drum_beat_synth",
+        "pattern": "A2 A2 E2 A2",
+        "gain": 0.68
+      },
+      {
+        "name": "pad_lush_synth",
+        "pattern": "A3 C#4 E4 A4 C#5",
+        "gain": 0.65
+      },
+      {
+        "name": "melody_lead_ethereal",
+        "pattern": "E5 A5 C#5 E5 A5",
+        "gain": 0.7
+      },
+      {
+        "name": "texture_shimmer_fx",
+        "pattern": "C#5 E5 A5 E5",
+        "gain": 0.48
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.2,
+    "fade_out": 2.0,
+    "mood_color": "#FF1493"
+  }
+}

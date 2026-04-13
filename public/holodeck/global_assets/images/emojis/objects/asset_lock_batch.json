@@ -1,0 +1,113 @@
+{
+  "id": "asset_lock_batch",
+  "type": "asset",
+  "name": "Lock",
+  "tags": [
+    "emoji",
+    "object",
+    "lock",
+    "security"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.245Z",
+    "modified": "2026-03-28T07:33:47.245Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A padlock",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#8a6f30",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "w": 160,
+            "h": 140,
+            "rx": 14,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "r": 55,
+            "startAngle": -180,
+            "endAngle": 0,
+            "thickness": 14,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "r": 16,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "w": 10,
+            "h": 30,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#8a6f30",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

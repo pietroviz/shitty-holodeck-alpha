@@ -1,0 +1,188 @@
+{
+  "id": "asset_checkered_flag_batch",
+  "type": "asset",
+  "name": "Checkered Flag",
+  "tags": [
+    "emoji",
+    "flag",
+    "race",
+    "finish"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.258Z",
+    "modified": "2026-03-28T07:33:47.258Z",
+    "origin": "batch",
+    "origin_ref": "flags",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A racing checkered flag",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "secondary",
+      "primary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#222034",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 170,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 170,
+            "cy": 280,
+            "length": 300,
+            "angle": 90,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 280,
+            "cy": 195,
+            "w": 160,
+            "h": 110,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 230,
+            "cy": 165,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 280,
+            "cy": 165,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 330,
+            "cy": 165,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 255,
+            "cy": 195,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 305,
+            "cy": 195,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 230,
+            "cy": 225,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 280,
+            "cy": 225,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "square",
+          "params": {
+            "cx": 330,
+            "cy": 225,
+            "size": 26,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 9
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#222034",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

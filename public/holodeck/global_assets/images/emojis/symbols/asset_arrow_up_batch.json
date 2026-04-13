@@ -1,0 +1,86 @@
+{
+  "id": "asset_arrow_up_batch",
+  "type": "asset",
+  "name": "Arrow Up",
+  "tags": [
+    "emoji",
+    "symbol",
+    "arrow",
+    "up",
+    "direction"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.346Z",
+    "modified": "2026-03-28T15:22:15.346Z",
+    "origin": "batch",
+    "origin_ref": "symbols",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "An upward pointing arrow",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#639bff",
+      "secondary": "#222034",
+      "tertiary": "#ffffff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 170,
+            "r": 100,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "w": 80,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#639bff",
+        "secondary": "#222034",
+        "tertiary": "#ffffff"
+      }
+    }
+  }
+}

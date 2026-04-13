@@ -1,0 +1,53 @@
+{
+  "id": "char_navigator_luna",
+  "type": "character",
+  "name": "Navigator Luna",
+  "tags": [
+    "sci-fi",
+    "navigator",
+    "female",
+    "space"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Star navigator who can plot a course through any nebula.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#4a3a8a",
+      "skinColor": "#a67c52",
+      "torsoColor": "#1a1a4a",
+      "bottomColor": "#0a0a2a",
+      "eyeIrisColor": "#c0c0ff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#6a4a8a",
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#4a3a8a",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

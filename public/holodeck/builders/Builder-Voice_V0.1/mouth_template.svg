@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  VOICEBOX V2 — MOUTH KIT TEMPLATE                              ║
+  ║  Open this file in Illustrator or Figma.                        ║
+  ║  Design your custom mouth parts on the designated layers.       ║
+  ║  Export each piece as a separate SVG to the project folder.     ║
+  ╚══════════════════════════════════════════════════════════════════╝
+
+  COORDINATE SYSTEM
+  ─────────────────
+  • Origin (0, 0) = center of the mouth opening.
+  • X: positive = right, negative = left.
+  • Y: positive = down (chin), negative = up (nose).
+  • All parts are centered on the origin.
+
+  ARTBOARD
+  ────────
+  • 120 × 80 units, with origin at center (60, 40).
+  • This matches the maximum mouth extent at full open + lip stroke.
+
+  HOW THE ENGINE USES EACH PIECE
+  ───────────────────────────────
+  MOUTH SHAPE (clip mask):
+    The engine uses this as a clipPath — everything inside (teeth,
+    tongue, interior) is only visible through this shape. Currently
+    an ellipse that scales dynamically:
+      rx: 18–44 units (lipWidth + lipRound params)
+      ry: 2–26 units  (jawOpen param, driven by audio amplitude)
+    Your custom shapes will replace this ellipse. Design them at
+    key states (see layer examples below).
+
+  TEETH (upper + lower):
+    Clipped inside the mouth shape. Upper teeth hang from the top
+    edge, lower teeth rise from the bottom edge.
+      Upper: width ≈ rx × 1.6, height 6–20 (teethShow param)
+      Lower: width ≈ rx × 1.36, height 5–13
+    Anchor: top edge of upper teeth = top of mouth opening.
+             bottom edge of lower teeth = bottom of mouth opening.
+
+  TONGUE:
+    Clipped inside the mouth shape. Sits at bottom-center,
+    rises when tongueUp increases.
+      cy: 8 (down/hidden) → -8 (up/visible)
+      rx: openRx × 0.6
+      ry: 10–18
+    Anchor: center-bottom of mouth opening.
+
+  LIP OUTLINE:
+    Drawn ON TOP of everything, not clipped. Traces the outside
+    of the mouth shape with a stroke. The inner edge of the stroke
+    aligns with the mouth opening (like Illustrator's "outside" stroke).
+    Stroke width: 0–16 units (user slider).
+
+  EXPORT INSTRUCTIONS
+  ───────────────────
+  From Illustrator:
+    1. Select the artwork on one layer (e.g., "Tongue")
+    2. File → Export → Export As → SVG
+    3. Ensure "Use Artboards" is checked
+    4. In SVG options: Styling = Inline Style, Decimal = 2
+    5. Save to: VoiceBox_V2/mouth_parts/
+
+  From Figma:
+    1. Select the frame/group for one part
+    2. Right panel → Export → SVG
+    3. Save to: VoiceBox_V2/mouth_parts/
+
+  File naming convention:
+    mouth_shape_REST.svg    (closed mouth clip path)
+    mouth_shape_AA.svg      (wide open — "AH")
+    mouth_shape_OO.svg      (round — "OO")
+    mouth_shape_EE.svg      (wide narrow — "EE")
+    teeth_upper.svg
+    teeth_lower.svg
+    tongue.svg
+    lip_outline.svg         (optional — or use programmatic stroke)
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="-60 -40 120 80"
+     width="480" height="320">
+
+  <defs>
+    <!-- Grid pattern for reference -->
+    <pattern id="grid-small" width="5" height="5" patternUnits="userSpaceOnUse">
+      <path d="M 5 0 L 0 0 0 5" fill="none" stroke="#333" stroke-width="0.2"/>
+    </pattern>
+    <pattern id="grid-large" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="url(#grid-small)"/>
+      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#444" stroke-width="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- ═══ BACKGROUND & GRID ═══ -->
+  <rect x="-60" y="-40" width="120" height="80" fill="#1a1a2e"/>
+  <rect x="-60" y="-40" width="120" height="80" fill="url(#grid-large)"/>
+
+  <!-- Crosshair at origin -->
+  <line x1="-60" y1="0" x2="60" y2="0" stroke="#555" stroke-width="0.3"/>
+  <line x1="0" y1="-40" x2="0" y2="40" stroke="#555" stroke-width="0.3"/>
+  <circle cx="0" cy="0" r="1" fill="#888" opacity="0.5"/>
+
+  <!-- ═══ LAYER: DESIGN ZONES (reference — delete before exporting parts) ═══ -->
+
+  <!-- Mouth opening max extent (AA viseme: rx=41, ry=26) -->
+  <ellipse cx="0" cy="0" rx="41" ry="26"
+           fill="none" stroke="#4a90d9" stroke-width="0.5" stroke-dasharray="3,2" opacity="0.5"/>
+  <text x="42" y="-22" fill="#4a90d9" font-size="3.5" font-family="monospace" opacity="0.6">MAX OPEN (AA)</text>
+
+  <!-- Mouth opening medium (OH viseme: rx=36, ry=19) -->
+  <ellipse cx="0" cy="0" rx="36" ry="19"
+           fill="none" stroke="#7ab8e0" stroke-width="0.4" stroke-dasharray="2,2" opacity="0.4"/>
+  <text x="37" y="-16" fill="#7ab8e0" font-size="3" font-family="monospace" opacity="0.5">MEDIUM (OH)</text>
+
+  <!-- Mouth opening round (OO viseme: rx=26, ry=13) -->
+  <ellipse cx="0" cy="0" rx="26" ry="13"
+           fill="none" stroke="#90d0ff" stroke-width="0.4" stroke-dasharray="2,2" opacity="0.4"/>
+  <text x="27" y="-10" fill="#90d0ff" font-size="3" font-family="monospace" opacity="0.5">ROUND (OO)</text>
+
+  <!-- Mouth opening wide-narrow (EE viseme: rx=44, ry=10) -->
+  <ellipse cx="0" cy="0" rx="44" ry="10"
+           fill="none" stroke="#a0e0a0" stroke-width="0.4" stroke-dasharray="2,2" opacity="0.4"/>
+  <text x="37" y="14" fill="#a0e0a0" font-size="3" font-family="monospace" opacity="0.5">WIDE (EE)</text>
+
+  <!-- Closed mouth (REST: rx=39, ry=2) -->
+  <ellipse cx="0" cy="0" rx="39" ry="2"
+           fill="none" stroke="#e0e080" stroke-width="0.4" stroke-dasharray="2,2" opacity="0.4"/>
+  <text x="33" y="6" fill="#e0e080" font-size="3" font-family="monospace" opacity="0.5">CLOSED (REST)</text>
+
+  <!-- ═══ LAYER: UPPER TEETH ZONE ═══ -->
+  <!-- Anchor: top edge aligns with top of mouth opening -->
+  <!-- Shown here at AA state (openRy=26, teethShow=0.4 → height=12) -->
+  <rect x="-33" y="-28" width="66" height="12" rx="2"
+        fill="none" stroke="#f0eee8" stroke-width="0.4" stroke-dasharray="2,1" opacity="0.4"/>
+  <text x="-32" y="-29" fill="#f0eee8" font-size="3" font-family="monospace" opacity="0.5">UPPER TEETH ZONE</text>
+  <line x1="-33" y1="-26" x2="33" y2="-26" stroke="#f0eee8" stroke-width="0.2" stroke-dasharray="1,1" opacity="0.3"/>
+  <text x="20" y="-23" fill="#f0eee8" font-size="2.5" font-family="monospace" opacity="0.4">← anchored to top edge of mouth</text>
+
+  <!-- ═══ LAYER: LOWER TEETH ZONE ═══ -->
+  <!-- Anchor: bottom edge aligns with bottom of mouth opening -->
+  <rect x="-28" y="16" width="56" height="10" rx="2"
+        fill="none" stroke="#e8e6e0" stroke-width="0.4" stroke-dasharray="2,1" opacity="0.4"/>
+  <text x="-27" y="29" fill="#e8e6e0" font-size="3" font-family="monospace" opacity="0.5">LOWER TEETH ZONE</text>
+  <line x1="-28" y1="26" x2="28" y2="26" stroke="#e8e6e0" stroke-width="0.2" stroke-dasharray="1,1" opacity="0.3"/>
+  <text x="-27" y="24" fill="#e8e6e0" font-size="2.5" font-family="monospace" opacity="0.4">anchored to bottom edge of mouth →</text>
+
+  <!-- ═══ LAYER: TONGUE ZONE ═══ -->
+  <!-- Anchor: center-bottom of mouth opening -->
+  <!-- cy ranges from 8 (hidden, below center) to -8 (raised, above center) -->
+  <ellipse cx="0" cy="8" rx="25" ry="14"
+           fill="none" stroke="#c44055" stroke-width="0.4" stroke-dasharray="2,1" opacity="0.4"/>
+  <text x="18" y="22" fill="#c44055" font-size="3" font-family="monospace" opacity="0.5">TONGUE (down)</text>
+
+  <ellipse cx="0" cy="-8" rx="25" ry="14"
+           fill="none" stroke="#c44055" stroke-width="0.4" stroke-dasharray="1,1" opacity="0.25"/>
+  <text x="18" y="-10" fill="#c44055" font-size="3" font-family="monospace" opacity="0.4">TONGUE (up)</text>
+
+  <!-- Arrow showing tongue travel -->
+  <line x1="3" y1="8" x2="3" y2="-8" stroke="#c44055" stroke-width="0.3" opacity="0.3" marker-end="url(#arrow)"/>
+
+  <!-- ═══ LAYER: LIP OUTLINE ZONE ═══ -->
+  <!-- Drawn OUTSIDE the mouth shape. Inner edge = mouth opening edge. -->
+  <!-- Example at AA state with 8px lip stroke -->
+  <ellipse cx="0" cy="0" rx="45" ry="30"
+           fill="none" stroke="#d4626e" stroke-width="0.5" stroke-dasharray="3,2" opacity="0.35"/>
+  <text x="38" y="34" fill="#d4626e" font-size="3" font-family="monospace" opacity="0.5">LIP OUTLINE (outside stroke)</text>
+
+  <!-- ═══ EXAMPLE MOUTH SHAPES (for tracing) ═══ -->
+  <!-- These show the current programmatic ellipses at 4 key states -->
+  <!-- Trace over these with your own custom paths -->
+
+  <!-- Example: REST (closed) -->
+  <g opacity="0.15">
+    <ellipse cx="0" cy="0" rx="39" ry="2" fill="#2a1015"/>
+    <ellipse cx="0" cy="0" rx="39" ry="2" fill="none" stroke="#d4626e" stroke-width="3.5"/>
+  </g>
+
+  <!-- Example: AA (wide open) — shown as the prominent reference -->
+  <g opacity="0.2">
+    <ellipse cx="0" cy="0" rx="41" ry="26" fill="#2a1015"/>
+    <!-- Upper teeth -->
+    <rect x="-33" y="-28" width="66" height="12" rx="2" fill="#f0eee8" opacity="0.5"/>
+    <!-- Lower teeth -->
+    <rect x="-28" y="16" width="56" height="10" rx="2" fill="#e8e6e0" opacity="0.4"/>
+    <!-- Tongue (down) -->
+    <ellipse cx="0" cy="8" rx="25" ry="14" fill="#c44055" opacity="0.4"/>
+    <!-- Lip outline -->
+    <ellipse cx="0" cy="0" rx="43" ry="28" fill="none" stroke="#d4626e" stroke-width="4" opacity="0.3"/>
+  </g>
+
+  <!-- ═══ DIMENSION ANNOTATIONS ═══ -->
+  <!-- Horizontal span at max -->
+  <line x1="-44" y1="36" x2="44" y2="36" stroke="#888" stroke-width="0.3"/>
+  <line x1="-44" y1="35" x2="-44" y2="37" stroke="#888" stroke-width="0.3"/>
+  <line x1="44" y1="35" x2="44" y2="37" stroke="#888" stroke-width="0.3"/>
+  <text x="0" y="39" fill="#888" font-size="3" font-family="monospace" text-anchor="middle" opacity="0.6">88 units max width (EE: rx=44)</text>
+
+  <!-- Vertical span at max -->
+  <line x1="54" y1="-30" x2="54" y2="30" stroke="#888" stroke-width="0.3"/>
+  <line x1="53" y1="-30" x2="55" y2="-30" stroke="#888" stroke-width="0.3"/>
+  <line x1="53" y1="30" x2="55" y2="30" stroke="#888" stroke-width="0.3"/>
+  <text x="56" y="2" fill="#888" font-size="3" font-family="monospace" opacity="0.6" transform="rotate(90, 56, 2)">60 units max height (AA+lips)</text>
+
+</svg>

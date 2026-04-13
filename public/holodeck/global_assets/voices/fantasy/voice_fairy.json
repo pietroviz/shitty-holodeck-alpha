@@ -1,0 +1,46 @@
+{
+  "id": "voice_fairy",
+  "type": "voice",
+  "name": "Fairy",
+  "tags": ["fantasy", "fairy", "magical", "high"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "High, magical fairy voice with sparkly chorus and wobble.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "f5",
+      "speed": 210,
+      "pitch": 95,
+      "volume": 100,
+      "amplitude": 60,
+      "wordgap": 0,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 35,
+      "lipColor": "#dd88bb",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#ffe8f0",
+      "scalpColor": "#cc88dd",
+      "captionSize": 16,
+      "presetKey": "fairy",
+      "previewText": "Sparkle sparkle! Make a wish and I shall grant it!"
+    }
+  }
+}

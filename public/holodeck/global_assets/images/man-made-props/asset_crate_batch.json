@@ -1,0 +1,111 @@
+{
+  "id": "asset_crate_batch",
+  "type": "asset",
+  "name": "Wooden Crate",
+  "tags": [
+    "man-made-props",
+    "crate",
+    "box",
+    "wood",
+    "cargo",
+    "storage"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A sturdy wooden shipping crate",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#8f563b",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 330
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "w": 90,
+            "h": 90,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "length": 90,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "length": 90,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 245,
+            "length": 90,
+            "angle": 45,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#8f563b",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

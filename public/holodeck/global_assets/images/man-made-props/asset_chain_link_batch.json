@@ -1,0 +1,138 @@
+{
+  "id": "asset_chain_link_batch",
+  "type": "asset",
+  "name": "Chain Link",
+  "tags": [
+    "man-made-props",
+    "chain",
+    "link",
+    "metal",
+    "barrier",
+    "fence"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A section of chain links",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#9badb7",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 160,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 192,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 224,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 288,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 320,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 352,
+            "cy": 256,
+            "r": 18,
+            "thickness": 6,
+            "fill": "primary"
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#9badb7",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

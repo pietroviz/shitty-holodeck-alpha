@@ -1,0 +1,46 @@
+{
+  "id": "mus_mountain_wind",
+  "type": "music",
+  "name": "Mountain Wind",
+  "tags": ["nature", "majestic", "serene"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Majestic mountain soundscape with soaring melodies and windy atmospheric textures",
+    "engine": "strudel",
+    "bpm": 85,
+    "key": "A",
+    "scale": "major",
+    "pattern": "Majestic mountain ambience with wind and soaring lead",
+    "layers": [
+      {
+        "name": "pad_majestic_high",
+        "pattern": "A4 C#5 E5 A5 C#5",
+        "gain": 0.65
+      },
+      {
+        "name": "wind_texture_howl",
+        "pattern": "E5 A5 C#5 E5",
+        "gain": 0.48
+      },
+      {
+        "name": "melody_lead_soaring",
+        "pattern": "C#5 E5 A5 C#5 E5 A5",
+        "gain": 0.72
+      },
+      {
+        "name": "bass_foundation_solid",
+        "pattern": "A2 A2 E3 A2",
+        "gain": 0.58
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.8,
+    "fade_out": 2.8,
+    "mood_color": "#87CEEB"
+  }
+}

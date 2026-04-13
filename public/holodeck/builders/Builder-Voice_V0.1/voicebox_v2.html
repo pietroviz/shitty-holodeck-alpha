@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoiceBox V2 // Prototype</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --panel-width: 320px;
+      --bg-dark: #1a1a2e;
+      --bg-panel: #141425;
+      --bg-stage: #2a2a3e;
+      --accent: #4a90d9;
+      --accent-hover: #5da0e9;
+      --text-primary: #e0e0e0;
+      --text-secondary: #888;
+      --text-muted: #666;
+      --border: rgba(255,255,255,0.08);
+      --slider-track: rgba(255,255,255,0.1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+    }
+
+    /* ── LEFT PANEL ── */
+    #panel {
+      width: var(--panel-width);
+      min-width: var(--panel-width);
+      height: 100vh;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #panel::-webkit-scrollbar { width: 5px; }
+    #panel::-webkit-scrollbar-track { background: transparent; }
+    #panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .panel-header h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+
+    .panel-header .status {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    .panel-header .status.ready { color: #6ecf6e; }
+    .panel-header .status.loading { color: #f0c040; }
+    .panel-header .status.error { color: #e05050; }
+
+    /* Tabs */
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .panel-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .panel-tab:hover { color: var(--text-secondary); }
+    .panel-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .tab-content { display: none; padding: 16px 20px; }
+    .tab-content.active { display: block; }
+
+    /* Sections */
+    .section {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+    }
+
+    .reset-btn {
+      font-size: 9px;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+
+    .reset-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,0.2); }
+
+    /* Select */
+    .select-wrapper select {
+      width: 100%;
+      padding: 8px 30px 8px 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .select-wrapper select:hover { border-color: rgba(74,144,217,0.4); }
+    .select-wrapper select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(74,144,217,0.15); }
+    .select-wrapper select option { background: var(--bg-panel); color: var(--text-primary); }
+
+    /* Sliders */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .slider-row label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+
+    .slider-row input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: var(--slider-track);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .slider-row input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .slider-row .slider-val {
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 36px;
+      text-align: right;
+      font-family: 'SF Mono', 'Menlo', monospace;
+    }
+
+    /* Chips */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .chip:hover { border-color: rgba(74,144,217,0.4); color: var(--text-primary); }
+    .chip.active { border-color: var(--accent); background: rgba(74,144,217,0.15); color: var(--accent); }
+
+    /* ── MAIN STAGE ── */
+    #stage {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-stage);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Face area */
+    #face-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+    }
+
+    #face-svg { width: 340px; height: 340px; max-width: 90%; }
+
+    /* Captions */
+    #caption-area {
+      flex-shrink: 0;
+      width: 100%;
+      padding: 12px 40px;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #caption-text {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.3px;
+    }
+
+    #caption-text .word {
+      display: inline-block;
+      margin: 0 3px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    #caption-text .word.spoken { color: rgba(255,255,255,0.6); }
+    #caption-text .word.active { color: #ffd54f; text-shadow: 0 0 12px rgba(255,213,79,0.3); }
+    #caption-text .word.next { color: rgba(255,255,255,0.3); }
+
+    #caption-text.word-mode .word { display: none; }
+    #caption-text.word-mode .word.active { display: inline-block; color: #fff; font-size: 28px; }
+
+    /* Viseme strip */
+    #viseme-strip {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .viseme-thumb {
+      width: 52px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      padding: 4px 2px 3px;
+      gap: 2px;
+    }
+
+    .viseme-thumb:hover { background: rgba(255,255,255,0.1); }
+    .viseme-thumb.active { border-color: var(--accent); background: rgba(74,144,217,0.12); }
+    .viseme-thumb svg { width: 38px; height: 30px; display: block; }
+    .viseme-thumb .viseme-label {
+      font-size: 8px;
+      line-height: 1;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Menlo', monospace;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 700px) {
+      #viseme-strip { padding: 6px 8px; gap: 4px; }
+      .viseme-thumb { width: 42px; padding: 3px 1px 2px; }
+      .viseme-thumb svg { width: 30px; height: 24px; }
+      .viseme-thumb .viseme-label { font-size: 7px; }
+    }
+
+    /* Caption mode toggle */
+    #caption-mode-toggle {
+      display: flex;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+
+    .mode-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-secondary); }
+    .mode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,144,217,0.1); }
+
+    /* Input area */
+    #input-area {
+      flex-shrink: 0;
+      width: 100%;
+      padding: 12px 30px 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #text-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      min-height: 48px;
+      max-height: 120px;
+      line-height: 1.4;
+    }
+
+    #text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(74,144,217,0.12); }
+    #text-input::placeholder { color: var(--text-muted); }
+
+    #speak-btn {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    #speak-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+    #speak-btn:active { transform: scale(0.95); }
+    #speak-btn.speaking { background: #e05050; }
+    #speak-btn.speaking:hover { background: #e86060; }
+
+    /* Loading overlay */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    #loading-overlay.hidden { display: none; }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--text-muted);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <span>Loading eSpeak engine...</span>
+</div>
+
+<!-- LEFT PANEL -->
+<div id="panel">
+  <div class="panel-header">
+    <h1>VoiceBox</h1>
+    <span id="engine-status" class="status loading">loading</span>
+  </div>
+
+  <div class="panel-tabs">
+    <div class="panel-tab active" data-tab="voice">Voice</div>
+    <div class="panel-tab" data-tab="mouth">Mouth</div>
+    <div class="panel-tab" data-tab="display">Display</div>
+  </div>
+
+  <!-- VOICE TAB -->
+  <div id="tab-voice" class="tab-content active">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Language</span>
+      </div>
+      <div class="select-wrapper">
+        <select id="voice-lang">
+          <option value="en/en-us">English (US)</option>
+          <option value="en/en">English (UK)</option>
+          <option value="en/en-rp">English (RP)</option>
+          <option value="en/en-sc">English (Scottish)</option>
+          <option value="en/en-n">English (Northern)</option>
+          <option value="en/en-wm">English (West Midlands)</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="es">Spanish</option>
+          <option value="es-la">Spanish (Latin Am.)</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="nl">Dutch</option>
+          <option value="sv">Swedish</option>
+          <option value="pl">Polish</option>
+          <option value="ro">Romanian</option>
+          <option value="hu">Hungarian</option>
+          <option value="cs">Czech</option>
+          <option value="sk">Slovak</option>
+          <option value="fi">Finnish</option>
+          <option value="tr">Turkish</option>
+          <option value="el">Greek</option>
+          <option value="la">Latin</option>
+          <option value="eo">Esperanto</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Voice Preset</span>
+        <button class="reset-btn" data-reset="preset">Reset</button>
+      </div>
+      <div class="chip-group" id="preset-chips"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Parameters</span>
+        <button class="reset-btn" data-reset="params">Reset</button>
+      </div>
+      <div class="slider-row">
+        <label>Speed</label>
+        <input type="range" id="param-speed" min="80" max="450" value="175" step="5">
+        <span class="slider-val" id="val-speed">175</span>
+      </div>
+      <div class="slider-row">
+        <label>Pitch</label>
+        <input type="range" id="param-pitch" min="0" max="100" value="50" step="1">
+        <span class="slider-val" id="val-pitch">50</span>
+      </div>
+      <div class="slider-row">
+        <label>Volume</label>
+        <input type="range" id="param-volume" min="0" max="200" value="100" step="5">
+        <span class="slider-val" id="val-volume">100</span>
+      </div>
+      <div class="slider-row">
+        <label>Amplitude</label>
+        <input type="range" id="param-amplitude" min="0" max="200" value="100" step="5">
+        <span class="slider-val" id="val-amplitude">100</span>
+      </div>
+      <div class="slider-row">
+        <label>Word Gap</label>
+        <input type="range" id="param-wordgap" min="0" max="50" value="0" step="1">
+        <span class="slider-val" id="val-wordgap">0</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Effects</span>
+        <button class="reset-btn" data-reset="effects">Reset</button>
+      </div>
+      <div class="slider-row">
+        <label>Reverb</label>
+        <input type="range" id="param-reverb" min="0" max="100" value="0" step="1">
+        <span class="slider-val" id="val-reverb">0</span>
+      </div>
+      <div class="slider-row">
+        <label>Wobble</label>
+        <input type="range" id="param-wobble" min="0" max="100" value="0" step="1">
+        <span class="slider-val" id="val-wobble">0</span>
+      </div>
+      <div class="slider-row">
+        <label>Wobble Speed</label>
+        <input type="range" id="param-wobbleSpeed" min="1" max="20" value="5" step="0.5">
+        <span class="slider-val" id="val-wobbleSpeed">5 Hz</span>
+      </div>
+      <div class="slider-row">
+        <label>Brightness</label>
+        <input type="range" id="param-brightness" min="-100" max="100" value="0" step="1">
+        <span class="slider-val" id="val-brightness">0</span>
+      </div>
+      <div class="slider-row">
+        <label>Breathiness</label>
+        <input type="range" id="param-breathiness" min="0" max="100" value="0" step="1">
+        <span class="slider-val" id="val-breathiness">0</span>
+      </div>
+      <div class="slider-row">
+        <label>Vocal Fry</label>
+        <input type="range" id="param-vocalFry" min="0" max="100" value="0" step="1">
+        <span class="slider-val" id="val-vocalFry">0</span>
+      </div>
+      <div class="slider-row">
+        <label>Chorus</label>
+        <input type="range" id="param-chorus" min="0" max="100" value="0" step="1">
+        <span class="slider-val" id="val-chorus">0</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Preview</span>
+      </div>
+      <button id="preview-btn" style="
+        width: 100%;
+        padding: 10px;
+        background: rgba(74,144,217,0.15);
+        border: 1px solid rgba(74,144,217,0.3);
+        border-radius: 8px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      ">Preview Voice</button>
+    </div>
+  </div>
+
+  <!-- MOUTH TAB -->
+  <div id="tab-mouth" class="tab-content">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Lip Sync Tuning</span>
+        <button class="reset-btn" data-reset="sync">Reset</button>
+      </div>
+      <div class="slider-row">
+        <label>Snappiness</label>
+        <input type="range" id="param-snappiness" min="0" max="100" value="85" step="5">
+        <span class="slider-val" id="val-snappiness">85</span>
+      </div>
+      <div class="slider-row">
+        <label>Audio Lead</label>
+        <input type="range" id="param-audiolead" min="-100" max="150" value="40" step="10">
+        <span class="slider-val" id="val-audiolead">40ms</span>
+      </div>
+      <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+        Snappiness: 0 = smooth blend, 100 = instant snap.<br>
+        Audio Lead: positive = mouth arrives before sound.
+      </p>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Mouth Style</span>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+        SVG placeholder with lips/teeth/tongue layers. Drop in custom PNGs or SVGs later.
+      </p>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Layer Visibility</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); cursor:pointer;">
+          <input type="checkbox" id="show-lips" checked> Lips
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); cursor:pointer;">
+          <input type="checkbox" id="show-teeth" checked> Teeth
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); cursor:pointer;">
+          <input type="checkbox" id="show-tongue" checked> Tongue
+        </label>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Lip Color</span>
+      </div>
+      <input type="color" id="lip-color" value="#d4626e" style="width:100%; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Lip Thickness</span>
+        <span class="param-value" id="lip-thickness-val">3.5</span>
+      </div>
+      <input type="range" id="lip-thickness" min="0" max="16" step="0.5" value="3.5" class="param-slider">
+    </div>
+  </div>
+
+  <!-- DISPLAY TAB -->
+  <div id="tab-display" class="tab-content">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Face Color</span>
+      </div>
+      <input type="color" id="face-color" value="#e08090" style="width:100%; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Background</span>
+      </div>
+      <input type="color" id="stage-color" value="#2a2a3e" style="width:100%; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Caption Style</span>
+      </div>
+      <div class="slider-row">
+        <label>Font Size</label>
+        <input type="range" id="caption-size" min="14" max="40" value="22" step="1">
+        <span class="slider-val" id="val-caption-size">22</span>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Caption Mode</span>
+      </div>
+      <div id="caption-mode-toggle">
+        <button class="mode-btn active" data-mode="karaoke">Karaoke</button>
+        <button class="mode-btn" data-mode="word">Word</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-label">Debug</span>
+      </div>
+      <div id="debug-toggle-row" style="display:flex; align-items:center; gap:10px;">
+        <label style="font-size:12px; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <input type="checkbox" id="debug-timing-toggle"> Show timing visualizer
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN STAGE -->
+<div id="stage">
+  <!-- Viseme shapes -->
+  <div id="viseme-strip"></div>
+
+  <!-- Face -->
+  <div id="face-container">
+    <svg id="face-svg" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- Face background -->
+      <rect id="face-bg" x="30" y="20" width="280" height="290" rx="40" ry="40" fill="#e08090"/>
+
+      <!-- Eyes -->
+      <g id="eyes">
+        <circle cx="115" cy="130" r="38" fill="white"/>
+        <circle id="pupil-l" cx="120" cy="133" r="20" fill="#111"/>
+        <circle cx="128" cy="124" r="6" fill="white" opacity="0.8"/>
+        <circle cx="225" cy="130" r="38" fill="white"/>
+        <circle id="pupil-r" cx="230" cy="133" r="20" fill="#111"/>
+        <circle cx="238" cy="124" r="6" fill="white" opacity="0.8"/>
+      </g>
+
+      <!-- Mouth assembly — centered at (170, 235) -->
+      <g id="mouth-assembly" transform="translate(170, 235)">
+        <defs>
+          <clipPath id="mouth-clip">
+            <ellipse id="mouth-opening" cx="0" cy="0" rx="40" ry="5"/>
+          </clipPath>
+        </defs>
+
+        <!-- Dark mouth interior -->
+        <ellipse id="mouth-interior" cx="0" cy="0" rx="40" ry="5" fill="#2a1015"/>
+
+        <!-- Tongue (clipped to mouth opening) -->
+        <g id="tongue-layer" clip-path="url(#mouth-clip)">
+          <ellipse id="tongue" cx="0" cy="12" rx="25" ry="18" fill="#c44055"/>
+        </g>
+
+        <!-- Teeth (clipped to mouth opening) -->
+        <g id="teeth-layer" clip-path="url(#mouth-clip)">
+          <rect id="upper-teeth" x="-32" y="-20" width="64" height="16" rx="3" fill="#f0eee8"/>
+          <rect id="lower-teeth" x="-28" y="8" width="56" height="14" rx="3" fill="#e8e6e0"/>
+        </g>
+
+        <!-- Lips — stroke outline on the mouth shape -->
+        <g id="lips-layer">
+          <ellipse id="lip-outline" cx="0" cy="0" rx="40" ry="5" fill="none" stroke="#d4626e" stroke-width="3.5"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Captions -->
+  <div id="caption-area">
+    <div id="caption-text"></div>
+  </div>
+
+  <!-- Debug timing overlay -->
+  <div id="debug-timing" style="display:none; padding:8px 12px; background:#111; border-top:1px solid rgba(255,255,255,0.1);">
+    <canvas id="debug-canvas" style="width:100%; height:80px; border-radius:4px; background:#0a0a18;"></canvas>
+    <div style="display:flex; justify-content:space-between; margin-top:4px;">
+      <span id="debug-info" style="font-size:11px; color:#888; font-family:monospace;"></span>
+      <button id="debug-close-btn" style="font-size:11px; color:#666; background:none; border:1px solid #333; border-radius:3px; padding:1px 8px; cursor:pointer;">close</button>
+    </div>
+  </div>
+
+  <!-- Text input -->
+  <div id="input-area">
+    <textarea id="text-input" rows="1" placeholder="Type something to speak...">Hello. Welcome to the future of voice models and SVG animation. I farted on your pillow while you were asleep.</textarea>
+    <button id="speak-btn" title="Speak">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// VOICEBOX V2 — ENGINE
+// ═══════════════════════════════════════════════════════════
+
+// ── VOICE PRESETS ──
+// Each preset sets variant + core params + audio effects to create a character
+// Effects: reverb, wobble (combined tremolo+vibrato), wobbleSpeed, brightness, breathiness, vocalFry, chorus
+const VOICE_PRESETS = {
+  'narrator':  { label: 'Narrator',  variant: 'm3',       pitch: 40, speed: 155, amplitude: 100, wordgap: 1, reverb: 15, wobble: 0,  wobbleSpeed: 5,  brightness: 0,   breathiness: 0,  vocalFry: 0,  chorus: 10 },
+  'male':      { label: 'Male',      variant: 'm2',       pitch: 35, speed: 170, amplitude: 110, wordgap: 0, reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,   breathiness: 0,  vocalFry: 0,  chorus: 0 },
+  'female':    { label: 'Female',    variant: 'f2',       pitch: 60, speed: 170, amplitude: 100, wordgap: 0, reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 5,   breathiness: 10, vocalFry: 0,  chorus: 0 },
+  'child':     { label: 'Child',     variant: 'f1',       pitch: 85, speed: 200, amplitude: 100, wordgap: 0, reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 10,  breathiness: 0,  vocalFry: 0,  chorus: 0 },
+  'old-man':   { label: 'Old Man',   variant: 'croak',    pitch: 30, speed: 120, amplitude: 90,  wordgap: 3, reverb: 10, wobble: 15, wobbleSpeed: 3,  brightness: -15, breathiness: 15, vocalFry: 25, chorus: 0 },
+  'old-woman': { label: 'Old Woman', variant: 'f4',       pitch: 45, speed: 120, amplitude: 85,  wordgap: 3, reverb: 10, wobble: 18, wobbleSpeed: 3,  brightness: -10, breathiness: 20, vocalFry: 10, chorus: 0 },
+  'robot':     { label: 'Robot',     variant: 'klatt3',   pitch: 50, speed: 140, amplitude: 100, wordgap: 2, reverb: 20, wobble: 0,  wobbleSpeed: 5,  brightness: 30,  breathiness: 0,  vocalFry: 0,  chorus: 30 },
+  'alien':     { label: 'Alien',     variant: 'klatt2',   pitch: 90, speed: 200, amplitude: 80,  wordgap: 0, reverb: 30, wobble: 25, wobbleSpeed: 8,  brightness: 20,  breathiness: 0,  vocalFry: 0,  chorus: 40 },
+  'demon':     { label: 'Demon',     variant: 'm7',       pitch: 5,  speed: 90,  amplitude: 200, wordgap: 4, reverb: 50, wobble: 15, wobbleSpeed: 2,  brightness: -40, breathiness: 0,  vocalFry: 40, chorus: 20 },
+  'ghost':     { label: 'Ghost',     variant: 'whisperf', pitch: 60, speed: 130, amplitude: 40,  wordgap: 6, reverb: 60, wobble: 30, wobbleSpeed: 4,  brightness: -20, breathiness: 50, vocalFry: 0,  chorus: 15 },
+  'fairy':     { label: 'Fairy',     variant: 'f5',       pitch: 95, speed: 210, amplitude: 60,  wordgap: 0, reverb: 25, wobble: 20, wobbleSpeed: 12, brightness: 40,  breathiness: 25, vocalFry: 0,  chorus: 20 },
+};
+
+// ── DEFAULT PARAM VALUES ──
+const PARAM_DEFAULTS = { speed: 175, pitch: 50, volume: 100, amplitude: 100, wordgap: 0 };
+const EFFECT_DEFAULTS = { reverb: 0, wobble: 0, wobbleSpeed: 5, brightness: 0, breathiness: 0, vocalFry: 0, chorus: 0 };
+
+// ── VISEME DEFINITIONS ──
+const VISEMES = {
+  REST:  { jawOpen: 0.0,  lipWidth: 0.45, lipRound: 0.0, tongueUp: 0.0, teethShow: 0.0, label: 'Rest' },
+  PP:    { jawOpen: 0.0,  lipWidth: 0.35, lipRound: 0.0, tongueUp: 0.0, teethShow: 0.0, label: 'P/B/M' },
+  FF:    { jawOpen: 0.15, lipWidth: 0.4,  lipRound: 0.0, tongueUp: 0.0, teethShow: 0.6, label: 'F/V' },
+  TH:    { jawOpen: 0.2,  lipWidth: 0.45, lipRound: 0.0, tongueUp: 0.8, teethShow: 0.4, label: 'TH' },
+  DD:    { jawOpen: 0.25, lipWidth: 0.45, lipRound: 0.0, tongueUp: 0.6, teethShow: 0.3, label: 'D/T/N' },
+  KK:    { jawOpen: 0.35, lipWidth: 0.45, lipRound: 0.0, tongueUp: 0.2, teethShow: 0.2, label: 'K/G' },
+  LL:    { jawOpen: 0.2,  lipWidth: 0.45, lipRound: 0.0, tongueUp: 0.9, teethShow: 0.2, label: 'L' },
+  RR:    { jawOpen: 0.2,  lipWidth: 0.4,  lipRound: 0.3, tongueUp: 0.5, teethShow: 0.1, label: 'R' },
+  SS:    { jawOpen: 0.1,  lipWidth: 0.4,  lipRound: 0.0, tongueUp: 0.4, teethShow: 0.5, label: 'S/Z' },
+  SH:    { jawOpen: 0.15, lipWidth: 0.3,  lipRound: 0.5, tongueUp: 0.3, teethShow: 0.3, label: 'SH/CH' },
+  AA:    { jawOpen: 0.85, lipWidth: 0.55, lipRound: 0.0, tongueUp: 0.0, teethShow: 0.4, label: 'AH' },
+  EE:    { jawOpen: 0.3,  lipWidth: 0.7,  lipRound: 0.0, tongueUp: 0.3, teethShow: 0.5, label: 'EE' },
+  OO:    { jawOpen: 0.4,  lipWidth: 0.2,  lipRound: 0.9, tongueUp: 0.0, teethShow: 0.1, label: 'OO' },
+  OH:    { jawOpen: 0.6,  lipWidth: 0.3,  lipRound: 0.6, tongueUp: 0.0, teethShow: 0.2, label: 'OH' },
+  WW:    { jawOpen: 0.2,  lipWidth: 0.15, lipRound: 1.0, tongueUp: 0.0, teethShow: 0.0, label: 'W' },
+  AW:    { jawOpen: 0.7,  lipWidth: 0.4,  lipRound: 0.4, tongueUp: 0.0, teethShow: 0.3, label: 'AW' },
+};
+
+const VISEME_KEYS = Object.keys(VISEMES);
+
+// ── LETTER → VISEME MAP ──
+const DIGRAPH_MAP = {
+  'th': 'TH', 'sh': 'SH', 'ch': 'SH', 'wh': 'WW', 'ph': 'FF',
+  'ng': 'KK', 'ck': 'KK', 'qu': 'WW', 'oo': 'OO', 'ee': 'EE',
+  'ou': 'AW', 'ow': 'AW', 'aw': 'AW', 'au': 'AW', 'ai': 'AA',
+  'ay': 'AA', 'ea': 'EE', 'oi': 'OH', 'oy': 'OH',
+};
+
+const LETTER_MAP = {
+  'a': 'AA', 'b': 'PP', 'c': 'KK', 'd': 'DD', 'e': 'EE',
+  'f': 'FF', 'g': 'KK', 'h': 'KK', 'i': 'EE', 'j': 'SH',
+  'k': 'KK', 'l': 'LL', 'm': 'PP', 'n': 'DD', 'o': 'OH',
+  'p': 'PP', 'q': 'KK', 'r': 'RR', 's': 'SS', 't': 'DD',
+  'u': 'OO', 'v': 'FF', 'w': 'WW', 'x': 'SS', 'y': 'EE',
+  'z': 'SS',
+};
+
+function wordToVisemes(word) {
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!lower.length) return [];
+  const result = [];
+  let i = 0;
+  while (i < lower.length) {
+    if (i + 1 < lower.length) {
+      const digraph = lower[i] + lower[i + 1];
+      if (DIGRAPH_MAP[digraph]) {
+        result.push(DIGRAPH_MAP[digraph]);
+        i += 2;
+        continue;
+      }
+    }
+    result.push(LETTER_MAP[lower[i]] || 'REST');
+    i++;
+  }
+  return result;
+}
+
+// ── AUDIO EFFECT CHAIN ──
+// Web Audio post-processing: brightness, reverb, wobble, breathiness, vocal fry, chorus, volume
+class AudioEffectChain {
+  constructor() {
+    this.ctx = null;
+    this.nodes = {};
+    this.ready = false;
+    this.values = { ...EFFECT_DEFAULTS };
+  }
+
+  init(ctx) {
+    this.ctx = ctx;
+
+    // ── Brightness: BiquadFilter ──
+    this.nodes.brightness = ctx.createBiquadFilter();
+    this.nodes.brightness.type = 'lowpass';
+    this.nodes.brightness.frequency.value = 20000;
+    this.nodes.brightness.Q.value = 0.7;
+
+    // ── Reverb: ConvolverNode with dry/wet mix ──
+    this.nodes.reverbDry = ctx.createGain();
+    this.nodes.reverbDry.gain.value = 1;
+    this.nodes.reverbWet = ctx.createGain();
+    this.nodes.reverbWet.gain.value = 0;
+    this.nodes.convolver = ctx.createConvolver();
+    this._buildImpulseResponse(1.5);
+    this.nodes.reverbMerge = ctx.createGain();
+    this.nodes.reverbMerge.gain.value = 1;
+
+    // ── Wobble: combined tremolo (volume LFO) + vibrato (pitch LFO) ──
+    // Tremolo part: LFO → gain modulation
+    this.nodes.wobbleGain = ctx.createGain();
+    this.nodes.wobbleGain.gain.value = 1;
+    this.nodes.wobbleLfo = ctx.createOscillator();
+    this.nodes.wobbleLfo.type = 'sine';
+    this.nodes.wobbleLfo.frequency.value = 5;
+    this.nodes.wobbleTremoloDepth = ctx.createGain();
+    this.nodes.wobbleTremoloDepth.gain.value = 0;
+    this.nodes.wobbleLfo.connect(this.nodes.wobbleTremoloDepth);
+    this.nodes.wobbleTremoloDepth.connect(this.nodes.wobbleGain.gain);
+    this.nodes.wobbleLfo.start();
+    // Vibrato part is applied per-source in connectSource() via detune
+
+    // ── Breathiness: pink noise mixed into signal ──
+    this.nodes.breathGain = ctx.createGain();
+    this.nodes.breathGain.gain.value = 0;
+    this.nodes.breathFilter = ctx.createBiquadFilter();
+    this.nodes.breathFilter.type = 'bandpass';
+    this.nodes.breathFilter.frequency.value = 2500;
+    this.nodes.breathFilter.Q.value = 0.8;
+    this._createNoiseSource(); // creates this.nodes.noiseSource
+    this.nodes.noiseSource.connect(this.nodes.breathFilter);
+    this.nodes.breathFilter.connect(this.nodes.breathGain);
+
+    // ── Vocal Fry: very low-freq amplitude modulation (30-80Hz) ──
+    this.nodes.fryGain = ctx.createGain();
+    this.nodes.fryGain.gain.value = 1;
+    this.nodes.fryLfo = ctx.createOscillator();
+    this.nodes.fryLfo.type = 'sine';
+    this.nodes.fryLfo.frequency.value = 50;
+    this.nodes.fryDepth = ctx.createGain();
+    this.nodes.fryDepth.gain.value = 0;
+    this.nodes.fryLfo.connect(this.nodes.fryDepth);
+    this.nodes.fryDepth.connect(this.nodes.fryGain.gain);
+    this.nodes.fryLfo.start();
+
+    // ── Chorus: delayed pitch-modulated copy mixed with dry ──
+    this.nodes.chorusDry = ctx.createGain();
+    this.nodes.chorusDry.gain.value = 1;
+    this.nodes.chorusWet = ctx.createGain();
+    this.nodes.chorusWet.gain.value = 0;
+    this.nodes.chorusDelay = ctx.createDelay(0.1);
+    this.nodes.chorusDelay.delayTime.value = 0.015;
+    this.nodes.chorusLfo = ctx.createOscillator();
+    this.nodes.chorusLfo.type = 'sine';
+    this.nodes.chorusLfo.frequency.value = 1.5;
+    this.nodes.chorusLfoDepth = ctx.createGain();
+    this.nodes.chorusLfoDepth.gain.value = 0.003; // subtle delay modulation
+    this.nodes.chorusLfo.connect(this.nodes.chorusLfoDepth);
+    this.nodes.chorusLfoDepth.connect(this.nodes.chorusDelay.delayTime);
+    this.nodes.chorusLfo.start();
+    this.nodes.chorusMerge = ctx.createGain();
+    this.nodes.chorusMerge.gain.value = 1;
+
+    // ── Volume: final GainNode ──
+    this.nodes.volume = ctx.createGain();
+    this.nodes.volume.gain.value = 1;
+
+    // ── Wire the chain ──
+    // input → brightness → [reverbDry + reverbWet→convolver] → reverbMerge
+    //   → fryGain → wobbleGain → [chorusDry + chorusWet→delay] → chorusMerge
+    //   + breathGain → chorusMerge → volume → destination
+    this.nodes.brightness.connect(this.nodes.reverbDry);
+    this.nodes.brightness.connect(this.nodes.reverbWet);
+    this.nodes.reverbWet.connect(this.nodes.convolver);
+    this.nodes.reverbDry.connect(this.nodes.reverbMerge);
+    this.nodes.convolver.connect(this.nodes.reverbMerge);
+
+    this.nodes.reverbMerge.connect(this.nodes.fryGain);
+    this.nodes.fryGain.connect(this.nodes.wobbleGain);
+
+    this.nodes.wobbleGain.connect(this.nodes.chorusDry);
+    this.nodes.wobbleGain.connect(this.nodes.chorusWet);
+    this.nodes.chorusWet.connect(this.nodes.chorusDelay);
+    this.nodes.chorusDry.connect(this.nodes.chorusMerge);
+    this.nodes.chorusDelay.connect(this.nodes.chorusMerge);
+
+    // Breathiness noise mixes in at the merge point
+    this.nodes.breathGain.connect(this.nodes.chorusMerge);
+
+    this.nodes.chorusMerge.connect(this.nodes.volume);
+    this.nodes.volume.connect(ctx.destination);
+
+    this.ready = true;
+  }
+
+  // Returns the node to connect audio sources into
+  get input() { return this.nodes.brightness; }
+
+  // Connect a BufferSource and apply vibrato (pitch wobble) component
+  connectSource(source) {
+    source.connect(this.input);
+    // Vibrato: LFO modulates the source's detune for pitch wobble
+    // Reuse the wobble LFO — same rate as tremolo, but targeting detune
+    if (this._vibratoDepth > 0) {
+      const vibratoGain = this.ctx.createGain();
+      vibratoGain.gain.value = this._vibratoDepth; // cents of pitch deviation
+      this.nodes.wobbleLfo.connect(vibratoGain);
+      vibratoGain.connect(source.detune);
+      source._vibratoGain = vibratoGain; // store ref for cleanup
+    }
+  }
+
+  get _vibratoDepth() {
+    // Map wobble 0-100 to 0-50 cents of pitch deviation
+    return (this.values.wobble / 100) * 50;
+  }
+
+  setVolume(v) {
+    if (!this.ready) return;
+    this.nodes.volume.gain.value = v;
+  }
+
+  setBrightness(val) {
+    if (!this.ready) return;
+    this.values.brightness = val;
+    if (val <= 0) {
+      this.nodes.brightness.type = 'lowpass';
+      const t = (val + 100) / 100;
+      this.nodes.brightness.frequency.value = 300 + t * 19700;
+    } else {
+      this.nodes.brightness.type = 'highpass';
+      this.nodes.brightness.frequency.value = 20 + (val / 100) * 2980;
+    }
+  }
+
+  setReverb(val) {
+    if (!this.ready) return;
+    this.values.reverb = val;
+    const wet = val / 100;
+    this.nodes.reverbDry.gain.value = 1 - wet * 0.5;
+    this.nodes.reverbWet.gain.value = wet;
+  }
+
+  setWobble(val) {
+    // Combined tremolo + vibrato. val: 0-100
+    if (!this.ready) return;
+    this.values.wobble = val;
+    // Tremolo component: volume modulation (max 60% depth)
+    this.nodes.wobbleTremoloDepth.gain.value = (val / 100) * 0.6;
+    // Vibrato component is applied per-source via _vibratoDepth getter
+  }
+
+  setWobbleSpeed(hz) {
+    if (!this.ready) return;
+    this.values.wobbleSpeed = hz;
+    this.nodes.wobbleLfo.frequency.value = hz;
+  }
+
+  setBreathiness(val) {
+    // val: 0 (none) to 100 (heavy breathy)
+    if (!this.ready) return;
+    this.values.breathiness = val;
+    this.nodes.breathGain.gain.value = (val / 100) * 0.35;
+  }
+
+  setVocalFry(val) {
+    // val: 0 (none) to 100 (heavy crackle)
+    if (!this.ready) return;
+    this.values.vocalFry = val;
+    this.nodes.fryDepth.gain.value = (val / 100) * 0.7;
+    // Adjust fry frequency: higher values = more aggressive
+    this.nodes.fryLfo.frequency.value = 30 + (val / 100) * 50; // 30-80 Hz
+  }
+
+  setChorus(val) {
+    // val: 0 (dry) to 100 (thick chorus)
+    if (!this.ready) return;
+    this.values.chorus = val;
+    const wet = val / 100;
+    this.nodes.chorusDry.gain.value = 1;
+    this.nodes.chorusWet.gain.value = wet * 0.7;
+    // More depth at higher values
+    this.nodes.chorusLfoDepth.gain.value = 0.002 + wet * 0.005;
+  }
+
+  _createNoiseSource() {
+    // Pink-ish noise buffer (looped)
+    const sampleRate = this.ctx.sampleRate;
+    const length = sampleRate * 2; // 2 seconds, looped
+    const buffer = this.ctx.createBuffer(1, length, sampleRate);
+    const data = buffer.getChannelData(0);
+    // Simple pink noise approximation (Paul Kellett algorithm)
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < length; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+      b6 = white * 0.115926;
+    }
+    const source = this.ctx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+    source.start();
+    this.nodes.noiseSource = source;
+  }
+
+  _buildImpulseResponse(duration) {
+    const sampleRate = this.ctx.sampleRate;
+    const length = sampleRate * duration;
+    const impulse = this.ctx.createBuffer(2, length, sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const data = impulse.getChannelData(ch);
+      for (let i = 0; i < length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5);
+      }
+    }
+    this.nodes.convolver.buffer = impulse;
+  }
+}
+
+// Global effect chain instance
+const effectChain = new AudioEffectChain();
+
+// ── AMPLITUDE ENVELOPE ──
+// Pre-computes RMS energy from the audio buffer in small windows.
+// This drives jawOpen in real-time for tight lip sync.
+class AmplitudeEnvelope {
+  constructor() {
+    this.envelope = [];     // normalized 0-1 energy per window
+    this.windowMs = 15;     // analysis window size (ms) — small = responsive
+    this.durationMs = 0;
+    this.ready = false;
+  }
+
+  // Analyze an AudioBuffer and build the envelope
+  analyze(audioBuffer) {
+    const sampleRate = audioBuffer.sampleRate;
+    const samples = audioBuffer.getChannelData(0); // mono or left channel
+    const windowSamples = Math.floor((this.windowMs / 1000) * sampleRate);
+    const numWindows = Math.ceil(samples.length / windowSamples);
+
+    this.envelope = new Float32Array(numWindows);
+    this.durationMs = (samples.length / sampleRate) * 1000;
+
+    // Compute RMS per window
+    let maxRms = 0;
+    for (let w = 0; w < numWindows; w++) {
+      const start = w * windowSamples;
+      const end = Math.min(start + windowSamples, samples.length);
+      let sumSq = 0;
+      for (let i = start; i < end; i++) {
+        sumSq += samples[i] * samples[i];
+      }
+      const rms = Math.sqrt(sumSq / (end - start));
+      this.envelope[w] = rms;
+      if (rms > maxRms) maxRms = rms;
+    }
+
+    // Normalize to 0-1
+    if (maxRms > 0) {
+      for (let i = 0; i < numWindows; i++) {
+        this.envelope[i] /= maxRms;
+      }
+    }
+
+    this.ready = true;
+    console.log(`[Envelope] ${numWindows} windows, ${this.windowMs}ms each, peak normalized`);
+  }
+
+  // Get energy at a given time in ms (0-1)
+  getEnergy(timeMs) {
+    if (!this.ready || this.envelope.length === 0) return 0;
+    const idx = Math.floor(timeMs / this.windowMs);
+    if (idx < 0) return 0;
+    if (idx >= this.envelope.length) return 0;
+    return this.envelope[idx];
+  }
+
+  // Get smoothed energy (averages a small neighborhood for less jitter)
+  getSmoothedEnergy(timeMs, radiusMs = 10) {
+    if (!this.ready) return 0;
+    const centerIdx = timeMs / this.windowMs;
+    const radiusIdx = radiusMs / this.windowMs;
+    const lo = Math.max(0, Math.floor(centerIdx - radiusIdx));
+    const hi = Math.min(this.envelope.length - 1, Math.ceil(centerIdx + radiusIdx));
+    if (lo > hi) return 0;
+    let sum = 0;
+    for (let i = lo; i <= hi; i++) sum += this.envelope[i];
+    return sum / (hi - lo + 1);
+  }
+
+  // Find word boundaries by detecting silence gaps
+  // Returns array of { startMs, endMs } for each sound cluster
+  findSoundRegions(silenceThreshold = 0.05, minGapMs = 40) {
+    if (!this.ready) return [];
+    const regions = [];
+    let inSound = false;
+    let regionStart = 0;
+    const minGapWindows = Math.ceil(minGapMs / this.windowMs);
+    let silenceCount = 0;
+
+    for (let i = 0; i < this.envelope.length; i++) {
+      if (this.envelope[i] > silenceThreshold) {
+        if (!inSound) {
+          regionStart = i * this.windowMs;
+          inSound = true;
+        }
+        silenceCount = 0;
+      } else {
+        silenceCount++;
+        if (inSound && silenceCount >= minGapWindows) {
+          regions.push({
+            startMs: regionStart,
+            endMs: (i - silenceCount + 1) * this.windowMs,
+          });
+          inSound = false;
+        }
+      }
+    }
+    if (inSound) {
+      regions.push({ startMs: regionStart, endMs: this.durationMs });
+    }
+    return regions;
+  }
+
+  clear() {
+    this.envelope = [];
+    this.durationMs = 0;
+    this.ready = false;
+  }
+}
+
+// ── VISEME ENGINE ──
+// Hybrid approach:
+//   - jawOpen is driven by audio amplitude (tight sync to actual sound)
+//   - lip shape (width, round, tongue, teeth) comes from text→viseme mapping
+//   - viseme shapes are remapped to audio sound regions for timing
+class VisemeEngine {
+  constructor() {
+    this.queue = [];
+    this.queueIndex = 0;
+    this.elapsed = 0;
+    this.playing = false;
+    this.currentParams = { jawOpen: 0, lipWidth: 0.45, lipRound: 0, tongueUp: 0, teethShow: 0 };
+    this.targetParams = { ...this.currentParams };
+    this.currentKey = 'REST';
+    this.durationMs = 0;
+
+    // Audio-driven jaw
+    this.ampEnvelope = new AmplitudeEnvelope();
+    this.jawFromAudio = 0;  // current audio-driven jaw value
+
+    // Tuning knobs
+    this.snappiness = 0.85;
+    this.audioLeadMs = 40;
+    this.jawGain = 1.2;      // amplify audio→jaw mapping (>1 = more open)
+    this.jawFloor = 0.0;     // minimum jaw opening during speech
+  }
+
+  // Build viseme queue, but remap timing to actual audio sound regions
+  startSentence(text, durationMs, audioBuffer) {
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    this.durationMs = durationMs;
+
+    // Analyze audio
+    if (audioBuffer) {
+      this.ampEnvelope.analyze(audioBuffer);
+    }
+
+    // Build flat viseme list from text, grouped by word
+    const wordVisemes = [];  // array of arrays
+    for (let w = 0; w < words.length; w++) {
+      wordVisemes.push(wordToVisemes(words[w]).map(key => ({ key, wordIdx: w })));
+    }
+
+    // Try to remap timing using audio sound regions
+    const soundRegions = this.ampEnvelope.findSoundRegions(0.06, 30);
+
+    if (soundRegions.length > 0 && words.length > 0) {
+      this.queue = this._remapToRegions(wordVisemes, soundRegions, durationMs);
+    } else {
+      // Fallback: distribute evenly (old approach)
+      const flat = [];
+      for (let w = 0; w < wordVisemes.length; w++) {
+        flat.push(...wordVisemes[w]);
+        if (w < wordVisemes.length - 1) flat.push({ key: 'REST', wordIdx: -1 });
+      }
+      this.queue = this._distributeEvenly(flat, durationMs);
+    }
+
+    this.queueIndex = 0;
+    this.elapsed = 0;
+    this.playing = true;
+    console.log(`[VisemeEngine] ${this.queue.length} queue items, ${soundRegions.length} sound regions, duration ${durationMs.toFixed(0)}ms`);
+  }
+
+  _remapToRegions(wordVisemes, regions, durationMs) {
+    const queue = [];
+    const numWords = wordVisemes.length;
+    const numRegions = regions.length;
+
+    // Distribute words across regions proportionally by character count
+    // (longer words get more time within a region)
+    const wordCharCounts = wordVisemes.map(wv => wv.length);
+    const totalChars = wordCharCounts.reduce((a, b) => a + b, 0);
+
+    // Assign words to regions: spread evenly
+    const assignments = []; // assignments[r] = [wordIdx, wordIdx, ...]
+    for (let r = 0; r < numRegions; r++) assignments.push([]);
+
+    if (numWords <= numRegions) {
+      // Fewer words than regions: one word per region, spread out
+      for (let w = 0; w < numWords; w++) {
+        const r = Math.round(w * (numRegions - 1) / Math.max(numWords - 1, 1));
+        assignments[r].push(w);
+      }
+    } else {
+      // More words than regions: distribute proportionally
+      for (let w = 0; w < numWords; w++) {
+        const r = Math.min(numRegions - 1, Math.floor(w * numRegions / numWords));
+        assignments[r].push(w);
+      }
+    }
+
+    // Build queue from assignments
+    for (let r = 0; r < numRegions; r++) {
+      const region = regions[r];
+      const regionDur = region.endMs - region.startMs;
+      const wordsHere = assignments[r];
+      if (wordsHere.length === 0) continue;
+
+      // Gather all visemes for words in this region (with inter-word rests)
+      const regionVis = [];
+      for (let i = 0; i < wordsHere.length; i++) {
+        regionVis.push(...wordVisemes[wordsHere[i]]);
+        if (i < wordsHere.length - 1) {
+          regionVis.push({ key: 'REST', wordIdx: -1 });
+        }
+      }
+
+      // Distribute visemes across the region duration
+      const slotDur = regionDur / Math.max(regionVis.length, 1);
+      let t = region.startMs;
+      for (const rv of regionVis) {
+        const dur = rv.key === 'REST' ? slotDur * 0.3 : slotDur;
+        queue.push({ key: rv.key, time: t, duration: dur, wordIdx: rv.wordIdx !== undefined ? rv.wordIdx : -1 });
+        t += dur;
+      }
+
+      // Fill gap to next region with REST
+      if (r + 1 < numRegions) {
+        const gapEnd = regions[r + 1].startMs;
+        if (t < gapEnd) {
+          queue.push({ key: 'REST', time: t, duration: gapEnd - t, wordIdx: -1 });
+        }
+      }
+    }
+
+    // Ensure queue covers full duration
+    if (queue.length > 0) {
+      const lastItem = queue[queue.length - 1];
+      const lastEnd = lastItem.time + lastItem.duration;
+      if (lastEnd < durationMs - 50) {
+        queue.push({ key: 'REST', time: lastEnd, duration: durationMs - lastEnd, wordIdx: -1 });
+      }
+    }
+
+    return queue;
+  }
+
+  _distributeEvenly(allVisemes, durationMs) {
+    const queue = [];
+    const slotDur = durationMs / Math.max(allVisemes.length, 1);
+    let time = 0;
+    for (const v of allVisemes) {
+      const dur = v.key === 'REST' ? slotDur * 0.4 : slotDur;
+      queue.push({ key: v.key, time, duration: dur, wordIdx: v.wordIdx !== undefined ? v.wordIdx : -1 });
+      time += dur;
+    }
+    return queue;
+  }
+
+  stop() {
+    this.playing = false;
+    this.targetParams = { ...VISEMES.REST };
+    this.currentKey = 'REST';
+    this.jawFromAudio = 0;
+    this.ampEnvelope.clear();
+  }
+
+  update(dtMs) {
+    if (this.playing && this.queue.length > 0) {
+      this.elapsed += dtMs;
+      const lookupTime = this.elapsed + this.audioLeadMs;
+
+      // ── Audio-driven jaw ──
+      // Get energy from the actual audio at current playback position
+      const rawEnergy = this.ampEnvelope.getSmoothedEnergy(this.elapsed, 8);
+      // Apply gain and floor, clamp to 0-1
+      this.jawFromAudio = Math.min(1, Math.max(0, rawEnergy * this.jawGain));
+
+      // ── Viseme shape lookup ──
+      let newIndex = this.queueIndex;
+      while (newIndex < this.queue.length - 1 &&
+             lookupTime >= this.queue[newIndex + 1].time) {
+        newIndex++;
+      }
+      this.queueIndex = newIndex;
+
+      if (this.queueIndex < this.queue.length) {
+        const item = this.queue[this.queueIndex];
+        const v = VISEMES[item.key];
+        if (v) {
+          // Jaw is driven by audio amplitude, NOT the viseme definition
+          // Lip shape (width, rounding, tongue, teeth) comes from viseme
+          const audioJaw = this.jawFromAudio;
+          // Scale the viseme's shape influence by how open the mouth is
+          const openness = Math.max(audioJaw, 0.05);
+
+          this.targetParams = {
+            jawOpen: audioJaw,
+            lipWidth: v.lipWidth,
+            lipRound: v.lipRound,
+            tongueUp: v.tongueUp * openness,
+            teethShow: v.teethShow,
+          };
+          this.currentKey = item.key;
+        }
+      }
+
+      // Finished? Use actual audio duration, not queue timing
+      if (this.elapsed >= this.durationMs + 100) {
+        this.stop();
+      }
+    }
+
+    // ── Interpolation ──
+    const dt = dtMs / 1000;
+    const baseLerp = 1 - Math.exp(-14 * dt);
+    const snapLerp = 1 - Math.exp(-120 * dt);
+    const t = baseLerp + (snapLerp - baseLerp) * this.snappiness;
+
+    for (const key of Object.keys(this.currentParams)) {
+      this.currentParams[key] += (this.targetParams[key] - this.currentParams[key]) * t;
+    }
+  }
+
+  getParams() {
+    return { ...this.currentParams, visemeKey: this.currentKey };
+  }
+}
+
+// ── SVG MOUTH RENDERER ──
+// Now lips physically move apart with jaw opening
+class MouthRenderer {
+  constructor() {
+    this.mouthOpening = document.getElementById('mouth-opening');
+    this.mouthInterior = document.getElementById('mouth-interior');
+    this.tongue = document.getElementById('tongue');
+    this.upperTeeth = document.getElementById('upper-teeth');
+    this.lowerTeeth = document.getElementById('lower-teeth');
+    this.lipOutline = document.getElementById('lip-outline');
+    this.lipColor = '#d4626e';
+    this.lipWidth = 3.5;
+  }
+
+  setLipColor(hex) {
+    this.lipColor = hex;
+  }
+
+  setLipWidth(w) {
+    this.lipWidth = w;
+  }
+
+  render(params) {
+    const { jawOpen, lipWidth, lipRound, tongueUp, teethShow } = params;
+
+    // Mouth opening size
+    const openRx = 30 + lipWidth * 20 - lipRound * 12;
+    const openRy = 2 + jawOpen * 28;
+
+    // Clip path & interior
+    this.mouthOpening.setAttribute('rx', openRx);
+    this.mouthOpening.setAttribute('ry', openRy);
+    this.mouthInterior.setAttribute('rx', openRx);
+    this.mouthInterior.setAttribute('ry', openRy);
+
+    // Tongue
+    const tongueY = 8 - tongueUp * 16;
+    this.tongue.setAttribute('cy', tongueY);
+    this.tongue.setAttribute('rx', openRx * 0.6);
+    this.tongue.setAttribute('ry', 10 + jawOpen * 8);
+
+    // Teeth — visible whenever mouth is open enough to reveal them
+    // teethShow controls how far they protrude, jawOpen gates visibility
+    const teethW = openRx * 1.6;
+    // Teeth become visible as soon as mouth opens, full opacity at jawOpen > 0.15
+    const jawGate = Math.min(1, jawOpen * 8);  // rapid fade-in with jaw opening
+    const teethOpacity = teethShow > 0.05 ? jawGate : 0;
+    this.upperTeeth.setAttribute('x', -teethW / 2);
+    this.upperTeeth.setAttribute('width', teethW);
+    this.upperTeeth.setAttribute('y', -openRy - 2);
+    this.upperTeeth.setAttribute('height', 6 + teethShow * 14);
+    this.upperTeeth.setAttribute('opacity', teethOpacity);
+
+    const lowerTeethW = teethW * 0.85;
+    this.lowerTeeth.setAttribute('x', -lowerTeethW / 2);
+    this.lowerTeeth.setAttribute('width', lowerTeethW);
+    this.lowerTeeth.setAttribute('y', openRy - 4 - teethShow * 6);
+    this.lowerTeeth.setAttribute('height', 5 + teethShow * 8);
+    this.lowerTeeth.setAttribute('opacity', teethOpacity * 0.9);
+
+    // ── LIPS — outside stroke: offset by half stroke width so inner edge
+    //    aligns with mouth opening (like Illustrator's "outside" stroke) ──
+    const halfStroke = this.lipWidth / 2;
+    this.lipOutline.setAttribute('rx', openRx + halfStroke);
+    this.lipOutline.setAttribute('ry', openRy + halfStroke);
+    this.lipOutline.setAttribute('stroke', this.lipColor);
+    this.lipOutline.setAttribute('stroke-width', this.lipWidth);
+  }
+}
+
+// ── CAPTION ENGINE ──
+// Hybrid approach: real-time amplitude gating drives word advances (tight),
+// with a character-proportional schedule as safety net (never fall behind).
+class CaptionEngine {
+  constructor(el) {
+    this.el = el;
+    this.words = [];
+    this.wordEls = [];
+    this.currentIndex = -1;
+    this.mode = 'karaoke';
+    this.visemeEngineRef = null; // set externally — reads ampEnvelope + elapsed
+
+    // Amplitude-gating state
+    this.inDip = true;          // start in "dip" so first rise triggers word 0
+    this.dipThreshold = 0.08;   // energy below this = silence/dip
+    this.riseThreshold = 0.15;  // energy above this after a dip = new word onset
+    this.holdoffMs = 0;         // cooldown timer to prevent rapid double-triggers
+    this.holdoffDuration = 50;  // minimum ms between word advances
+
+    // Schedule safety net
+    this.schedule = [];         // [{startMs}] — character-proportional fallback times
+    this.durationMs = 0;
+  }
+
+  setMode(mode) {
+    this.mode = mode;
+    this.el.classList.toggle('word-mode', mode === 'word');
+    this.applyStyles();
+  }
+
+  startSentence(text, durationMs) {
+    this.words = text.split(/\s+/).filter(w => w.length > 0);
+    this.el.innerHTML = '';
+    this.wordEls = [];
+    this.currentIndex = -1;
+    this.inDip = true;
+    this.holdoffMs = 0;
+
+    for (const w of this.words) {
+      const span = document.createElement('span');
+      span.className = 'word next';
+      span.textContent = w;
+      this.el.appendChild(span);
+      this.wordEls.push(span);
+    }
+
+    // Build character-proportional schedule as safety net
+    this.schedule = [];
+    this.durationMs = durationMs;
+    const totalChars = this.words.reduce((sum, w) => sum + Math.max(w.length, 2), 0);
+    let time = 0;
+    for (const w of this.words) {
+      this.schedule.push({ startMs: time });
+      time += (Math.max(w.length, 2) / totalChars) * durationMs;
+    }
+
+    this.el.classList.toggle('word-mode', this.mode === 'word');
+  }
+
+  /**
+   * Hybrid word advancement:
+   * 1. Amplitude gating (primary): detect dip→rise to advance words in real-time.
+   * 2. Schedule safety net: if the schedule says we should be further ahead,
+   *    snap forward so we never fall more than 1 word behind.
+   * This gives tight real-time feel while preventing the "stuck behind" problem.
+   */
+  update(dtMs) {
+    if (this.words.length === 0 || !this.visemeEngineRef) return;
+
+    const ve = this.visemeEngineRef;
+    if (!ve.playing || !ve.ampEnvelope || !ve.ampEnvelope.envelope) return;
+
+    const elapsed = ve.elapsed;
+    let newIndex = this.currentIndex;
+
+    // ── Find where the schedule thinks we should be ──
+    let scheduleIdx = 0;
+    for (let i = 0; i < this.schedule.length; i++) {
+      if (elapsed >= this.schedule[i].startMs) scheduleIdx = i;
+    }
+
+    // ── Check if schedule allows advancing to next word ──
+    // Amplitude can only trigger the next word if we're within striking
+    // distance of its scheduled time. This prevents syllable dips inside
+    // long/compound words from falsely advancing the caption.
+    const nextWordIdx = newIndex + 1;
+    const nextScheduledMs = nextWordIdx < this.schedule.length
+      ? this.schedule[nextWordIdx].startMs : Infinity;
+    // Allow amplitude to fire up to 30% of the word's expected duration early
+    const wordDurMs = nextWordIdx < this.schedule.length
+      ? (nextWordIdx + 1 < this.schedule.length
+          ? this.schedule[nextWordIdx + 1].startMs - nextScheduledMs
+          : this.durationMs - nextScheduledMs)
+      : 0;
+    const earlyAllowanceMs = wordDurMs * 0.3;
+    const canAdvance = elapsed >= (nextScheduledMs - earlyAllowanceMs);
+
+    // ── Primary: amplitude gating (only if schedule allows) ──
+    const energy = ve.ampEnvelope.getSmoothedEnergy(elapsed, 8);
+
+    if (this.holdoffMs > 0) {
+      this.holdoffMs -= dtMs || 16;
+    }
+
+    if (this.inDip) {
+      if (energy > this.riseThreshold && this.holdoffMs <= 0 && canAdvance) {
+        this.inDip = false;
+        this.holdoffMs = this.holdoffDuration;
+        if (nextWordIdx < this.words.length) {
+          newIndex = nextWordIdx;
+        }
+      }
+    } else {
+      if (energy < this.dipThreshold) {
+        this.inDip = true;
+      }
+    }
+
+    // ── Safety net: schedule catch-up ──
+    // If schedule is ahead of us, snap forward (never fall more than 1 behind)
+    if (scheduleIdx > newIndex + 1) {
+      newIndex = scheduleIdx - 1;
+      // Reset amplitude state so we start fresh detecting the next dip→rise
+      this.inDip = energy < this.riseThreshold;
+      this.holdoffMs = this.holdoffDuration;
+    }
+
+    // Apply if changed
+    if (newIndex !== this.currentIndex && newIndex >= 0) {
+      this.currentIndex = newIndex;
+      this.applyStyles();
+      debugLogCaptionSwitch(newIndex);
+    }
+  }
+
+  applyStyles() {
+    for (let i = 0; i < this.wordEls.length; i++) {
+      const el = this.wordEls[i];
+      el.className = 'word';
+      if (i < this.currentIndex) el.classList.add('spoken');
+      else if (i === this.currentIndex) el.classList.add('active');
+      else el.classList.add('next');
+    }
+  }
+
+  stop() {
+    this.words = [];
+    this.wordEls = [];
+    this.currentIndex = -1;
+    this.el.innerHTML = '';
+    this.el.classList.remove('word-mode');
+  }
+}
+
+// ── MESPEAK LOADER ──
+function loadScript(url) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error(`Script load failed: ${url}`));
+    document.head.appendChild(s);
+  });
+}
+
+function waitFor(conditionFn, timeout = 15000, interval = 100) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const check = () => {
+      if (conditionFn()) return resolve();
+      if (Date.now() - start > timeout) return reject(new Error('Timeout'));
+      setTimeout(check, interval);
+    };
+    check();
+  });
+}
+
+function loadVoicePromise(url) {
+  return new Promise((resolve, reject) => {
+    meSpeak.loadVoice(url, (success, message) => {
+      if (success) resolve(message);
+      else reject(new Error(`Voice load failed: ${message}`));
+    });
+  });
+}
+
+// ── AUDIO ──
+let audioCtx = null;
+let currentSource = null;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    effectChain.init(audioCtx);
+  }
+  return audioCtx;
+}
+
+function stopAudio() {
+  if (currentSource) {
+    try { currentSource.stop(); } catch(e) {}
+    currentSource = null;
+  }
+}
+
+// ── CDN ──
+const CDN_ROOTS = [
+  'https://cdn.jsdelivr.net/gh/btopro/mespeak@master',
+];
+
+let mespeakReady = false;
+let currentVoice = null;
+let isSpeaking = false;
+let activeVariant = 'm3'; // current eSpeak variant, set by presets
+let activeCDN = null;
+
+const visemeEngine = new VisemeEngine();
+const mouthRenderer = new MouthRenderer();
+const captionEngine = new CaptionEngine(document.getElementById('caption-text'));
+captionEngine.visemeEngineRef = visemeEngine;
+
+// ── INIT ──
+async function init() {
+  const overlay = document.getElementById('loading-overlay');
+  const status = document.getElementById('engine-status');
+
+  try {
+    let loaded = false;
+
+    for (const root of CDN_ROOTS) {
+      try {
+        console.log(`[VoiceBox] Trying CDN: ${root}`);
+        await loadScript(`${root}/mespeak.js`);
+
+        if (typeof meSpeak === 'undefined') {
+          throw new Error('meSpeak not defined after script load');
+        }
+
+        meSpeak.loadConfig(`${root}/mespeak_config.json`);
+        await waitFor(() => meSpeak.isConfigLoaded(), 15000);
+
+        activeCDN = root;
+        loaded = true;
+        console.log(`[VoiceBox] Engine loaded from ${root}`);
+        break;
+      } catch(e) {
+        console.warn(`[VoiceBox] CDN ${root} failed:`, e.message);
+      }
+    }
+
+    if (!loaded) throw new Error('Could not load meSpeak from any CDN');
+
+    await loadVoice('en/en-us');
+
+    mespeakReady = true;
+    status.textContent = 'ready';
+    status.className = 'status ready';
+    overlay.classList.add('hidden');
+    console.log('[VoiceBox] Ready!');
+  } catch (err) {
+    console.error('[VoiceBox] Init failed:', err);
+    status.textContent = 'error';
+    status.className = 'status error';
+    overlay.innerHTML = `<div style="text-align:center; max-width:400px;">
+      <div style="font-size:18px; margin-bottom:10px;">Failed to load eSpeak engine</div>
+      <div style="font-size:13px; color:#888;">${err.message}<br><br>
+      <button onclick="location.reload()" style="padding:8px 20px; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer;">Retry</button></div>
+    </div>`;
+  }
+}
+
+async function loadVoice(voicePath) {
+  const roots = activeCDN ? [activeCDN, ...CDN_ROOTS.filter(r => r !== activeCDN)] : CDN_ROOTS;
+  for (const root of roots) {
+    try {
+      await loadVoicePromise(`${root}/voices/${voicePath}.json`);
+      currentVoice = voicePath;
+      return;
+    } catch(e) {
+      console.warn(`[VoiceBox] Voice load failed from ${root}:`, e.message);
+    }
+  }
+  throw new Error(`Could not load voice: ${voicePath}`);
+}
+
+// ── SPEAK ──
+async function speak(text) {
+  if (!mespeakReady) return;
+  if (isSpeaking) { stopSpeaking(); return; }
+  if (!text.trim()) return;
+
+  isSpeaking = true;
+  const btn = document.getElementById('speak-btn');
+  btn.classList.add('speaking');
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+
+  try {
+    const voiceLang = document.getElementById('voice-lang').value;
+
+    if (currentVoice !== voiceLang) {
+      await loadVoice(voiceLang);
+    }
+
+    const speed = parseInt(document.getElementById('param-speed').value);
+    const pitch = parseInt(document.getElementById('param-pitch').value);
+    const amplitude = parseInt(document.getElementById('param-amplitude').value);
+    const wordgap = parseInt(document.getElementById('param-wordgap').value);
+    const volume = parseInt(document.getElementById('param-volume').value) / 100;
+
+    const opts = {
+      speed,
+      pitch,
+      amplitude,
+      wordgap,
+      variant: activeVariant,
+      rawdata: 'buffer',
+    };
+
+    const wavBuffer = meSpeak.speak(text, opts);
+    if (!wavBuffer) throw new Error('Speech synthesis returned no data');
+
+    const ctx = getAudioCtx();
+    // Resume audio context (required after user gesture on some browsers)
+    if (ctx.state === 'suspended') await ctx.resume();
+
+    const audioBuffer = await ctx.decodeAudioData(wavBuffer.slice(0));
+    const durationMs = audioBuffer.duration * 1000;
+
+    console.log(`[VoiceBox] Audio duration: ${durationMs.toFixed(0)}ms, words: ${text.split(/\s+/).length}`);
+
+    // Start viseme + caption engines (pass audioBuffer for amplitude-driven sync)
+    visemeEngine.startSentence(text, durationMs, audioBuffer);
+    captionEngine.startSentence(text, durationMs);
+
+    // Start debug timing capture (shows waveform + word boundaries)
+    debugStartCapture(audioBuffer, durationMs, text, visemeEngine.queue);
+
+    // Play audio through the effect chain
+    const source = ctx.createBufferSource();
+    source.buffer = audioBuffer;
+    effectChain.setVolume(volume);
+    effectChain.connectSource(source);
+
+    if (currentSource) {
+      try { currentSource.stop(); } catch(e) {}
+    }
+    currentSource = source;
+
+    source.onended = () => {
+      currentSource = null;
+      finishSpeaking();
+    };
+
+    source.start(0);
+
+  } catch (err) {
+    console.error('Speak error:', err);
+    finishSpeaking();
+  }
+}
+
+function finishSpeaking() {
+  isSpeaking = false;
+  visemeEngine.stop();
+  captionEngine.stop();
+  const btn = document.getElementById('speak-btn');
+  btn.classList.remove('speaking');
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+}
+
+function stopSpeaking() {
+  stopAudio();
+  finishSpeaking();
+}
+
+// ── DEBUG TIMING VISUALIZER ──
+const debugTimingState = {
+  active: false,
+  envelope: null,    // AmplitudeEnvelope reference
+  durationMs: 0,
+  words: [],
+  wordBoundaries: [], // [{timeMs, wordIdx}] — when each wordIdx first appears in queue
+  playbackStartTime: 0,
+  captionWordLog: [],  // [{timeMs, wordIdx}] — when caption actually switched
+};
+
+function debugStartCapture(audioBuffer, durationMs, text, queue) {
+  const el = document.getElementById('debug-timing');
+  if (!el) return;
+  const toggle = document.getElementById('debug-timing-toggle');
+  if (!toggle || !toggle.checked) return;
+
+  const dbg = debugTimingState;
+  dbg.active = true;
+  dbg.durationMs = durationMs;
+  dbg.words = text.split(/\s+/).filter(w => w.length > 0);
+  dbg.captionWordLog = [];
+  dbg.playbackStartTime = performance.now();
+
+  // Analyze audio for waveform display
+  dbg.envelope = new AmplitudeEnvelope();
+  dbg.envelope.analyze(audioBuffer);
+
+  // Extract word boundaries from the viseme queue: first time each wordIdx appears
+  dbg.wordBoundaries = [];
+  const seenWords = new Set();
+  for (const item of queue) {
+    if (item.wordIdx >= 0 && !seenWords.has(item.wordIdx)) {
+      seenWords.add(item.wordIdx);
+      dbg.wordBoundaries.push({ timeMs: item.time, wordIdx: item.wordIdx });
+    }
+  }
+
+  el.style.display = 'block';
+
+  // Size canvas properly
+  const canvas = document.getElementById('debug-canvas');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+}
+
+function debugLogCaptionSwitch(wordIdx) {
+  if (!debugTimingState.active) return;
+  const elapsed = performance.now() - debugTimingState.playbackStartTime;
+  debugTimingState.captionWordLog.push({ timeMs: elapsed, wordIdx });
+}
+
+function debugRenderFrame() {
+  const dbg = debugTimingState;
+  if (!dbg.active || !dbg.envelope) return;
+
+  const canvas = document.getElementById('debug-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const dur = dbg.durationMs;
+  const elapsed = performance.now() - dbg.playbackStartTime;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw amplitude waveform (blue filled)
+  const env = dbg.envelope;
+  ctx.fillStyle = 'rgba(74, 144, 217, 0.3)';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let i = 0; i < env.envelope.length; i++) {
+    const x = (i * env.windowMs / dur) * W;
+    const y = H - env.envelope[i] * H * 0.85;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fill();
+
+  // Draw amplitude threshold lines (horizontal)
+  const dipY = H - captionEngine.dipThreshold * H * 0.85;
+  const riseY = H - captionEngine.riseThreshold * H * 0.85;
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(255, 80, 80, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, dipY);
+  ctx.lineTo(W, dipY);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(80, 255, 80, 0.3)';
+  ctx.beginPath();
+  ctx.moveTo(0, riseY);
+  ctx.lineTo(W, riseY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw schedule safety-net lines (yellow dashed — expected word start times)
+  ctx.setLineDash([3, 3]);
+  for (let i = 0; i < captionEngine.schedule.length; i++) {
+    const x = (captionEngine.schedule[i].startMs / dur) * W;
+    ctx.strokeStyle = 'rgba(255, 200, 50, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255, 200, 50, 0.7)';
+    ctx.font = `${Math.round(9 * window.devicePixelRatio)}px monospace`;
+    const word = dbg.words[i] || '?';
+    ctx.fillText(word, x + 2, 11 * window.devicePixelRatio);
+  }
+  ctx.setLineDash([]);
+
+  // Draw actual caption switch times (green solid — "actual" time)
+  for (const cl of dbg.captionWordLog) {
+    const x = (cl.timeMs / dur) * W;
+    ctx.strokeStyle = 'rgba(80, 220, 100, 0.8)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+
+    // Word label at bottom
+    ctx.fillStyle = 'rgba(80, 220, 100, 0.9)';
+    ctx.font = `${Math.round(10 * window.devicePixelRatio)}px monospace`;
+    const word = dbg.words[cl.wordIdx] || '?';
+    ctx.fillText(word, x + 2, H - 4);
+  }
+
+  // Playhead (white vertical line)
+  if (elapsed <= dur) {
+    const px = (elapsed / dur) * W;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(px, 0);
+    ctx.lineTo(px, H);
+    ctx.stroke();
+  }
+
+  // Legend
+  const info = document.getElementById('debug-info');
+  if (info) {
+    info.textContent = `yellow = schedule | green vert = caption switch | horiz lines = amp thresholds | white = playhead`;
+  }
+}
+
+function debugStop() {
+  debugTimingState.active = false;
+}
+
+// ── ANIMATION LOOP ──
+let lastTime = performance.now();
+
+function animate(now) {
+  const dt = now - lastTime;
+  lastTime = now;
+
+  visemeEngine.update(dt);
+  const params = visemeEngine.getParams();
+  mouthRenderer.render(params);
+
+  if (isSpeaking) captionEngine.update(dt);
+
+  // Debug timing overlay
+  if (debugTimingState.active) debugRenderFrame();
+
+  // Highlight current viseme in strip
+  const thumbs = document.querySelectorAll('.viseme-thumb');
+  thumbs.forEach(t => t.classList.toggle('active', t.dataset.key === params.visemeKey));
+
+  requestAnimationFrame(animate);
+}
+
+// ── BUILD VISEME STRIP ──
+function buildVisemeStrip() {
+  const strip = document.getElementById('viseme-strip');
+  strip.innerHTML = '';
+
+  for (const key of VISEME_KEYS) {
+    const v = VISEMES[key];
+    const thumb = document.createElement('div');
+    thumb.className = 'viseme-thumb';
+    thumb.dataset.key = key;
+    thumb.title = `${key}: ${v.label}`;
+
+    // Match the main mouth renderer's proportions (scaled down)
+    const openRx = 10 + v.lipWidth * 7 - v.lipRound * 4;
+    const openRy = 0.8 + v.jawOpen * 10;
+    const lipStroke = 1.8;
+    const lipRx = openRx + lipStroke / 2;
+    const lipRy = openRy + lipStroke / 2;
+
+    // Teeth
+    const teethW = openRx * 1.5;
+    const teethH = 2.5 + v.teethShow * 4;
+    const teethOpacity = v.teethShow > 0.05 ? 0.9 : 0;
+
+    // Tongue
+    const tongueY = 3 - v.tongueUp * 6;
+    const tongueRx = openRx * 0.55;
+    const tongueRy = 3 + v.jawOpen * 3;
+    const tongueOpacity = v.tongueUp > 0.1 ? 0.9 : (v.jawOpen > 0.3 ? 0.6 : 0);
+
+    thumb.innerHTML = `<svg viewBox="-20 -14 40 28">
+      <defs><clipPath id="mc-${key}"><ellipse cx="0" cy="0" rx="${openRx}" ry="${openRy}"/></clipPath></defs>
+      <ellipse cx="0" cy="0" rx="${openRx}" ry="${openRy}" fill="#2a1015"/>
+      <g clip-path="url(#mc-${key})">
+        <ellipse cx="0" cy="${tongueY}" rx="${tongueRx}" ry="${tongueRy}" fill="#c44055" opacity="${tongueOpacity}"/>
+        <rect x="${-teethW/2}" y="${-openRy - 1}" width="${teethW}" height="${teethH}" rx="1" fill="#f0eee8" opacity="${teethOpacity}"/>
+        <rect x="${-teethW*0.42}" y="${openRy - teethH*0.6}" width="${teethW*0.84}" height="${teethH*0.7}" rx="1" fill="#e8e6e0" opacity="${teethOpacity * 0.85}"/>
+      </g>
+      <ellipse cx="0" cy="0" rx="${lipRx.toFixed(1)}" ry="${lipRy.toFixed(1)}" fill="none" stroke="#d4626e" stroke-width="${lipStroke}"/>
+    </svg>
+    <span class="viseme-label">${key}</span>`;
+
+    thumb.addEventListener('click', () => {
+      visemeEngine.targetParams = {
+        jawOpen: v.jawOpen, lipWidth: v.lipWidth,
+        lipRound: v.lipRound, tongueUp: v.tongueUp, teethShow: v.teethShow,
+      };
+      visemeEngine.currentKey = key;
+    });
+
+    strip.appendChild(thumb);
+  }
+}
+
+// ── UI ──
+function setSlider(id, value) {
+  const el = document.getElementById(`param-${id}`);
+  const val = document.getElementById(`val-${id}`);
+  if (el) { el.value = value; if (val) val.textContent = value; }
+}
+
+function applyPreset(presetName) {
+  const preset = VOICE_PRESETS[presetName];
+  if (!preset) return;
+
+  // Highlight
+  document.querySelectorAll('#preset-chips .chip').forEach(p => p.classList.remove('active'));
+  const chip = document.querySelector(`#preset-chips .chip[data-preset="${presetName}"]`);
+  if (chip) chip.classList.add('active');
+
+  // Set eSpeak variant
+  activeVariant = preset.variant;
+
+  // Apply core params
+  setSlider('speed', preset.speed);
+  setSlider('pitch', preset.pitch);
+  setSlider('amplitude', preset.amplitude);
+  setSlider('wordgap', preset.wordgap);
+
+  // Apply effects
+  setSlider('reverb', preset.reverb);
+  setSlider('wobble', preset.wobble);
+  setSliderSpecial('wobbleSpeed', preset.wobbleSpeed, preset.wobbleSpeed + ' Hz');
+  setSliderSpecial('brightness', preset.brightness, preset.brightness);
+  setSlider('breathiness', preset.breathiness);
+  setSlider('vocalFry', preset.vocalFry);
+  setSlider('chorus', preset.chorus);
+
+  // Push to effect chain
+  if (effectChain.ready) {
+    effectChain.setReverb(preset.reverb);
+    effectChain.setWobble(preset.wobble);
+    effectChain.setWobbleSpeed(preset.wobbleSpeed);
+    effectChain.setBrightness(preset.brightness);
+    effectChain.setBreathiness(preset.breathiness);
+    effectChain.setVocalFry(preset.vocalFry);
+    effectChain.setChorus(preset.chorus);
+  }
+}
+
+function setSliderSpecial(id, value, displayValue) {
+  const el = document.getElementById(`param-${id}`);
+  const val = document.getElementById(`val-${id}`);
+  if (el) el.value = value;
+  if (val) val.textContent = displayValue;
+}
+
+function buildPresetChips() {
+  const container = document.getElementById('preset-chips');
+  container.innerHTML = '';
+  for (const [key, preset] of Object.entries(VOICE_PRESETS)) {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (key === 'narrator' ? ' active' : '');
+    chip.dataset.preset = key;
+    chip.textContent = preset.label;
+    chip.addEventListener('click', () => applyPreset(key));
+    container.appendChild(chip);
+  }
+}
+
+function wireUI() {
+  // Build preset chips
+  buildPresetChips();
+
+  // Apply default preset (Narrator)
+  applyPreset('narrator');
+
+  // Tabs
+  document.querySelectorAll('.panel-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  // Reset buttons
+  document.querySelectorAll('.reset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const resetType = btn.dataset.reset;
+
+      if (resetType === 'preset') {
+        applyPreset('narrator');
+      }
+
+      if (resetType === 'params') {
+        for (const [key, val] of Object.entries(PARAM_DEFAULTS)) {
+          setSlider(key, val);
+        }
+      }
+
+      if (resetType === 'effects') {
+        for (const [key, val] of Object.entries(EFFECT_DEFAULTS)) {
+          if (key === 'wobbleSpeed') {
+            setSliderSpecial(key, val, val + ' Hz');
+          } else {
+            setSlider(key, val);
+          }
+        }
+        if (effectChain.ready) {
+          effectChain.setReverb(0);
+          effectChain.setWobble(0);
+          effectChain.setWobbleSpeed(5);
+          effectChain.setBrightness(0);
+          effectChain.setBreathiness(0);
+          effectChain.setVocalFry(0);
+          effectChain.setChorus(0);
+        }
+      }
+
+      if (resetType === 'sync') {
+        setSlider('snappiness', 85);
+        visemeEngine.snappiness = 0.85;
+        document.getElementById('param-audiolead').value = 40;
+        document.getElementById('val-audiolead').textContent = '40ms';
+        visemeEngine.audioLeadMs = 40;
+      }
+    });
+  });
+
+  // Core parameter sliders
+  const coreSliders = ['speed', 'pitch', 'volume', 'amplitude', 'wordgap'];
+  coreSliders.forEach(name => {
+    const slider = document.getElementById(`param-${name}`);
+    const val = document.getElementById(`val-${name}`);
+    if (slider && val) {
+      slider.addEventListener('input', () => {
+        val.textContent = slider.value;
+      });
+    }
+  });
+
+  // Effect sliders
+  const effectMap = {
+    reverb:       (v) => effectChain.setReverb(v),
+    wobble:       (v) => effectChain.setWobble(v),
+    brightness:   (v) => effectChain.setBrightness(v),
+    breathiness:  (v) => effectChain.setBreathiness(v),
+    vocalFry:     (v) => effectChain.setVocalFry(v),
+    chorus:       (v) => effectChain.setChorus(v),
+  };
+  for (const [name, setter] of Object.entries(effectMap)) {
+    const slider = document.getElementById(`param-${name}`);
+    const val = document.getElementById(`val-${name}`);
+    if (slider && val) {
+      slider.addEventListener('input', () => {
+        val.textContent = slider.value;
+        if (effectChain.ready) setter(parseFloat(slider.value));
+      });
+    }
+  }
+
+  // Wobble speed (special display format)
+  const wobbleSpeedSlider = document.getElementById('param-wobbleSpeed');
+  const wobbleSpeedVal = document.getElementById('val-wobbleSpeed');
+  if (wobbleSpeedSlider) {
+    wobbleSpeedSlider.addEventListener('input', () => {
+      wobbleSpeedVal.textContent = wobbleSpeedSlider.value + ' Hz';
+      if (effectChain.ready) effectChain.setWobbleSpeed(parseFloat(wobbleSpeedSlider.value));
+    });
+  }
+
+  // Snappiness slider
+  const snappinessSlider = document.getElementById('param-snappiness');
+  const snappinessVal = document.getElementById('val-snappiness');
+  if (snappinessSlider) {
+    snappinessSlider.addEventListener('input', () => {
+      snappinessVal.textContent = snappinessSlider.value;
+      visemeEngine.snappiness = parseInt(snappinessSlider.value) / 100;
+    });
+  }
+
+  // Audio lead slider
+  const audioLeadSlider = document.getElementById('param-audiolead');
+  const audioLeadVal = document.getElementById('val-audiolead');
+  if (audioLeadSlider) {
+    audioLeadSlider.addEventListener('input', () => {
+      audioLeadVal.textContent = audioLeadSlider.value + 'ms';
+      visemeEngine.audioLeadMs = parseInt(audioLeadSlider.value);
+    });
+  }
+
+  // Caption size slider
+  const captionSlider = document.getElementById('caption-size');
+  const captionVal = document.getElementById('val-caption-size');
+  if (captionSlider && captionVal) {
+    captionSlider.addEventListener('input', () => {
+      captionVal.textContent = captionSlider.value;
+      document.getElementById('caption-text').style.fontSize = captionSlider.value + 'px';
+    });
+  }
+
+  // Speak button
+  document.getElementById('speak-btn').addEventListener('click', () => {
+    if (isSpeaking) stopSpeaking();
+    else speak(document.getElementById('text-input').value);
+  });
+
+  // Debug close button
+  document.getElementById('debug-close-btn').addEventListener('click', () => {
+    debugStop();
+    document.getElementById('debug-timing').style.display = 'none';
+    document.getElementById('debug-timing-toggle').checked = false;
+  });
+
+  // Debug toggle in Display tab
+  document.getElementById('debug-timing-toggle').addEventListener('change', (e) => {
+    if (!e.target.checked) {
+      debugStop();
+      document.getElementById('debug-timing').style.display = 'none';
+    }
+  });
+
+  // Preview button
+  document.getElementById('preview-btn').addEventListener('click', () => {
+    if (isSpeaking) stopSpeaking();
+    setTimeout(() => speak('Hello! Testing one two three.'), 50);
+  });
+
+  // Enter to speak
+  document.getElementById('text-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (isSpeaking) stopSpeaking();
+      else speak(e.target.value);
+    }
+  });
+
+  // Auto-resize textarea
+  const textarea = document.getElementById('text-input');
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+  });
+
+  // Caption mode buttons
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      captionEngine.setMode(btn.dataset.mode);
+    });
+  });
+
+  // Lip color
+  document.getElementById('lip-color').addEventListener('input', (e) => {
+    mouthRenderer.setLipColor(e.target.value);
+  });
+  document.getElementById('lip-thickness').addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value);
+    document.getElementById('lip-thickness-val').textContent = val.toFixed(1);
+    mouthRenderer.setLipWidth(val);
+  });
+
+  // Face color
+  document.getElementById('face-color').addEventListener('input', (e) => {
+    document.getElementById('face-bg').setAttribute('fill', e.target.value);
+  });
+
+  // Stage color
+  document.getElementById('stage-color').addEventListener('input', (e) => {
+    document.getElementById('stage').style.background = e.target.value;
+  });
+
+  // Layer visibility
+  document.getElementById('show-lips').addEventListener('change', (e) => {
+    document.getElementById('lips-layer').style.display = e.target.checked ? '' : 'none';
+  });
+  document.getElementById('show-teeth').addEventListener('change', (e) => {
+    document.getElementById('teeth-layer').style.display = e.target.checked ? '' : 'none';
+  });
+  document.getElementById('show-tongue').addEventListener('change', (e) => {
+    document.getElementById('tongue-layer').style.display = e.target.checked ? '' : 'none';
+  });
+
+  // Voice language change
+  document.getElementById('voice-lang').addEventListener('change', async (e) => {
+    const status = document.getElementById('engine-status');
+    status.textContent = 'loading';
+    status.className = 'status loading';
+    try {
+      await loadVoice(e.target.value);
+      status.textContent = 'ready';
+      status.className = 'status ready';
+    } catch(err) {
+      status.textContent = 'error';
+      status.className = 'status error';
+    }
+  });
+}
+
+// ── GO ──
+buildVisemeStrip();
+wireUI();
+requestAnimationFrame(animate);
+init();
+</script>
+
+</body>
+</html>

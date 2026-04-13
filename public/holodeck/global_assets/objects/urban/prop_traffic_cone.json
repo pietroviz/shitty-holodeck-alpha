@@ -1,0 +1,98 @@
+{
+  "id": "prop_traffic_cone",
+  "type": "prop",
+  "name": "Traffic Cone",
+  "tags": [
+    "urban",
+    "hazard",
+    "warning",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "urban",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Orange traffic cone with reflective stripes",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#ffffff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "type": "cone",
+          "px": 0,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.25,
+          "height": 1,
+          "fill": "primary",
+          "metalness": 0.1,
+          "roughness": 0.9,
+          "opacity": 1,
+          "id": "el_1"
+        },
+        {
+          "type": "torus",
+          "px": 0,
+          "py": 0.35,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.2,
+          "tube": 0.04,
+          "fill": "secondary",
+          "metalness": 0.8,
+          "roughness": 0.1,
+          "opacity": 1,
+          "id": "el_2"
+        },
+        {
+          "type": "torus",
+          "px": 0,
+          "py": 0.65,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.15,
+          "tube": 0.04,
+          "fill": "secondary",
+          "metalness": 0.8,
+          "roughness": 0.1,
+          "opacity": 1,
+          "id": "el_3"
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#ffffff"
+      }
+    }
+  }
+}

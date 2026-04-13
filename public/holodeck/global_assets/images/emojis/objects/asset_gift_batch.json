@@ -1,0 +1,126 @@
+{
+  "id": "asset_gift_batch",
+  "type": "asset",
+  "name": "Gift",
+  "tags": [
+    "emoji",
+    "object",
+    "gift",
+    "present"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.243Z",
+    "modified": "2026-03-28T07:33:47.243Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A wrapped gift box with bow",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#fbf236",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 400
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "w": 200,
+            "h": 160,
+            "rx": 8,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "w": 30,
+            "h": 160,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "w": 220,
+            "h": 30,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 235,
+            "cy": 200,
+            "r": 20,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 277,
+            "cy": 200,
+            "r": 20,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#fbf236",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

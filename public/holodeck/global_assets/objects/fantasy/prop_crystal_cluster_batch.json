@@ -1,0 +1,151 @@
+{
+  "id": "prop_crystal_cluster_batch",
+  "type": "prop",
+  "name": "Crystal Cluster",
+  "tags": [
+    "fantasy",
+    "crystal_cluster",
+    "magic",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-30T03:55:11.260Z",
+    "modified": "2026-03-30T03:55:11.260Z",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cluster of translucent magical crystals at various angles, glowing with arcane energy",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#639bff",
+      "secondary": "#d77bba",
+      "tertiary": "#eec39a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_crystal_main",
+          "type": "pyramid",
+          "px": 0,
+          "py": 1,
+          "pz": 0,
+          "rx": 0.2,
+          "ry": 0.3,
+          "rz": 0,
+          "baseWidth": 0.8,
+          "height": 1.5,
+          "fill": "primary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 0.75
+        },
+        {
+          "id": "el_crystal_left",
+          "type": "pyramid",
+          "px": -1.2,
+          "py": 0.5,
+          "pz": 0.3,
+          "rx": 0.5,
+          "ry": 0.1,
+          "rz": 0.4,
+          "baseWidth": 0.6,
+          "height": 1.2,
+          "fill": "secondary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 0.7
+        },
+        {
+          "id": "el_crystal_right",
+          "type": "pyramid",
+          "px": 1.2,
+          "py": 0.4,
+          "pz": -0.2,
+          "rx": -0.3,
+          "ry": -0.2,
+          "rz": 0.3,
+          "baseWidth": 0.7,
+          "height": 1.3,
+          "fill": "tertiary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 0.72
+        },
+        {
+          "id": "el_crystal_small1",
+          "type": "pyramid",
+          "px": -0.6,
+          "py": 0.8,
+          "pz": 0.8,
+          "rx": 0.1,
+          "ry": 0.4,
+          "rz": -0.2,
+          "baseWidth": 0.5,
+          "height": 0.9,
+          "fill": "primary",
+          "metalness": 0.65,
+          "roughness": 0.25,
+          "opacity": 0.78
+        },
+        {
+          "id": "el_crystal_small2",
+          "type": "pyramid",
+          "px": 0.7,
+          "py": 0.3,
+          "pz": 0.6,
+          "rx": -0.2,
+          "ry": 0.3,
+          "rz": 0.1,
+          "baseWidth": 0.5,
+          "height": 0.85,
+          "fill": "secondary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 0.74
+        },
+        {
+          "id": "el_crystal_base",
+          "type": "rounded-box",
+          "px": 0,
+          "py": -0.3,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 2.5,
+          "height": 0.4,
+          "depth": 2.5,
+          "bevelRadius": 0.1,
+          "fill": "tertiary",
+          "metalness": 0.3,
+          "roughness": 0.6,
+          "opacity": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#639bff",
+        "secondary": "#d77bba",
+        "tertiary": "#eec39a"
+      }
+    }
+  }
+}

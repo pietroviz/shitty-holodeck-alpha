@@ -1,0 +1,128 @@
+{
+  "id": "asset_sword_batch",
+  "type": "asset",
+  "name": "Sword",
+  "tags": [
+    "emoji",
+    "activity",
+    "sword",
+    "weapon",
+    "medieval",
+    "combat"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.314Z",
+    "modified": "2026-03-28T15:22:15.314Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A medieval sword",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#222034",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "w": 22,
+            "h": 250,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 80,
+            "r": 20,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 360,
+            "w": 80,
+            "h": 14,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 400,
+            "w": 16,
+            "h": 50,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 430,
+            "r": 10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#222034",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

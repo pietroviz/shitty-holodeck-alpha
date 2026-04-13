@@ -1,0 +1,53 @@
+{
+  "id": "char_coral_the_merfolk",
+  "type": "character",
+  "name": "Coral the Merfolk",
+  "tags": [
+    "creatures",
+    "merfolk",
+    "female",
+    "aquatic"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Merfolk ambassador from the deep ocean kingdoms.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#2a8aaa",
+      "skinColor": "#5a7a9a",
+      "torsoColor": "#4aaa8a",
+      "bottomColor": "#2a8a6a",
+      "eyeIrisColor": "#00ccaa",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "wideOval",
+      "lipColor": "#4a8aaa",
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#2a8aaa",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

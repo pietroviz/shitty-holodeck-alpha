@@ -1,0 +1,53 @@
+{
+  "id": "char_influencer_aria",
+  "type": "character",
+  "name": "Influencer Aria",
+  "tags": [
+    "internet",
+    "influencer",
+    "female",
+    "beauty"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Lifestyle influencer with millions of followers.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#d4a843",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#ff69b4",
+      "bottomColor": "#ffffff",
+      "eyeIrisColor": "#4a9ac0",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#ff69b4",
+      "lipThickness": 5,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#d4a843",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_heart_glasses",
+      "glassesColor": "#ff69b4"
+    }
+  }
+}

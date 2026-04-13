@@ -1,0 +1,133 @@
+{
+  "id": "asset_disguised_face_batch",
+  "type": "asset",
+  "name": "Disguised Face",
+  "tags": [
+    "emoji",
+    "smiley",
+    "disguise",
+    "spy",
+    "incognito"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.273Z",
+    "modified": "2026-03-28T15:22:15.273Z",
+    "origin": "batch",
+    "origin_ref": "smileys-people",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A face with fake nose and glasses disguise",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#222034",
+      "tertiary": "#eec39a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 200,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 200,
+            "cy": 230,
+            "r": 35,
+            "thickness": 5,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 312,
+            "cy": 230,
+            "r": 35,
+            "thickness": 5,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "length": 42,
+            "angle": 0,
+            "thickness": 5,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "r": 35,
+            "rotation": 180,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 330,
+            "rx": 70,
+            "ry": 20,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#222034",
+        "tertiary": "#eec39a"
+      }
+    }
+  }
+}

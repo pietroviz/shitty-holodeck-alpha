@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1A2332;
+  --foreground: #ffffff;
+  --holo-accent: #00D9D9;
+  --holo-accent-dark: #00B8B8;
+  --holo-bg: #1A2332;
+  --holo-panel: #1E2530;
+  --holo-raised: #2A3240;
+  --holo-text: #ffffff;
+  --holo-dim: #5A6676;
 }
 
 @theme inline {
@@ -14,13 +21,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1A2332;
+    --foreground: #ffffff;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }

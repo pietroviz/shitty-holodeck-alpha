@@ -1,0 +1,53 @@
+{
+  "id": "char_shambler",
+  "type": "character",
+  "name": "Shambler",
+  "tags": [
+    "creatures",
+    "zombie",
+    "male",
+    "undead"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Slow-moving zombie with a taste for brains.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "wide",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "low",
+      "scalpColor": "#4a5a4a",
+      "skinColor": "#7a8a6a",
+      "torsoColor": "#5a5a4a",
+      "bottomColor": "#4a4a3a",
+      "eyeIrisColor": "#cccc00",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "wideOval",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_eye_patch",
+      "glassesColor": "#4a4a4a"
+    }
+  }
+}

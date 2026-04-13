@@ -1,0 +1,46 @@
+{
+  "id": "voice_french",
+  "type": "voice",
+  "name": "French",
+  "tags": ["accented", "french", "european", "romantic"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Smooth French-accented voice with warm intonation.",
+    "format": "voice_state",
+    "state": {
+      "language": "fr",
+      "variant": "m3",
+      "speed": 150,
+      "pitch": 45,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 30,
+      "lipColor": "#cc5566",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e8c9a0",
+      "scalpColor": "#4a3520",
+      "captionSize": 18,
+      "presetKey": "french",
+      "previewText": "Bonjour! I am speaking with a lovely French accent, non?"
+    }
+  }
+}

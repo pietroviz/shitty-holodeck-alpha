@@ -1,0 +1,184 @@
+{
+  "id": "asset_octopus_batch",
+  "type": "asset",
+  "name": "Octopus",
+  "tags": [
+    "emoji",
+    "animal",
+    "octopus",
+    "ocean"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.215Z",
+    "modified": "2026-03-28T07:33:47.215Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cute purple octopus",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#76428a",
+      "secondary": "#222034",
+      "tertiary": "#d77bba"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "r": 120,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 160,
+            "cy": 340,
+            "r": 40,
+            "startAngle": -90,
+            "endAngle": 90,
+            "thickness": 18,
+            "fill": "primary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 210,
+            "cy": 360,
+            "r": 35,
+            "startAngle": -90,
+            "endAngle": 90,
+            "thickness": 16,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 302,
+            "cy": 360,
+            "r": 35,
+            "startAngle": -90,
+            "endAngle": 90,
+            "thickness": 16,
+            "fill": "primary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 352,
+            "cy": 340,
+            "r": 40,
+            "startAngle": -90,
+            "endAngle": 90,
+            "thickness": 18,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 220,
+            "cy": 205,
+            "r": 22,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 292,
+            "cy": 205,
+            "r": 22,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 220,
+            "cy": 205,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 292,
+            "cy": 205,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 245,
+            "r": 30,
+            "startAngle": 20,
+            "endAngle": 160,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 9
+        }
+      ],
+      "color_assignments": {
+        "primary": "#76428a",
+        "secondary": "#222034",
+        "tertiary": "#d77bba"
+      }
+    }
+  }
+}

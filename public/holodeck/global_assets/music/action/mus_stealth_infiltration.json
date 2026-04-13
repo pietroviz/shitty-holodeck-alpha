@@ -1,0 +1,46 @@
+{
+  "id": "mus_stealth_infiltration",
+  "type": "music",
+  "name": "Stealth Infiltration",
+  "tags": ["action", "suspenseful", "tactical"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Tense stealth action theme with sparse beats and sneaky synth elements",
+    "engine": "strudel",
+    "bpm": 140,
+    "key": "Fm",
+    "scale": "natural minor",
+    "pattern": "Tense stealth groove with sneaky leads and minimal drums",
+    "layers": [
+      {
+        "name": "drum_beat_sparse",
+        "pattern": "F2 F2 C2 F2",
+        "gain": 0.62
+      },
+      {
+        "name": "bass_sneaky_sub",
+        "pattern": "F3 Ab3 C4 F4 Ab4",
+        "gain": 0.58
+      },
+      {
+        "name": "lead_pluck_stealth",
+        "pattern": "C5 F5 Ab5 C5 F5",
+        "gain": 0.68
+      },
+      {
+        "name": "texture_ambient_edge",
+        "pattern": "Ab5 C5 F5 Ab5",
+        "gain": 0.45
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.8,
+    "fade_out": 2.0,
+    "mood_color": "#2F4F4F"
+  }
+}

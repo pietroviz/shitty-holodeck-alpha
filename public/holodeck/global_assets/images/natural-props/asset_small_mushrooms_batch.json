@@ -1,0 +1,145 @@
+{
+  "id": "asset_small_mushrooms_batch",
+  "type": "asset",
+  "name": "Mushroom Cluster",
+  "tags": [
+    "natural-props",
+    "mushroom",
+    "fungus",
+    "small",
+    "forest",
+    "ground"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cluster of small mushrooms",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#eec39a",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 330
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 220,
+            "cy": 310,
+            "w": 8,
+            "h": 35,
+            "rotation": -3,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 220,
+            "cy": 288,
+            "rx": 20,
+            "ry": 12,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 305,
+            "w": 10,
+            "h": 40,
+            "rotation": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "rx": 25,
+            "ry": 15,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 290,
+            "cy": 312,
+            "w": 7,
+            "h": 30,
+            "rotation": 5,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 290,
+            "cy": 295,
+            "rx": 18,
+            "ry": 10,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#eec39a",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

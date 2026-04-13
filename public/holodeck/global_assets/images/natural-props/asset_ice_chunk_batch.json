@@ -1,0 +1,112 @@
+{
+  "id": "asset_ice_chunk_batch",
+  "type": "asset",
+  "name": "Ice Chunk",
+  "tags": [
+    "natural-props",
+    "ice",
+    "frozen",
+    "arctic",
+    "glacier",
+    "tundra"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A jagged chunk of ice",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#f4f4f4",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 340
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 240,
+            "cy": 260,
+            "r": 80,
+            "rotation": 5,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 280,
+            "cy": 240,
+            "r": 55,
+            "rotation": -10,
+            "fill": "secondary",
+            "stroke": "primary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 210,
+            "r": 30,
+            "rotation": 10,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 250,
+            "cy": 260,
+            "length": 60,
+            "angle": 80,
+            "thickness": 1,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#f4f4f4",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "char_grogg_the_ogre",
+  "type": "character",
+  "name": "Grogg the Ogre",
+  "tags": [
+    "fantasy",
+    "ogre",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Dim but lovable ogre who just wants to be left alone.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "wide",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "wide",
+      "headShape": "sphere",
+      "bodyShape": "barrel",
+      "facePlacement": "low",
+      "scalpColor": "#5a7a4a",
+      "skinColor": "#5a8a5a",
+      "torsoColor": "#6a5a3a",
+      "bottomColor": "#4a3a2a",
+      "eyeIrisColor": "#8a6a2a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "wideOval",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_soul_patch",
+      "facialHairColor": "#3a4a2a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

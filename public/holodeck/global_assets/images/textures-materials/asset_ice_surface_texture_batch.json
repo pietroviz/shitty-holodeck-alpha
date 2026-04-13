@@ -1,0 +1,151 @@
+{
+  "id": "asset_ice_surface_texture_batch",
+  "type": "asset",
+  "name": "Ice Surface",
+  "tags": [
+    "textures",
+    "ice",
+    "frozen",
+    "arctic",
+    "glacier",
+    "smooth"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Smooth frozen ice surface",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#9badb7",
+      "tertiary": "#f4f4f4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 180,
+            "cy": 180,
+            "length": 100,
+            "angle": 25,
+            "thickness": 1,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 300,
+            "cy": 220,
+            "length": 80,
+            "angle": 50,
+            "thickness": 1,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 200,
+            "cy": 320,
+            "length": 120,
+            "angle": 15,
+            "thickness": 1,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 350,
+            "cy": 350,
+            "length": 90,
+            "angle": 40,
+            "thickness": 1,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "star-4",
+          "params": {
+            "cx": 300,
+            "cy": 170,
+            "r": 6,
+            "innerRatio": 0.3,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "star-4",
+          "params": {
+            "cx": 180,
+            "cy": 350,
+            "r": 5,
+            "innerRatio": 0.3,
+            "rotation": 22,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#9badb7",
+        "tertiary": "#f4f4f4"
+      }
+    }
+  }
+}

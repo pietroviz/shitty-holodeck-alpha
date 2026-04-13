@@ -1,0 +1,46 @@
+{
+  "id": "mus_desert_caravan",
+  "type": "music",
+  "name": "Desert Caravan",
+  "tags": ["world", "exotic", "cultural"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Middle Eastern desert caravan theme with exotic scales and rhythmic textures",
+    "engine": "strudel",
+    "bpm": 110,
+    "key": "Em",
+    "scale": "phrygian",
+    "pattern": "Desert caravan with exotic rhythms and melodies",
+    "layers": [
+      {
+        "name": "drum_beat_exotic",
+        "pattern": "E2 E2 B1 E2",
+        "gain": 0.65
+      },
+      {
+        "name": "pad_middle_eastern",
+        "pattern": "E3 F3 B3 E4 F4",
+        "gain": 0.6
+      },
+      {
+        "name": "melody_lead_exotic",
+        "pattern": "B4 E5 F5 B5 E5",
+        "gain": 0.7
+      },
+      {
+        "name": "texture_wind_desert",
+        "pattern": "F5 B5 E5 F5",
+        "gain": 0.48
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.5,
+    "fade_out": 2.5,
+    "mood_color": "#DEB887"
+  }
+}

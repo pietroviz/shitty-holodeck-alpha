@@ -1,0 +1,149 @@
+{
+  "id": "prop_skull_batch",
+  "type": "prop",
+  "name": "Skull",
+  "tags": [
+    "fantasy",
+    "skull",
+    "magic",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-30T03:55:11.260Z",
+    "modified": "2026-03-30T03:55:11.260Z",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A bone-white skull with dark eye sockets and a grim visage",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#222034",
+      "secondary": "#696a6a",
+      "tertiary": "#ffffff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_skull_head",
+          "type": "sphere",
+          "px": 0,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.6,
+          "fill": "tertiary",
+          "metalness": 0.2,
+          "roughness": 0.5,
+          "opacity": 1
+        },
+        {
+          "id": "el_skull_jaw",
+          "type": "rounded-box",
+          "px": 0,
+          "py": -0.1,
+          "pz": 0.55,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.5,
+          "height": 0.3,
+          "depth": 0.2,
+          "bevelRadius": 0.05,
+          "fill": "tertiary",
+          "metalness": 0.15,
+          "roughness": 0.55,
+          "opacity": 1
+        },
+        {
+          "id": "el_skull_eye_left",
+          "type": "sphere",
+          "px": -0.2,
+          "py": 0.65,
+          "pz": 0.5,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.15,
+          "fill": "primary",
+          "metalness": 0.3,
+          "roughness": 0.8,
+          "opacity": 1
+        },
+        {
+          "id": "el_skull_eye_right",
+          "type": "sphere",
+          "px": 0.2,
+          "py": 0.65,
+          "pz": 0.5,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.15,
+          "fill": "primary",
+          "metalness": 0.3,
+          "roughness": 0.8,
+          "opacity": 1
+        },
+        {
+          "id": "el_skull_nose",
+          "type": "pyramid",
+          "px": 0,
+          "py": 0.35,
+          "pz": 0.55,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "baseWidth": 0.15,
+          "height": 0.15,
+          "fill": "primary",
+          "metalness": 0.3,
+          "roughness": 0.8,
+          "opacity": 1
+        },
+        {
+          "id": "el_skull_teeth",
+          "type": "box",
+          "px": 0,
+          "py": 0.05,
+          "pz": 0.63,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 0.45,
+          "height": 0.08,
+          "depth": 0.08,
+          "fill": "tertiary",
+          "metalness": 0.1,
+          "roughness": 0.6,
+          "opacity": 0.9
+        }
+      ],
+      "color_assignments": {
+        "primary": "#222034",
+        "secondary": "#696a6a",
+        "tertiary": "#ffffff"
+      }
+    }
+  }
+}

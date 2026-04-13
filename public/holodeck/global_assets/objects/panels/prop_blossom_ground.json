@@ -1,0 +1,221 @@
+{
+  "id": "prop_blossom_ground",
+  "type": "prop",
+  "name": "Blossom Ground Panel",
+  "tags": [
+    "panels",
+    "environment",
+    "terrain",
+    "ground",
+    "blossom"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Ground panel with scattered petals and small mounds",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#99e550",
+      "secondary": "#d77bba",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_box_0",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 3,
+            "height": 0.26,
+            "depth": 2.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_hemisphere_1",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1.3,
+            "py": 0.19,
+            "pz": -0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.3,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_hemisphere_2",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.3,
+            "py": 0.2,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.28,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_3",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.7,
+            "py": 0.24,
+            "pz": 0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.11,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_4",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.2,
+            "py": 0.23,
+            "pz": -0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.1,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_5",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 1.1,
+            "py": 0.24,
+            "pz": 0.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.12,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_6",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1.5,
+            "py": 0.22,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.11,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_7",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 1.4,
+            "py": 0.23,
+            "pz": -0.7,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.12,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#99e550",
+        "secondary": "#d77bba",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

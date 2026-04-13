@@ -1,0 +1,148 @@
+{
+  "id": "asset_wolf_batch",
+  "type": "asset",
+  "name": "Wolf",
+  "tags": [
+    "emoji",
+    "animal",
+    "wolf",
+    "predator"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.278Z",
+    "modified": "2026-03-28T15:22:15.278Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A grey wolf head",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#222034",
+      "tertiary": "#cbdbfc"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "r": 150,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 185,
+            "cy": 140,
+            "r": 55,
+            "rotation": 345,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 327,
+            "cy": 140,
+            "r": 55,
+            "rotation": 15,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "rx": 60,
+            "ry": 40,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 215,
+            "cy": 250,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 297,
+            "cy": 250,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "r": 12,
+            "rotation": 180,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#222034",
+        "tertiary": "#cbdbfc"
+      }
+    }
+  }
+}

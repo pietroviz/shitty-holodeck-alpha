@@ -1,0 +1,148 @@
+{
+  "id": "asset_antenna_tower_batch",
+  "type": "asset",
+  "name": "Antenna Tower",
+  "tags": [
+    "man-made-props",
+    "antenna",
+    "tower",
+    "radio",
+    "communication",
+    "tech"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A radio/communication antenna tower",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#ac3232",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "tall",
+    "anchor_point": {
+      "x": 256,
+      "y": 445
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "w": 40,
+            "h": 320,
+            "rotation": 0,
+            "fill": "none",
+            "stroke": "primary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "cross",
+          "params": {
+            "cx": 256,
+            "cy": 180,
+            "r": 20,
+            "thickness": 3,
+            "rotation": 0,
+            "fill": "primary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "cross",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "r": 20,
+            "thickness": 3,
+            "rotation": 0,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "cross",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 20,
+            "thickness": 3,
+            "rotation": 0,
+            "fill": "primary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "cross",
+          "params": {
+            "cx": 256,
+            "cy": 390,
+            "r": 20,
+            "thickness": 3,
+            "rotation": 0,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 115,
+            "r": 12,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 108,
+            "r": 4,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#ac3232",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

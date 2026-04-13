@@ -1,0 +1,167 @@
+{
+  "id": "asset_castle_batch",
+  "type": "asset",
+  "name": "Castle",
+  "tags": [
+    "emoji",
+    "place",
+    "castle",
+    "building"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.237Z",
+    "modified": "2026-03-28T07:33:47.237Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A fairy tale castle",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#222034",
+      "tertiary": "#639bff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 460
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "w": 180,
+            "h": 200,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 180,
+            "cy": 280,
+            "w": 40,
+            "h": 120,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 332,
+            "cy": 280,
+            "w": 40,
+            "h": 120,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 180,
+            "cy": 210,
+            "r": 26,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 332,
+            "cy": 210,
+            "r": 26,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 190,
+            "r": 40,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 390,
+            "w": 44,
+            "h": 70,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 360,
+            "r": 22,
+            "startAngle": -180,
+            "endAngle": 0,
+            "thickness": 22,
+            "fill": "secondary"
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#222034",
+        "tertiary": "#639bff"
+      }
+    }
+  }
+}

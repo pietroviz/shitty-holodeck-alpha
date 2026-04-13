@@ -1,0 +1,207 @@
+{
+  "id": "asset_grass_texture_batch",
+  "type": "asset",
+  "name": "Grass",
+  "tags": [
+    "texture",
+    "textures",
+    "grass",
+    "lawn",
+    "green",
+    "ground"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Lush green grass texture",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#6abe30",
+      "secondary": "#4b692f",
+      "tertiary": "#37946e"
+    },
+    "background_color": "#6abe30",
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 100,
+            "cy": 150,
+            "length": 30,
+            "angle": 80,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 150,
+            "cy": 200,
+            "length": 25,
+            "angle": 95,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 200,
+            "cy": 130,
+            "length": 28,
+            "angle": 85,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 280,
+            "cy": 180,
+            "length": 30,
+            "angle": 75,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 340,
+            "cy": 140,
+            "length": 26,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 380,
+            "cy": 210,
+            "length": 30,
+            "angle": 85,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 120,
+            "cy": 290,
+            "length": 28,
+            "angle": 80,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 220,
+            "cy": 270,
+            "length": 30,
+            "angle": 95,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 310,
+            "cy": 300,
+            "length": 26,
+            "angle": 85,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 180,
+            "cy": 350,
+            "length": 30,
+            "angle": 75,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 360,
+            "cy": 340,
+            "length": 28,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 11
+        }
+      ],
+      "color_assignments": {
+        "primary": "#6abe30",
+        "secondary": "#4b692f",
+        "tertiary": "#37946e"
+      }
+    }
+  }
+}

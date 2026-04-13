@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Builder</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="state-editing">
+
+    <!-- ── Stage Menu (shown when panel closed) ─────────── -->
+    <div id="stage-menu-wrapper">
+        <button id="open-panel-btn" title="Menu">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <div class="menu-dropdown" id="stage-hamburger-menu">
+            <button class="menu-item" id="stage-menu-browse">Browse All</button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" id="stage-menu-new">New Character</button>
+            <button class="menu-item" id="stage-menu-duplicate">Duplicate</button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" id="stage-menu-export">Export JSON</button>
+            <button class="menu-item" id="stage-menu-import">Import JSON</button>
+            <div class="menu-divider"></div>
+            <button class="menu-item danger" id="stage-menu-delete">Delete</button>
+        </div>
+    </div>
+
+    <div id="ui-panel">
+        <!-- ── Panel Header ──────────────────────────────── -->
+        <div class="panel-header">
+            <div class="panel-header-left">
+                <!-- Cancel / Close button (browse + editing) -->
+                <button class="header-btn for-browse" id="btn-cancel-browse" title="Close">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+                <button class="header-btn for-editing" id="btn-cancel-edit" title="Cancel">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+
+                <!-- Title (browse state) -->
+                <span class="panel-title for-browse" id="panel-title">Browse</span>
+
+                <!-- Editable name (editing state) -->
+                <input type="text" id="character-name" value="Untitled Character" spellcheck="false">
+            </div>
+            <div class="panel-header-right">
+                <!-- Browse: search + menu -->
+                <button class="header-btn for-browse" id="btn-search" title="Search">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </button>
+                <!-- browse menu removed — actions available via hamburger -->
+
+                <!-- Editing: done + menu -->
+                <button class="header-btn primary for-editing" id="btn-done" title="Done">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    Done
+                </button>
+                <div class="menu-wrapper for-editing">
+                    <button class="header-btn" id="btn-menu-edit" title="Menu">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </button>
+                    <div class="menu-dropdown" id="edit-menu">
+                        <button class="menu-item" id="menu-duplicate">Duplicate</button>
+                        <div class="menu-divider"></div>
+                        <button class="menu-item" id="menu-export">Export JSON</button>
+                        <div class="menu-divider"></div>
+                        <button class="menu-item danger" id="menu-delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Search bar (visible in search state) ─────── -->
+        <div id="search-bar">
+            <input id="search-input" type="text" placeholder="Search by name or tags...">
+        </div>
+
+        <!-- ── Browse content (gallery) ──────────────────── -->
+        <div class="browse-content">
+            <div id="gallery-category-bar">
+                <select id="gallery-category-select">
+                    <option value="all">All Characters</option>
+                </select>
+            </div>
+            <div id="gallery-container"></div>
+        </div>
+
+        <!-- ── Editing content (tabs + controls) ─────────── -->
+        <div class="editing-content">
+            <div class="panel-body">
+
+            <!-- ── Panel Tabs ──────────────────────────────── -->
+            <div class="panel-tabs">
+                <button class="panel-tab active" data-tab="file">File</button>
+                <button class="panel-tab" data-tab="body">Body</button>
+                <button class="panel-tab" data-tab="head">Head</button>
+                <button class="panel-tab" data-tab="style">Style</button>
+                <button class="panel-tab" data-tab="voice">Voice</button>
+            </div>
+
+            <!-- ══ FILE TAB ══ -->
+            <div class="tab-content active" data-tab="file">
+                <div class="file-field">
+                    <label class="file-label">Name</label>
+                    <input class="file-input" id="file-name" type="text" maxlength="40" placeholder="e.g. Cool Warrior">
+                    <div class="file-char-count"><span id="file-name-count">0</span>/40</div>
+                </div>
+                <div class="file-field">
+                    <label class="file-label">Description</label>
+                    <textarea class="file-textarea" id="file-desc" maxlength="200" placeholder="What is this character?"></textarea>
+                    <div class="file-char-count"><span id="file-desc-count">0</span>/200</div>
+                </div>
+                <div class="file-field">
+                    <label class="file-label">Tags <span style="font-weight:400;text-transform:none;font-size:9px">(comma-separated)</span></label>
+                    <input class="file-input" id="file-tags" type="text" maxlength="100" placeholder="e.g. warrior, tall, red">
+                    <div class="file-char-count"><span id="file-tags-count">0</span>/100</div>
+                </div>
+            </div>
+
+            <!-- ══ BODY TAB ══ -->
+            <div class="tab-content" data-tab="body">
+                <div class="section">
+                    <h3>Colors</h3>
+                    <div class="control-row">
+                        <label for="scalp-color">Scalp</label>
+                        <input type="color" id="scalp-color" value="#8b2020">
+                    </div>
+                    <div class="control-row">
+                        <label for="skin-color">Skin</label>
+                        <input type="color" id="skin-color" value="#ffcc88">
+                    </div>
+                    <div class="control-row">
+                        <label for="torso-color">Torso</label>
+                        <input type="color" id="torso-color" value="#7b4daa">
+                    </div>
+                    <div class="control-row">
+                        <label for="bottom-color">Bottom</label>
+                        <input type="color" id="bottom-color" value="#3a2870">
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Body Shape</h3>
+                    <div class="toggle-group toggle-wrap" id="body-shape-toggle">
+                        <button data-value="roundedBox" class="active">Box</button>
+                        <button data-value="cylinder">Cylinder</button>
+                        <button data-value="capsule">Capsule</button>
+                        <button data-value="cone">Taper</button>
+                        <button data-value="invertedCone">V-Shape</button>
+                        <button data-value="hexagon">Hexagon</button>
+                        <button data-value="sphere">Sphere</button>
+                        <button data-value="barrel">Barrel</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Body Height</h3>
+                    <div class="toggle-group" id="height-toggle">
+                        <button data-value="squat">Squat</button>
+                        <button data-value="medium" class="active">Medium</button>
+                        <button data-value="tall">Tall</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Body Width</h3>
+                    <div class="toggle-group" id="width-toggle">
+                        <button data-value="narrow">Narrow</button>
+                        <button data-value="moderate" class="active">Moderate</button>
+                        <button data-value="wide">Wide</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Animation</h3>
+                    <select id="anim-select"><option value="">T-Pose</option></select>
+                    <div id="loading-indicator" class="hidden">Loading animations...</div>
+                </div>
+                <div class="section">
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="show-skeleton"> Show Skeleton
+                    </label>
+                </div>
+            </div>
+
+            <!-- ══ HEAD TAB ══ -->
+            <div class="tab-content" data-tab="head">
+                <div class="section">
+                    <h3>Head Shape</h3>
+                    <div class="toggle-group toggle-wrap" id="head-shape-toggle">
+                        <button data-value="roundedBox" class="active">Box</button>
+                        <button data-value="sphere">Sphere</button>
+                        <button data-value="cylinder">Cylinder</button>
+                        <button data-value="cone">Cone</button>
+                        <button data-value="diamond">Diamond</button>
+                        <button data-value="hexagon">Hexagon</button>
+                        <button data-value="star">Star</button>
+                        <button data-value="triangle">Triangle</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Head Height</h3>
+                    <div class="toggle-group" id="head-height-toggle">
+                        <button data-value="squat">Squat</button>
+                        <button data-value="medium" class="active">Medium</button>
+                        <button data-value="tall">Tall</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Head Width</h3>
+                    <div class="toggle-group" id="head-width-toggle">
+                        <button data-value="narrow">Narrow</button>
+                        <button data-value="moderate" class="active">Moderate</button>
+                        <button data-value="wide">Wide</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Face Shape</h3>
+                    <div class="toggle-group" id="face-height-toggle">
+                        <button data-value="squat">Squat</button>
+                        <button data-value="medium" class="active">Medium</button>
+                        <button data-value="tall">Tall</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="toggle-group" id="face-width-toggle">
+                        <button data-value="narrow">Narrow</button>
+                        <button data-value="moderate" class="active">Moderate</button>
+                        <button data-value="wide">Wide</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="toggle-group" id="face-placement-toggle">
+                        <button data-value="high">High</button>
+                        <button data-value="mid" class="active">Mid</button>
+                        <button data-value="low">Low</button>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Eyes</h3>
+                    <div class="toggle-group toggle-wrap" id="eye-shape-toggle">
+                        <button data-value="circle" class="active">Circle</button>
+                        <button data-value="tallPill">Tall Pill</button>
+                        <button data-value="widePill">Wide Pill</button>
+                        <button data-value="roundedSquare">Rounded</button>
+                        <button data-value="tallOval">Tall Oval</button>
+                        <button data-value="wideOval">Wide Oval</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="control-row">
+                        <label for="eye-iris-color">Iris Color</label>
+                        <input type="color" id="eye-iris-color" value="#4a7a8c">
+                    </div>
+                    <div class="slider-row">
+                        <label>Pupil Size</label>
+                        <input type="range" id="eye-pupil-size" min="0.15" max="0.7" value="0.35" step="0.05">
+                        <span class="slider-val" data-for="eye-pupil-size">0.35</span>
+                    </div>
+                    <div class="slider-row">
+                        <label>Iris Size</label>
+                        <input type="range" id="eye-iris-size" min="0.4" max="0.9" value="0.65" step="0.05">
+                        <span class="slider-val" data-for="eye-iris-size">0.65</span>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Mouth</h3>
+                    <div class="control-row">
+                        <label for="mouth-lip-color">Lip Color</label>
+                        <input type="color" id="mouth-lip-color" value="#d4626e">
+                    </div>
+                    <div class="slider-row">
+                        <label>Lip Width</label>
+                        <input type="range" id="mouth-lip-thickness" min="1" max="8" value="3.5" step="0.5">
+                        <span class="slider-val" data-for="mouth-lip-thickness">3.5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ STYLE TAB ══ -->
+            <div class="tab-content" data-tab="style">
+                <div class="section">
+                    <h3>Hair</h3>
+                    <div class="toggle-group toggle-wrap" id="hair-style-toggle">
+                        <button data-value="none" class="active">None</button>
+                        <button data-value="prop_afro">Afro</button>
+                        <button data-value="prop_mohawk">Mohawk</button>
+                        <button data-value="prop_hair_bow">Hair Bow</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="control-row">
+                        <label for="hair-color">Color</label>
+                        <input type="color" id="hair-color" value="#4a3728">
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Hats</h3>
+                    <div class="toggle-group toggle-wrap" id="hat-style-toggle">
+                        <button data-value="none" class="active">None</button>
+                        <button data-value="prop_baseball_cap">Baseball Cap</button>
+                        <button data-value="prop_cowboy_hat">Cowboy Hat</button>
+                        <button data-value="prop_crown">Crown</button>
+                        <button data-value="prop_top_hat">Top Hat</button>
+                        <button data-value="prop_wizard_hat">Wizard Hat</button>
+                        <button data-value="prop_santa_hat">Santa Hat</button>
+                        <button data-value="prop_pirate_hat">Pirate Hat</button>
+                        <button data-value="prop_sun_hat">Sun Hat</button>
+                        <button data-value="prop_tiara">Tiara</button>
+                        <button data-value="prop_grad_cap">Grad Cap</button>
+                        <button data-value="prop_helmet">Helmet</button>
+                        <button data-value="prop_army_helmet">Army Helmet</button>
+                        <button data-value="prop_knight_helm">Knight Helm</button>
+                        <button data-value="prop_viking_helmet">Viking Helmet</button>
+                        <button data-value="prop_bunny_ears">Bunny Ears</button>
+                        <button data-value="prop_fox_ears">Fox Ears</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="control-row">
+                        <label for="hat-color">Color</label>
+                        <input type="color" id="hat-color" value="#333333">
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Glasses</h3>
+                    <div class="toggle-group toggle-wrap" id="glasses-style-toggle">
+                        <button data-value="none" class="active">None</button>
+                        <button data-value="prop_round_glasses">Round</button>
+                        <button data-value="prop_square_glasses">Square</button>
+                        <button data-value="prop_sunglasses">Sunglasses</button>
+                        <button data-value="prop_monocle">Monocle</button>
+                        <button data-value="prop_heart_glasses">Heart</button>
+                        <button data-value="prop_eye_patch">Eye Patch</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="control-row">
+                        <label for="glasses-color">Color</label>
+                        <input type="color" id="glasses-color" value="#333333">
+                    </div>
+                </div>
+                <div class="section">
+                    <h3>Facial Hair</h3>
+                    <div class="toggle-group toggle-wrap" id="facial-hair-style-toggle">
+                        <button data-value="none" class="active">None</button>
+                        <button data-value="prop_mustache">Mustache</button>
+                        <button data-value="prop_full_beard">Full Beard</button>
+                        <button data-value="prop_goatee">Goatee</button>
+                        <button data-value="prop_soul_patch">Soul Patch</button>
+                        <button data-value="prop_long_beard">Long Beard</button>
+                    </div>
+                    <div style="height:8px"></div>
+                    <div class="control-row">
+                        <label for="facial-hair-color">Color</label>
+                        <input type="color" id="facial-hair-color" value="#4a3728">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ VOICE TAB ══ -->
+            <div class="tab-content" data-tab="voice">
+                <div class="section">
+                    <h3>Presets</h3>
+                    <div id="voice-presets" class="chip-group"></div>
+                </div>
+                <div class="section">
+                    <h3>Parameters</h3>
+                    <div class="slider-row"><label>Speed</label><input type="range" id="vs-speed" min="50" max="300" value="155" step="5"><span class="slider-val" data-for="vs-speed">155</span></div>
+                    <div class="slider-row"><label>Pitch</label><input type="range" id="vs-pitch" min="0" max="100" value="40" step="1"><span class="slider-val" data-for="vs-pitch">40</span></div>
+                    <div class="slider-row"><label>Amplitude</label><input type="range" id="vs-amplitude" min="10" max="150" value="100" step="5"><span class="slider-val" data-for="vs-amplitude">100</span></div>
+                    <div class="slider-row"><label>Word Gap</label><input type="range" id="vs-wordgap" min="0" max="20" value="1" step="1"><span class="slider-val" data-for="vs-wordgap">1</span></div>
+                </div>
+                <div class="section">
+                    <h3>Effects</h3>
+                    <div class="slider-row"><label>Reverb</label><input type="range" id="vfx-reverb" min="0" max="100" value="0" step="1"><span class="slider-val" data-for="vfx-reverb">0</span></div>
+                    <div class="slider-row"><label>Wobble</label><input type="range" id="vfx-wobble" min="0" max="60" value="0" step="1"><span class="slider-val" data-for="vfx-wobble">0</span></div>
+                    <div class="slider-row"><label>Wob Speed</label><input type="range" id="vfx-wobbleSpeed" min="1" max="12" value="5" step="0.5"><span class="slider-val" data-for="vfx-wobbleSpeed">5</span></div>
+                    <div class="slider-row"><label>Brightness</label><input type="range" id="vfx-brightness" min="-60" max="60" value="0" step="1"><span class="slider-val" data-for="vfx-brightness">0</span></div>
+                    <div class="slider-row"><label>Breathiness</label><input type="range" id="vfx-breathiness" min="0" max="40" value="0" step="1"><span class="slider-val" data-for="vfx-breathiness">0</span></div>
+                    <div class="slider-row"><label>Vocal Fry</label><input type="range" id="vfx-vocalFry" min="0" max="40" value="0" step="1"><span class="slider-val" data-for="vfx-vocalFry">0</span></div>
+                    <div class="slider-row"><label>Chorus</label><input type="range" id="vfx-chorus" min="0" max="50" value="0" step="1"><span class="slider-val" data-for="vfx-chorus">0</span></div>
+                </div>
+                <div class="section">
+                    <button id="voice-preview-btn" class="action-btn">Preview Voice</button>
+                </div>
+            </div>
+
+            </div><!-- /.panel-body -->
+        </div><!-- /.editing-content -->
+
+        <!-- Hidden file input for import -->
+        <input type="file" id="import-file-input" accept=".json" style="display:none">
+    </div>
+
+    <!-- ── Bottom Bar (floating input + mode toggle) ───── -->
+    <div id="voice-bar">
+        <div id="voice-bar-top-row">
+            <div id="item-name-row">
+                <img id="item-thumb" src="" alt="">
+                <span id="item-name-display">No character loaded</span>
+                <button id="btn-edit-stage">Edit</button>
+            </div>
+            <div id="input-mode-toggle">
+                <button class="mode-btn active" data-mode="speak">Speak</button>
+                <button class="mode-btn" data-mode="prompt">Prompt</button>
+            </div>
+        </div>
+        <div id="voice-input-row">
+            <div class="new-switch" id="btn-new-toggle" title="Toggle: create new character">
+                <span class="new-switch-label">New</span>
+                <div class="new-switch-track"><div class="new-switch-thumb"></div></div>
+            </div>
+            <textarea id="voice-text" rows="1" placeholder="Type something to speak...">Hello! Welcome to the character builder.</textarea>
+            <button id="voice-speak-btn" title="Speak">
+                <svg id="btn-icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <svg id="btn-icon-send" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="hidden"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+        <div id="voice-status" class="hidden"></div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

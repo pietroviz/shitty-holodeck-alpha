@@ -1,0 +1,127 @@
+{
+  "id": "asset_hourglass_batch",
+  "type": "asset",
+  "name": "Hourglass",
+  "tags": [
+    "emoji",
+    "object",
+    "hourglass",
+    "time",
+    "timer"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.343Z",
+    "modified": "2026-03-28T15:22:15.343Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A sand timer hourglass",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "secondary",
+      "tertiary",
+      "primary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#222034",
+      "tertiary": "#eec39a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 115,
+            "w": 120,
+            "h": 12,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 397,
+            "w": 120,
+            "h": 12,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 200,
+            "r": 80,
+            "rotation": 180,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 312,
+            "r": 80,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "r": 50,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#222034",
+        "tertiary": "#eec39a"
+      }
+    }
+  }
+}

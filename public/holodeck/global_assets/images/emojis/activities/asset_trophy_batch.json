@@ -1,0 +1,142 @@
+{
+  "id": "asset_trophy_batch",
+  "type": "asset",
+  "name": "Trophy",
+  "tags": [
+    "emoji",
+    "activity",
+    "trophy",
+    "winner"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.228Z",
+    "modified": "2026-03-28T07:33:47.228Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A golden trophy cup",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#8a6f30",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 450
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 200,
+            "w": 140,
+            "h": 160,
+            "rx": 30,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "w": 24,
+            "h": 80,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 380,
+            "w": 100,
+            "h": 24,
+            "rx": 8,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 150,
+            "cy": 200,
+            "r": 45,
+            "startAngle": -90,
+            "endAngle": 60,
+            "thickness": 10,
+            "fill": "primary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 362,
+            "cy": 200,
+            "r": 45,
+            "startAngle": 120,
+            "endAngle": 270,
+            "thickness": 10,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "star-5",
+          "params": {
+            "cx": 256,
+            "cy": 190,
+            "r": 24,
+            "innerRatio": 0.4,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#8a6f30",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

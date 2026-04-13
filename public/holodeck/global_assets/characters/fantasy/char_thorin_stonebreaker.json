@@ -1,0 +1,53 @@
+{
+  "id": "char_thorin_stonebreaker",
+  "type": "character",
+  "name": "Thorin Stonebreaker",
+  "tags": [
+    "fantasy",
+    "warrior",
+    "male",
+    "dwarf"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Stout dwarven warrior with a mighty beard and battle scars.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "squat",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "barrel",
+      "facePlacement": "mid",
+      "scalpColor": "#8b4513",
+      "skinColor": "#8d6e4c",
+      "torsoColor": "#8b7355",
+      "bottomColor": "#5a4a3a",
+      "eyeIrisColor": "#5a3a1a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_viking_helmet",
+      "hatColor": "#888888",
+      "facialHairStyle": "prop_long_beard",
+      "facialHairColor": "#8b4513",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

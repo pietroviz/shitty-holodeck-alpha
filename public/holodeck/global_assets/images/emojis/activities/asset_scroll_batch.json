@@ -1,0 +1,138 @@
+{
+  "id": "asset_scroll_batch",
+  "type": "asset",
+  "name": "Scroll",
+  "tags": [
+    "emoji",
+    "activity",
+    "scroll",
+    "document",
+    "ancient"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.317Z",
+    "modified": "2026-03-28T15:22:15.317Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "An ancient rolled-up scroll",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#663931",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 240,
+            "h": 160,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 136,
+            "cy": 256,
+            "rx": 22,
+            "ry": 90,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 376,
+            "cy": 256,
+            "rx": 22,
+            "ry": 90,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "length": 160,
+            "angle": 0,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "length": 160,
+            "angle": 0,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "length": 140,
+            "angle": 0,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#663931",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

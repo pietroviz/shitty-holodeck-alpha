@@ -1,0 +1,53 @@
+{
+  "id": "char_quantum_ghost",
+  "type": "character",
+  "name": "Quantum Ghost",
+  "tags": [
+    "sci-fi",
+    "quantum",
+    "non-binary",
+    "entity"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Entity that exists in superposition across multiple realities.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "star",
+      "bodyShape": "cone",
+      "facePlacement": "high",
+      "scalpColor": "#8a4aff",
+      "skinColor": "#c0a0ff",
+      "torsoColor": "#4a2a8a",
+      "bottomColor": "#2a1a4a",
+      "eyeIrisColor": "#ff88ff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#8a4aff",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

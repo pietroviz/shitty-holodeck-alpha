@@ -1,0 +1,257 @@
+{
+  "id": "asset_mosaic_texture_batch",
+  "type": "asset",
+  "name": "Mosaic",
+  "tags": [
+    "texture",
+    "textures",
+    "mosaic",
+    "tile",
+    "colorful",
+    "decorative"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Small colorful mosaic tile pattern",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#5b6ee1",
+      "secondary": "#37946e",
+      "tertiary": "#222034"
+    },
+    "background_color": "#222034",
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 130,
+            "cy": 130,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 165,
+            "cy": 130,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 200,
+            "cy": 130,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 235,
+            "cy": 130,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 270,
+            "cy": 130,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 130,
+            "cy": 165,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 165,
+            "cy": 165,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 200,
+            "cy": 165,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 235,
+            "cy": 165,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 270,
+            "cy": 165,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 130,
+            "cy": 200,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 11
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 165,
+            "cy": 200,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 12
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 200,
+            "cy": 200,
+            "w": 28,
+            "h": 28,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 13
+        }
+      ],
+      "color_assignments": {
+        "primary": "#5b6ee1",
+        "secondary": "#37946e",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

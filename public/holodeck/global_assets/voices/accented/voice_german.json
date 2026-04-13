@@ -1,0 +1,46 @@
+{
+  "id": "voice_german",
+  "type": "voice",
+  "name": "German",
+  "tags": ["accented", "german", "european", "authoritative"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Precise authoritative German-accented voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "de",
+      "variant": "m4",
+      "speed": 145,
+      "pitch": 38,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 85,
+      "audioLead": 25,
+      "lipColor": "#b06050",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#d4b896",
+      "scalpColor": "#3a3a28",
+      "captionSize": 18,
+      "presetKey": "german",
+      "previewText": "Guten Tag! I speak with a strong German precision."
+    }
+  }
+}

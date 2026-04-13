@@ -1,0 +1,157 @@
+{
+  "id": "asset_tumbleweed_batch",
+  "type": "asset",
+  "name": "Tumbleweed",
+  "tags": [
+    "natural-props",
+    "tumbleweed",
+    "desert",
+    "dry",
+    "rolling",
+    "western"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A dry rolling tumbleweed",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#8f563b",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 320
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 50,
+            "fill": "none",
+            "stroke": "primary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 35,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 90,
+            "angle": 30,
+            "thickness": 2,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 85,
+            "angle": 75,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 80,
+            "angle": 120,
+            "thickness": 2,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 90,
+            "angle": 160,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 85,
+            "angle": -30,
+            "thickness": 2,
+            "fill": "primary"
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "length": 80,
+            "angle": -70,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#8f563b",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

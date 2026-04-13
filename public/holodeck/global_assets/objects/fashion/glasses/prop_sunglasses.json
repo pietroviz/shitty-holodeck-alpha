@@ -1,0 +1,184 @@
+{
+  "id": "prop_sunglasses",
+  "type": "prop",
+  "name": "Aviator Sunglasses",
+  "tags": ["glasses", "eyewear", "sunglasses", "aviator", "cool"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cool aviator-style sunglasses with large dark lenses and a metallic frame.",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary"],
+    "color_assignments": {
+      "primary": "#c0c0c0",
+      "secondary": "#1a1a2e"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Left lens (dark, teardrop-ish via flattened sphere)",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.075,
+            "px": -0.12,
+            "py": -0.005,
+            "pz": 0.035,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.05,
+            "opacity": 0.85
+          }
+        },
+        {
+          "comment": "Right lens (dark, teardrop-ish via flattened sphere)",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.075,
+            "px": 0.12,
+            "py": -0.005,
+            "pz": 0.035,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.05,
+            "opacity": 0.85
+          }
+        },
+        {
+          "comment": "Left lens frame ring",
+          "primitive": "torus",
+          "params": {
+            "radius": 0.075,
+            "tubeRadius": 0.008,
+            "px": -0.12,
+            "py": -0.005,
+            "pz": 0.04,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right lens frame ring",
+          "primitive": "torus",
+          "params": {
+            "radius": 0.075,
+            "tubeRadius": 0.008,
+            "px": 0.12,
+            "py": -0.005,
+            "pz": 0.04,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Nose bridge (metallic bar)",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.008,
+            "radiusBottom": 0.008,
+            "height": 0.06,
+            "px": 0,
+            "py": 0.02,
+            "pz": 0.05,
+            "rx": 0,
+            "ry": 0,
+            "rz": 90,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Top brow bar",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.32,
+            "px": 0,
+            "py": 0.06,
+            "pz": 0.045,
+            "rx": 0,
+            "ry": 0,
+            "rz": 90,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.22,
+            "px": -0.195,
+            "py": 0.02,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.22,
+            "px": 0.195,
+            "py": 0.02,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.15,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#c0c0c0",
+        "secondary": "#1a1a2e"
+      }
+    }
+  }
+}

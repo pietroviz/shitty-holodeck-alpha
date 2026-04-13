@@ -1,0 +1,125 @@
+{
+  "id": "asset_sailboat_batch",
+  "type": "asset",
+  "name": "Sailboat",
+  "tags": [
+    "emoji",
+    "travel",
+    "boat",
+    "sailing"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.235Z",
+    "modified": "2026-03-28T07:33:47.235Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A sailboat on water",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#639bff",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 400
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 270,
+            "cy": 220,
+            "r": 140,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 210,
+            "cy": 250,
+            "r": 100,
+            "rotation": 25,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "length": 240,
+            "angle": 90,
+            "thickness": 5,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 390,
+            "w": 220,
+            "h": 40,
+            "rx": 16,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 420,
+            "r": 160,
+            "startAngle": -170,
+            "endAngle": -10,
+            "thickness": 14,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#639bff",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

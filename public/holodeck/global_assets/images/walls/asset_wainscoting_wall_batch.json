@@ -1,0 +1,155 @@
+{
+  "id": "asset_wainscoting_wall_batch",
+  "type": "asset",
+  "name": "Wainscoting Wall",
+  "tags": [
+    "wall",
+    "walls",
+    "wainscoting",
+    "panel",
+    "classic",
+    "interior"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "walls",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wall with raised wainscoting panels on the lower half",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#f4f4f4",
+      "tertiary": "#847e87"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 200,
+            "w": 460,
+            "h": 140,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "w": 460,
+            "h": 120,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "length": 460,
+            "angle": 0,
+            "thickness": 6,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 150,
+            "cy": 325,
+            "w": 100,
+            "h": 80,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 325,
+            "w": 100,
+            "h": 80,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 362,
+            "cy": 325,
+            "w": 100,
+            "h": 80,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 385,
+            "length": 460,
+            "angle": 0,
+            "thickness": 6,
+            "fill": "tertiary"
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#f4f4f4",
+        "tertiary": "#847e87"
+      }
+    }
+  }
+}

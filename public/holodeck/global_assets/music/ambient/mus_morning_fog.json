@@ -1,0 +1,50 @@
+{
+  "id": "mus_morning_fog",
+  "type": "music",
+  "name": "Morning Fog",
+  "tags": [
+    "ambient",
+    "peaceful",
+    "serene"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Gentle misty soundscape with soft string textures and hushed atmospheric layers",
+    "engine": "strudel",
+    "bpm": 70,
+    "key": "Dm",
+    "scale": "natural minor",
+    "pattern": "Soft pad with gentle string and rain textures",
+    "layers": [
+      {
+        "name": "pad_ambient_soft",
+        "pattern": "D4 F4 A4 C5 D5",
+        "gain": 0.65
+      },
+      {
+        "name": "string_harp_texture",
+        "pattern": "A3 D4 F4 A4",
+        "gain": 0.5
+      },
+      {
+        "name": "rain_texture_falling",
+        "pattern": "C5 F5 A5 D5 C5",
+        "gain": 0.4
+      },
+      {
+        "name": "wind_texture_gentle",
+        "pattern": "D2 D2 D3 A2",
+        "gain": 0.35
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 2.0,
+    "fade_out": 3.0,
+    "mood_color": "#A8A8A8"
+  }
+}

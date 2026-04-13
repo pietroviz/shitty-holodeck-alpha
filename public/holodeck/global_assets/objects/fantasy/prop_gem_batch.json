@@ -1,0 +1,119 @@
+{
+  "id": "prop_gem_batch",
+  "type": "prop",
+  "name": "Gem",
+  "tags": [
+    "fantasy",
+    "gem",
+    "magic",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-30T03:55:11.260Z",
+    "modified": "2026-03-30T03:55:11.260Z",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A brilliant faceted gemstone with a golden setting",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#8a6f30",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_gem_main",
+          "type": "star",
+          "px": 0,
+          "py": 0.4,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "points": 8,
+          "outerRadius": 0.5,
+          "innerRadius": 0.25,
+          "depth": 0.6,
+          "fill": "primary",
+          "metalness": 0.85,
+          "roughness": 0.12,
+          "opacity": 0.95
+        },
+        {
+          "id": "el_gem_setting_top",
+          "type": "cone",
+          "px": 0,
+          "py": 0.95,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.35,
+          "height": 0.3,
+          "fill": "secondary",
+          "metalness": 0.8,
+          "roughness": 0.15,
+          "opacity": 1
+        },
+        {
+          "id": "el_gem_setting_bottom",
+          "type": "cone",
+          "px": 0,
+          "py": -0.15,
+          "pz": 0,
+          "rx": 3.14159,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.35,
+          "height": 0.3,
+          "fill": "secondary",
+          "metalness": 0.8,
+          "roughness": 0.15,
+          "opacity": 1
+        },
+        {
+          "id": "el_gem_band",
+          "type": "torus",
+          "px": 0,
+          "py": 0.4,
+          "pz": 0,
+          "rx": 1.5,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.5,
+          "tube": 0.08,
+          "fill": "secondary",
+          "metalness": 0.75,
+          "roughness": 0.2,
+          "opacity": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#8a6f30",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

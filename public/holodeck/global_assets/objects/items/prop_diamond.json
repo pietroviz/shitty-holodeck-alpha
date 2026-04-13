@@ -1,0 +1,179 @@
+{
+  "id": "prop_diamond",
+  "type": "prop",
+  "name": "Faceted Diamond",
+  "tags": [
+    "items",
+    "gem",
+    "diamond",
+    "treasure"
+  ],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "items",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A brilliant faceted diamond gemstone with radiant cuts",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#ffffff",
+      "tertiary": "#5fcde4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": -0.4,
+      "z": 0
+    },
+    "attach_points": {
+      "grip": {
+        "x": 0,
+        "y": -0.45,
+        "z": 0,
+        "nx": 0,
+        "ny": -1,
+        "nz": 0
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_diamond_top",
+          "primitiveId": "pyramid",
+          "zIndex": 0,
+          "params": {
+            "baseWidth": 0.5,
+            "height": 0.45,
+            "px": 0,
+            "py": 0.25,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.05,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_diamond_bottom",
+          "primitiveId": "pyramid",
+          "zIndex": 0,
+          "params": {
+            "baseWidth": 0.5,
+            "height": 0.45,
+            "px": 0,
+            "py": -0.25,
+            "pz": 0,
+            "rx": 180,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.9,
+            "roughness": 0.05,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crown_facet_1",
+          "primitiveId": "wedge",
+          "zIndex": 0,
+          "params": {
+            "width": 0.35,
+            "height": 0.15,
+            "depth": 0.3,
+            "px": 0.2,
+            "py": 0.15,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.95,
+            "roughness": 0.02,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crown_facet_2",
+          "primitiveId": "wedge",
+          "zIndex": 0,
+          "params": {
+            "width": 0.35,
+            "height": 0.15,
+            "depth": 0.3,
+            "px": -0.2,
+            "py": 0.15,
+            "pz": 0,
+            "rx": 0,
+            "ry": 180,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.95,
+            "roughness": 0.02,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_girdle",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "radiusTop": 0.25,
+            "radiusBottom": 0.25,
+            "height": 0.08,
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.7,
+            "roughness": 0.15,
+            "opacity": 0.9
+          }
+        },
+        {
+          "id": "el_pavilion_facet",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.2,
+            "height": 0.25,
+            "px": 0,
+            "py": -0.15,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.85,
+            "roughness": 0.08,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#ffffff",
+        "tertiary": "#5fcde4"
+      }
+    }
+  }
+}

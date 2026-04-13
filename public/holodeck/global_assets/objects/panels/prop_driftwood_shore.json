@@ -1,0 +1,212 @@
+{
+  "id": "prop_driftwood_shore",
+  "type": "prop",
+  "name": "Driftwood Shore",
+  "tags": [
+    "panels",
+    "environment",
+    "beach",
+    "wood",
+    "shipwreck"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Sandy beach panel with wood debris - shipwreck beach",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#8a6f30",
+      "tertiary": "#5fcde4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_base_slab",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 3,
+            "y": 0.35,
+            "z": 3,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_driftwood_log_1",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "px": -0.7,
+            "py": 0.15,
+            "pz": 0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 35,
+            "r": 0.25,
+            "h": 2,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_driftwood_log_2",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "px": 0.8,
+            "py": 0.14,
+            "pz": -0.6,
+            "rx": 0,
+            "ry": 0,
+            "rz": -20,
+            "r": 0.2,
+            "h": 1.8,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_driftwood_log_3",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "px": -1.2,
+            "py": 0.13,
+            "pz": -1.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 55,
+            "r": 0.18,
+            "h": 1.5,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sand_pile_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 1.3,
+            "py": 0.1,
+            "pz": 0.9,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.5,
+            "y": 0.2,
+            "z": 0.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sand_pile_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.3,
+            "py": 0.09,
+            "pz": -1.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.4,
+            "y": 0.18,
+            "z": 0.4,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_water_pool",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.5,
+            "py": 0.12,
+            "pz": 1.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.6,
+            "y": 0.08,
+            "z": 0.6,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#8a6f30",
+        "tertiary": "#5fcde4"
+      }
+    }
+  }
+}

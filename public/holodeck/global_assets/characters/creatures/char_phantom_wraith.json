@@ -1,0 +1,53 @@
+{
+  "id": "char_phantom_wraith",
+  "type": "character",
+  "name": "Phantom Wraith",
+  "tags": [
+    "creatures",
+    "ghost",
+    "non-binary",
+    "spirit"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Ethereal spirit haunting the old manor.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "tall",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "cone",
+      "facePlacement": "high",
+      "scalpColor": "#c0c0d0",
+      "skinColor": "#d0d0e0",
+      "torsoColor": "#a0a0c0",
+      "bottomColor": "#8080a0",
+      "eyeIrisColor": "#ffffff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

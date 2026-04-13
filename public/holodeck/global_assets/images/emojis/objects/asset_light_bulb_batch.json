@@ -1,0 +1,146 @@
+{
+  "id": "asset_light_bulb_batch",
+  "type": "asset",
+  "name": "Light Bulb",
+  "tags": [
+    "emoji",
+    "object",
+    "lightbulb",
+    "idea"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.239Z",
+    "modified": "2026-03-28T07:33:47.239Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A glowing light bulb",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#222034",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "r": 110,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 370,
+            "w": 60,
+            "h": 50,
+            "rx": 8,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 350,
+            "length": 55,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 362,
+            "length": 50,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 374,
+            "length": 45,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 246,
+            "cy": 260,
+            "length": 60,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 266,
+            "cy": 260,
+            "length": 60,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#222034",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

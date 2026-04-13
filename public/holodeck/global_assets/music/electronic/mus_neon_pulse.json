@@ -1,0 +1,50 @@
+{
+  "id": "mus_neon_pulse",
+  "type": "music",
+  "name": "Neon Pulse",
+  "tags": [
+    "electronic",
+    "dance",
+    "vibrant"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Pulsating synth-pop rhythm with bright melodic leads and hypnotic drum groove",
+    "engine": "strudel",
+    "bpm": 130,
+    "key": "F#",
+    "scale": "major",
+    "pattern": "Pulsing beat with bright lead melody and bass",
+    "layers": [
+      {
+        "name": "modern_synth_beat",
+        "pattern": "F#2 F#2 F#2 C#3",
+        "gain": 0.68
+      },
+      {
+        "name": "bass_fat_pulse",
+        "pattern": "F#3 A#3 C#4 F#4 A#4",
+        "gain": 0.62
+      },
+      {
+        "name": "melody_lead_bright",
+        "pattern": "C#5 F#5 A#5 C#5 F#5",
+        "gain": 0.68
+      },
+      {
+        "name": "texture_fx_shimmer",
+        "pattern": "A#5 F#5 C#5 A#4",
+        "gain": 0.48
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.7,
+    "fade_out": 1.8,
+    "mood_color": "#FF006E"
+  }
+}

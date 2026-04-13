@@ -1,0 +1,142 @@
+{
+    "categories": {
+        "creatures": {
+            "name": "Creatures",
+            "count": 20,
+            "files": [
+                "char_asterion.json",
+                "char_blobsworth.json",
+                "char_bones_mcgee.json",
+                "char_coral_the_merfolk.json",
+                "char_count_drakul.json",
+                "char_elder_troll.json",
+                "char_ember_dragonkin.json",
+                "char_grasha_the_orc.json",
+                "char_gronk_the_goblin.json",
+                "char_infernal_damien.json",
+                "char_iron_golem.json",
+                "char_luna_fang.json",
+                "char_oakbeard.json",
+                "char_phantom_wraith.json",
+                "char_phoenix_ember.json",
+                "char_pixie_dust.json",
+                "char_seraph.json",
+                "char_shadow_whisper.json",
+                "char_shambler.json",
+                "char_thunderhoof.json"
+            ]
+        },
+        "fantasy": {
+            "name": "Fantasy",
+            "count": 20,
+            "files": [
+                "char_brother_cedric.json",
+                "char_captain_blacktide.json",
+                "char_faye_windrunner.json",
+                "char_gandara_the_wise.json",
+                "char_grimjaw_the_barbarian.json",
+                "char_grogg_the_ogre.json",
+                "char_lady_ironheart.json",
+                "char_luna_starweaver.json",
+                "char_morgana_hexweaver.json",
+                "char_nyx_shadowstep.json",
+                "char_paladin_auric.json",
+                "char_pip_tinkersprocket.json",
+                "char_ragnar_wolfblood.json",
+                "char_seraphina_brightflame.json",
+                "char_sylvaris.json",
+                "char_the_necromancer.json",
+                "char_thorin_stonebreaker.json",
+                "char_valkyrie_skald.json",
+                "char_willow_moonwhisper.json",
+                "char_zephyr_the_bard.json"
+            ]
+        },
+        "internet": {
+            "name": "Internet",
+            "count": 19,
+            "files": [
+                "char_bot_9000.json",
+                "char_content_creator_chris.json",
+                "char_cosplay_queen_keiko.json",
+                "char_crypto_chad.json",
+                "char_digital_artist_zuri.json",
+                "char_e_girl_sakura.json",
+                "char_gamer_gio.json",
+                "char_hacker_zero.json",
+                "char_influencer_aria.json",
+                "char_meme_lord_dave.json",
+                "char_moderator_max.json",
+                "char_podcast_pat.json",
+                "char_social_media_manager_sal.json",
+                "char_streamerking.json",
+                "char_tech_bro_tyler.json",
+                "char_tiktok_tiana.json",
+                "char_troll_terrence.json",
+                "char_virtual_vee.json",
+                "char_vlogger_valentina.json"
+            ]
+        },
+        "sci-fi": {
+            "name": "Sci-Fi",
+            "count": 20,
+            "files": [
+                "char_ai_aria.json",
+                "char_ambassador_zyloth.json",
+                "char_asteroid_miner_kofi.json",
+                "char_bounty_hunter_rex.json",
+                "char_clone_trooper_delta.json",
+                "char_commander_vasquez.json",
+                "char_cyborg_kai.json",
+                "char_diplomat_chen.json",
+                "char_dr_elara_quantum.json",
+                "char_engineer_mei_lin.json",
+                "char_mech_pilot_yuki.json",
+                "char_medic_nova.json",
+                "char_navigator_luna.json",
+                "char_pilot_jax.json",
+                "char_quantum_ghost.json",
+                "char_rebel_leader_ash.json",
+                "char_space_marine_okonkwo.json",
+                "char_time_agent_sato.json",
+                "char_unit_7_android.json",
+                "char_xenobiologist_orin.json"
+            ]
+        },
+        "television": {
+            "name": "Television",
+            "count": 20,
+            "files": [
+                "char_captain_cosmos.json",
+                "char_cartoon_villainess.json",
+                "char_chef_ramona.json",
+                "char_crime_boss_carlo.json",
+                "char_detective_matsuda.json",
+                "char_dr_priya_singh.json",
+                "char_fashion_fatima.json",
+                "char_forensic_dr_lee.json",
+                "char_gameshow_gary.json",
+                "char_judge_fontaine.json",
+                "char_news_anchor_nkechi.json",
+                "char_professor_pendleton.json",
+                "char_reality_quinn.json",
+                "char_rod_sterling.json",
+                "char_sitcom_steve.json",
+                "char_soap_star_sandra.json",
+                "char_sports_commentator_rio.json",
+                "char_survival_sam.json",
+                "char_talk_show_tanya.json",
+                "char_weather_wes.json"
+            ]
+        },
+        "custom": {
+            "name": "Custom",
+            "count": 3,
+            "files": [
+                "char_tayne.json",
+                "mneplgf994yx6q.json",
+                "mnequmircex5lj.json"
+            ]
+        }
+    }
+}

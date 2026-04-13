@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MusicBox — Batch Import</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0d1b2e;
+  color: #fff;
+  min-height: 100vh;
+  padding: 24px;
+}
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #8a9ab8; margin-bottom: 24px; }
+.category-section { margin-bottom: 32px; }
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.category-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00c4be;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.category-count { font-size: 11px; color: #8a9ab8; }
+.import-btn {
+  background: rgba(0,196,190,0.15);
+  border: 1px solid #00c4be;
+  border-radius: 8px;
+  color: #00c4be;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.import-btn:hover { background: rgba(0,196,190,0.25); }
+.import-btn.done { background: rgba(0,196,190,0.05); border-color: #333; color: #8a9ab8; cursor: default; }
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+.theme-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.theme-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.theme-info { flex: 1; min-width: 0; }
+.theme-name { font-size: 13px; font-weight: 600; }
+.theme-meta { font-size: 10px; color: #8a9ab8; margin-top: 2px; }
+.theme-status { font-size: 10px; flex-shrink: 0; }
+.theme-status.imported { color: #00c4be; }
+.theme-status.error { color: #d95763; }
+.master-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+.master-btn {
+  background: #00c4be;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.master-btn:hover { background: #00a8a3; }
+.master-btn:disabled { opacity: 0.5; cursor: default; }
+.progress-text { font-size: 13px; color: #8a9ab8; }
+</style>
+</head>
+<body>
+<h1>MusicBox — Batch Import</h1>
+<p class="subtitle">Import pre-generated music themes into your library</p>
+
+<div class="master-bar">
+  <button class="master-btn" id="btn-import-all">Import All</button>
+  <span class="progress-text" id="progress">Ready</span>
+</div>
+
+<div id="content">Loading manifest…</div>
+
+<script type="module">
+const DB_NAME = 'musicbox_assets';
+const DB_STORE = 'music';
+const DB_VERSION = 1;
+
+let db;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(DB_STORE)) {
+        const store = db.createObjectStore(DB_STORE, { keyPath: 'id' });
+        store.createIndex('name', 'name', { unique: false });
+        store.createIndex('modified', 'meta.modified', { unique: false });
+      }
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+function dbSave(asset) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(asset);
+    tx.oncomplete = () => resolve();
+    tx.onerror = (e) => reject(e.target.error);
+  });
+}
+
+function dbGetAllIds() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).getAllKeys();
+    req.onsuccess = () => resolve(new Set(req.result));
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+await openDB();
+
+const content = document.getElementById('content');
+const progress = document.getElementById('progress');
+
+let manifest;
+try {
+  const res = await fetch('./assets/music/manifest.json');
+  manifest = await res.json();
+} catch {
+  content.innerHTML = '<p style="color:#d95763">No manifest found at ./assets/music/manifest.json</p>';
+  throw new Error('No manifest');
+}
+
+const existingIds = await dbGetAllIds();
+const categories = manifest.categories || {};
+
+// Render
+let html = '';
+for (const [catId, cat] of Object.entries(categories)) {
+  html += `<div class="category-section" data-cat="${catId}">
+    <div class="category-header">
+      <span class="category-name">${cat.name || catId}</span>
+      <span class="category-count">${(cat.files || []).length} themes</span>
+      <button class="import-btn" data-cat="${catId}">Import</button>
+    </div>
+    <div class="theme-grid">`;
+
+  for (const file of (cat.files || [])) {
+    const id = file.replace('.json', '');
+    const exists = existingIds.has(id);
+    html += `<div class="theme-card" data-file="${file}" data-cat="${catId}">
+      <div class="theme-badge" style="background:rgba(0,196,190,0.15)">♪</div>
+      <div class="theme-info">
+        <div class="theme-name">${file.replace('.json', '').replace(/_/g, ' ')}</div>
+        <div class="theme-meta">${catId}</div>
+      </div>
+      <span class="theme-status ${exists ? 'imported' : ''}">${exists ? '✓' : '—'}</span>
+    </div>`;
+  }
+
+  html += '</div></div>';
+}
+content.innerHTML = html;
+
+// Import single category
+async function importCategory(catId) {
+  const cat = categories[catId];
+  if (!cat) return 0;
+  let count = 0;
+  for (const file of (cat.files || [])) {
+    try {
+      const r = await fetch(`./assets/music/${catId}/${file}`);
+      if (!r.ok) continue;
+      const asset = await r.json();
+      if (asset.id && !existingIds.has(asset.id)) {
+        await dbSave(asset);
+        existingIds.add(asset.id);
+        count++;
+        // Update card status
+        const card = document.querySelector(`.theme-card[data-file="${file}"][data-cat="${catId}"]`);
+        if (card) {
+          const status = card.querySelector('.theme-status');
+          status.textContent = '✓';
+          status.classList.add('imported');
+        }
+      }
+    } catch (e) {
+      const card = document.querySelector(`.theme-card[data-file="${file}"][data-cat="${catId}"]`);
+      if (card) {
+        const status = card.querySelector('.theme-status');
+        status.textContent = '✕';
+        status.classList.add('error');
+      }
+    }
+  }
+  return count;
+}
+
+// Per-category import buttons
+document.querySelectorAll('.import-btn[data-cat]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    btn.textContent = 'Importing…';
+    const count = await importCategory(btn.dataset.cat);
+    btn.textContent = 'Done';
+    btn.classList.add('done');
+    progress.textContent = `Imported ${count} themes from ${btn.dataset.cat}`;
+  });
+});
+
+// Import All
+document.getElementById('btn-import-all').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-import-all');
+  btn.disabled = true;
+  btn.textContent = 'Importing…';
+  let total = 0;
+  for (const catId of Object.keys(categories)) {
+    const count = await importCategory(catId);
+    total += count;
+    progress.textContent = `Imported ${total} themes so far…`;
+  }
+  btn.textContent = 'Done!';
+  progress.textContent = `Finished! Imported ${total} new themes.`;
+  document.querySelectorAll('.import-btn').forEach(b => { b.textContent = 'Done'; b.classList.add('done'); });
+});
+</script>
+</body>
+</html>

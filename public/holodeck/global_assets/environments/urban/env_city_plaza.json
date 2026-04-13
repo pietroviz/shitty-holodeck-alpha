@@ -1,0 +1,74 @@
+{
+  "id": "env_city_plaza",
+  "type": "environment",
+  "name": "City Plaza",
+  "tags": [
+    "urban",
+    "city",
+    "plaza"
+  ],
+  "meta": {
+    "created": "2026-04-11T00:00:00.000Z",
+    "modified": "2026-04-11T00:00:00.000Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A bustling city plaza with lampposts and benches",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#87CEEB",
+      "bottomColor": "#E0E8F0"
+    },
+    "ground": {
+      "color": "#808080",
+      "material": "concrete"
+    },
+    "walls": [],
+    "objects": [
+      {
+        "assetId": "prop_lamppost_batch",
+        "position": [
+          2,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      },
+      {
+        "assetId": "prop_park_bench",
+        "position": [
+          -2,
+          0,
+          1
+        ],
+        "rotation": [
+          0,
+          45,
+          0
+        ],
+        "scale": 1
+      },
+      {
+        "assetId": "prop_trash_can",
+        "position": [
+          3,
+          0,
+          -1
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      }
+    ]
+  }
+}

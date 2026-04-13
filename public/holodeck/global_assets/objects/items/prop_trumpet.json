@@ -1,0 +1,198 @@
+{
+  "id": "prop_trumpet",
+  "type": "prop",
+  "name": "Brass Trumpet",
+  "tags": [
+    "items",
+    "instrument",
+    "trumpet",
+    "music"
+  ],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "items",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A brass trumpet with valves and bell",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#8a6f30",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": -0.3,
+      "z": 0
+    },
+    "attach_points": {
+      "grip": {
+        "x": -0.35,
+        "y": -0.25,
+        "z": 0,
+        "nx": -1,
+        "ny": 0,
+        "nz": 0
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_mouthpiece",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "radiusTop": 0.08,
+            "radiusBottom": 0.08,
+            "height": 0.3,
+            "px": -0.6,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.5,
+            "roughness": 0.5,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_main_tubing_1",
+          "primitiveId": "tube",
+          "zIndex": 0,
+          "params": {
+            "outerRadius": 0.12,
+            "innerRadius": 0.09,
+            "height": 0.35,
+            "px": -0.3,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.8,
+            "roughness": 0.15,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_valve_casing_1",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "radiusTop": 0.1,
+            "radiusBottom": 0.1,
+            "height": 0.25,
+            "px": 0,
+            "py": 0.15,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.8,
+            "roughness": 0.15,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_valve_1",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.07,
+            "px": 0,
+            "py": 0.22,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.7,
+            "roughness": 0.3,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_main_tubing_2",
+          "primitiveId": "tube",
+          "zIndex": 0,
+          "params": {
+            "outerRadius": 0.12,
+            "innerRadius": 0.09,
+            "height": 0.4,
+            "px": 0.2,
+            "py": -0.15,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.8,
+            "roughness": 0.15,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_bell",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.22,
+            "height": 0.35,
+            "px": 0.5,
+            "py": 0.05,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.85,
+            "roughness": 0.1,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_bell_rim",
+          "primitiveId": "torus",
+          "zIndex": 0,
+          "params": {
+            "radius": 0.22,
+            "tube": 0.06,
+            "px": 0.5,
+            "py": 0.35,
+            "pz": 0,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#8a6f30",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

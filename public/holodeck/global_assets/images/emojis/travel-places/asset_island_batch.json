@@ -1,0 +1,130 @@
+{
+  "id": "asset_island_batch",
+  "type": "asset",
+  "name": "Island",
+  "tags": [
+    "emoji",
+    "place",
+    "island",
+    "tropical",
+    "beach"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.331Z",
+    "modified": "2026-03-28T15:22:15.331Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A small desert island",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#6abe30",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 320
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "rx": 160,
+            "ry": 40,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 240,
+            "w": 12,
+            "h": 120,
+            "rotation": 5,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 220,
+            "cy": 190,
+            "rx": 60,
+            "ry": 18,
+            "rotation": 330,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 292,
+            "cy": 190,
+            "rx": 60,
+            "ry": 18,
+            "rotation": 30,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 175,
+            "rx": 50,
+            "ry": 18,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#6abe30",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

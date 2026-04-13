@@ -1,0 +1,52 @@
+{
+  "id": "char_luna_starweaver",
+  "type": "character",
+  "name": "Luna Starweaver",
+  "tags": [
+    "fantasy",
+    "mage",
+    "female"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Celestial mage who draws power from the stars.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "diamond",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#4a3a8a",
+      "skinColor": "#e8d8c8",
+      "torsoColor": "#1a1a4a",
+      "bottomColor": "#0a0a2a",
+      "eyeIrisColor": "#c0c0ff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#8a6aaa",
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#8a7ac0",
+      "hatStyle": "prop_wizard_hat",
+      "hatColor": "#1a1a4a",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shitty Holodeck</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ── Global nav (above all stacking contexts) ──── -->
+    <button id="hamburger-btn" aria-label="Menu"></button>
+    <div id="menu-backdrop"></div>
+    <nav id="menu-dropdown" aria-label="Main menu"></nav>
+
+    <div id="root">
+
+        <!-- ── Left sliding panel ──────────────────────── -->
+        <div id="left-panel" aria-hidden="true">
+            <div id="panel-inner"></div>
+        </div>
+
+        <!-- ── Main viewport ──────────────────────────── -->
+        <div id="viewport">
+
+            <!-- Three.js canvas goes here -->
+            <div id="scene-container"></div>
+
+            <!-- UI overlay (pointer-events: none by default) -->
+            <div id="ui-shell">
+
+                <!-- Safe-area dashed outline -->
+                <div id="safe-area"></div>
+
+                <!-- Dark scrim for "new" mode -->
+                <div id="new-overlay"></div>
+
+                <!-- About modal -->
+                <div id="about-overlay" class="about-overlay" style="display:none;">
+                    <div class="about-card">
+                        <button class="about-close" id="about-close-btn">&times;</button>
+                        <h2 class="about-title">Shitty Holodeck</h2>
+                        <p class="about-version">v0.1 — Prototype</p>
+                        <p class="about-desc">
+                            A browser-based creative sandbox for building characters,
+                            environments, music, and more — then bringing them to life
+                            in interactive simulations.
+                        </p>
+                        <div class="about-section">
+                            <strong>Built with</strong>
+                            <p>Three.js r170 &middot; Vanilla ES Modules &middot; IndexedDB &middot; meSpeak TTS</p>
+                        </div>
+                        <div class="about-section">
+                            <strong>Assets</strong>
+                            <p>DawnBringer 32 palette &middot; Mixamo animations &middot; AI-generated templates</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings modal -->
+                <div id="settings-overlay" class="about-overlay" style="display:none;">
+                    <div class="about-card settings-card">
+                        <button class="about-close" id="settings-close-btn">&times;</button>
+                        <h2 class="about-title">Settings</h2>
+                        <div id="settings-content">
+                            <p class="about-desc" style="color:var(--text-dim);">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All transient UI elements (fade on viewport drag) -->
+                <div id="ui-elements">
+
+                    <!-- Reset view (top-right) -->
+                    <button id="reset-btn" aria-label="Reset view"></button>
+
+                    <!-- Bottom gradient -->
+                    <div id="bottom-gradient" aria-hidden="true"></div>
+
+                    <!-- Play button (bottom, left-aligned within max-width) -->
+                    <div id="play-wrap">
+                        <button id="play-btn" aria-label="Play"></button>
+                    </div>
+
+                    <!-- Current item title row -->
+                    <div id="title-row">
+                        <div id="title-thumb" aria-hidden="true"></div>
+                        <h2 id="title-text">Untitled</h2>
+                        <span id="el-count">37 Elements</span>
+                        <button id="edit-btn"></button>
+                        <button id="surprise-btn"></button>
+                    </div>
+
+                    <!-- Prompt input bar -->
+                    <div id="prompt-box">
+                        <input id="prompt-input" type="text"
+                               placeholder="What do you imagine?"
+                               autocomplete="off" spellcheck="false">
+                        <button id="new-btn" aria-label="Toggle new" aria-pressed="false">
+                            <span class="new-btn-label">New</span>
+                            <span class="sw-track" aria-hidden="true">
+                                <span class="sw-thumb"></span>
+                            </span>
+                        </button>
+                        <button id="send-btn" aria-label="Send" disabled></button>
+                    </div>
+
+                </div><!-- /#ui-elements -->
+            </div><!-- /#ui-shell -->
+        </div><!-- /#viewport -->
+
+    </div><!-- /#root -->
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="js/app.js?v=2"></script>
+</body>
+</html>

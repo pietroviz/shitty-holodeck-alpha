@@ -1,0 +1,124 @@
+{
+  "id": "prop_ruins",
+  "type": "prop",
+  "name": "Stone Ruins",
+  "tags": ["environment", "architecture", "ancient", "broken"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "environment",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Crumbling stone ruins and archway",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#696a6a",
+      "secondary": "#595652",
+      "tertiary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_left_pillar",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.6, "py": 0.5, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "width": 0.4, "height": 1.2, "depth": 0.4,
+            "fill": "primary",
+            "metalness": 0.0, "roughness": 0.95, "opacity": 1
+          }
+        },
+        {
+          "id": "el_right_pillar",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.6, "py": 0.5, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "width": 0.4, "height": 1.2, "depth": 0.4,
+            "fill": "primary",
+            "metalness": 0.0, "roughness": 0.95, "opacity": 1
+          }
+        },
+        {
+          "id": "el_arch",
+          "primitiveId": "torus",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 1.1, "pz": 0,
+            "rx": 90, "ry": 0, "rz": 0,
+            "radius": 0.55, "tube": 0.12,
+            "fill": "secondary",
+            "metalness": 0.0, "roughness": 0.92, "opacity": 1
+          }
+        },
+        {
+          "id": "el_broken_stone_1",
+          "primitiveId": "box",
+          "zIndex": 2,
+          "params": {
+            "px": -0.8, "py": 0.2, "pz": 0,
+            "rx": 15, "ry": 0, "rz": 25,
+            "width": 0.35, "height": 0.35, "depth": 0.35,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.98, "opacity": 1
+          }
+        },
+        {
+          "id": "el_broken_stone_2",
+          "primitiveId": "box",
+          "zIndex": 2,
+          "params": {
+            "px": 0.8, "py": 0.25, "pz": 0,
+            "rx": -10, "ry": 0, "rz": -20,
+            "width": 0.3, "height": 0.3, "depth": 0.3,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.98, "opacity": 1
+          }
+        },
+        {
+          "id": "el_broken_stone_3",
+          "primitiveId": "pyramid",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 0.15, "pz": -0.5,
+            "rx": 20, "ry": 0, "rz": 0,
+            "baseWidth": 0.4, "height": 0.25, "depth": 0.35,
+            "fill": "secondary",
+            "metalness": 0.0, "roughness": 0.94, "opacity": 1
+          }
+        },
+        {
+          "id": "el_crumble_top",
+          "primitiveId": "box",
+          "zIndex": 2,
+          "params": {
+            "px": 0.1, "py": 1.15, "pz": 0.1,
+            "rx": 30, "ry": 0, "rz": 20,
+            "width": 0.25, "height": 0.25, "depth": 0.25,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.97, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#696a6a",
+        "secondary": "#595652",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

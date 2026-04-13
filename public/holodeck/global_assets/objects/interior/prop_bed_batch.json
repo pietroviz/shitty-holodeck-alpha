@@ -1,0 +1,136 @@
+{
+  "id": "prop_bed_batch",
+  "type": "prop",
+  "name": "Bed",
+  "tags": [
+    "interior",
+    "furniture",
+    "bedroom",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "interior",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A bed with mattress, headboard, frame, and pillows",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#663931",
+      "secondary": "#d9a066",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_frame",
+          "type": "box",
+          "px": 0,
+          "py": 0.05,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 1.6,
+          "height": 0.1,
+          "depth": 2,
+          "fill": "tertiary",
+          "metalness": 0.1,
+          "roughness": 0.8,
+          "opacity": 1
+        },
+        {
+          "id": "el_mattress",
+          "type": "box",
+          "px": 0,
+          "py": 0.2,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 1.5,
+          "height": 0.25,
+          "depth": 1.9,
+          "fill": "primary",
+          "metalness": 0,
+          "roughness": 0.95,
+          "opacity": 1
+        },
+        {
+          "id": "el_headboard",
+          "type": "box",
+          "px": 0,
+          "py": 0.7,
+          "pz": -0.95,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "width": 1.5,
+          "height": 0.8,
+          "depth": 0.1,
+          "fill": "tertiary",
+          "metalness": 0.05,
+          "roughness": 0.85,
+          "opacity": 1
+        },
+        {
+          "id": "el_pillow_left",
+          "type": "capsule",
+          "px": -0.35,
+          "py": 0.5,
+          "pz": -0.7,
+          "rx": 0,
+          "ry": 0.3,
+          "rz": 0,
+          "radius": 0.15,
+          "length": 0.6,
+          "fill": "primary",
+          "metalness": 0,
+          "roughness": 0.85,
+          "opacity": 1
+        },
+        {
+          "id": "el_pillow_right",
+          "type": "capsule",
+          "px": 0.35,
+          "py": 0.5,
+          "pz": -0.7,
+          "rx": 0,
+          "ry": 0.3,
+          "rz": 0,
+          "radius": 0.15,
+          "length": 0.6,
+          "fill": "primary",
+          "metalness": 0,
+          "roughness": 0.85,
+          "opacity": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#663931",
+        "secondary": "#d9a066",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

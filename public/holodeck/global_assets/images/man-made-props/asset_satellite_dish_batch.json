@@ -1,0 +1,126 @@
+{
+  "id": "asset_satellite_dish_batch",
+  "type": "asset",
+  "name": "Satellite Dish",
+  "tags": [
+    "man-made-props",
+    "satellite",
+    "dish",
+    "antenna",
+    "tech",
+    "station"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A satellite receiving dish",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#595652",
+      "tertiary": "#847e87"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 375
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 70,
+            "startAngle": -120,
+            "endAngle": -60,
+            "thickness": 50,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 330,
+            "w": 10,
+            "h": 60,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 365,
+            "w": 50,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "length": 40,
+            "angle": 90,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 240,
+            "r": 6,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#595652",
+        "tertiary": "#847e87"
+      }
+    }
+  }
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBox — Batch Import</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0d1b2e;
+  color: #fff;
+  min-height: 100vh;
+  padding: 40px;
+}
+h1 { font-size: 24px; margin-bottom: 8px; }
+.subtitle { color: #8a9ab8; font-size: 14px; margin-bottom: 32px; }
+.category {
+  margin-bottom: 32px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 20px;
+}
+.cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cat-name { font-size: 18px; font-weight: 700; }
+.cat-count { font-size: 13px; color: #8a9ab8; }
+.cat-btn {
+  padding: 8px 18px;
+  background: #00c4be;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.cat-btn:hover { background: #00a8a3; }
+.cat-btn:disabled { opacity: 0.5; cursor: default; }
+.cat-btn.done { background: #37946e; }
+.prop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.prop-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+.prop-name { font-weight: 600; margin-bottom: 3px; }
+.prop-meta { color: #8a9ab8; font-size: 11px; }
+.prop-tags { color: #00c4be; font-size: 10px; margin-top: 3px; }
+.status {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status.imported { color: #37946e; }
+.status.error { color: #d95763; }
+#import-all {
+  padding: 12px 28px;
+  background: #00c4be;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: background 0.12s;
+}
+#import-all:hover { background: #00a8a3; }
+#import-all:disabled { opacity: 0.5; }
+.progress {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #8a9ab8;
+}
+</style>
+</head>
+<body>
+<h1>PropBox — Batch Import</h1>
+<p class="subtitle">Import pre-built 3D props into your local IndexedDB library.</p>
+<button id="import-all">Import All Props</button>
+<div class="progress" id="progress"></div>
+<div id="categories"></div>
+
+<script type="module">
+const DB_NAME = 'propbox_assets';
+const DB_STORE = 'props';
+const DB_VERSION = 1;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(DB_STORE)) {
+        db.createObjectStore(DB_STORE, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveAsset(db, asset) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(asset);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getExistingIds(db) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).getAllKeys();
+    req.onsuccess = () => resolve(new Set(req.result));
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function init() {
+  const manifestRes = await fetch('./assets/props/manifest.json');
+  const manifest = await manifestRes.json();
+  const db = await openDB();
+  const existingIds = await getExistingIds(db);
+
+  const container = document.getElementById('categories');
+  let allProps = [];
+
+  for (const [catId, cat] of Object.entries(manifest.categories)) {
+    const section = document.createElement('div');
+    section.className = 'category';
+
+    let propsData = [];
+    for (const file of cat.files) {
+      const res = await fetch(`./assets/props/${catId}/${file}`);
+      const prop = await res.json();
+      propsData.push(prop);
+      allProps.push({ catId, prop });
+    }
+
+    section.innerHTML = `
+      <div class="cat-header">
+        <div>
+          <span class="cat-name">${cat.name}</span>
+          <span class="cat-count">${cat.count} props</span>
+        </div>
+        <button class="cat-btn" data-cat="${catId}">Import ${cat.name}</button>
+      </div>
+      <div class="prop-grid" id="grid-${catId}">
+        ${propsData.map(p => {
+          const elCount = p.payload?._editor?.elements?.length || 0;
+          const exists = existingIds.has(p.id);
+          return `
+            <div class="prop-card" data-id="${p.id}">
+              <div class="prop-name">${p.name}</div>
+              <div class="prop-meta">${elCount} elements</div>
+              <div class="prop-tags">${(p.tags || []).join(', ')}</div>
+              <div class="status ${exists ? 'imported' : ''}" id="status-${p.id}">${exists ? '✓ Already imported' : ''}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    // Category import button
+    section.querySelector('.cat-btn').addEventListener('click', async (e) => {
+      const btn = e.target;
+      btn.disabled = true;
+      btn.textContent = 'Importing…';
+      let count = 0;
+      for (const prop of propsData) {
+        try {
+          await saveAsset(db, prop);
+          const statusEl = document.getElementById(`status-${prop.id}`);
+          statusEl.textContent = '✓ Imported';
+          statusEl.className = 'status imported';
+          count++;
+        } catch (err) {
+          const statusEl = document.getElementById(`status-${prop.id}`);
+          statusEl.textContent = '✗ Error';
+          statusEl.className = 'status error';
+        }
+      }
+      btn.textContent = `✓ ${count} imported`;
+      btn.className = 'cat-btn done';
+    });
+
+    container.appendChild(section);
+  }
+
+  // Import All button
+  document.getElementById('import-all').addEventListener('click', async (e) => {
+    const btn = e.target;
+    btn.disabled = true;
+    btn.textContent = 'Importing…';
+    const progressEl = document.getElementById('progress');
+    let imported = 0;
+    let errors = 0;
+
+    for (const { catId, prop } of allProps) {
+      try {
+        await saveAsset(db, prop);
+        const statusEl = document.getElementById(`status-${prop.id}`);
+        statusEl.textContent = '✓ Imported';
+        statusEl.className = 'status imported';
+        imported++;
+      } catch (err) {
+        errors++;
+      }
+      progressEl.textContent = `${imported + errors} / ${allProps.length} processed…`;
+    }
+
+    progressEl.textContent = `Done! ${imported} imported, ${errors} errors.`;
+    btn.textContent = `✓ All ${imported} imported`;
+    btn.className = 'done';
+    btn.style.background = '#37946e';
+
+    // Update all category buttons
+    document.querySelectorAll('.cat-btn').forEach(b => {
+      b.textContent = '✓ Done';
+      b.className = 'cat-btn done';
+      b.disabled = true;
+    });
+  });
+}
+
+init();
+</script>
+</body>
+</html>

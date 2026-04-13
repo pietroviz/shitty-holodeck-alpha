@@ -1,0 +1,52 @@
+{
+  "id": "char_lady_ironheart",
+  "type": "character",
+  "name": "Lady Ironheart",
+  "tags": [
+    "fantasy",
+    "knight",
+    "female"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Noble knight in gleaming armor, champion of the realm.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#d4a843",
+      "skinColor": "#c8a06a",
+      "torsoColor": "#c0c0c0",
+      "bottomColor": "#888888",
+      "eyeIrisColor": "#4a7ab0",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_knight_helm",
+      "hatColor": "#c0c0c0",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

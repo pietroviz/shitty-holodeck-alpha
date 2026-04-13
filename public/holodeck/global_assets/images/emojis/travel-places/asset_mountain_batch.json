@@ -1,0 +1,98 @@
+{
+  "id": "asset_mountain_batch",
+  "type": "asset",
+  "name": "Mountain",
+  "tags": [
+    "emoji",
+    "place",
+    "mountain",
+    "nature"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.237Z",
+    "modified": "2026-03-28T07:33:47.237Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A snow-capped mountain",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#696a6a",
+      "secondary": "#ffffff",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 350
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "r": 180,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 158,
+            "r": 50,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 170,
+            "cy": 260,
+            "r": 130,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#696a6a",
+        "secondary": "#ffffff",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

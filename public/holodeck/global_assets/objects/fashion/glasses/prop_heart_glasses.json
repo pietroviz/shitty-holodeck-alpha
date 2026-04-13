@@ -1,0 +1,229 @@
+{
+  "id": "prop_heart_glasses",
+  "type": "prop",
+  "name": "Heart Glasses",
+  "tags": ["glasses", "eyewear", "heart", "fun", "party"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Fun heart-shaped glasses with colorful frames, perfect for parties.",
+    "format": "mesh",
+    "color_roles_used": ["primary"],
+    "color_assignments": {
+      "primary": "#e83e8c"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Left heart - upper left lobe",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.042,
+            "px": -0.145,
+            "py": 0.025,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left heart - upper right lobe",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.042,
+            "px": -0.095,
+            "py": 0.025,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left heart - bottom point",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.038,
+            "px": -0.12,
+            "py": -0.03,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left heart - center fill",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.03,
+            "px": -0.12,
+            "py": 0.005,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right heart - upper left lobe",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.042,
+            "px": 0.095,
+            "py": 0.025,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right heart - upper right lobe",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.042,
+            "px": 0.145,
+            "py": 0.025,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right heart - bottom point",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.038,
+            "px": 0.12,
+            "py": -0.03,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right heart - center fill",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.03,
+            "px": 0.12,
+            "py": 0.005,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Nose bridge",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.008,
+            "radiusBottom": 0.008,
+            "height": 0.04,
+            "px": 0,
+            "py": 0.01,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 90,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.007,
+            "radiusBottom": 0.007,
+            "height": 0.2,
+            "px": -0.185,
+            "py": 0.02,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.007,
+            "radiusBottom": 0.007,
+            "height": 0.2,
+            "px": 0.185,
+            "py": 0.02,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.1,
+            "roughness": 0.5,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#e83e8c"
+      }
+    }
+  }
+}

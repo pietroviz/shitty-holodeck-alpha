@@ -1,0 +1,19 @@
+{
+  "id": "ring",
+  "name": "Ring",
+  "category": "special",
+  "icon": "◯",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "r": 130,
+    "thickness": 30,
+    "fill": "primary",
+    "rotation": 0
+  },
+  "params": [
+    { "key": "r", "label": "Outer Radius", "type": "range", "min": 20, "max": 240 },
+    { "key": "thickness", "label": "Thickness", "type": "range", "min": 4, "max": 120 },
+    { "key": "fill", "label": "Color", "type": "token" }
+  ]
+}

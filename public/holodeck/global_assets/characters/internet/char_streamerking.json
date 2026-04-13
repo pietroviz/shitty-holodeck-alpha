@@ -1,0 +1,53 @@
+{
+  "id": "char_streamerking",
+  "type": "character",
+  "name": "StreamerKing",
+  "tags": [
+    "internet",
+    "streamer",
+    "male",
+    "gaming"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Top streamer with a dedicated fanbase and RGB everything.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#00cc88",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#1a1a2e",
+      "bottomColor": "#1a1a1a",
+      "eyeIrisColor": "#00cc88",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#00cc88",
+      "hatStyle": "prop_baseball_cap",
+      "hatColor": "#1a1a2e",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_square_glasses",
+      "glassesColor": "#00ccff"
+    }
+  }
+}

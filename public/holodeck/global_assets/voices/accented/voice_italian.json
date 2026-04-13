@@ -1,0 +1,46 @@
+{
+  "id": "voice_italian",
+  "type": "voice",
+  "name": "Italian",
+  "tags": ["accented", "italian", "european", "expressive"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Expressive animated Italian-accented voice with passion.",
+    "format": "voice_state",
+    "state": {
+      "language": "it",
+      "variant": "m2",
+      "speed": 165,
+      "pitch": 50,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 90,
+      "audioLead": 35,
+      "lipColor": "#d45555",
+      "lipThickness": 4,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e0c090",
+      "scalpColor": "#3d2815",
+      "captionSize": 18,
+      "presetKey": "italian",
+      "previewText": "Mamma mia! I speak with the passion of Italy!"
+    }
+  }
+}

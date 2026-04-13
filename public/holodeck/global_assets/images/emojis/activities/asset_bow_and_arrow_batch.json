@@ -1,0 +1,111 @@
+{
+  "id": "asset_bow_and_arrow_batch",
+  "type": "asset",
+  "name": "Bow and Arrow",
+  "tags": [
+    "emoji",
+    "activity",
+    "bow",
+    "arrow",
+    "archery",
+    "weapon"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.312Z",
+    "modified": "2026-03-28T15:22:15.312Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A bow with arrow",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "tertiary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#222034",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 220,
+            "cy": 256,
+            "r": 120,
+            "startAngle": -70,
+            "endAngle": 70,
+            "thickness": 8,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 220,
+            "cy": 256,
+            "length": 232,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 330,
+            "cy": 256,
+            "length": 260,
+            "angle": 0,
+            "thickness": 5,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 460,
+            "cy": 256,
+            "r": 18,
+            "rotation": 90,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#222034",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

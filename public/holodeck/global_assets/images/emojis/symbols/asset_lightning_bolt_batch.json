@@ -1,0 +1,86 @@
+{
+  "id": "asset_lightning_bolt_batch",
+  "type": "asset",
+  "name": "Lightning Bolt",
+  "tags": [
+    "emoji",
+    "symbol",
+    "lightning",
+    "power",
+    "energy",
+    "electric"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.350Z",
+    "modified": "2026-03-28T15:22:15.350Z",
+    "origin": "batch",
+    "origin_ref": "symbols",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A high voltage lightning bolt symbol",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#222034",
+      "tertiary": "#df7126"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 240,
+            "cy": 220,
+            "r": 90,
+            "rotation": 15,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "diamond",
+          "params": {
+            "cx": 272,
+            "cy": 320,
+            "r": 80,
+            "rotation": 15,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#222034",
+        "tertiary": "#df7126"
+      }
+    }
+  }
+}

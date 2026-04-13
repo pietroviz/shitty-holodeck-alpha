@@ -1,0 +1,115 @@
+{
+  "id": "asset_wine_glass_batch",
+  "type": "asset",
+  "name": "Wine Glass",
+  "tags": [
+    "emoji",
+    "drink",
+    "wine",
+    "glass"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.307Z",
+    "modified": "2026-03-28T15:22:15.307Z",
+    "origin": "batch",
+    "origin_ref": "food-drink",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A glass of red wine",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "tertiary",
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#cbdbfc",
+      "secondary": "#76428a",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 450
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 440,
+            "rx": 60,
+            "ry": 12,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 370,
+            "w": 8,
+            "h": 120,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "rx": 80,
+            "ry": 110,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "rx": 70,
+            "ry": 70,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#cbdbfc",
+        "secondary": "#76428a",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

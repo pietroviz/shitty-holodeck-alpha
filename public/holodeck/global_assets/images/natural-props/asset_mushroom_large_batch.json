@@ -1,0 +1,124 @@
+{
+  "id": "asset_mushroom_large_batch",
+  "type": "asset",
+  "name": "Giant Mushroom",
+  "tags": [
+    "natural-props",
+    "mushroom",
+    "fungus",
+    "fantasy",
+    "forest"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A large mushroom cap",
+    "format": "svg",
+    "viewBox": "94 40 324 432",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ac3232",
+      "secondary": "#eec39a",
+      "tertiary": "#f4f4f4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait3",
+    "anchor_point": {
+      "x": 256,
+      "y": 410
+    },
+    "natural_size": {
+      "w": 324,
+      "h": 432
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 340,
+            "w": 30,
+            "h": 120,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "rx": 80,
+            "ry": 50,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 230,
+            "cy": 250,
+            "r": 10,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 270,
+            "cy": 240,
+            "r": 8,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 255,
+            "cy": 265,
+            "r": 6,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ac3232",
+        "secondary": "#eec39a",
+        "tertiary": "#f4f4f4"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_unit_7_android",
+  "type": "character",
+  "name": "Unit-7 Android",
+  "tags": [
+    "sci-fi",
+    "android",
+    "non-binary",
+    "ai"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Advanced humanoid android seeking to understand emotions.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "hexagon",
+      "bodyShape": "cylinder",
+      "facePlacement": "high",
+      "scalpColor": "#c0c0c0",
+      "skinColor": "#8a8a8a",
+      "torsoColor": "#e0e0e0",
+      "bottomColor": "#c0c0c0",
+      "eyeIrisColor": "#00ccff",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "roundedSquare",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

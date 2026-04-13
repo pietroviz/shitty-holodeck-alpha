@@ -1,0 +1,165 @@
+{
+  "id": "asset_lavender_bunch_batch",
+  "type": "asset",
+  "name": "Lavender",
+  "tags": [
+    "natural-props",
+    "lavender",
+    "flower",
+    "purple",
+    "field",
+    "herb"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A bunch of lavender stems",
+    "format": "svg",
+    "viewBox": "94 40 324 432",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#76428a",
+      "secondary": "#d77bba",
+      "tertiary": "#4b692f"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait3",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 324,
+      "h": 432
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 235,
+            "cy": 310,
+            "length": 200,
+            "angle": 84,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 250,
+            "cy": 305,
+            "length": 210,
+            "angle": 88,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 265,
+            "cy": 312,
+            "length": 195,
+            "angle": 92,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 278,
+            "cy": 308,
+            "length": 200,
+            "angle": 96,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 234,
+            "cy": 190,
+            "rx": 6,
+            "ry": 22,
+            "rotation": -6,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 250,
+            "cy": 180,
+            "rx": 6,
+            "ry": 25,
+            "rotation": -2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 266,
+            "cy": 195,
+            "rx": 6,
+            "ry": 20,
+            "rotation": 2,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 280,
+            "cy": 188,
+            "rx": 6,
+            "ry": 22,
+            "rotation": 6,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#76428a",
+        "secondary": "#d77bba",
+        "tertiary": "#4b692f"
+      }
+    }
+  }
+}

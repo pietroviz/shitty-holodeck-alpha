@@ -1,0 +1,215 @@
+{
+  "id": "prop_salt_flat",
+  "type": "prop",
+  "name": "Salt Flat",
+  "tags": [
+    "panels",
+    "environment",
+    "terrain",
+    "flat",
+    "desert"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cracked white flat ground panel - salt flat with dark fissures",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#ffffff",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_base_slab",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 3,
+            "y": 0.3,
+            "z": 3,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crack_line_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.4,
+            "py": 0.17,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.08,
+            "y": 0.05,
+            "z": 2.2,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crack_line_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.5,
+            "py": 0.17,
+            "pz": 0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 25,
+            "x": 0.08,
+            "y": 0.05,
+            "z": 2,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crack_line_3",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.8,
+            "py": 0.17,
+            "pz": -0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 45,
+            "x": 0.06,
+            "y": 0.05,
+            "z": 1.8,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_salt_deposit_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 1,
+            "py": 0.2,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.4,
+            "y": 0.15,
+            "z": 0.4,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_salt_deposit_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -1.1,
+            "py": 0.18,
+            "pz": -1.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.3,
+            "y": 0.12,
+            "z": 0.3,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_salt_deposit_3",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.6,
+            "py": 0.18,
+            "pz": -1,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.35,
+            "y": 0.13,
+            "z": 0.35,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#ffffff",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

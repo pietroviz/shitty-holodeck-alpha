@@ -1,0 +1,171 @@
+{
+  "id": "asset_wood_plank_bridge_batch",
+  "type": "asset",
+  "name": "Plank Bridge",
+  "tags": [
+    "man-made-props",
+    "bridge",
+    "plank",
+    "wood",
+    "crossing",
+    "path"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A simple wooden plank bridge",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#8f563b",
+      "tertiary": "#663931"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 290
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 380,
+            "h": 60,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 100,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 140,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 180,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 220,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 260,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 300,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 340,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 380,
+            "cy": 256,
+            "length": 60,
+            "angle": 90,
+            "thickness": 2,
+            "fill": "secondary"
+          },
+          "zIndex": 8
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#8f563b",
+        "tertiary": "#663931"
+      }
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "id": "asset_wheat_sheaf_batch",
+  "type": "asset",
+  "name": "Wheat Sheaf",
+  "tags": [
+    "natural-props",
+    "wheat",
+    "grain",
+    "crop",
+    "field",
+    "farm"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A bundle of golden wheat stalks",
+    "format": "svg",
+    "viewBox": "94 40 324 432",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#d9a066",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait3",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 324,
+      "h": 432
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 245,
+            "cy": 300,
+            "length": 200,
+            "angle": 85,
+            "thickness": 4,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 255,
+            "cy": 295,
+            "length": 210,
+            "angle": 88,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 265,
+            "cy": 302,
+            "length": 195,
+            "angle": 92,
+            "thickness": 4,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 240,
+            "cy": 310,
+            "length": 180,
+            "angle": 80,
+            "thickness": 3,
+            "fill": "primary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 272,
+            "cy": 308,
+            "length": 185,
+            "angle": 96,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 243,
+            "cy": 185,
+            "rx": 5,
+            "ry": 18,
+            "rotation": -5,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 178,
+            "rx": 5,
+            "ry": 20,
+            "rotation": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 268,
+            "cy": 183,
+            "rx": 5,
+            "ry": 17,
+            "rotation": 5,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#d9a066",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "asset_moon_batch",
+  "type": "asset",
+  "name": "Moon",
+  "tags": [
+    "emoji",
+    "weather",
+    "moon",
+    "night",
+    "crescent"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.291Z",
+    "modified": "2026-03-28T15:22:15.291Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A crescent moon",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#222034",
+      "tertiary": "#d9a066"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "r": 150,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 320,
+            "cy": 220,
+            "r": 120,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#222034",
+        "tertiary": "#d9a066"
+      }
+    }
+  }
+}

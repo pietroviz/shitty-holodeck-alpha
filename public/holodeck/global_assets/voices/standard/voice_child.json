@@ -1,0 +1,46 @@
+{
+  "id": "voice_child",
+  "type": "voice",
+  "name": "Child",
+  "tags": ["standard", "child", "high", "energetic"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "High-pitched, energetic child voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "f1",
+      "speed": 200,
+      "pitch": 85,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 0,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 90,
+      "audioLead": 30,
+      "lipColor": "#aaa06a",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#c9c08b",
+      "scalpColor": "#8a8350",
+      "captionSize": 18,
+      "presetKey": "child",
+      "previewText": "Whee! I'm a kid voice! Let's play a game!"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "mnequmircex5lj",
+  "type": "character",
+  "name": "Pietro",
+  "tags": [],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "app",
+    "origin_ref": null,
+    "creator": "user",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#8b2020",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#7b4daa",
+      "bottomColor": "#3a2870",
+      "eyeIrisColor": null,
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

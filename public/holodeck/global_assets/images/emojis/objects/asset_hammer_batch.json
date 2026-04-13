@@ -1,0 +1,88 @@
+{
+  "id": "asset_hammer_batch",
+  "type": "asset",
+  "name": "Hammer",
+  "tags": [
+    "emoji",
+    "object",
+    "hammer",
+    "tool",
+    "build"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.342Z",
+    "modified": "2026-03-28T15:22:15.342Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A construction hammer",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "tertiary",
+      "secondary",
+      "primary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#222034",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "w": 14,
+            "h": 180,
+            "rotation": 30,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 210,
+            "cy": 180,
+            "w": 100,
+            "h": 40,
+            "rotation": 30,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 1
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#222034",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

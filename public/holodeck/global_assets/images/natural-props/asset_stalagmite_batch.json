@@ -1,0 +1,100 @@
+{
+  "id": "asset_stalagmite_batch",
+  "type": "asset",
+  "name": "Stalagmite",
+  "tags": [
+    "natural-props",
+    "stalagmite",
+    "cave",
+    "rock",
+    "formation",
+    "underground"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A pointed cave stalagmite",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#595652",
+      "tertiary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "tall",
+    "anchor_point": {
+      "x": 256,
+      "y": 430
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "r": 100,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 230,
+            "cy": 330,
+            "r": 50,
+            "rotation": 5,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 280,
+            "cy": 320,
+            "r": 45,
+            "rotation": -3,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#595652",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

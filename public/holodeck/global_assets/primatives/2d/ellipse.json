@@ -1,0 +1,24 @@
+{
+  "id": "ellipse",
+  "name": "Ellipse",
+  "category": "basic",
+  "icon": "⬭",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "rx": 150,
+    "ry": 90,
+    "fill": "primary",
+    "stroke": "none",
+    "strokeWidth": 0,
+    "rotation": 0
+  },
+  "params": [
+    { "key": "rx", "label": "Width Radius", "type": "range", "min": 10, "max": 240 },
+    { "key": "ry", "label": "Height Radius", "type": "range", "min": 10, "max": 240 },
+    { "key": "rotation", "label": "Rotation", "type": "range", "min": 0, "max": 360 },
+    { "key": "fill", "label": "Fill", "type": "token" },
+    { "key": "stroke", "label": "Stroke", "type": "token" },
+    { "key": "strokeWidth", "label": "Stroke Width", "type": "range", "min": 0, "max": 20 }
+  ]
+}

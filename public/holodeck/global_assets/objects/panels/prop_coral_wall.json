@@ -1,0 +1,221 @@
+{
+  "id": "prop_coral_wall",
+  "type": "prop",
+  "name": "Coral Wall Panel",
+  "tags": [
+    "panels",
+    "environment",
+    "terrain",
+    "wall",
+    "reef"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Colorful coral reef wall section with organic bumps",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#5fcde4",
+      "secondary": "#d77bba",
+      "tertiary": "#639bff"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_box_0",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 3,
+            "height": 0.28,
+            "depth": 2.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_1",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1.3,
+            "py": 0.22,
+            "pz": 0.4,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.22,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_2",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.4,
+            "py": 0.21,
+            "pz": -0.6,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.25,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_3",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.8,
+            "py": 0.23,
+            "pz": 0.7,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.2,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_4",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 1.5,
+            "py": 0.22,
+            "pz": -0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.19,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_hemisphere_5",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.8,
+            "py": 0.19,
+            "pz": 0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.3,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_hemisphere_6",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.3,
+            "py": 0.2,
+            "pz": -0.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.28,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_7",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.1,
+            "py": 0.24,
+            "pz": 0.4,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.16,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#5fcde4",
+        "secondary": "#d77bba",
+        "tertiary": "#639bff"
+      }
+    }
+  }
+}

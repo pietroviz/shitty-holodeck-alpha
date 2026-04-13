@@ -1,0 +1,50 @@
+{
+  "id": "mus_8bit_adventure",
+  "type": "music",
+  "name": "8-Bit Adventure",
+  "tags": [
+    "retro",
+    "chiptune",
+    "playful"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Classic 8-bit chiptune adventure theme with bright square wave melodies",
+    "engine": "strudel",
+    "bpm": 145,
+    "key": "C",
+    "scale": "major",
+    "pattern": "Chiptune adventure with square wave leads and bass",
+    "layers": [
+      {
+        "name": "drum_beat_perc",
+        "pattern": "C2 C2 G1 C2",
+        "gain": 0.65
+      },
+      {
+        "name": "bass_sub_chiptune",
+        "pattern": "C3 E3 G3 C4 E4",
+        "gain": 0.6
+      },
+      {
+        "name": "melody_lead_square",
+        "pattern": "E5 G5 C5 E5 G5 C6",
+        "gain": 0.72
+      },
+      {
+        "name": "harp_bell_shimmer",
+        "pattern": "G4 C5 E5 G5",
+        "gain": 0.55
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.7,
+    "fade_out": 1.5,
+    "mood_color": "#FF00FF"
+  }
+}

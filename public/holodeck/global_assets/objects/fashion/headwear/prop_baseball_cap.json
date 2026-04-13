@@ -1,0 +1,115 @@
+{
+  "id": "prop_baseball_cap",
+  "type": "prop",
+  "name": "Baseball Cap",
+  "tags": ["headwear", "casual", "sports"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "headwear",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Baseball cap with curved bill and ventilation",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#306082",
+      "secondary": "#ffffff",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {
+      "head_top": { "x": 0, "y": 0.65, "z": 0, "nx": 0, "ny": 1, "nz": 0 },
+      "head_base": { "x": 0, "y": 0, "z": 0, "nx": 0, "ny": -1, "nz": 0 }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_crown",
+          "primitiveId": "cylinder",
+          "zIndex": 0,
+          "params": {
+            "px": 0, "py": 0.25, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.35, "height": 0.3,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_bill_front",
+          "primitiveId": "box",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 0.15, "pz": 0.4,
+            "rx": -25, "ry": 0, "rz": 0,
+            "sx": 0.5, "sy": 0.08, "sz": 0.35,
+            "fill": "secondary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_visor_underside",
+          "primitiveId": "box",
+          "zIndex": 2,
+          "params": {
+            "px": 0, "py": 0.1, "pz": 0.38,
+            "rx": -25, "ry": 0, "rz": 0,
+            "sx": 0.48, "sy": 0.04, "sz": 0.3,
+            "fill": "tertiary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_side_left",
+          "primitiveId": "box",
+          "zIndex": 3,
+          "params": {
+            "px": -0.35, "py": 0.15, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "sx": 0.08, "sy": 0.25, "sz": 0.2,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_side_right",
+          "primitiveId": "box",
+          "zIndex": 4,
+          "params": {
+            "px": 0.35, "py": 0.15, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "sx": 0.08, "sy": 0.25, "sz": 0.2,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_back_strap",
+          "primitiveId": "box",
+          "zIndex": 5,
+          "params": {
+            "px": 0, "py": 0.15, "pz": -0.25,
+            "rx": 0, "ry": 0, "rz": 0,
+            "sx": 0.42, "sy": 0.15, "sz": 0.1,
+            "fill": "primary",
+            "metalness": 0.1, "roughness": 0.8, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#306082",
+        "secondary": "#ffffff",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

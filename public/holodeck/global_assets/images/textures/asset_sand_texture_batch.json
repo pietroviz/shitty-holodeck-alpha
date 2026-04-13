@@ -1,0 +1,195 @@
+{
+  "id": "asset_sand_texture_batch",
+  "type": "asset",
+  "name": "Sand",
+  "tags": [
+    "texture",
+    "textures",
+    "sand",
+    "beach",
+    "desert",
+    "ground"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Sandy beach or desert surface",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#d9a066",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 130,
+            "cy": 140,
+            "r": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 200,
+            "cy": 180,
+            "r": 3,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 300,
+            "cy": 150,
+            "r": 2,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 360,
+            "cy": 200,
+            "r": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 150,
+            "cy": 270,
+            "r": 3,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 250,
+            "cy": 300,
+            "r": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 350,
+            "cy": 280,
+            "r": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 120,
+            "cy": 370,
+            "r": 3,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 280,
+            "cy": 360,
+            "r": 2,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 400,
+            "cy": 350,
+            "r": 2,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 10
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#d9a066",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

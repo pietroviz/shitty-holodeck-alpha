@@ -1,0 +1,123 @@
+{
+  "id": "asset_medal_batch",
+  "type": "asset",
+  "name": "Medal",
+  "tags": [
+    "emoji",
+    "activity",
+    "medal",
+    "award"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.232Z",
+    "modified": "2026-03-28T07:33:47.232Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A gold medal with ribbon",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "secondary",
+      "primary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#639bff",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 230,
+            "cy": 180,
+            "r": 80,
+            "rotation": 180,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 282,
+            "cy": 180,
+            "r": 80,
+            "rotation": 180,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 90,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 6
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 70,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "star-5",
+          "params": {
+            "cx": 256,
+            "cy": 320,
+            "r": 45,
+            "innerRatio": 0.4,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#639bff",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

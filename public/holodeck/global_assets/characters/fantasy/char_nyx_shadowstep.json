@@ -1,0 +1,52 @@
+{
+  "id": "char_nyx_shadowstep",
+  "type": "character",
+  "name": "Nyx Shadowstep",
+  "tags": [
+    "fantasy",
+    "rogue",
+    "non-binary"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Silent assassin who moves through shadows like water.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "low",
+      "scalpColor": "#1a1a2e",
+      "skinColor": "#a67c52",
+      "torsoColor": "#1a1a2e",
+      "bottomColor": "#0a0a1e",
+      "eyeIrisColor": "#8a2a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_eye_patch",
+      "glassesColor": "#1a1a1a"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "char_grasha_the_orc",
+  "type": "character",
+  "name": "Grasha the Orc",
+  "tags": [
+    "creatures",
+    "orc",
+    "female"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Fierce orc chieftain who leads her clan with an iron fist.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "wide",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "wide",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#2a4a1a",
+      "skinColor": "#5a8a5a",
+      "torsoColor": "#6a3a1a",
+      "bottomColor": "#4a2a0a",
+      "eyeIrisColor": "#ff4400",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_viking_helmet",
+      "hatColor": "#6a6a6a",
+      "facialHairStyle": "prop_soul_patch",
+      "facialHairColor": "#1a1a1a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

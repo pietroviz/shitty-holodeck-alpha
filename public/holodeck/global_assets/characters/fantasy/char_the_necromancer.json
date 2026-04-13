@@ -1,0 +1,52 @@
+{
+  "id": "char_the_necromancer",
+  "type": "character",
+  "name": "The Necromancer",
+  "tags": [
+    "fantasy",
+    "necromancer",
+    "non-binary"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Mysterious figure who commands the undead.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "diamond",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#2a2a2a",
+      "skinColor": "#8a8a8a",
+      "torsoColor": "#1a1a1a",
+      "bottomColor": "#0a0a0a",
+      "eyeIrisColor": "#00ff88",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_wizard_hat",
+      "hatColor": "#1a1a1a",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_monocle",
+      "glassesColor": "#4a0a4a"
+    }
+  }
+}

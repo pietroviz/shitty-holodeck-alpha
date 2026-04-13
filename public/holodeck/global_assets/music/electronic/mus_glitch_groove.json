@@ -1,0 +1,50 @@
+{
+  "id": "mus_glitch_groove",
+  "type": "music",
+  "name": "Glitch Groove",
+  "tags": [
+    "electronic",
+    "experimental",
+    "rhythmic"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Broken beat electronic groove with stuttering rhythms and layered synth textures",
+    "engine": "strudel",
+    "bpm": 125,
+    "key": "Gm",
+    "scale": "harmonic minor",
+    "pattern": "Glitchy drums with textured bass and synth layers",
+    "layers": [
+      {
+        "name": "glitch_drum_electronic",
+        "pattern": "G2 D2 G2 D2",
+        "gain": 0.65
+      },
+      {
+        "name": "bass_groove_funky",
+        "pattern": "G3 Bb3 D4 G4 Bb4",
+        "gain": 0.55
+      },
+      {
+        "name": "lead_pluck_stab",
+        "pattern": "D5 G5 Bb5 D5 G5",
+        "gain": 0.6
+      },
+      {
+        "name": "texture_noise_fx",
+        "pattern": "G5 Bb5 D5 Bb5",
+        "gain": 0.45
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.8,
+    "fade_out": 2.0,
+    "mood_color": "#FF00FF"
+  }
+}

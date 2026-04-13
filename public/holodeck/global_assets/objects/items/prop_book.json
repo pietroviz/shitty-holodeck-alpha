@@ -1,0 +1,185 @@
+{
+  "id": "prop_book",
+  "type": "prop",
+  "name": "Leather-Bound Book",
+  "tags": [
+    "items",
+    "book",
+    "knowledge",
+    "reading"
+  ],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "items",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A thick leather-bound book with ornate spine and cover details",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#663931",
+      "secondary": "#eec39a",
+      "tertiary": "#8a6f30"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": -0.5,
+      "z": 0
+    },
+    "attach_points": {
+      "grip": {
+        "x": 0,
+        "y": -0.5,
+        "z": 0,
+        "nx": 0,
+        "ny": -1,
+        "nz": 0
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_book_cover",
+          "primitiveId": "rounded-box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.8,
+            "height": 1.1,
+            "depth": 0.35,
+            "bevelRadius": 0.08,
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.2,
+            "roughness": 0.8,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_spine",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.08,
+            "height": 1.1,
+            "depth": 0.35,
+            "px": -0.36,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_decoration_1",
+          "primitiveId": "star",
+          "zIndex": 0,
+          "params": {
+            "points": 5,
+            "outerRadius": 0.15,
+            "innerRadius": 0.08,
+            "depth": 0.05,
+            "px": 0,
+            "py": 0.2,
+            "pz": 0.18,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.6,
+            "roughness": 0.4,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_gold_band_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.6,
+            "height": 0.06,
+            "depth": 0.37,
+            "px": 0,
+            "py": 0.35,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_gold_band_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.6,
+            "height": 0.06,
+            "depth": 0.37,
+            "px": 0,
+            "py": -0.35,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "tertiary",
+            "metalness": 0.8,
+            "roughness": 0.2,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_pages",
+          "primitiveId": "rounded-box",
+          "zIndex": 0,
+          "params": {
+            "width": 0.7,
+            "height": 1,
+            "depth": 0.3,
+            "bevelRadius": 0.06,
+            "px": 0,
+            "py": 0,
+            "pz": 0.05,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.05,
+            "roughness": 0.9,
+            "opacity": 0.9
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#663931",
+        "secondary": "#eec39a",
+        "tertiary": "#8a6f30"
+      }
+    }
+  }
+}

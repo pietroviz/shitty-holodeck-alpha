@@ -1,0 +1,136 @@
+{
+  "id": "asset_sandbag_pile_batch",
+  "type": "asset",
+  "name": "Sandbag Pile",
+  "tags": [
+    "man-made-props",
+    "sandbag",
+    "pile",
+    "barrier",
+    "military",
+    "flood"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A stack of sandbags",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#d9a066",
+      "secondary": "#eec39a",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 330
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 200,
+            "cy": 310,
+            "w": 80,
+            "h": 30,
+            "rx": 10,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 300,
+            "cy": 310,
+            "w": 80,
+            "h": 30,
+            "rx": 10,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 250,
+            "cy": 280,
+            "w": 80,
+            "h": 30,
+            "rx": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 350,
+            "cy": 280,
+            "w": 80,
+            "h": 30,
+            "rx": 10,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 300,
+            "cy": 250,
+            "w": 80,
+            "h": 30,
+            "rx": 10,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#d9a066",
+        "secondary": "#eec39a",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

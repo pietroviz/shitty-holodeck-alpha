@@ -1,0 +1,124 @@
+{
+  "id": "prop_nest",
+  "type": "prop",
+  "name": "Bird Nest",
+  "tags": ["environment", "nature", "animal", "nest"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "environment",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Bird nest with eggs",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#8a6f30",
+      "secondary": "#8f563b",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_nest_base",
+          "primitiveId": "hemisphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0, "py": 0.3, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.6,
+            "fill": "primary",
+            "metalness": 0.0, "roughness": 0.95, "opacity": 1
+          }
+        },
+        {
+          "id": "el_stick_1",
+          "primitiveId": "cylinder",
+          "zIndex": -1,
+          "params": {
+            "px": -0.5, "py": 0.1, "pz": -0.3,
+            "rx": 45, "ry": 0, "rz": 0,
+            "radiusTop": 0.03, "radiusBottom": 0.035, "height": 0.5,
+            "fill": "secondary",
+            "metalness": 0.0, "roughness": 0.92, "opacity": 1
+          }
+        },
+        {
+          "id": "el_stick_2",
+          "primitiveId": "cylinder",
+          "zIndex": -1,
+          "params": {
+            "px": 0.5, "py": 0.1, "pz": 0.3,
+            "rx": -40, "ry": 0, "rz": 0,
+            "radiusTop": 0.03, "radiusBottom": 0.035, "height": 0.48,
+            "fill": "secondary",
+            "metalness": 0.0, "roughness": 0.92, "opacity": 1
+          }
+        },
+        {
+          "id": "el_stick_3",
+          "primitiveId": "cylinder",
+          "zIndex": -1,
+          "params": {
+            "px": 0, "py": 0.15, "pz": -0.5,
+            "rx": 50, "ry": 0, "rz": 0,
+            "radiusTop": 0.025, "radiusBottom": 0.03, "height": 0.45,
+            "fill": "secondary",
+            "metalness": 0.0, "roughness": 0.92, "opacity": 1
+          }
+        },
+        {
+          "id": "el_egg_1",
+          "primitiveId": "sphere",
+          "zIndex": 1,
+          "params": {
+            "px": -0.15, "py": 0.45, "pz": -0.1,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.12,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.85, "opacity": 1
+          }
+        },
+        {
+          "id": "el_egg_2",
+          "primitiveId": "sphere",
+          "zIndex": 1,
+          "params": {
+            "px": 0.15, "py": 0.45, "pz": 0.05,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.11,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.85, "opacity": 1
+          }
+        },
+        {
+          "id": "el_egg_3",
+          "primitiveId": "sphere",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 0.42, "pz": 0.15,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.1,
+            "fill": "tertiary",
+            "metalness": 0.0, "roughness": 0.85, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8a6f30",
+        "secondary": "#8f563b",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "voice_serpent",
+  "type": "voice",
+  "name": "Serpent",
+  "tags": ["creatures", "serpent", "fantasy", "sinister", "sibilant"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Sibilant, whispery, sinister serpent voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "whisper",
+      "speed": 130,
+      "pitch": 55,
+      "volume": 100,
+      "amplitude": 95,
+      "wordgap": 0,
+      "reverb": 20,
+      "wobble": 5,
+      "wobbleSpeed": 6,
+      "brightness": 25,
+      "breathiness": 45,
+      "vocalFry": 20,
+      "chorus": 12,
+      "mouthSnappiness": 65,
+      "audioLead": 8,
+      "lipColor": "#1a4d1a",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#2d5a2d",
+      "scalpColor": "#1a3a1a",
+      "captionSize": 19,
+      "presetKey": "serpent",
+      "previewText": "Yesss... the serpent ssspeaks in sssilken tones..."
+    }
+  }
+}

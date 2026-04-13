@@ -1,0 +1,52 @@
+{
+  "id": "char_luna_fang",
+  "type": "character",
+  "name": "Luna Fang",
+  "tags": [
+    "creatures",
+    "werewolf",
+    "female"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Werewolf pack leader who struggles between two worlds.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "wide",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#6a5a4a",
+      "skinColor": "#8a7a5a",
+      "torsoColor": "#4a3a2a",
+      "bottomColor": "#2a2a1a",
+      "eyeIrisColor": "#ffcc00",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_fox_ears",
+      "hatColor": "#6a5a4a",
+      "facialHairStyle": "prop_full_beard",
+      "facialHairColor": "#6a5a4a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

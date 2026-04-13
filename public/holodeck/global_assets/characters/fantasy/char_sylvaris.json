@@ -1,0 +1,53 @@
+{
+  "id": "char_sylvaris",
+  "type": "character",
+  "name": "Sylvaris",
+  "tags": [
+    "fantasy",
+    "ranger",
+    "non-binary",
+    "elf"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Swift elven ranger at home in the deepest forests.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "tall",
+      "faceWidthPreset": "moderate",
+      "headShape": "diamond",
+      "bodyShape": "capsule",
+      "facePlacement": "high",
+      "scalpColor": "#b8d4a0",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a6a3a",
+      "bottomColor": "#3a4a2a",
+      "eyeIrisColor": "#2a8a2a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#b8d4a0",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

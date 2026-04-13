@@ -1,0 +1,112 @@
+{
+  "id": "asset_traffic_cone_batch",
+  "type": "asset",
+  "name": "Traffic Cone",
+  "tags": [
+    "man-made-props",
+    "cone",
+    "traffic",
+    "safety",
+    "construction",
+    "road"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "An orange traffic safety cone",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#222034",
+      "tertiary": "#f4f4f4"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 345
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "r": 50,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 335,
+            "w": 70,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 285,
+            "length": 45,
+            "angle": 0,
+            "thickness": 4,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 305,
+            "length": 55,
+            "angle": 0,
+            "thickness": 4,
+            "fill": "tertiary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#222034",
+        "tertiary": "#f4f4f4"
+      }
+    }
+  }
+}

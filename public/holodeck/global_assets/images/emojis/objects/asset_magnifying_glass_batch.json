@@ -1,0 +1,106 @@
+{
+  "id": "asset_magnifying_glass_batch",
+  "type": "asset",
+  "name": "Magnifying Glass",
+  "tags": [
+    "emoji",
+    "object",
+    "search",
+    "magnify"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.244Z",
+    "modified": "2026-03-28T07:33:47.244Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A magnifying glass",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "secondary",
+      "primary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#639bff",
+      "secondary": "#222034",
+      "tertiary": "#cbdbfc"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ring",
+          "params": {
+            "cx": 230,
+            "cy": 230,
+            "r": 100,
+            "thickness": 14,
+            "fill": "secondary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 230,
+            "cy": 230,
+            "r": 80,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 210,
+            "cy": 210,
+            "r": 20,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 330,
+            "cy": 350,
+            "length": 100,
+            "angle": 225,
+            "thickness": 16,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#639bff",
+        "secondary": "#222034",
+        "tertiary": "#cbdbfc"
+      }
+    }
+  }
+}

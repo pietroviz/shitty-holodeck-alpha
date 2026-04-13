@@ -1,0 +1,52 @@
+{
+  "id": "char_zephyr_the_bard",
+  "type": "character",
+  "name": "Zephyr the Bard",
+  "tags": [
+    "fantasy",
+    "bard",
+    "non-binary"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wandering bard whose songs can charm kings and dragons alike.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#d4a843",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#6a2a8a",
+      "bottomColor": "#4a1a6a",
+      "eyeIrisColor": "#6a2a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#aa4466",
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_tiara",
+      "hatColor": "#d4a843",
+      "facialHairStyle": "prop_soul_patch",
+      "facialHairColor": "#d4a843",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "id": "asset_bleacher_section_batch",
+  "type": "asset",
+  "name": "Bleachers",
+  "tags": [
+    "man-made-props",
+    "bleacher",
+    "seating",
+    "stadium",
+    "amphitheater",
+    "spectator"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "man-made-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A section of tiered bleacher seating",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#595652",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 340
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "w": 250,
+            "h": 14,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "w": 220,
+            "h": 14,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 250,
+            "w": 190,
+            "h": 14,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 220,
+            "w": 160,
+            "h": 14,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 370,
+            "cy": 270,
+            "w": 8,
+            "h": 120,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 142,
+            "cy": 270,
+            "w": 8,
+            "h": 120,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#595652",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

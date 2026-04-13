@@ -1,0 +1,53 @@
+{
+  "id": "char_rod_sterling",
+  "type": "character",
+  "name": "Rod Sterling",
+  "tags": [
+    "television",
+    "host",
+    "male",
+    "classic"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "television",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Enigmatic host who guides you through strange dimensions.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#2a2a2a",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#1a1a1a",
+      "bottomColor": "#1a1a1a",
+      "eyeIrisColor": "#4a4a4a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": 2,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_mustache",
+      "facialHairColor": "#2a2a2a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_cosplay_queen_keiko",
+  "type": "character",
+  "name": "Cosplay Queen Keiko",
+  "tags": [
+    "internet",
+    "cosplay",
+    "female",
+    "fandom"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Award-winning cosplayer who transforms into any character.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#ff4488",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a4a8a",
+      "bottomColor": "#2a2a6a",
+      "eyeIrisColor": "#ff4488",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#ff4488",
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#ff4488",
+      "hatStyle": "prop_bunny_ears",
+      "hatColor": "#ff4488",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

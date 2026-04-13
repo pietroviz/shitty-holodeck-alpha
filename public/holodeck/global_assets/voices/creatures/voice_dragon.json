@@ -1,0 +1,46 @@
+{
+  "id": "voice_dragon",
+  "type": "voice",
+  "name": "Dragon",
+  "tags": ["creatures", "dragon", "fantasy", "powerful", "ancient"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Deep rumbling dragon voice with ancient power.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "croak",
+      "speed": 120,
+      "pitch": 15,
+      "volume": 100,
+      "amplitude": 110,
+      "wordgap": 0,
+      "reverb": 30,
+      "wobble": 8,
+      "wobbleSpeed": 4,
+      "brightness": 20,
+      "breathiness": 20,
+      "vocalFry": 40,
+      "chorus": 35,
+      "mouthSnappiness": 70,
+      "audioLead": 10,
+      "lipColor": "#cc3300",
+      "lipThickness": 4,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#8b3a3a",
+      "scalpColor": "#660000",
+      "captionSize": 20,
+      "presetKey": "dragon",
+      "previewText": "I am ancient dragon. Tremble before my voice."
+    }
+  }
+}

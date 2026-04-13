@@ -1,0 +1,52 @@
+{
+  "id": "char_infernal_damien",
+  "type": "character",
+  "name": "Infernal Damien",
+  "tags": [
+    "creatures",
+    "demon",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Smooth-talking demon with devilish charm.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "diamond",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#cc0000",
+      "skinColor": "#9a4a4a",
+      "torsoColor": "#1a1a1a",
+      "bottomColor": "#0a0a0a",
+      "eyeIrisColor": "#ff4400",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#cc0000",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_goatee",
+      "facialHairColor": "#1a1a1a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

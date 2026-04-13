@@ -1,0 +1,159 @@
+{
+  "id": "asset_pebbles_batch",
+  "type": "asset",
+  "name": "Pebbles",
+  "tags": [
+    "natural-props",
+    "pebble",
+    "stone",
+    "small",
+    "ground",
+    "beach"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Scattered small pebbles",
+    "format": "svg",
+    "viewBox": "40 94 432 324",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#9badb7",
+      "secondary": "#847e87",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "landscape",
+    "anchor_point": {
+      "x": 256,
+      "y": 300
+    },
+    "natural_size": {
+      "w": 432,
+      "h": 324
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 180,
+            "cy": 280,
+            "rx": 14,
+            "ry": 10,
+            "rotation": 20,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 220,
+            "cy": 290,
+            "rx": 12,
+            "ry": 8,
+            "rotation": -15,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 260,
+            "cy": 275,
+            "rx": 16,
+            "ry": 11,
+            "rotation": 5,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 300,
+            "cy": 285,
+            "rx": 13,
+            "ry": 9,
+            "rotation": -25,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 340,
+            "cy": 278,
+            "rx": 11,
+            "ry": 8,
+            "rotation": 30,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 200,
+            "cy": 300,
+            "rx": 10,
+            "ry": 7,
+            "rotation": -10,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 280,
+            "cy": 298,
+            "rx": 12,
+            "ry": 8,
+            "rotation": 40,
+            "fill": "secondary",
+            "stroke": "tertiary",
+            "strokeWidth": 1
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#9badb7",
+        "secondary": "#847e87",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

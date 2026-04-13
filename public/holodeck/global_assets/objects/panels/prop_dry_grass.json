@@ -1,0 +1,207 @@
+{
+  "id": "prop_dry_grass",
+  "type": "prop",
+  "name": "Dry Grass Panel",
+  "tags": [
+    "panels",
+    "environment",
+    "terrain",
+    "ground",
+    "savanna"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Dry savanna grass ground panel with sparse tufts",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#8a6f30",
+      "secondary": "#d9a066",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_box_0",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0.1,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "width": 3,
+            "height": 0.25,
+            "depth": 2.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cone_1",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "px": -1.4,
+            "py": 0.23,
+            "pz": 0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.18,
+            "height": 0.3,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cone_2",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "px": -0.2,
+            "py": 0.23,
+            "pz": -0.8,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.16,
+            "height": 0.28,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cone_3",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "px": 0.9,
+            "py": 0.22,
+            "pz": 0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.17,
+            "height": 0.29,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_cone_4",
+          "primitiveId": "cone",
+          "zIndex": 0,
+          "params": {
+            "px": 1.5,
+            "py": 0.23,
+            "pz": -0.4,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.15,
+            "height": 0.27,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_5",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.2,
+            "py": 0.21,
+            "pz": 0.7,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.12,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_sphere_6",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.8,
+            "py": 0.2,
+            "pz": -0.3,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "radius": 0.11,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8a6f30",
+        "secondary": "#d9a066",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

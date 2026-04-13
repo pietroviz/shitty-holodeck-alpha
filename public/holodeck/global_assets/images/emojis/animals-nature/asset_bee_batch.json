@@ -1,0 +1,178 @@
+{
+  "id": "asset_bee_batch",
+  "type": "asset",
+  "name": "Bee",
+  "tags": [
+    "emoji",
+    "animal",
+    "bee",
+    "insect"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.214Z",
+    "modified": "2026-03-28T07:33:47.214Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A busy honeybee",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#222034",
+      "tertiary": "#cbdbfc"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "rx": 90,
+            "ry": 70,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 200,
+            "cy": 195,
+            "rx": 55,
+            "ry": 35,
+            "rotation": 320,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 312,
+            "cy": 195,
+            "rx": 55,
+            "ry": 35,
+            "rotation": 40,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 265,
+            "w": 180,
+            "h": 14,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 295,
+            "w": 160,
+            "h": 14,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 205,
+            "r": 40,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 243,
+            "cy": 198,
+            "r": 8,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 269,
+            "cy": 198,
+            "r": 8,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 330,
+            "cy": 340,
+            "r": 20,
+            "rotation": 150,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#222034",
+        "tertiary": "#cbdbfc"
+      }
+    }
+  }
+}

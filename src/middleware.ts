@@ -20,6 +20,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Let holodeck static assets through without gate check or session refresh
+  // (the HTML entry point is still gated below)
+  if (pathname.startsWith("/holodeck/") && !pathname.endsWith(".html")) {
+    return NextResponse.next();
+  }
+
   // Check for site-wide password gate
   const siteAccess = request.cookies.get("site_access")?.value;
   if (siteAccess !== "granted") {
@@ -38,6 +44,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|js|css|json|fbx|glb|gltf|woff|woff2|ttf|eot|map|mp3|wav|ogg)$).*)",
   ],
 };

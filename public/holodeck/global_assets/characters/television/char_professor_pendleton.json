@@ -1,0 +1,53 @@
+{
+  "id": "char_professor_pendleton",
+  "type": "character",
+  "name": "Professor Pendleton",
+  "tags": [
+    "television",
+    "educational",
+    "male",
+    "science"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "television",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Eccentric science show host who makes learning fun.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#c0c0c0",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#4a4a8a",
+      "bottomColor": "#3a3a3a",
+      "eyeIrisColor": "#4a6a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#c0c0c0",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_mustache",
+      "facialHairColor": "#c0c0c0",
+      "glassesStyle": "prop_round_glasses",
+      "glassesColor": "#c0c0c0"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "id": "asset_geode_batch",
+  "type": "asset",
+  "name": "Geode",
+  "tags": [
+    "natural-props",
+    "geode",
+    "crystal",
+    "mineral",
+    "cave"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A split geode showing crystals inside",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#76428a",
+      "secondary": "#d77bba",
+      "tertiary": "#847e87"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 350
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "r": 80,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "r": 55,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "star-6",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "r": 40,
+            "innerRatio": 0.6,
+            "rotation": 15,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#76428a",
+        "secondary": "#d77bba",
+        "tertiary": "#847e87"
+      }
+    }
+  }
+}

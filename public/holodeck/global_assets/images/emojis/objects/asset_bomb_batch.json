@@ -1,0 +1,124 @@
+{
+  "id": "asset_bomb_batch",
+  "type": "asset",
+  "name": "Bomb",
+  "tags": [
+    "emoji",
+    "object",
+    "bomb",
+    "explosive"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.248Z",
+    "modified": "2026-03-28T07:33:47.248Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cartoon bomb with fuse",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#222034",
+      "secondary": "#696a6a",
+      "tertiary": "#df7126"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 290,
+            "r": 120,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 170,
+            "w": 40,
+            "h": 30,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 290,
+            "cy": 140,
+            "r": 30,
+            "startAngle": -120,
+            "endAngle": 30,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "star-4",
+          "params": {
+            "cx": 310,
+            "cy": 115,
+            "r": 18,
+            "innerRatio": 0.3,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 225,
+            "cy": 260,
+            "r": 25,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#222034",
+        "secondary": "#696a6a",
+        "tertiary": "#df7126"
+      }
+    }
+  }
+}

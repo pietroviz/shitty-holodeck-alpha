@@ -1,0 +1,138 @@
+{
+  "id": "asset_arch_doorway_batch",
+  "type": "asset",
+  "name": "Arch Doorway",
+  "tags": [
+    "wall",
+    "walls",
+    "arch",
+    "doorway",
+    "opening",
+    "interior"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "walls",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wall with arched doorway opening",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#eec39a",
+      "secondary": "#8f563b",
+      "tertiary": "#595652"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 460,
+            "h": 260,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "w": 120,
+            "h": 150,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 235,
+            "r": 60,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 235,
+            "r": 65,
+            "startAngle": -180,
+            "endAngle": 0,
+            "thickness": 8,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 196,
+            "cy": 300,
+            "length": 155,
+            "angle": 90,
+            "thickness": 8,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 316,
+            "cy": 300,
+            "length": 155,
+            "angle": 90,
+            "thickness": 8,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#eec39a",
+        "secondary": "#8f563b",
+        "tertiary": "#595652"
+      }
+    }
+  }
+}

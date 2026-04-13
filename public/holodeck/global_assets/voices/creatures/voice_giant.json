@@ -1,0 +1,46 @@
+{
+  "id": "voice_giant",
+  "type": "voice",
+  "name": "Giant",
+  "tags": ["creatures", "giant", "fantasy", "large", "booming"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Very deep, slow, booming giant voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "m4",
+      "speed": 100,
+      "pitch": 10,
+      "volume": 100,
+      "amplitude": 120,
+      "wordgap": 0,
+      "reverb": 40,
+      "wobble": 0,
+      "wobbleSpeed": 0,
+      "brightness": 10,
+      "breathiness": 5,
+      "vocalFry": 0,
+      "chorus": 20,
+      "mouthSnappiness": 50,
+      "audioLead": 0,
+      "lipColor": "#8b6914",
+      "lipThickness": 5,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#a0826d",
+      "scalpColor": "#6b5d52",
+      "captionSize": 24,
+      "presetKey": "giant",
+      "previewText": "FEE FI FO FUM. Giant speaks with thunder."
+    }
+  }
+}

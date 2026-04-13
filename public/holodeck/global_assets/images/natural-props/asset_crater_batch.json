@@ -1,0 +1,98 @@
+{
+  "id": "asset_crater_batch",
+  "type": "asset",
+  "name": "Crater",
+  "tags": [
+    "natural-props",
+    "crater",
+    "impact",
+    "volcanic",
+    "terrain",
+    "space"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "An impact or volcanic crater",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#847e87",
+      "secondary": "#595652",
+      "tertiary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 270
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 100,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 65,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 85,
+            "startAngle": -140,
+            "endAngle": -30,
+            "thickness": 10,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#847e87",
+        "secondary": "#595652",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

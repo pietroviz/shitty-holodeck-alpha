@@ -1,0 +1,165 @@
+{
+  "id": "prop_round_glasses",
+  "type": "prop",
+  "name": "Round Glasses",
+  "tags": ["glasses", "eyewear", "classic", "round"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Classic round glasses with circular wire frames, nose bridge, and temple arms.",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary"],
+    "color_assignments": {
+      "primary": "#2a2a2a",
+      "secondary": "#aaccee"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Left lens frame",
+          "primitive": "torus",
+          "params": {
+            "radius": 0.065,
+            "tubeRadius": 0.012,
+            "px": -0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.3,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right lens frame",
+          "primitive": "torus",
+          "params": {
+            "radius": 0.065,
+            "tubeRadius": 0.012,
+            "px": 0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.3,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left lens tint",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.058,
+            "px": -0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.1,
+            "opacity": 0.15
+          }
+        },
+        {
+          "comment": "Right lens tint",
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.058,
+            "px": 0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.1,
+            "opacity": 0.15
+          }
+        },
+        {
+          "comment": "Nose bridge",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.008,
+            "radiusBottom": 0.008,
+            "height": 0.07,
+            "px": 0,
+            "py": 0.01,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 90,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.3,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Left temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.007,
+            "radiusBottom": 0.007,
+            "height": 0.2,
+            "px": -0.185,
+            "py": 0,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.3,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Right temple arm",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.007,
+            "radiusBottom": 0.007,
+            "height": 0.2,
+            "px": 0.185,
+            "py": 0,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.6,
+            "roughness": 0.3,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#2a2a2a",
+        "secondary": "#aaccee"
+      }
+    }
+  }
+}

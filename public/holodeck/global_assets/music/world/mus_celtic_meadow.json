@@ -1,0 +1,46 @@
+{
+  "id": "mus_celtic_meadow",
+  "type": "music",
+  "name": "Celtic Meadow",
+  "tags": ["world", "folk", "mystical"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Celtic folk melody with harp textures and mystical atmospheric layers",
+    "engine": "strudel",
+    "bpm": 105,
+    "key": "D",
+    "scale": "major",
+    "pattern": "Celtic folk with harp and mystical pad",
+    "layers": [
+      {
+        "name": "harp_string_texture",
+        "pattern": "D4 F#4 A4 D5 F#5",
+        "gain": 0.65
+      },
+      {
+        "name": "melody_lead_celtic",
+        "pattern": "F#5 A5 D5 F#5 A5",
+        "gain": 0.72
+      },
+      {
+        "name": "pad_ambient_mystical",
+        "pattern": "A4 D5 F#5 A5",
+        "gain": 0.58
+      },
+      {
+        "name": "bass_foundation_folk",
+        "pattern": "D2 D2 A2 D2",
+        "gain": 0.52
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 1.8,
+    "fade_out": 2.8,
+    "mood_color": "#7FBF7F"
+  }
+}

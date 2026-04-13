@@ -1,0 +1,149 @@
+{
+  "id": "asset_dice_batch",
+  "type": "asset",
+  "name": "Dice",
+  "tags": [
+    "emoji",
+    "activity",
+    "dice",
+    "game"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.231Z",
+    "modified": "2026-03-28T07:33:47.231Z",
+    "origin": "batch",
+    "origin_ref": "activities",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A pair of dice",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#222034",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 210,
+            "cy": 280,
+            "w": 140,
+            "h": 140,
+            "rx": 16,
+            "rotation": 350,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 175,
+            "cy": 255,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 210,
+            "cy": 280,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 245,
+            "cy": 305,
+            "r": 12,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 310,
+            "cy": 220,
+            "w": 130,
+            "h": 130,
+            "rx": 16,
+            "rotation": 15,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 280,
+            "cy": 195,
+            "r": 11,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 340,
+            "cy": 245,
+            "r": 11,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#222034",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

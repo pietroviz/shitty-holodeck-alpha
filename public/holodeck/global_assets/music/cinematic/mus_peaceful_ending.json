@@ -1,0 +1,46 @@
+{
+  "id": "mus_peaceful_ending",
+  "type": "music",
+  "name": "Peaceful Ending",
+  "tags": ["cinematic", "emotional", "reflective"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Gentle cinematic score with warm orchestral colors and tender melodic resolutions",
+    "engine": "strudel",
+    "bpm": 85,
+    "key": "Eb",
+    "scale": "major",
+    "pattern": "Warm orchestral pad with gentle melody and piano",
+    "layers": [
+      {
+        "name": "pad_warm_orchestral",
+        "pattern": "Eb4 G4 Bb4 Eb5 G5",
+        "gain": 0.65
+      },
+      {
+        "name": "piano_key_tender",
+        "pattern": "Bb3 Eb4 G4 Bb4",
+        "gain": 0.6
+      },
+      {
+        "name": "melody_lead_gentle",
+        "pattern": "G5 Bb5 Eb5 G5 Bb5",
+        "gain": 0.63
+      },
+      {
+        "name": "texture_ambient_string",
+        "pattern": "Eb5 G5 Bb5 G5",
+        "gain": 0.42
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 2.0,
+    "fade_out": 3.5,
+    "mood_color": "#F4A460"
+  }
+}

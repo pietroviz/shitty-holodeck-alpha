@@ -1,0 +1,109 @@
+{
+  "id": "asset_bell_batch",
+  "type": "asset",
+  "name": "Bell",
+  "tags": [
+    "emoji",
+    "object",
+    "bell",
+    "notification"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.243Z",
+    "modified": "2026-03-28T07:33:47.243Z",
+    "origin": "batch",
+    "origin_ref": "objects",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A ringing bell",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#fbf236",
+      "secondary": "#8a6f30",
+      "tertiary": "#222034"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 420
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "r": 120,
+            "startAngle": 0,
+            "endAngle": 180,
+            "thickness": 100,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 350,
+            "w": 260,
+            "h": 20,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 382,
+            "r": 18,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 160,
+            "r": 14,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#fbf236",
+        "secondary": "#8a6f30",
+        "tertiary": "#222034"
+      }
+    }
+  }
+}

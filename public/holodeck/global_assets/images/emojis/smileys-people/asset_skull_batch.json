@@ -1,0 +1,158 @@
+{
+  "id": "asset_skull_batch",
+  "type": "asset",
+  "name": "Skull",
+  "tags": [
+    "emoji",
+    "smiley",
+    "skull",
+    "dead"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.205Z",
+    "modified": "2026-03-28T07:33:47.205Z",
+    "origin": "batch",
+    "origin_ref": "smileys-people",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cartoon skull",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#222034",
+      "tertiary": "#696a6a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "r": 180,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rounded-rect",
+          "params": {
+            "cx": 256,
+            "cy": 400,
+            "w": 140,
+            "h": 60,
+            "rx": 8,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 200,
+            "cy": 210,
+            "r": 40,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 312,
+            "cy": 210,
+            "r": 40,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "r": 20,
+            "rotation": 180,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 220,
+            "cy": 400,
+            "length": 50,
+            "angle": 90,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 400,
+            "length": 50,
+            "angle": 90,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 292,
+            "cy": 400,
+            "length": 50,
+            "angle": 90,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#222034",
+        "tertiary": "#696a6a"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_fashion_fatima",
+  "type": "character",
+  "name": "Fashion Fatima",
+  "tags": [
+    "television",
+    "fashion",
+    "female",
+    "judge"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "television",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Sharp-tongued fashion judge with impeccable taste.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#1a1a1a",
+      "skinColor": "#a67c52",
+      "torsoColor": "#1a1a1a",
+      "bottomColor": "#1a1a1a",
+      "eyeIrisColor": "#4a3a2a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#cc0000",
+      "lipThickness": 6,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#1a1a1a",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_sunglasses",
+      "glassesColor": "#1a1a1a"
+    }
+  }
+}

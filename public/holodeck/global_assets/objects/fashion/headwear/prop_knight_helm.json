@@ -1,0 +1,175 @@
+{
+  "id": "prop_knight_helm",
+  "type": "prop",
+  "name": "Knight Helmet",
+  "tags": ["headwear", "medieval", "armor"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "headwear",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Full knight's helmet with visor slit and crown",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#696a6a",
+      "secondary": "#323c39",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {
+      "head_top": { "x": 0, "y": 1.0, "z": 0, "nx": 0, "ny": 1, "nz": 0 },
+      "head_base": { "x": 0, "y": 0, "z": 0, "nx": 0, "ny": -1, "nz": 0 }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_main_dome",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0, "py": 0.35, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.5,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_crown_top",
+          "primitiveId": "cone",
+          "zIndex": 1,
+          "params": {
+            "px": 0, "py": 0.75, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.2, "height": 0.5,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_crown_band",
+          "primitiveId": "cylinder",
+          "zIndex": 2,
+          "params": {
+            "px": 0, "py": 0.45, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.48, "height": 0.15,
+            "fill": "secondary",
+            "metalness": 0.5, "roughness": 0.4, "opacity": 1
+          }
+        },
+        {
+          "id": "el_visor_slit",
+          "primitiveId": "box",
+          "zIndex": 3,
+          "params": {
+            "px": 0, "py": 0.35, "pz": 0.48,
+            "rx": 0, "ry": 0, "rz": 0,
+            "sx": 0.25, "sy": 0.18, "sz": 0.08,
+            "fill": "secondary",
+            "metalness": 0.3, "roughness": 0.6, "opacity": 1
+          }
+        },
+        {
+          "id": "el_nose_guard",
+          "primitiveId": "wedge",
+          "zIndex": 4,
+          "params": {
+            "px": 0, "py": 0.25, "pz": 0.5,
+            "rx": 0, "ry": 0, "rz": 0,
+            "sx": 0.08, "sy": 0.3, "sz": 0.25,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_neck_guard_front",
+          "primitiveId": "box",
+          "zIndex": 5,
+          "params": {
+            "px": 0, "py": -0.1, "pz": 0.35,
+            "rx": 30, "ry": 0, "rz": 0,
+            "sx": 0.45, "sy": 0.15, "sz": 0.2,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_neck_guard_left",
+          "primitiveId": "box",
+          "zIndex": 6,
+          "params": {
+            "px": -0.35, "py": -0.05, "pz": 0.15,
+            "rx": 20, "ry": 20, "rz": 0,
+            "sx": 0.12, "sy": 0.18, "sz": 0.25,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_neck_guard_right",
+          "primitiveId": "box",
+          "zIndex": 7,
+          "params": {
+            "px": 0.35, "py": -0.05, "pz": 0.15,
+            "rx": 20, "ry": -20, "rz": 0,
+            "sx": 0.12, "sy": 0.18, "sz": 0.25,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_cheek_guard_left",
+          "primitiveId": "box",
+          "zIndex": 8,
+          "params": {
+            "px": -0.48, "py": 0.2, "pz": 0.1,
+            "rx": 0, "ry": 25, "rz": 0,
+            "sx": 0.1, "sy": 0.25, "sz": 0.2,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_cheek_guard_right",
+          "primitiveId": "box",
+          "zIndex": 9,
+          "params": {
+            "px": 0.48, "py": 0.2, "pz": 0.1,
+            "rx": 0, "ry": -25, "rz": 0,
+            "sx": 0.1, "sy": 0.25, "sz": 0.2,
+            "fill": "primary",
+            "metalness": 0.4, "roughness": 0.5, "opacity": 1
+          }
+        },
+        {
+          "id": "el_accent_gem",
+          "primitiveId": "sphere",
+          "zIndex": 10,
+          "params": {
+            "px": 0, "py": 0.78, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.1,
+            "fill": "tertiary",
+            "metalness": 0.7, "roughness": 0.2, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#696a6a",
+        "secondary": "#323c39",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

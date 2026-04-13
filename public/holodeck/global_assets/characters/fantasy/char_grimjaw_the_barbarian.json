@@ -1,0 +1,52 @@
+{
+  "id": "char_grimjaw_the_barbarian",
+  "type": "character",
+  "name": "Grimjaw the Barbarian",
+  "tags": [
+    "fantasy",
+    "barbarian",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Hulking barbarian from the northern wastes.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "wide",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#cc3300",
+      "skinColor": "#6b4226",
+      "torsoColor": "#8b4513",
+      "bottomColor": "#5a3010",
+      "eyeIrisColor": "#cc6600",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#1a1a1a",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_full_beard",
+      "facialHairColor": "#1a1a1a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

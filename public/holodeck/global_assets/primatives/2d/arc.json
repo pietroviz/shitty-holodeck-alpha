@@ -1,0 +1,22 @@
+{
+  "id": "arc",
+  "name": "Arc",
+  "category": "special",
+  "icon": "◜",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "r": 130,
+    "startAngle": -120,
+    "endAngle": 120,
+    "thickness": 30,
+    "fill": "secondary"
+  },
+  "params": [
+    { "key": "r", "label": "Radius", "type": "range", "min": 20, "max": 240 },
+    { "key": "startAngle", "label": "Start Angle", "type": "range", "min": -180, "max": 180 },
+    { "key": "endAngle", "label": "End Angle", "type": "range", "min": -180, "max": 180 },
+    { "key": "thickness", "label": "Thickness", "type": "range", "min": 4, "max": 120 },
+    { "key": "fill", "label": "Color", "type": "token" }
+  ]
+}

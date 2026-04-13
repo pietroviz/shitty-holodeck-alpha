@@ -1,0 +1,46 @@
+{
+    "categories": {
+        "urban": {
+            "name": "Urban",
+            "count": 1,
+            "files": [
+                "env_city_plaza.json"
+            ]
+        },
+        "nature": {
+            "name": "Nature",
+            "count": 0,
+            "files": []
+        },
+        "home-interiors": {
+            "name": "Home Interiors",
+            "count": 0,
+            "files": []
+        },
+        "office-interiors": {
+            "name": "Office Interiors",
+            "count": 0,
+            "files": []
+        },
+        "holy-places": {
+            "name": "Holy Places",
+            "count": 0,
+            "files": []
+        },
+        "fantasy": {
+            "name": "Fantasy",
+            "count": 0,
+            "files": []
+        },
+        "sci-fi": {
+            "name": "Sci-Fi",
+            "count": 0,
+            "files": []
+        },
+        "dreamscapes": {
+            "name": "Dreamscapes",
+            "count": 0,
+            "files": []
+        }
+    }
+}

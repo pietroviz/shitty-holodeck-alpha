@@ -1,0 +1,52 @@
+{
+  "id": "char_pip_tinkersprocket",
+  "type": "character",
+  "name": "Pip Tinkersprocket",
+  "tags": [
+    "fantasy",
+    "gnome",
+    "non-binary"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Ingenious gnome inventor with gadgets for every occasion.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "squat",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "wide",
+      "faceHeightPreset": "squat",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#ff6600",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a8a4a",
+      "bottomColor": "#3a6a3a",
+      "eyeIrisColor": "#4a8a4a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#ff6600",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_round_glasses",
+      "glassesColor": "#c0a040"
+    }
+  }
+}

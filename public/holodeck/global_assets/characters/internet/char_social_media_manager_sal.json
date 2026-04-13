@@ -1,0 +1,53 @@
+{
+  "id": "char_social_media_manager_sal",
+  "type": "character",
+  "name": "Social Media Manager Sal",
+  "tags": [
+    "internet",
+    "social-media",
+    "non-binary",
+    "marketing"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Manages 15 brand accounts and lives on scheduled posts.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "capsule",
+      "facePlacement": "mid",
+      "scalpColor": "#6a3a8a",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#4a6a8a",
+      "bottomColor": "#2a3a4a",
+      "eyeIrisColor": "#6a3a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#6a3a8a",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "prop_round_glasses",
+      "glassesColor": "#6a3a8a"
+    }
+  }
+}

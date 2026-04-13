@@ -1,0 +1,24 @@
+{
+  "id": "cross",
+  "name": "Cross",
+  "category": "special",
+  "icon": "✚",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "r": 120,
+    "thickness": 40,
+    "fill": "primary",
+    "stroke": "none",
+    "strokeWidth": 0,
+    "rotation": 0
+  },
+  "params": [
+    { "key": "r", "label": "Size", "type": "range", "min": 10, "max": 240 },
+    { "key": "thickness", "label": "Arm Width", "type": "range", "min": 4, "max": 200 },
+    { "key": "rotation", "label": "Rotation", "type": "range", "min": 0, "max": 90 },
+    { "key": "fill", "label": "Fill", "type": "token" },
+    { "key": "stroke", "label": "Stroke", "type": "token" },
+    { "key": "strokeWidth", "label": "Stroke Width", "type": "range", "min": 0, "max": 20 }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "line",
+  "name": "Line",
+  "category": "special",
+  "icon": "╱",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "length": 200,
+    "angle": 0,
+    "thickness": 8,
+    "fill": "tertiary",
+    "linecap": "round"
+  },
+  "params": [
+    { "key": "length", "label": "Length", "type": "range", "min": 10, "max": 500 },
+    { "key": "angle", "label": "Angle", "type": "range", "min": 0, "max": 360 },
+    { "key": "thickness", "label": "Thickness", "type": "range", "min": 1, "max": 60 },
+    { "key": "fill", "label": "Color", "type": "token" }
+  ]
+}

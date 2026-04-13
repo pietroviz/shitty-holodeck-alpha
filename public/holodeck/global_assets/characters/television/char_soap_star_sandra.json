@@ -1,0 +1,53 @@
+{
+  "id": "char_soap_star_sandra",
+  "type": "character",
+  "name": "Soap Star Sandra",
+  "tags": [
+    "television",
+    "soap",
+    "female",
+    "drama"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "television",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Dramatic soap opera lead with a complicated love life.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#d4a843",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#cc0044",
+      "bottomColor": "#880022",
+      "eyeIrisColor": "#4a8ac0",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": "#cc2244",
+      "lipThickness": 6,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#d4a843",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

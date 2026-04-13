@@ -1,0 +1,133 @@
+{
+  "id": "asset_tall_grass_clump_batch",
+  "type": "asset",
+  "name": "Tall Grass",
+  "tags": [
+    "natural-props",
+    "grass",
+    "tall",
+    "clump",
+    "vegetation",
+    "prairie"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A clump of tall swaying grass",
+    "format": "svg",
+    "viewBox": "94 40 324 432",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#6abe30",
+      "secondary": "#4b692f",
+      "tertiary": "#8f563b"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait3",
+    "anchor_point": {
+      "x": 256,
+      "y": 400
+    },
+    "natural_size": {
+      "w": 324,
+      "h": 432
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 240,
+            "cy": 260,
+            "length": 180,
+            "angle": 82,
+            "thickness": 5,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 260,
+            "cy": 250,
+            "length": 200,
+            "angle": 88,
+            "thickness": 5,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 280,
+            "cy": 265,
+            "length": 170,
+            "angle": 95,
+            "thickness": 5,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 230,
+            "cy": 280,
+            "length": 150,
+            "angle": 78,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 275,
+            "cy": 275,
+            "length": 160,
+            "angle": 100,
+            "thickness": 4,
+            "fill": "primary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 250,
+            "cy": 270,
+            "length": 190,
+            "angle": 86,
+            "thickness": 6,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        }
+      ],
+      "color_assignments": {
+        "primary": "#6abe30",
+        "secondary": "#4b692f",
+        "tertiary": "#8f563b"
+      }
+    }
+  }
+}

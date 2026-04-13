@@ -1,0 +1,231 @@
+{
+  "id": "asset_bamboo_texture_batch",
+  "type": "asset",
+  "name": "Bamboo",
+  "tags": [
+    "texture",
+    "textures",
+    "bamboo",
+    "natural",
+    "wood",
+    "asian"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Vertical bamboo stalks texture",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#6abe30",
+      "secondary": "#4b692f",
+      "tertiary": "#323c39"
+    },
+    "background_color": "#323c39",
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 110,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 170,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 230,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 290,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 350,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 410,
+            "cy": 256,
+            "w": 35,
+            "h": 400,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 110,
+            "cy": 180,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 170,
+            "cy": 250,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 230,
+            "cy": 160,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 290,
+            "cy": 300,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 350,
+            "cy": 200,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 11
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 410,
+            "cy": 280,
+            "length": 35,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "tertiary"
+          },
+          "zIndex": 12
+        }
+      ],
+      "color_assignments": {
+        "primary": "#6abe30",
+        "secondary": "#4b692f",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

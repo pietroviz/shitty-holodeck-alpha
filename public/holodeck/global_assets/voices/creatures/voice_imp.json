@@ -1,0 +1,46 @@
+{
+  "id": "voice_imp",
+  "type": "voice",
+  "name": "Imp",
+  "tags": ["creatures", "imp", "fantasy", "mischief", "nasally"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Fast, nasally, troublemaker imp voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "m7",
+      "speed": 185,
+      "pitch": 75,
+      "volume": 100,
+      "amplitude": 105,
+      "wordgap": 0,
+      "reverb": 5,
+      "wobble": 12,
+      "wobbleSpeed": 10,
+      "brightness": 40,
+      "breathiness": 5,
+      "vocalFry": 15,
+      "chorus": 8,
+      "mouthSnappiness": 90,
+      "audioLead": 12,
+      "lipColor": "#cc0033",
+      "lipThickness": 2.5,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#8b2e2e",
+      "scalpColor": "#660000",
+      "captionSize": 18,
+      "presetKey": "imp",
+      "previewText": "Nyehehe! The imp is here to cause mischief!"
+    }
+  }
+}

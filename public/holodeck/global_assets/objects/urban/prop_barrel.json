@@ -1,0 +1,115 @@
+{
+  "id": "prop_barrel",
+  "type": "prop",
+  "name": "Barrel",
+  "tags": [
+    "urban",
+    "storage",
+    "container",
+    "environment"
+  ],
+  "meta": {
+    "created": "2026-03-29T00:00:00Z",
+    "modified": "2026-03-29T00:00:00Z",
+    "origin": "batch",
+    "origin_ref": "urban",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Wooden storage barrel with metal bands",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#8f563b",
+      "secondary": "#696a6a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "type": "cylinder",
+          "px": 0,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radiusTop": 0.3,
+          "radiusBottom": 0.3,
+          "height": 1,
+          "fill": "primary",
+          "metalness": 0.1,
+          "roughness": 0.8,
+          "opacity": 1,
+          "id": "el_1"
+        },
+        {
+          "type": "torus",
+          "px": 0,
+          "py": 0.2,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.3,
+          "tube": 0.05,
+          "fill": "secondary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 1,
+          "id": "el_2"
+        },
+        {
+          "type": "torus",
+          "px": 0,
+          "py": 0.5,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.3,
+          "tube": 0.05,
+          "fill": "secondary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 1,
+          "id": "el_3"
+        },
+        {
+          "type": "torus",
+          "px": 0,
+          "py": 0.8,
+          "pz": 0,
+          "rx": 0,
+          "ry": 0,
+          "rz": 0,
+          "radius": 0.3,
+          "tube": 0.05,
+          "fill": "secondary",
+          "metalness": 0.6,
+          "roughness": 0.3,
+          "opacity": 1,
+          "id": "el_4"
+        }
+      ],
+      "color_assignments": {
+        "primary": "#8f563b",
+        "secondary": "#696a6a"
+      }
+    }
+  }
+}

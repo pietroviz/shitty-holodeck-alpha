@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prototype reference files (kept locally, not deployed)
+/_refs/
+
+# claude code config
+.claude/

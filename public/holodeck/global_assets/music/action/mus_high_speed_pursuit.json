@@ -1,0 +1,46 @@
+{
+  "id": "mus_high_speed_pursuit",
+  "type": "music",
+  "name": "High Speed Pursuit",
+  "tags": ["action", "intense", "fast"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Adrenaline-pumping high-speed action theme with relentless drums and pulsing bass",
+    "engine": "strudel",
+    "bpm": 165,
+    "key": "Bm",
+    "scale": "minor pentatonic",
+    "pattern": "Driving action beat with intense bass and synth",
+    "layers": [
+      {
+        "name": "drum_kick_snare",
+        "pattern": "B2 B2 F#2 B2",
+        "gain": 0.75
+      },
+      {
+        "name": "bass_fat_drive",
+        "pattern": "B3 D4 F#4 B4 D5",
+        "gain": 0.68
+      },
+      {
+        "name": "melody_lead_sharp",
+        "pattern": "F#5 B5 D5 F#5 B5 D6",
+        "gain": 0.75
+      },
+      {
+        "name": "texture_noise_edge",
+        "pattern": "D5 F#5 B5 D5",
+        "gain": 0.52
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 0.5,
+    "fade_out": 1.5,
+    "mood_color": "#DC143C"
+  }
+}

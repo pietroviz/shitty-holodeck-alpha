@@ -1,0 +1,101 @@
+{
+  "id": "asset_half_wall_batch",
+  "type": "asset",
+  "name": "Half Wall",
+  "tags": [
+    "wall",
+    "walls",
+    "half",
+    "divider",
+    "low",
+    "interior"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "walls",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Low half-height wall divider",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#f4f4f4",
+      "secondary": "#9badb7",
+      "tertiary": "#847e87"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 380
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 325,
+            "w": 460,
+            "h": 110,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 268,
+            "w": 465,
+            "h": 10,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 385,
+            "length": 460,
+            "angle": 0,
+            "thickness": 6,
+            "fill": "tertiary"
+          },
+          "zIndex": 2
+        }
+      ],
+      "color_assignments": {
+        "primary": "#f4f4f4",
+        "secondary": "#9badb7",
+        "tertiary": "#847e87"
+      }
+    }
+  }
+}

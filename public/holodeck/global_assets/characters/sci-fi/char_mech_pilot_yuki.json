@@ -1,0 +1,53 @@
+{
+  "id": "char_mech_pilot_yuki",
+  "type": "character",
+  "name": "Mech Pilot Yuki",
+  "tags": [
+    "sci-fi",
+    "mech",
+    "female",
+    "pilot"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "sci-fi",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Giant mech pilot defending Earth from kaiju threats.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#ff4488",
+      "skinColor": "#ffe0bd",
+      "torsoColor": "#cc0044",
+      "bottomColor": "#4a4a4a",
+      "eyeIrisColor": "#cc0044",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_hair_bow",
+      "hairColor": "#ff4488",
+      "hatStyle": "prop_helmet",
+      "hatColor": "#cc0044",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

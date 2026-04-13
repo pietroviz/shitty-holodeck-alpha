@@ -1,0 +1,121 @@
+{
+  "id": "asset_taco_batch",
+  "type": "asset",
+  "name": "Taco",
+  "tags": [
+    "emoji",
+    "food",
+    "taco",
+    "mexican"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.226Z",
+    "modified": "2026-03-28T07:33:47.226Z",
+    "origin": "batch",
+    "origin_ref": "food-drink",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A loaded taco",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#6abe30",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 360
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "r": 140,
+            "startAngle": 0,
+            "endAngle": 180,
+            "thickness": 18,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 256,
+            "cy": 285,
+            "r": 110,
+            "startAngle": 10,
+            "endAngle": 170,
+            "thickness": 60,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 220,
+            "cy": 260,
+            "r": 24,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 280,
+            "cy": 255,
+            "r": 20,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 250,
+            "cy": 245,
+            "r": 18,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#6abe30",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

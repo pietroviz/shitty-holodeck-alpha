@@ -1,0 +1,114 @@
+{
+  "id": "asset_hospital_batch",
+  "type": "asset",
+  "name": "Hospital",
+  "tags": [
+    "emoji",
+    "building",
+    "hospital",
+    "medical"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.318Z",
+    "modified": "2026-03-28T15:22:15.318Z",
+    "origin": "batch",
+    "origin_ref": "travel-places",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A hospital building with cross",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#222034",
+      "tertiary": "#ac3232"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 400
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 300,
+            "w": 220,
+            "h": 200,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 195,
+            "w": 100,
+            "h": 30,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "cross",
+          "params": {
+            "cx": 256,
+            "cy": 270,
+            "r": 40,
+            "thickness": 16,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 380,
+            "w": 40,
+            "h": 50,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#222034",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}

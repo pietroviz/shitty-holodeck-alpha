@@ -1,0 +1,238 @@
+{
+  "id": "asset_cat_batch",
+  "type": "asset",
+  "name": "Cat",
+  "tags": [
+    "emoji",
+    "animal",
+    "cat",
+    "face"
+  ],
+  "meta": {
+    "created": "2026-03-28T06:58:04.846Z",
+    "modified": "2026-03-28T06:58:04.846Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A cute cat face emoji with pointed ears",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#222034",
+      "tertiary": "#fbf236"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "r": 160,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 6
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 160,
+            "cy": 130,
+            "r": 70,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 352,
+            "cy": 130,
+            "r": 70,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 160,
+            "cy": 140,
+            "r": 36,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 352,
+            "cy": 140,
+            "r": 36,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 206,
+            "cy": 260,
+            "rx": 24,
+            "ry": 30,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 306,
+            "cy": 260,
+            "rx": 24,
+            "ry": 30,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "triangle",
+          "params": {
+            "cx": 256,
+            "cy": 310,
+            "r": 14,
+            "rotation": 180,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 170,
+            "cy": 310,
+            "length": 80,
+            "angle": 170,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 170,
+            "cy": 330,
+            "length": 80,
+            "angle": 185,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 342,
+            "cy": 310,
+            "length": 80,
+            "angle": 10,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 342,
+            "cy": 330,
+            "length": 80,
+            "angle": 355,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 11
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 240,
+            "cy": 330,
+            "r": 20,
+            "startAngle": 0,
+            "endAngle": 90,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 12
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 272,
+            "cy": 330,
+            "r": 20,
+            "startAngle": 90,
+            "endAngle": 180,
+            "thickness": 4,
+            "fill": "secondary"
+          },
+          "zIndex": 13
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#222034",
+        "tertiary": "#fbf236"
+      }
+    }
+  }
+}

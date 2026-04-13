@@ -1,0 +1,110 @@
+{
+  "id": "asset_deciduous_tree_batch",
+  "type": "asset",
+  "name": "Deciduous Tree",
+  "tags": [
+    "emoji",
+    "nature",
+    "tree",
+    "forest",
+    "deciduous"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.298Z",
+    "modified": "2026-03-28T15:22:15.298Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A green leafy tree",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "secondary",
+      "primary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#6abe30",
+      "secondary": "#663931",
+      "tertiary": "#4b692f"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "portrait",
+    "anchor_point": {
+      "x": 256,
+      "y": 460
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 400,
+            "w": 45,
+            "h": 110,
+            "rotation": 0,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "r": 120,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 4
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 190,
+            "cy": 270,
+            "r": 60,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 322,
+            "cy": 270,
+            "r": 60,
+            "fill": "primary",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#6abe30",
+        "secondary": "#663931",
+        "tertiary": "#4b692f"
+      }
+    }
+  }
+}

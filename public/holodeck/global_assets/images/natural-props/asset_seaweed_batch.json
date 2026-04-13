@@ -1,0 +1,128 @@
+{
+  "id": "asset_seaweed_batch",
+  "type": "asset",
+  "name": "Seaweed",
+  "tags": [
+    "natural-props",
+    "seaweed",
+    "kelp",
+    "underwater",
+    "ocean",
+    "plant"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "natural-props",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Underwater seaweed strands",
+    "format": "svg",
+    "viewBox": "130 32 252 448",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#37946e",
+      "secondary": "#4b692f",
+      "tertiary": "#6abe30"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "tall",
+    "anchor_point": {
+      "x": 256,
+      "y": 440
+    },
+    "natural_size": {
+      "w": 252,
+      "h": 448
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 245,
+            "cy": 200,
+            "r": 60,
+            "startAngle": -50,
+            "endAngle": 50,
+            "thickness": 10,
+            "fill": "primary"
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 265,
+            "cy": 300,
+            "r": 55,
+            "startAngle": -40,
+            "endAngle": 60,
+            "thickness": 10,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "arc",
+          "params": {
+            "cx": 250,
+            "cy": 380,
+            "r": 50,
+            "startAngle": -60,
+            "endAngle": 30,
+            "thickness": 8,
+            "fill": "primary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 260,
+            "cy": 140,
+            "rx": 10,
+            "ry": 18,
+            "rotation": 10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 240,
+            "cy": 160,
+            "rx": 8,
+            "ry": 15,
+            "rotation": -15,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        }
+      ],
+      "color_assignments": {
+        "primary": "#37946e",
+        "secondary": "#4b692f",
+        "tertiary": "#6abe30"
+      }
+    }
+  }
+}

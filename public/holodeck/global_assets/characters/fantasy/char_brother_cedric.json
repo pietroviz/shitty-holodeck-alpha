@@ -1,0 +1,52 @@
+{
+  "id": "char_brother_cedric",
+  "type": "character",
+  "name": "Brother Cedric",
+  "tags": [
+    "fantasy",
+    "monk",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Humble monk who fights with fists of iron.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "squat",
+      "faceWidthPreset": "moderate",
+      "headShape": "sphere",
+      "bodyShape": "cylinder",
+      "facePlacement": "mid",
+      "scalpColor": "#c8a06a",
+      "skinColor": "#c8a06a",
+      "torsoColor": "#cc8844",
+      "bottomColor": "#aa6622",
+      "eyeIrisColor": "#4a3728",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_goatee",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

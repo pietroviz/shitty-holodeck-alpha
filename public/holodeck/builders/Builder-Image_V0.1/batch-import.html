@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>ImageBox — Batch Import</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #cbdbfc; padding: 40px; }
+  h1 { font-size: 20px; margin-bottom: 8px; }
+  p { color: #9badb7; font-size: 14px; margin-bottom: 24px; }
+  .log { background: #0d0d1a; border: 1px solid #333; border-radius: 8px; padding: 16px; font-family: monospace; font-size: 13px; line-height: 1.8; max-height: 500px; overflow-y: auto; }
+  .ok { color: #6abe30; }
+  .err { color: #d95763; }
+  .info { color: #5fcde4; }
+  button { background: #5b6ee1; color: white; border: none; border-radius: 6px; padding: 10px 24px; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
+  button:hover { background: #639bff; }
+  button:disabled { opacity: 0.5; cursor: default; }
+</style>
+</head>
+<body>
+<h1>Batch Import — Emoji Animals</h1>
+<p>Imports all generated assets into ImageBox's IndexedDB gallery. After importing, open the main app and check My Assets.</p>
+<button id="btn-go">Import All</button>
+<div class="log" id="log"></div>
+
+<script>
+const DB_NAME = 'imagebox_assets';
+const DB_VERSION = 1;
+const STORE_NAME = 'assets';
+const BATCH_DIR = './assets/batch/emoji-animals/';
+
+const FILES = [
+  'asset_cat_batch.json',
+  'asset_dog_batch.json',
+  'asset_fish_batch.json',
+  'asset_bird_batch.json',
+  'asset_frog_batch.json',
+  'asset_bear_batch.json',
+  'asset_fox_batch.json',
+  'asset_owl_batch.json',
+];
+
+const logEl = document.getElementById('log');
+function log(msg, cls = '') {
+  logEl.innerHTML += `<div class="${cls}">${msg}</div>`;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+        store.createIndex('name', 'name', { unique: false });
+        store.createIndex('modified', 'meta.modified', { unique: false });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbPut(db, asset) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(asset);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+document.getElementById('btn-go').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-go');
+  btn.disabled = true;
+  log('Opening IndexedDB…', 'info');
+
+  try {
+    const db = await openDB();
+    log('Database ready', 'ok');
+
+    let imported = 0;
+    for (const file of FILES) {
+      try {
+        log(`Fetching ${file}…`);
+        const res = await fetch(BATCH_DIR + file);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const asset = await res.json();
+        await dbPut(db, asset);
+        log(`  ✓ ${asset.name} (${asset.payload._editor.elements.length} shapes)`, 'ok');
+        imported++;
+      } catch (err) {
+        log(`  ✗ ${file}: ${err.message}`, 'err');
+      }
+    }
+
+    log('');
+    log(`Done! Imported ${imported}/${FILES.length} assets.`, imported === FILES.length ? 'ok' : 'err');
+    log('Open ImageBox and go to Menu → My Assets to see them.', 'info');
+    db.close();
+  } catch (err) {
+    log(`Database error: ${err.message}`, 'err');
+  }
+});
+</script>
+</body>
+</html>

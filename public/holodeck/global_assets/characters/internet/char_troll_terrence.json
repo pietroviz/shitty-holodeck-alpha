@@ -1,0 +1,53 @@
+{
+  "id": "char_troll_terrence",
+  "type": "character",
+  "name": "Troll Terrence",
+  "tags": [
+    "internet",
+    "troll",
+    "male",
+    "chaos"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Professional internet troll who lives in comment sections.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "squat",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "squat",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "barrel",
+      "facePlacement": "mid",
+      "scalpColor": "#ff6600",
+      "skinColor": "#5a8a5a",
+      "torsoColor": "#4a4a4a",
+      "bottomColor": "#2a2a2a",
+      "eyeIrisColor": "#ff0000",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "wideOval",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "prop_mohawk",
+      "hairColor": "#ff6600",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_full_beard",
+      "facialHairColor": "#ff6600",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

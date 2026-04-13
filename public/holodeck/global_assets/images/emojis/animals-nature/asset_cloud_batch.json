@@ -1,0 +1,108 @@
+{
+  "id": "asset_cloud_batch",
+  "type": "asset",
+  "name": "Cloud",
+  "tags": [
+    "emoji",
+    "weather",
+    "cloud",
+    "sky"
+  ],
+  "meta": {
+    "created": "2026-03-28T15:22:15.286Z",
+    "modified": "2026-03-28T15:22:15.286Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A fluffy white cloud",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary"
+    ],
+    "color_assignments": {
+      "primary": "#ffffff",
+      "secondary": "#cbdbfc",
+      "tertiary": "#9badb7"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 280,
+            "rx": 160,
+            "ry": 50,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 200,
+            "cy": 240,
+            "r": 60,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 270,
+            "cy": 220,
+            "r": 75,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 330,
+            "cy": 250,
+            "r": 50,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        }
+      ],
+      "color_assignments": {
+        "primary": "#ffffff",
+        "secondary": "#cbdbfc",
+        "tertiary": "#9badb7"
+      }
+    }
+  }
+}

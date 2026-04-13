@@ -1,0 +1,207 @@
+{
+  "id": "prop_asteroid_surface",
+  "type": "prop",
+  "name": "Asteroid Surface",
+  "tags": [
+    "panels",
+    "environment",
+    "space",
+    "asteroid",
+    "crater"
+  ],
+  "meta": {
+    "created": "2026-03-30T18:00:00.000Z",
+    "modified": "2026-03-30T18:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "panels",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cratered grey surface panel - asteroid or space rock",
+    "format": "mesh",
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#696a6a",
+      "secondary": "#595652",
+      "tertiary": "#847e87"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "attach_points": {
+      "edge_left": {
+        "x": -1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_right": {
+        "x": 1.5,
+        "y": 0,
+        "z": 0
+      },
+      "edge_front": {
+        "x": 0,
+        "y": 0,
+        "z": 1.5
+      },
+      "edge_back": {
+        "x": 0,
+        "y": 0,
+        "z": -1.5
+      }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_base_slab",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0,
+            "py": 0,
+            "pz": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 3,
+            "y": 0.4,
+            "z": 3,
+            "fill": "secondary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crater_1",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -0.7,
+            "py": -0.1,
+            "pz": 0.6,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.5,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crater_2",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 0.8,
+            "py": -0.08,
+            "pz": -0.5,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.4,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crater_3",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": -1.1,
+            "py": -0.07,
+            "pz": -1.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.35,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_crater_4",
+          "primitiveId": "sphere",
+          "zIndex": 0,
+          "params": {
+            "px": 1.3,
+            "py": -0.06,
+            "pz": 0.9,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "r": 0.3,
+            "fill": "primary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_impact_ridge_1",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": -0.2,
+            "py": 0.2,
+            "pz": 1.2,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "x": 0.15,
+            "y": 0.1,
+            "z": 0.8,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        },
+        {
+          "id": "el_impact_ridge_2",
+          "primitiveId": "box",
+          "zIndex": 0,
+          "params": {
+            "px": 0.5,
+            "py": 0.19,
+            "pz": -1.3,
+            "rx": 0,
+            "ry": 30,
+            "rz": 0,
+            "x": 0.12,
+            "y": 0.08,
+            "z": 0.7,
+            "fill": "tertiary",
+            "metalness": 0.3,
+            "roughness": 0.7,
+            "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#696a6a",
+        "secondary": "#595652",
+        "tertiary": "#847e87"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_count_drakul",
+  "type": "character",
+  "name": "Count Drakul",
+  "tags": [
+    "creatures",
+    "vampire",
+    "male",
+    "undead"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Aristocratic vampire with centuries of dark charm.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "narrow",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "cone",
+      "facePlacement": "mid",
+      "scalpColor": "#1a1a1a",
+      "skinColor": "#e8d8c8",
+      "torsoColor": "#2a0a0a",
+      "bottomColor": "#1a0a0a",
+      "eyeIrisColor": "#cc0000",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "tallPill",
+      "lipColor": "#cc0000",
+      "lipThickness": 4,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_goatee",
+      "facialHairColor": "#1a1a1a",
+      "glassesStyle": "prop_monocle",
+      "glassesColor": "#d4a843"
+    }
+  }
+}

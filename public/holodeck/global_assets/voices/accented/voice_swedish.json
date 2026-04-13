@@ -1,0 +1,46 @@
+{
+  "id": "voice_swedish",
+  "type": "voice",
+  "name": "Swedish",
+  "tags": ["accented", "swedish", "scandinavian", "melodic"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Light melodic Swedish-accented voice with feminine quality.",
+    "format": "voice_state",
+    "state": {
+      "language": "sv",
+      "variant": "f2",
+      "speed": 155,
+      "pitch": 55,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 76,
+      "audioLead": 26,
+      "lipColor": "#dd7788",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#f0d8c0",
+      "scalpColor": "#c8a860",
+      "captionSize": 18,
+      "presetKey": "swedish",
+      "previewText": "Hello there! I speak with a light Swedish melody."
+    }
+  }
+}

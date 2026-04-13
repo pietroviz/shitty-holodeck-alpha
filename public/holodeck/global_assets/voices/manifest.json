@@ -1,0 +1,68 @@
+{
+    "categories": {
+        "standard": {
+            "name": "Standard",
+            "count": 4,
+            "files": [
+                "voice_narrator.json",
+                "voice_male.json",
+                "voice_female.json",
+                "voice_child.json"
+            ]
+        },
+        "fantasy": {
+            "name": "Fantasy & Sci-Fi",
+            "count": 5,
+            "files": [
+                "voice_robot.json",
+                "voice_alien.json",
+                "voice_demon.json",
+                "voice_ghost.json",
+                "voice_fairy.json"
+            ]
+        },
+        "accented": {
+            "name": "Accented",
+            "count": 8,
+            "files": [
+                "voice_french.json",
+                "voice_german.json",
+                "voice_italian.json",
+                "voice_spanish.json",
+                "voice_russian.json",
+                "voice_british.json",
+                "voice_scottish.json",
+                "voice_swedish.json"
+            ]
+        },
+        "creatures": {
+            "name": "Creatures",
+            "count": 9,
+            "files": [
+                "voice_goblin.json",
+                "voice_giant.json",
+                "voice_dragon.json",
+                "voice_elf.json",
+                "voice_ogre.json",
+                "voice_pixie.json",
+                "voice_treant.json",
+                "voice_imp.json",
+                "voice_serpent.json"
+            ]
+        },
+        "everyday": {
+            "name": "Everyday",
+            "count": 8,
+            "files": [
+                "voice_elderly_man.json",
+                "voice_elderly_woman.json",
+                "voice_teenager.json",
+                "voice_gruff.json",
+                "voice_cheerful.json",
+                "voice_professor.json",
+                "voice_villain.json",
+                "voice_sports_announcer.json"
+            ]
+        }
+    }
+}

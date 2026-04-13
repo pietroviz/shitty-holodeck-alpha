@@ -1,0 +1,46 @@
+{
+  "id": "voice_robot",
+  "type": "voice",
+  "name": "Robot",
+  "tags": ["fantasy", "robot", "synthetic", "sci-fi"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cold, synthetic robot voice with metallic chorus.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "klatt3",
+      "speed": 140,
+      "pitch": 50,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 2,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "breathiness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 95,
+      "audioLead": 20,
+      "lipColor": "#8888a0",
+      "lipThickness": 2,
+      "showLips": true,
+      "showTeeth": false,
+      "showTongue": false,
+      "faceColor": "#b0b0c0",
+      "scalpColor": "#707088",
+      "captionSize": 18,
+      "presetKey": "robot",
+      "previewText": "Greetings human. I am a synthetic voice unit. How may I assist?"
+    }
+  }
+}

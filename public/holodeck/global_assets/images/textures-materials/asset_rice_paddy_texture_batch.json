@@ -1,0 +1,207 @@
+{
+  "id": "asset_rice_paddy_texture_batch",
+  "type": "asset",
+  "name": "Rice Paddy",
+  "tags": [
+    "textures",
+    "rice",
+    "paddy",
+    "water",
+    "farm",
+    "terraced"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Flooded rice paddy texture with rows",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#306082",
+      "secondary": "#37946e",
+      "tertiary": "#6abe30"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 130,
+            "length": 380,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 195,
+            "length": 380,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 260,
+            "length": 380,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 325,
+            "length": 380,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 256,
+            "cy": 390,
+            "length": 380,
+            "angle": 0,
+            "thickness": 3,
+            "fill": "secondary"
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 160,
+            "cy": 160,
+            "length": 20,
+            "angle": 80,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 200,
+            "cy": 160,
+            "length": 18,
+            "angle": 95,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 300,
+            "cy": 225,
+            "length": 20,
+            "angle": 85,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 8
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 340,
+            "cy": 225,
+            "length": 18,
+            "angle": 100,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 9
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 180,
+            "cy": 290,
+            "length": 20,
+            "angle": 78,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 10
+        },
+        {
+          "primitiveId": "line",
+          "params": {
+            "cx": 280,
+            "cy": 355,
+            "length": 18,
+            "angle": 92,
+            "thickness": 2,
+            "fill": "tertiary"
+          },
+          "zIndex": 11
+        }
+      ],
+      "color_assignments": {
+        "primary": "#306082",
+        "secondary": "#37946e",
+        "tertiary": "#6abe30"
+      }
+    }
+  }
+}

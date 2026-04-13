@@ -1,0 +1,166 @@
+{
+  "id": "asset_turtle_batch",
+  "type": "asset",
+  "name": "Turtle",
+  "tags": [
+    "emoji",
+    "animal",
+    "turtle",
+    "reptile"
+  ],
+  "meta": {
+    "created": "2026-03-28T07:33:47.212Z",
+    "modified": "2026-03-28T07:33:47.212Z",
+    "origin": "batch",
+    "origin_ref": "animals-nature",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A friendly turtle with patterned shell",
+    "format": "svg",
+    "viewBox": "32 130 448 252",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#6abe30",
+      "secondary": "#222034",
+      "tertiary": "#37946e"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "wide",
+    "anchor_point": {
+      "x": 256,
+      "y": 320
+    },
+    "natural_size": {
+      "w": 448,
+      "h": 252
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 256,
+            "cy": 240,
+            "rx": 140,
+            "ry": 100,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 5
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "hexagon",
+          "params": {
+            "cx": 256,
+            "cy": 230,
+            "r": 70,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 370,
+            "cy": 250,
+            "r": 35,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 4
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 382,
+            "cy": 244,
+            "r": 8,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 160,
+            "cy": 300,
+            "rx": 30,
+            "ry": 14,
+            "rotation": 40,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 350,
+            "cy": 300,
+            "rx": 30,
+            "ry": 14,
+            "rotation": 320,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 180,
+            "cy": 310,
+            "rx": 28,
+            "ry": 12,
+            "rotation": 20,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 332,
+            "cy": 310,
+            "rx": 28,
+            "ry": 12,
+            "rotation": 340,
+            "fill": "primary",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#6abe30",
+        "secondary": "#222034",
+        "tertiary": "#37946e"
+      }
+    }
+  }
+}

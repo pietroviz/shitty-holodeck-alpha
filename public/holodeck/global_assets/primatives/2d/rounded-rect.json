@@ -1,0 +1,26 @@
+{
+  "id": "rounded-rect",
+  "name": "Rounded Rect",
+  "category": "basic",
+  "icon": "▢",
+  "defaults": {
+    "cx": 256,
+    "cy": 256,
+    "w": 240,
+    "h": 180,
+    "rx": 24,
+    "fill": "primary",
+    "stroke": "none",
+    "strokeWidth": 0,
+    "rotation": 0
+  },
+  "params": [
+    { "key": "w", "label": "Width", "type": "range", "min": 10, "max": 500 },
+    { "key": "h", "label": "Height", "type": "range", "min": 10, "max": 500 },
+    { "key": "rx", "label": "Corner Radius", "type": "range", "min": 0, "max": 120 },
+    { "key": "rotation", "label": "Rotation", "type": "range", "min": 0, "max": 360 },
+    { "key": "fill", "label": "Fill", "type": "token" },
+    { "key": "stroke", "label": "Stroke", "type": "token" },
+    { "key": "strokeWidth", "label": "Stroke Width", "type": "range", "min": 0, "max": 20 }
+  ]
+}

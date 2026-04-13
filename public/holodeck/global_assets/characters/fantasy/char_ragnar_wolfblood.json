@@ -1,0 +1,52 @@
+{
+  "id": "char_ragnar_wolfblood",
+  "type": "character",
+  "name": "Ragnar Wolfblood",
+  "tags": [
+    "fantasy",
+    "berserker",
+    "male"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "fantasy",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Berserker who channels the spirit of the wolf in battle.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "invertedCone",
+      "facePlacement": "mid",
+      "scalpColor": "#8a6a4a",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#6a6a6a",
+      "bottomColor": "#4a4a4a",
+      "eyeIrisColor": "#d4a020",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "prop_fox_ears",
+      "hatColor": "#8a6a4a",
+      "facialHairStyle": "prop_full_beard",
+      "facialHairColor": "#8a6a4a",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

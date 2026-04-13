@@ -1,0 +1,50 @@
+{
+  "id": "mus_deep_space_drift",
+  "type": "music",
+  "name": "Deep Space Drift",
+  "tags": [
+    "ambient",
+    "cosmic",
+    "spacious"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-03-30T00:00:00.000Z",
+    "modified": "2026-03-30T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "Vast celestial ambience with resonant drones and floating melodies in deep space",
+    "engine": "strudel",
+    "bpm": 72,
+    "key": "Bm",
+    "scale": "dorian",
+    "pattern": "Deep drone foundation with ethereal melodic elements",
+    "layers": [
+      {
+        "name": "deep_bass_sub",
+        "pattern": "B1 B1 B1 F#2",
+        "gain": 0.55
+      },
+      {
+        "name": "pad_ambient_resonance",
+        "pattern": "B3 D4 F#4 A4 B4",
+        "gain": 0.65
+      },
+      {
+        "name": "texture_space_noise",
+        "pattern": "D5 F#5 A5 D5",
+        "gain": 0.45
+      },
+      {
+        "name": "lead_melody_floating",
+        "pattern": "F#4 A4 B4 D5 A4",
+        "gain": 0.5
+      }
+    ],
+    "duration_behavior": "loop",
+    "fade_in": 3.0,
+    "fade_out": 4.0,
+    "mood_color": "#1A1A2E"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "prop_full_beard",
+  "type": "prop",
+  "name": "Full Beard",
+  "tags": ["facial_hair"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "facial_hair",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Full beard covering the lower face with integrated mustache and side pieces connecting to the cheeks.",
+    "format": "mesh",
+    "color_roles_used": ["primary"],
+    "color_assignments": { "primary": "#4a3728" },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitive": "box",
+          "params": {
+            "width": 0.14,
+            "height": 0.1,
+            "depth": 0.06,
+            "px": 0, "py": -0.08, "pz": 0.03,
+            "rx": 0, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "hemisphere",
+          "params": {
+            "radius": 0.07,
+            "px": 0, "py": -0.13, "pz": 0.03,
+            "rx": 180, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "capsule",
+          "params": {
+            "radius": 0.01,
+            "length": 0.06,
+            "px": -0.03, "py": 0.03, "pz": 0.04,
+            "rx": 0, "ry": 0, "rz": 80,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "capsule",
+          "params": {
+            "radius": 0.01,
+            "length": 0.06,
+            "px": 0.03, "py": 0.03, "pz": 0.04,
+            "rx": 0, "ry": 0, "rz": -80,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "sphere",
+          "params": {
+            "radius": 0.01,
+            "px": 0, "py": 0.03, "pz": 0.042,
+            "rx": 0, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "box",
+          "params": {
+            "width": 0.03,
+            "height": 0.1,
+            "depth": 0.04,
+            "px": -0.08, "py": -0.02, "pz": 0.01,
+            "rx": 0, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "primitive": "box",
+          "params": {
+            "width": 0.03,
+            "height": 0.1,
+            "depth": 0.04,
+            "px": 0.08, "py": -0.02, "pz": 0.01,
+            "rx": 0, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": { "primary": "#4a3728" }
+    }
+  }
+}

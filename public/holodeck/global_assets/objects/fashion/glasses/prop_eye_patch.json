@@ -1,0 +1,150 @@
+{
+  "id": "prop_eye_patch",
+  "type": "prop",
+  "name": "Eye Patch",
+  "tags": ["glasses", "eyewear", "pirate", "eye patch", "costume"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "glasses",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "A pirate-style eye patch covering the left eye with an elastic strap.",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary"],
+    "color_assignments": {
+      "primary": "#111111",
+      "secondary": "#3a3a3a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "comment": "Eye patch body (flattened box over left eye)",
+          "primitive": "box",
+          "params": {
+            "width": 0.1,
+            "height": 0.09,
+            "depth": 0.025,
+            "px": -0.12,
+            "py": 0,
+            "pz": 0.04,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Eye patch rounded cover (hemisphere for shape)",
+          "primitive": "hemisphere",
+          "params": {
+            "radius": 0.055,
+            "px": -0.12,
+            "py": 0,
+            "pz": 0.045,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.85,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Strap - upper left section going back",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.12,
+            "px": -0.17,
+            "py": 0.03,
+            "pz": -0.02,
+            "rx": 90,
+            "ry": 15,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.8,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Strap - upper right section going back",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.12,
+            "px": -0.07,
+            "py": 0.03,
+            "pz": -0.02,
+            "rx": 90,
+            "ry": -15,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.8,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Strap - upper horizontal connecting to right side",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.18,
+            "px": 0.02,
+            "py": 0.03,
+            "pz": 0.02,
+            "rx": 0,
+            "ry": 0,
+            "rz": 90,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.8,
+            "opacity": 1.0
+          }
+        },
+        {
+          "comment": "Strap - right side going back",
+          "primitive": "cylinder",
+          "params": {
+            "radiusTop": 0.006,
+            "radiusBottom": 0.006,
+            "height": 0.2,
+            "px": 0.11,
+            "py": 0.03,
+            "pz": -0.06,
+            "rx": 90,
+            "ry": 0,
+            "rz": 0,
+            "fill": "secondary",
+            "metalness": 0.0,
+            "roughness": 0.8,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#111111",
+        "secondary": "#3a3a3a"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "char_moderator_max",
+  "type": "character",
+  "name": "Moderator Max",
+  "tags": [
+    "internet",
+    "moderator",
+    "male",
+    "community"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "internet",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Forum moderator keeping the peace since 2006.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "medium",
+      "widthPreset": "moderate",
+      "headHeightPreset": "medium",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "medium",
+      "faceWidthPreset": "moderate",
+      "headShape": "roundedBox",
+      "bodyShape": "roundedBox",
+      "facePlacement": "mid",
+      "scalpColor": "#4a4a4a",
+      "skinColor": "#ffcc88",
+      "torsoColor": "#4a4a6a",
+      "bottomColor": "#3a3a4a",
+      "eyeIrisColor": "#4a4a8a",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "circle",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "prop_mustache",
+      "facialHairColor": "#4a4a4a",
+      "glassesStyle": "prop_square_glasses",
+      "glassesColor": "#4a4a4a"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "id": "prop_fox_ears",
+  "type": "prop",
+  "name": "Fox Ears",
+  "tags": ["headwear", "animal", "cute"],
+  "meta": {
+    "created": "2026-03-30T12:00:00.000Z",
+    "modified": "2026-03-30T12:00:00.000Z",
+    "origin": "batch",
+    "origin_ref": "headwear",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Pair of pointed fox or cat ears on headband",
+    "format": "mesh",
+    "color_roles_used": ["primary", "secondary", "tertiary"],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#ffffff",
+      "tertiary": "#696a6a"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {
+      "head_top": { "x": 0, "y": 0.7, "z": 0, "nx": 0, "ny": 1, "nz": 0 },
+      "head_base": { "x": 0, "y": 0, "z": 0, "nx": 0, "ny": -1, "nz": 0 }
+    },
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "id": "el_headband",
+          "primitiveId": "torus",
+          "zIndex": 0,
+          "params": {
+            "px": 0, "py": 0.05, "pz": 0,
+            "rx": 0, "ry": 0, "rz": 0,
+            "radius": 0.35, "tubeRadius": 0.05,
+            "fill": "tertiary",
+            "metalness": 0.2, "roughness": 0.7, "opacity": 1
+          }
+        },
+        {
+          "id": "el_ear_left_outer",
+          "primitiveId": "cone",
+          "zIndex": 1,
+          "params": {
+            "px": -0.28, "py": 0.45, "pz": 0,
+            "rx": 20, "ry": 0, "rz": 0,
+            "radius": 0.13, "height": 0.6,
+            "fill": "primary",
+            "metalness": 0, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_ear_right_outer",
+          "primitiveId": "cone",
+          "zIndex": 2,
+          "params": {
+            "px": 0.28, "py": 0.45, "pz": 0,
+            "rx": -20, "ry": 0, "rz": 0,
+            "radius": 0.13, "height": 0.6,
+            "fill": "primary",
+            "metalness": 0, "roughness": 0.8, "opacity": 1
+          }
+        },
+        {
+          "id": "el_ear_left_inner",
+          "primitiveId": "cone",
+          "zIndex": 3,
+          "params": {
+            "px": -0.28, "py": 0.42, "pz": 0.05,
+            "rx": 20, "ry": 0, "rz": 0,
+            "radius": 0.07, "height": 0.5,
+            "fill": "secondary",
+            "metalness": 0, "roughness": 0.9, "opacity": 1
+          }
+        },
+        {
+          "id": "el_ear_right_inner",
+          "primitiveId": "cone",
+          "zIndex": 4,
+          "params": {
+            "px": 0.28, "py": 0.42, "pz": 0.05,
+            "rx": -20, "ry": 0, "rz": 0,
+            "radius": 0.07, "height": 0.5,
+            "fill": "secondary",
+            "metalness": 0, "roughness": 0.9, "opacity": 1
+          }
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#ffffff",
+        "tertiary": "#696a6a"
+      }
+    }
+  }
+}

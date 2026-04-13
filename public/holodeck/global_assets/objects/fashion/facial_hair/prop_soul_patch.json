@@ -1,0 +1,46 @@
+{
+  "id": "prop_soul_patch",
+  "type": "prop",
+  "name": "Soul Patch",
+  "tags": ["facial_hair"],
+  "meta": {
+    "created": "2026-03-30",
+    "modified": "2026-03-30",
+    "origin": "batch",
+    "origin_ref": "facial_hair",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Tiny patch of facial hair just below the lower lip, centered.",
+    "format": "mesh",
+    "color_roles_used": ["primary"],
+    "color_assignments": { "primary": "#4a3728" },
+    "background_color": null,
+    "palette_id": "db32",
+    "anchor_point": { "x": 0, "y": 0, "z": 0 },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitive": "box",
+          "params": {
+            "width": 0.015,
+            "height": 0.02,
+            "depth": 0.01,
+            "px": 0, "py": -0.03, "pz": 0.04,
+            "rx": 0, "ry": 0, "rz": 0,
+            "fill": "primary",
+            "metalness": 0.0,
+            "roughness": 0.9,
+            "opacity": 1.0
+          }
+        }
+      ],
+      "color_assignments": { "primary": "#4a3728" }
+    }
+  }
+}

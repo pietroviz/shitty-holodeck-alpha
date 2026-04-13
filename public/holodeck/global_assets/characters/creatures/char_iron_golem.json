@@ -1,0 +1,53 @@
+{
+  "id": "char_iron_golem",
+  "type": "character",
+  "name": "Iron Golem",
+  "tags": [
+    "creatures",
+    "golem",
+    "non-binary",
+    "construct"
+  ],
+  "meta": {
+    "created": "2026-03-31",
+    "modified": "2026-03-31",
+    "origin": "batch",
+    "origin_ref": "creatures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Massive stone golem awakened to protect its creator.",
+    "format": "character_state",
+    "state": {
+      "heightPreset": "tall",
+      "widthPreset": "wide",
+      "headHeightPreset": "squat",
+      "headWidthPreset": "moderate",
+      "faceHeightPreset": "squat",
+      "faceWidthPreset": "wide",
+      "headShape": "roundedBox",
+      "bodyShape": "barrel",
+      "facePlacement": "mid",
+      "scalpColor": "#8a8a8a",
+      "skinColor": "#8a8a8a",
+      "torsoColor": "#6a6a6a",
+      "bottomColor": "#4a4a4a",
+      "eyeIrisColor": "#ffcc00",
+      "eyePupilSize": null,
+      "eyeIrisSize": null,
+      "eyeShape": "roundedSquare",
+      "lipColor": null,
+      "lipThickness": null,
+      "hairStyle": "none",
+      "hairColor": "#4a3728",
+      "hatStyle": "none",
+      "hatColor": "#333333",
+      "facialHairStyle": "none",
+      "facialHairColor": "#4a3728",
+      "glassesStyle": "none",
+      "glassesColor": "#333333"
+    }
+  }
+}

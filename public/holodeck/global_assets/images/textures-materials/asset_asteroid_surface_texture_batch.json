@@ -1,0 +1,159 @@
+{
+  "id": "asset_asteroid_surface_texture_batch",
+  "type": "asset",
+  "name": "Asteroid Surface",
+  "tags": [
+    "textures",
+    "asteroid",
+    "space",
+    "crater",
+    "rocky",
+    "sci-fi"
+  ],
+  "meta": {
+    "created": "2026-03-31T01:49:09.241Z",
+    "modified": "2026-03-31T01:49:09.241Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cratered asteroid or moon surface",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#595652",
+      "secondary": "#847e87",
+      "tertiary": "#323c39"
+    },
+    "background_color": null,
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 180,
+            "cy": 170,
+            "r": 35,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 340,
+            "cy": 200,
+            "r": 25,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 3
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 250,
+            "cy": 300,
+            "r": 40,
+            "fill": "none",
+            "stroke": "tertiary",
+            "strokeWidth": 3
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 380,
+            "cy": 350,
+            "r": 20,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 130,
+            "cy": 320,
+            "r": 15,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 300,
+            "cy": 130,
+            "r": 12,
+            "fill": "none",
+            "stroke": "tertiary",
+            "strokeWidth": 2
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 380,
+            "cy": 140,
+            "r": 8,
+            "fill": "none",
+            "stroke": "secondary",
+            "strokeWidth": 2
+          },
+          "zIndex": 7
+        }
+      ],
+      "color_assignments": {
+        "primary": "#595652",
+        "secondary": "#847e87",
+        "tertiary": "#323c39"
+      }
+    }
+  }
+}

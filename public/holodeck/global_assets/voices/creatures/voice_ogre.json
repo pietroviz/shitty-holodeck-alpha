@@ -1,0 +1,46 @@
+{
+  "id": "voice_ogre",
+  "type": "voice",
+  "name": "Ogre",
+  "tags": ["creatures", "ogre", "fantasy", "brutish", "gravelly"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Dumb, gravelly, slow ogre voice.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "croak",
+      "speed": 110,
+      "pitch": 20,
+      "volume": 100,
+      "amplitude": 105,
+      "wordgap": 0,
+      "reverb": 10,
+      "wobble": 10,
+      "wobbleSpeed": 3,
+      "brightness": 15,
+      "breathiness": 10,
+      "vocalFry": 30,
+      "chorus": 5,
+      "mouthSnappiness": 55,
+      "audioLead": 5,
+      "lipColor": "#7a8c42",
+      "lipThickness": 3.5,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#6b7d3d",
+      "scalpColor": "#556633",
+      "captionSize": 20,
+      "presetKey": "ogre",
+      "previewText": "Ugh. Ogre no like fancy words. Ogre smash."
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "categories": {
+    "ambient": {
+      "name": "Ambient",
+      "count": 3,
+      "files": [
+        "mus_deep_space_drift.json",
+        "mus_morning_fog.json",
+        "mus_crystal_cave.json"
+      ]
+    },
+    "electronic": {
+      "name": "Electronic",
+      "count": 3,
+      "files": [
+        "mus_neon_pulse.json",
+        "mus_cyber_chase.json",
+        "mus_glitch_groove.json"
+      ]
+    },
+    "cinematic": {
+      "name": "Cinematic",
+      "count": 3,
+      "files": [
+        "mus_epic_dawn.json",
+        "mus_tension_rising.json",
+        "mus_peaceful_ending.json"
+      ]
+    },
+    "lofi": {
+      "name": "Lo-Fi",
+      "count": 3,
+      "files": [
+        "mus_late_night_lofi.json",
+        "mus_rainy_window.json",
+        "mus_vinyl_memories.json"
+      ]
+    },
+    "retro": {
+      "name": "Retro",
+      "count": 3,
+      "files": [
+        "mus_8bit_adventure.json",
+        "mus_synthwave_sunset.json",
+        "mus_chiptune_boss.json"
+      ]
+    },
+    "action": {
+      "name": "Action",
+      "count": 3,
+      "files": [
+        "mus_high_speed_pursuit.json",
+        "mus_battle_arena.json",
+        "mus_stealth_infiltration.json"
+      ]
+    },
+    "nature": {
+      "name": "Nature",
+      "count": 3,
+      "files": [
+        "mus_forest_canopy.json",
+        "mus_ocean_waves.json",
+        "mus_mountain_wind.json"
+      ]
+    },
+    "world": {
+      "name": "World",
+      "count": 3,
+      "files": [
+        "mus_desert_caravan.json",
+        "mus_tokyo_nights.json",
+        "mus_celtic_meadow.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "voice_elderly_man",
+  "type": "voice",
+  "name": "Elderly Man",
+  "tags": ["everyday", "elderly", "male", "warm"],
+  "meta": {
+    "created": "2026-04-12",
+    "modified": "2026-04-12",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Warm elderly man with slight tremor.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-us",
+      "variant": "m4",
+      "speed": 125,
+      "pitch": 35,
+      "volume": 100,
+      "amplitude": 90,
+      "wordgap": 2,
+      "reverb": 0,
+      "wobble": 12,
+      "wobbleSpeed": 3,
+      "brightness": 0,
+      "breathiness": 15,
+      "vocalFry": 20,
+      "chorus": 0,
+      "mouthSnappiness": 70,
+      "audioLead": 35,
+      "lipColor": "#a08070",
+      "lipThickness": 2.5,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": false,
+      "faceColor": "#d8c0a8",
+      "scalpColor": "#c0c0c0",
+      "captionSize": 18,
+      "presetKey": "elderly_man",
+      "previewText": "Back in my day, we used to walk uphill both ways."
+    }
+  }
+}

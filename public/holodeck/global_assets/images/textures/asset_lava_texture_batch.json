@@ -1,0 +1,183 @@
+{
+  "id": "asset_lava_texture_batch",
+  "type": "asset",
+  "name": "Lava",
+  "tags": [
+    "texture",
+    "textures",
+    "lava",
+    "magma",
+    "hot",
+    "volcanic"
+  ],
+  "meta": {
+    "created": "2026-03-30T23:23:19.177Z",
+    "modified": "2026-03-30T23:23:19.177Z",
+    "origin": "batch",
+    "origin_ref": "textures",
+    "creator": "batch-generator",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Glowing lava and magma surface",
+    "format": "svg",
+    "viewBox": "56 56 400 400",
+    "svg": null,
+    "color_roles_used": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "color_assignments": {
+      "primary": "#df7126",
+      "secondary": "#fbf236",
+      "tertiary": "#ac3232"
+    },
+    "background_color": "#ac3232",
+    "palette_id": "db32",
+    "frame_preset": "square",
+    "anchor_point": {
+      "x": 256,
+      "y": 256
+    },
+    "natural_size": {
+      "w": 400,
+      "h": 400
+    },
+    "attach_points": {},
+    "layer": null,
+    "z_index": 0,
+    "_editor": {
+      "elements": [
+        {
+          "primitiveId": "rect",
+          "params": {
+            "cx": 256,
+            "cy": 256,
+            "w": 410,
+            "h": 410,
+            "rotation": 0,
+            "fill": "tertiary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 0
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 180,
+            "cy": 170,
+            "rx": 60,
+            "ry": 35,
+            "rotation": 15,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 1
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 320,
+            "cy": 200,
+            "rx": 50,
+            "ry": 30,
+            "rotation": -20,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 2
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 150,
+            "cy": 280,
+            "rx": 55,
+            "ry": 32,
+            "rotation": 10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 3
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 300,
+            "cy": 310,
+            "rx": 65,
+            "ry": 35,
+            "rotation": -15,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 4
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 400,
+            "cy": 160,
+            "rx": 40,
+            "ry": 25,
+            "rotation": 5,
+            "fill": "primary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 5
+        },
+        {
+          "primitiveId": "ellipse",
+          "params": {
+            "cx": 230,
+            "cy": 370,
+            "rx": 55,
+            "ry": 28,
+            "rotation": -10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 6
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 180,
+            "cy": 170,
+            "r": 8,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 7
+        },
+        {
+          "primitiveId": "circle",
+          "params": {
+            "cx": 300,
+            "cy": 310,
+            "r": 10,
+            "fill": "secondary",
+            "stroke": "none",
+            "strokeWidth": 0
+          },
+          "zIndex": 8
+        }
+      ],
+      "color_assignments": {
+        "primary": "#df7126",
+        "secondary": "#fbf236",
+        "tertiary": "#ac3232"
+      }
+    }
+  }
+}
