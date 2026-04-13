@@ -14,7 +14,7 @@
  */
 
 import * as THREE from 'three';
-import { SCENE, LIGHT }           from '../shared/palette.js';
+import { UI, SCENE, LIGHT }       from '../shared/palette.js';
 import { groundMaterial, gridColors } from '../shared/materials.js';
 
 /** Auto-save debounce delay (ms). */
@@ -159,6 +159,14 @@ export class BaseBridge {
         const grid = new THREE.GridHelper(10, 20, gc.major, gc.minor);
         grid.position.y = 0.001;
         this._scene.add(grid);
+
+        // 1 m reference square (cyan outline on the floor)
+        const refPts = [[-0.5,0.002,-0.5],[0.5,0.002,-0.5],[0.5,0.002,0.5],[-0.5,0.002,0.5],[-0.5,0.002,-0.5]]
+            .map(p => new THREE.Vector3(...p));
+        this._scene.add(new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints(refPts),
+            new THREE.LineBasicMaterial({ color: parseInt(UI.accent.slice(1), 16), opacity: 0.6, transparent: true }),
+        ));
 
         // Lights
         this._scene.add(new THREE.AmbientLight(SCENE.ambient, LIGHT.ambientIntensity));

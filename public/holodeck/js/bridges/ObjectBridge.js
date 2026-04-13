@@ -59,13 +59,7 @@ export class ObjectBridge extends BaseBridge {
             this._renderFallbackBox();
         }
 
-        // 1m reference square
-        const pts = [[-0.5,0.01,-0.5],[0.5,0.01,-0.5],[0.5,0.01,0.5],[-0.5,0.01,0.5],[-0.5,0.01,-0.5]]
-            .map(p => new THREE.Vector3(...p));
-        this._scene.add(new THREE.Line(
-            new THREE.BufferGeometry().setFromPoints(pts),
-            new THREE.LineBasicMaterial({ color: parseInt(UI.accent.slice(1), 16) }),
-        ));
+        // 1m reference square is inherited from BaseBridge._setupBaseScene()
     }
 
     /** Render the object using its _editor element data via propRenderer. */
