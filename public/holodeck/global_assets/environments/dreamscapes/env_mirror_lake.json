@@ -1,0 +1,38 @@
+{
+  "id": "env_mirror_lake",
+  "type": "environment",
+  "name": "Mirror Lake",
+  "tags": [
+    "dream",
+    "lake",
+    "reflection"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A perfectly still lake reflecting an impossible sky of two moons",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#1a237e",
+      "bottomColor": "#9fa8da"
+    },
+    "ground": {
+      "color": "#263238",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#263238",
+      "skyTopColor": "#1a237e",
+      "skyHorizonColor": "#9fa8da",
+      "wallCount": 0,
+      "musicId": "mus_crystal_cave"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

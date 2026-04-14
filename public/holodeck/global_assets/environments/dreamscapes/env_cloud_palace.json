@@ -1,0 +1,38 @@
+{
+  "id": "env_cloud_palace",
+  "type": "environment",
+  "name": "Cloud Palace",
+  "tags": [
+    "dream",
+    "clouds",
+    "surreal"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A palace made of shifting clouds, staircases leading to nowhere",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#e1bee7",
+      "bottomColor": "#f3e5f5"
+    },
+    "ground": {
+      "color": "#f5f5f5",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#f5f5f5",
+      "skyTopColor": "#e1bee7",
+      "skyHorizonColor": "#f3e5f5",
+      "wallCount": 0,
+      "musicId": "mus_peaceful_ending"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

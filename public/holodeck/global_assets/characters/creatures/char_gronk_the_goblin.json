@@ -46,7 +46,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_goblin",
+      "eyebrowStyle": "thin",
+      "eyebrowColor": "#3a6a2a"
+    },
+    "catchphrase": "Ooh, shiny! Mine now."
   }
 }

@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_mustache",
       "facialHairColor": "#8a6a4a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_male",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#8a6a4a"
+    },
+    "catchphrase": "Did I do thaaaat?"
   }
 }

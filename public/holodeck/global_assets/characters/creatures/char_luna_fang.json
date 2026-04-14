@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#6a5a4a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#6a5a4a"
+    },
+    "catchphrase": "The moon calls, and I must answer."
   }
 }

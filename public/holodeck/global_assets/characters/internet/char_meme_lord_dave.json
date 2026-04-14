@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "prop_sunglasses",
-      "glassesColor": "#ffcc00"
-    }
+      "glassesColor": "#ffcc00",
+      "voiceId": "voice_teenager",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#ff6600"
+    },
+    "catchphrase": "This is fine."
   }
 }

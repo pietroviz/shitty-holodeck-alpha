@@ -15,7 +15,7 @@ import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
 import { MusicEngine } from './shared/musicEngine.js';
-import { makeEyeTexture } from './shared/eyeTexture.js';
+import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
 import {
@@ -61,6 +61,22 @@ async function _ensureMusic() {
     } catch (e) {
         console.warn('[previewRenderer] Music init failed:', e.message);
     }
+}
+
+// Map voice IDs to their subfolder paths
+const _VOICE_FOLDERS = {
+    voice_male: 'standard', voice_female: 'standard', voice_child: 'standard', voice_narrator: 'standard',
+    voice_robot: 'fantasy', voice_alien: 'fantasy', voice_demon: 'fantasy', voice_ghost: 'fantasy', voice_fairy: 'fantasy',
+    voice_french: 'accented', voice_german: 'accented', voice_italian: 'accented', voice_spanish: 'accented',
+    voice_russian: 'accented', voice_british: 'accented', voice_scottish: 'accented', voice_swedish: 'accented',
+    voice_goblin: 'creatures', voice_giant: 'creatures', voice_dragon: 'creatures', voice_elf: 'creatures',
+    voice_ogre: 'creatures', voice_pixie: 'creatures', voice_treant: 'creatures', voice_imp: 'creatures', voice_serpent: 'creatures',
+    voice_elderly_man: 'everyday', voice_elderly_woman: 'everyday', voice_teenager: 'everyday', voice_gruff: 'everyday',
+    voice_cheerful: 'everyday', voice_professor: 'everyday', voice_villain: 'everyday', voice_sports_announcer: 'everyday',
+};
+function _voicePath(voiceId) {
+    const folder = _VOICE_FOLDERS[voiceId] || 'standard';
+    return `${folder}/${voiceId}.json`;
 }
 
 async function _ensureVoice() {
@@ -111,11 +127,14 @@ export function previewStopVoice() {
     if (_onSpeakStateChange) _onSpeakStateChange(false);
 }
 
-/** Play music in the browse preview. */
+/** Play music in the browse preview (respects duration_behavior from asset). */
 export async function previewPlayMusic(asset) {
     if (!_musicReady) await _ensureMusic();
     if (!_musicReady || !_musicEngine) return;
-    _musicEngine.play(asset, { loop: true });
+    _musicEngine.onEnd = () => {
+        if (_onSpeakStateChange) _onSpeakStateChange(false);
+    };
+    _musicEngine.play(asset);
 }
 
 /** Stop any active browse-preview music. */
@@ -125,6 +144,26 @@ export function previewStopMusic() {
 
 /** Check if music is currently playing. */
 export function isPreviewMusicPlaying() { return _musicEngine?.isPlaying ?? false; }
+
+/** Auto-play music for an environment preview by fetching the music asset by ID. */
+async function _autoPlayEnvironmentMusic(musicId) {
+    if (!musicId) return;
+    try {
+        // Try loading from global music assets
+        const folders = ['ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
+        let track = null;
+        for (const folder of folders) {
+            try {
+                const res = await fetch(`global_assets/music/${folder}/${musicId}.json`);
+                if (res.ok) { track = await res.json(); break; }
+            } catch { /* try next */ }
+        }
+        if (!track) return;
+        if (!_musicReady) await _ensureMusic();
+        if (!_musicReady || !_musicEngine) return;
+        _musicEngine.play(track);
+    } catch { /* silent */ }
+}
 
 /** Wire up the voiceEngine's onSpeakEnd to notify the state change callback. */
 function _wireOnSpeakEnd() {
@@ -158,6 +197,7 @@ export function showPreview(container, asset, opts = {}) {
 
     // Tear down previous preview if any
     _stopLoop();
+    _musicViz = null;
     if (_musicEngine) _musicEngine.stop();
 
     // Create or reuse renderer
@@ -271,6 +311,7 @@ export function showPreview(container, asset, opts = {}) {
  */
 export function destroyPreview() {
     _stopLoop();
+    _musicViz = null;
     if (_voiceEngine) _voiceEngine.stop();
     if (_musicEngine) _musicEngine.stop();
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }
@@ -318,6 +359,33 @@ function _startLoop() {
         if (_voiceEngine && _mouthRig) {
             _voiceEngine.update(deltaMs);
             _mouthRig.update(_voiceEngine.getVisemeParams());
+        }
+
+        // Update music visualizer animation
+        if (_musicViz) {
+            _musicViz.time += delta;
+            const t = _musicViz.time;
+            const beat = _musicViz.beatSec;
+
+            // Pulse core on beat
+            const beatPhase = (t % beat) / beat;
+            const pulse = 1 + 0.12 * Math.exp(-beatPhase * 6);
+            _musicViz.core.scale.setScalar(pulse);
+            _musicViz.core.rotation.y = t * 0.3;
+            _musicViz.coreMat.emissiveIntensity = 0.15 + 0.35 * Math.exp(-beatPhase * 4);
+
+            // Pulse glow ring
+            _musicViz.glowMat.opacity = 0.3 + 0.3 * Math.exp(-beatPhase * 5);
+
+            // Orbit layer rings
+            for (const ring of _musicViz.layerRings) {
+                for (const orb of ring.orbs) {
+                    const a = orb.baseAngle + t * ring.speed * 0.5 + ring.angleOffset;
+                    orb.mesh.position.x = Math.cos(a) * ring.radius;
+                    orb.mesh.position.z = Math.sin(a) * ring.radius;
+                    orb.mesh.position.y = 0.8 + Math.sin(a * 2 + t) * 0.15;
+                }
+            }
         }
 
         _renderer.render(_scene, _camera);
@@ -419,8 +487,8 @@ function _renderPropGroup(propData, primaryColor, scale) {
 
 // ── Canvas-based eye renderer (simplified EyeRig) ──
 // _makeEyeTexture — delegates to shared module
-function _makeEyeTexture(irisColor, shape) {
-    return makeEyeTexture(irisColor, shape);
+function _makeEyeTexture(irisColor, shape, eyelashStyle, eyelashColor) {
+    return makeEyeTexture(irisColor, shape, eyelashStyle, eyelashColor);
 }
 
 // ── Canvas-based mouth renderer (simplified MouthRig) ──
@@ -556,7 +624,7 @@ async function _buildCharacterPreview(asset) {
     const mouthY = faceCY - myo;
 
     // ── Eyes (canvas texture on planes) ──
-    const eyeTex = _makeEyeTexture(s.eyeIrisColor, s.eyeShape);
+    const eyeTex = _makeEyeTexture(s.eyeIrisColor, s.eyeShape, s.eyelashStyle, s.eyelashColor);
     const eyePlaneSize = FACE_FEATURES.eye.scleraDiameter * 1.3;
     const eyeGeo = new THREE.PlaneGeometry(eyePlaneSize, eyePlaneSize);
 
@@ -576,6 +644,25 @@ async function _buildCharacterPreview(asset) {
     eyeR.position.set(exo, eyeY, frontZ + 0.005);
     _previewGroup.add(eyeR);
 
+    // ── Eyebrows (2D canvas texture planes above eyes) ──
+    if (s.eyebrowStyle && s.eyebrowStyle !== 'none') {
+        const browTexL = makeEyebrowTexture(s.eyebrowStyle, s.eyebrowColor || s.scalpColor || '#4a3728', false);
+        const browTexR = makeEyebrowTexture(s.eyebrowStyle, s.eyebrowColor || s.scalpColor || '#4a3728', true);
+        if (browTexL && browTexR) {
+            const browSize = eyePlaneSize * 1.3;
+            const browGeo = new THREE.PlaneGeometry(browSize, browSize * 0.5);
+            const browMatL = new THREE.MeshBasicMaterial({ map: browTexL, transparent: true, depthWrite: false, side: THREE.FrontSide });
+            const browMatR = new THREE.MeshBasicMaterial({ map: browTexR, transparent: true, depthWrite: false, side: THREE.FrontSide });
+            const browL = new THREE.Mesh(browGeo, browMatL);
+            const browR = new THREE.Mesh(browGeo.clone(), browMatR);
+            const browY = eyeY + eyePlaneSize * 0.55;
+            browL.position.set(-exo, browY, frontZ + 0.006);
+            browR.position.set(exo, browY, frontZ + 0.006);
+            _previewGroup.add(browL);
+            _previewGroup.add(browR);
+        }
+    }
+
     // ── Mouth (real MouthRig for animated visemes) ──
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }
     _mouthRig = new MouthRig();
@@ -583,8 +670,24 @@ async function _buildCharacterPreview(asset) {
     _mouthRig.mesh.position.set(0, mouthY, frontZ + 0.005);
     _previewGroup.add(_mouthRig.mesh);
 
-    // Init voice engine in background so it's ready for play button
-    _ensureVoice();
+    // Init voice engine and apply assigned voice (if any)
+    _voiceConfigured = _ensureVoice().then(async () => {
+        if (!_voiceReady || !_voiceEngine) return;
+        if (s.voiceId) {
+            // Load the voice JSON and apply its state to the engine
+            try {
+                const vRes = await fetch(`global_assets/voices/${_voicePath(s.voiceId)}`);
+                if (vRes.ok) {
+                    const vData = await vRes.json();
+                    const vState = vData.payload?.state || {};
+                    if (_voiceEngine.applyState) _voiceEngine.applyState(vState);
+                    return;
+                }
+            } catch { /* fall through to default */ }
+        }
+        // No assigned voice — apply character's own voice params if any
+        if (_voiceEngine.applyState) _voiceEngine.applyState(s);
+    });
 
     // ── Accessories (loaded asynchronously) ──
     const headTopY = headCenterY + headH / 2;
@@ -682,22 +785,31 @@ function _buildPropPreview(asset) {
 //  ENVIRONMENT PREVIEW
 // ─────────────────────────────────────────────────────────────────
 
-function _buildEnvironmentPreview(asset) {
+async function _buildEnvironmentPreview(asset) {
     _camera.position.set(4, 3, 5);
     _camera.lookAt(0, 0.3, 0);
     _camera.fov = 55;
     _camera.updateProjectionMatrix();
 
     const p = asset.payload || {};
+    const s = p.state || {};
 
-    // Skybox as scene background
-    if (p.skybox?.topColor && p.skybox?.bottomColor) {
+    // Auto-play assigned music track
+    const musicId = s.musicId || p.musicId;
+    if (musicId) {
+        _autoPlayEnvironmentMusic(musicId);
+    }
+
+    // Skybox as scene background — support both payload.skybox and state-based sky colors
+    const skyTop    = p.skybox?.topColor    || s.skyTopColor;
+    const skyBottom = p.skybox?.bottomColor || s.skyHorizonColor;
+    if (skyTop && skyBottom) {
         const canvas = document.createElement('canvas');
         canvas.width = 2; canvas.height = 256;
         const ctx = canvas.getContext('2d');
         const grad = ctx.createLinearGradient(0, 0, 0, 256);
-        grad.addColorStop(0, p.skybox.topColor);
-        grad.addColorStop(1, p.skybox.bottomColor);
+        grad.addColorStop(0, skyTop);
+        grad.addColorStop(1, skyBottom);
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, 2, 256);
         const tex = new THREE.CanvasTexture(canvas);
@@ -705,10 +817,11 @@ function _buildEnvironmentPreview(asset) {
         _scene.background = tex;
     }
 
-    // Ground color override
-    if (p.ground?.color) {
+    // Ground color override — support both payload.ground and state-based ground color
+    const groundColor = p.ground?.color || s.groundColor;
+    if (groundColor) {
         const ground = _scene.children.find(c => c.geometry?.type === 'PlaneGeometry');
-        if (ground) ground.material.color.set(p.ground.color);
+        if (ground) ground.material.color.set(groundColor);
     }
 
     // Place objects as simple placeholder boxes (actual props would need to be loaded)
@@ -737,37 +850,114 @@ function _buildEnvironmentPreview(asset) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-//  MUSIC PREVIEW (simple visualiser shapes)
+//  MUSIC PREVIEW (enhanced BPM-driven visualiser)
 // ─────────────────────────────────────────────────────────────────
 
+// Animation state for music visualizer
+let _musicViz = null;
+
+// Layer color palette (used to give each layer a unique hue)
+const _LAYER_COLORS = ['#00D9D9', '#FF6B9D', '#C084FC', '#FCD34D', '#34D399', '#F97316', '#60A5FA', '#F472B6'];
+
 function _buildMusicPreview(asset) {
-    _camera.position.set(0, 2, 4);
-    _camera.lookAt(0, 0.5, 0);
-    _camera.fov = 60;
+    _camera.position.set(0, 2.2, 4.5);
+    _camera.lookAt(0, 0.8, 0);
+    _camera.fov = 55;
     _camera.updateProjectionMatrix();
 
-    const moodColor = asset.payload?.mood_color || '#00D9D9';
+    const payload = asset.payload?.state || asset.payload || {};
+    const moodColor = payload.mood_color || asset.payload?.mood_color || '#00D9D9';
+    const bpm = payload.bpm || asset.payload?.bpm || 120;
+    const layers = payload.layers || asset.payload?.layers || [];
+    const beatSec = 60 / bpm;
 
-    // Floating shape representing the track
-    const shape = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.6),
-        standard(new THREE.Color(moodColor)),
-    );
-    shape.position.y = 1.2;
-    _previewGroup.add(shape);
+    // ── Central pulsing shape ──
+    const coreGeo = new THREE.OctahedronGeometry(0.45, 1);
+    const coreMat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(moodColor),
+        emissive: new THREE.Color(moodColor),
+        emissiveIntensity: 0.3,
+        roughness: 0.2,
+        metalness: 0.4,
+    });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    core.position.y = 1.2;
+    core.castShadow = true;
+    _previewGroup.add(core);
 
-    // Orbiting smaller shapes
-    const count = Math.min(Math.floor((asset.payload?.bpm || 120) / 30), 6);
-    for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
-        const r = 1.5;
-        const mini = new THREE.Mesh(
-            new THREE.SphereGeometry(0.12, 16, 16),
-            standard(new THREE.Color(moodColor), { roughness: 0.3 }),
-        );
-        mini.position.set(Math.cos(angle) * r, 0.8 + Math.sin(angle * 2) * 0.3, Math.sin(angle) * r);
-        _previewGroup.add(mini);
+    // ── Glow ring around core (mood color) ──
+    const glowGeo = new THREE.TorusGeometry(0.7, 0.03, 8, 48);
+    const glowMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(moodColor),
+        transparent: true,
+        opacity: 0.5,
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.y = 1.2;
+    glow.rotation.x = Math.PI / 2;
+    _previewGroup.add(glow);
+
+    // ── One orbiting ring per layer ──
+    const layerRings = [];
+    const layerCount = Math.min(layers.length, 6);
+    for (let i = 0; i < layerCount; i++) {
+        const layer = layers[i];
+        const color = _LAYER_COLORS[i % _LAYER_COLORS.length];
+        const radius = 1.0 + i * 0.4;
+        const noteCount = (layer.pattern || '').split(/\s+/).filter(Boolean).length;
+        const orbCount = Math.max(2, Math.min(noteCount, 8));
+
+        const ring = { orbs: [], radius, speed: (1 + i * 0.3), angleOffset: (i / layerCount) * Math.PI * 2 };
+
+        // Ring path (subtle visual guide)
+        const ringGeo = new THREE.TorusGeometry(radius, 0.01, 8, 48);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color(color), transparent: true, opacity: 0.15,
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.position.y = 0.8;
+        ringMesh.rotation.x = Math.PI / 2;
+        _previewGroup.add(ringMesh);
+
+        // Orbiting notes
+        for (let j = 0; j < orbCount; j++) {
+            const angle = (j / orbCount) * Math.PI * 2;
+            const size = 0.06 + (layer.gain ?? 0.5) * 0.06;
+            const orb = new THREE.Mesh(
+                new THREE.SphereGeometry(size, 12, 12),
+                new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(color),
+                    emissive: new THREE.Color(color),
+                    emissiveIntensity: 0.2,
+                    roughness: 0.3,
+                }),
+            );
+            orb.position.set(
+                Math.cos(angle) * radius,
+                0.8 + Math.sin(angle * 2) * 0.15,
+                Math.sin(angle) * radius,
+            );
+            _previewGroup.add(orb);
+            ring.orbs.push({ mesh: orb, baseAngle: angle });
+        }
+        layerRings.push(ring);
     }
+
+    // ── BPM indicator dots on the ground ──
+    const bpmDots = Math.min(Math.round(bpm / 30), 8);
+    for (let i = 0; i < bpmDots; i++) {
+        const angle = (i / bpmDots) * Math.PI * 2;
+        const dot = new THREE.Mesh(
+            new THREE.CircleGeometry(0.04, 16),
+            new THREE.MeshBasicMaterial({ color: new THREE.Color(moodColor), transparent: true, opacity: 0.4 }),
+        );
+        dot.rotation.x = -Math.PI / 2;
+        dot.position.set(Math.cos(angle) * 0.5, 0.005, Math.sin(angle) * 0.5);
+        _previewGroup.add(dot);
+    }
+
+    // Store animation state
+    _musicViz = { core, coreMat, glow, glowMat, layerRings, beatSec, time: 0 };
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -859,7 +1049,7 @@ function _buildVoicePreview(asset) {
     const skinCY = skinH / 2;
     const faceZ = frontZ + 0.005;
 
-    const eyeTex = _makeEyeTexture(s.eyeIrisColor || '#808080', s.eyeShape || 'circle');
+    const eyeTex = _makeEyeTexture(s.eyeIrisColor || '#808080', s.eyeShape || 'circle', s.eyelashStyle, s.eyelashColor);
     const eyePlaneSize = FACE_FEATURES.eye.scleraDiameter * 1.3;
     const eyeGeo = new THREE.PlaneGeometry(eyePlaneSize, eyePlaneSize);
 
@@ -878,6 +1068,25 @@ function _buildVoicePreview(asset) {
     const eyeR = new THREE.Mesh(eyeGeo.clone(), eyeMatR);
     eyeR.position.set(exo, skinCY + eyo, faceZ);
     headGroup.add(eyeR);
+
+    // Eyebrows
+    if (s.eyebrowStyle && s.eyebrowStyle !== 'none') {
+        const browTexL = makeEyebrowTexture(s.eyebrowStyle, s.eyebrowColor || scalpColor, false);
+        const browTexR = makeEyebrowTexture(s.eyebrowStyle, s.eyebrowColor || scalpColor, true);
+        if (browTexL && browTexR) {
+            const browSize = eyePlaneSize * 1.3;
+            const browGeo2 = new THREE.PlaneGeometry(browSize, browSize * 0.5);
+            const browMatL2 = new THREE.MeshBasicMaterial({ map: browTexL, transparent: true, depthWrite: false, side: THREE.FrontSide });
+            const browMatR2 = new THREE.MeshBasicMaterial({ map: browTexR, transparent: true, depthWrite: false, side: THREE.FrontSide });
+            const browL2 = new THREE.Mesh(browGeo2, browMatL2);
+            const browR2 = new THREE.Mesh(browGeo2.clone(), browMatR2);
+            const browY2 = skinCY + eyo + eyePlaneSize * 0.55;
+            browL2.position.set(-exo, browY2, faceZ + 0.001);
+            browR2.position.set(exo, browY2, faceZ + 0.001);
+            headGroup.add(browL2);
+            headGroup.add(browR2);
+        }
+    }
 
     // Mouth rig
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }

@@ -2,7 +2,11 @@
   "id": "mus_desert_caravan",
   "type": "music",
   "name": "Desert Caravan",
-  "tags": ["world", "exotic", "cultural"],
+  "tags": [
+    "world",
+    "exotic",
+    "cultural"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "drum_beat_exotic",
         "pattern": "E2 E2 B1 E2",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "triangle"
       },
       {
         "name": "pad_middle_eastern",
         "pattern": "E3 F3 B3 E4 F4",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_exotic",
         "pattern": "B4 E5 F5 B5 E5",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "square"
       },
       {
         "name": "texture_wind_desert",
         "pattern": "F5 B5 E5 F5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

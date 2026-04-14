@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_demon",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#cc0000"
+    },
+    "catchphrase": "Shall we make a deal?"
   }
 }

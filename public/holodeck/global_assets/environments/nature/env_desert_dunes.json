@@ -1,0 +1,38 @@
+{
+  "id": "env_desert_dunes",
+  "type": "environment",
+  "name": "Desert Dunes",
+  "tags": [
+    "nature",
+    "desert",
+    "hot"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Rolling sand dunes stretching to the horizon under a blazing sun",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#ff8f00",
+      "bottomColor": "#fff8e1"
+    },
+    "ground": {
+      "color": "#e6c87a",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#e6c87a",
+      "skyTopColor": "#ff8f00",
+      "skyHorizonColor": "#fff8e1",
+      "wallCount": 0,
+      "musicId": "mus_desert_caravan"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

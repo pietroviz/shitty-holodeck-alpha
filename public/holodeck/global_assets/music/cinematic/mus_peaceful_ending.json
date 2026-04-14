@@ -2,7 +2,11 @@
   "id": "mus_peaceful_ending",
   "type": "music",
   "name": "Peaceful Ending",
-  "tags": ["cinematic", "emotional", "reflective"],
+  "tags": [
+    "cinematic",
+    "emotional",
+    "reflective"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,26 +24,30 @@
       {
         "name": "pad_warm_orchestral",
         "pattern": "Eb4 G4 Bb4 Eb5 G5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "piano_key_tender",
         "pattern": "Bb3 Eb4 G4 Bb4",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_gentle",
         "pattern": "G5 Bb5 Eb5 G5 Bb5",
-        "gain": 0.63
+        "gain": 0.63,
+        "oscType": "square"
       },
       {
         "name": "texture_ambient_string",
         "pattern": "Eb5 G5 Bb5 G5",
-        "gain": 0.42
+        "gain": 0.42,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
-    "fade_in": 2.0,
+    "fade_in": 2,
     "fade_out": 3.5,
     "mood_color": "#F4A460"
   }

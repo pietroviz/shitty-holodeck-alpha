@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#4a3a2a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_narrator",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#4a3a2a"
+    },
+    "catchphrase": "Before we begin, a word from our sponsor."
   }
 }

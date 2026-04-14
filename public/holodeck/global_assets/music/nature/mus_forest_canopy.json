@@ -2,7 +2,11 @@
   "id": "mus_forest_canopy",
   "type": "music",
   "name": "Forest Canopy",
-  "tags": ["nature", "organic", "verdant"],
+  "tags": [
+    "nature",
+    "organic",
+    "verdant"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "pad_ambient_nature",
         "pattern": "G3 B3 D4 G4 B4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sine"
       },
       {
         "name": "texture_wind_rustling",
         "pattern": "D5 G5 B5 D5",
-        "gain": 0.45
+        "gain": 0.45,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_natural",
         "pattern": "B4 D5 G5 B5 D5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "square"
       },
       {
         "name": "bass_earth_foundation",
         "pattern": "G2 G2 D3 G2",
-        "gain": 0.52
+        "gain": 0.52,
+        "oscType": "sawtooth"
       }
     ],
     "duration_behavior": "loop",
-    "fade_in": 2.0,
-    "fade_out": 3.0,
+    "fade_in": 2,
+    "fade_out": 3,
     "mood_color": "#228B22"
   }
 }

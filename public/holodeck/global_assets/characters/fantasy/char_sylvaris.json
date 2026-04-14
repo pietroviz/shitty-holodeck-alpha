@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_elf",
+      "eyebrowStyle": "thin",
+      "eyebrowColor": "#b8d4a0"
+    },
+    "catchphrase": "The forest speaks to those who listen."
   }
 }

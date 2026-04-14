@@ -178,6 +178,28 @@ export const EYE_SHAPES = {
     wideOval:      { label: 'Wide Oval',   rxMul: 1.15, ryMul: 0.68, rounded: false },
 };
 
+// ── Eyelash Style Presets ────────────────────────────
+export const EYELASH_STYLES = {
+    none:      { label: 'None' },
+    thin:      { label: 'Thin',     count: 4, length: 0.22, curve: 0.15 },
+    natural:   { label: 'Natural',  count: 5, length: 0.28, curve: 0.20 },
+    thick:     { label: 'Thick',    count: 6, length: 0.30, curve: 0.18, width: 2.5 },
+    dramatic:  { label: 'Dramatic', count: 7, length: 0.38, curve: 0.25, width: 2.0 },
+    bottom:    { label: 'Bottom',   count: 3, length: 0.15, curve: 0.10, bottomOnly: true },
+};
+
+// ── Eyebrow Style Presets ────────────────────────────
+export const EYEBROW_STYLES = {
+    none:       { label: 'None' },
+    thin:       { label: 'Thin',      thickness: 0.08, arch: 0.15, taper: 0.6 },
+    natural:    { label: 'Natural',   thickness: 0.12, arch: 0.20, taper: 0.5 },
+    thick:      { label: 'Thick',     thickness: 0.18, arch: 0.18, taper: 0.4 },
+    bushy:      { label: 'Bushy',     thickness: 0.24, arch: 0.12, taper: 0.3 },
+    arched:     { label: 'Arched',    thickness: 0.12, arch: 0.35, taper: 0.5 },
+    angry:      { label: 'Angry',     thickness: 0.15, arch: -0.15, taper: 0.4 },
+    flat:       { label: 'Flat',      thickness: 0.14, arch: 0.0,  taper: 0.5 },
+};
+
 // ── Mouth Rig Dimensions ─────────────────────────────
 export const MOUTH_RIG = {
     planeSize: 0.30,

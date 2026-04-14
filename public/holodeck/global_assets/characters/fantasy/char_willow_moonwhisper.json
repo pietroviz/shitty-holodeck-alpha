@@ -46,7 +46,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_fairy",
+      "eyebrowStyle": "thin",
+      "eyebrowColor": "#6a9a4a"
+    },
+    "catchphrase": "The earth heals all who listen."
   }
 }

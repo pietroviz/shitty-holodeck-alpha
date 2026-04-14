@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_soul_patch",
       "facialHairColor": "#6a4a2a",
       "glassesStyle": "prop_round_glasses",
-      "glassesColor": "#1a1a1a"
-    }
+      "glassesColor": "#1a1a1a",
+      "voiceId": "voice_male",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#6a4a2a"
+    },
+    "catchphrase": "We're disrupting the disruption space."
   }
 }

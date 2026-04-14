@@ -1,0 +1,38 @@
+{
+  "id": "env_forest_clearing",
+  "type": "environment",
+  "name": "Forest Clearing",
+  "tags": [
+    "nature",
+    "forest",
+    "peaceful"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A sunlit clearing in an ancient forest with moss-covered ground",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#87ceeb",
+      "bottomColor": "#c8e6c9"
+    },
+    "ground": {
+      "color": "#3a5c2e",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#3a5c2e",
+      "skyTopColor": "#87ceeb",
+      "skyHorizonColor": "#c8e6c9",
+      "wallCount": 0,
+      "musicId": "mus_forest_canopy"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

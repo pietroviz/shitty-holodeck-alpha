@@ -1,0 +1,38 @@
+{
+  "id": "env_enchanted_grove",
+  "type": "environment",
+  "name": "Enchanted Grove",
+  "tags": [
+    "fantasy",
+    "magical",
+    "forest"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A mystical grove with glowing mushrooms and floating fireflies",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#1a237e",
+      "bottomColor": "#7c4dff"
+    },
+    "ground": {
+      "color": "#1b5e20",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#1b5e20",
+      "skyTopColor": "#1a237e",
+      "skyHorizonColor": "#7c4dff",
+      "wallCount": 0,
+      "musicId": "mus_celtic_meadow"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "env_corner_office",
+  "type": "environment",
+  "name": "Corner Office",
+  "tags": [
+    "interior",
+    "office",
+    "corporate"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A prestigious corner office with floor-to-ceiling windows",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#90caf9",
+      "bottomColor": "#e3f2fd"
+    },
+    "ground": {
+      "color": "#455a64",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#455a64",
+      "skyTopColor": "#90caf9",
+      "skyHorizonColor": "#e3f2fd",
+      "wallCount": 2,
+      "musicId": "mus_morning_fog"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

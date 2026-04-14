@@ -56,20 +56,23 @@ export class MusicEngine {
     get isPlaying() { return this._playing; }
 
     /**
-     * Play a music asset's layers as a looping pattern preview.
+     * Play a music asset's layers with proper duration behavior.
      * @param {Object} asset — music asset (with payload.bpm, payload.layers, etc.)
-     * @param {Object} opts  — { loop: true, fadeIn: 0 }
+     * @param {Object} opts  — { loop: undefined } (overrides duration_behavior if set)
      */
     play(asset, opts = {}) {
         this.stop();
         if (!this._ctx) return;
         if (this._ctx.state === 'suspended') this._ctx.resume();
 
-        const payload = asset.payload || asset.state || {};
-        const bpm     = payload.bpm || 120;
-        const layers  = payload.layers || [];
-        const fadeIn  = payload.fade_in ?? 0.5;
-        const loop    = opts.loop !== false;
+        const payload  = asset.payload?.state || asset.payload || {};
+        const bpm      = payload.bpm || 120;
+        const layers   = payload.layers || [];
+        const fadeIn   = payload.fade_in ?? 0.5;
+        const fadeOut  = payload.fade_out ?? 1.0;
+        const behavior = opts.loop !== undefined
+            ? (opts.loop ? 'loop' : 'play-once')
+            : (payload.duration_behavior || 'loop');
 
         if (layers.length === 0) return;
 
@@ -89,20 +92,46 @@ export class MusicEngine {
         }));
         const passDuration = maxNotes * beatDur;
 
-        if (loop && passDuration > 0) {
+        if (passDuration <= 0) return;
+
+        if (behavior === 'loop') {
             const scheduleNext = () => {
                 if (!this._playing) return;
                 this._schedulePass(layers, beatDur, this._ctx.currentTime);
                 this._loopTimer = setTimeout(scheduleNext, passDuration * 1000 - 50);
             };
             this._loopTimer = setTimeout(scheduleNext, passDuration * 1000 - 50);
+        } else if (behavior === 'play-once') {
+            // Stop after one pass
+            this._loopTimer = setTimeout(() => {
+                this._playing = false;
+                if (this._onEnd) this._onEnd();
+            }, passDuration * 1000);
+        } else if (behavior === 'fade-out') {
+            // Play once, then fade out over fade_out seconds
+            const fadeStartMs = Math.max(0, passDuration * 1000 - fadeOut * 1000);
+            this._loopTimer = setTimeout(() => {
+                if (!this._playing || !this._masterGain || !this._ctx) return;
+                try {
+                    this._masterGain.gain.cancelScheduledValues(this._ctx.currentTime);
+                    this._masterGain.gain.setValueAtTime(this._masterGain.gain.value, this._ctx.currentTime);
+                    this._masterGain.gain.linearRampToValueAtTime(0, this._ctx.currentTime + fadeOut);
+                } catch {}
+                this._loopTimer = setTimeout(() => {
+                    this._playing = false;
+                    if (this._onEnd) this._onEnd();
+                }, fadeOut * 1000);
+            }, fadeStartMs);
         }
     }
+
+    /** Register a callback for when playback ends naturally (play-once / fade-out). */
+    set onEnd(cb) { this._onEnd = cb; }
 
     _schedulePass(layers, beatDur, startTime) {
         for (const layer of layers) {
             const notes = (layer.pattern || '').split(/\s+/).filter(Boolean);
-            const oscType = oscTypeForLayer(layer.name);
+            const oscType = layer.oscType || oscTypeForLayer(layer.name);
             const layerGain = layer.gain ?? 0.5;
 
             for (let i = 0; i < notes.length; i++) {
@@ -137,24 +166,35 @@ export class MusicEngine {
         }
     }
 
-    stop() {
+    /**
+     * Stop playback with a quick fade-out.
+     * @param {number} [fadeSec=0.15] — fade-out duration in seconds
+     */
+    stop(fadeSec = 0.15) {
         this._playing = false;
         if (this._loopTimer) { clearTimeout(this._loopTimer); this._loopTimer = null; }
 
-        // Fade out quickly
+        // Fade out
         if (this._masterGain && this._ctx) {
             try {
                 this._masterGain.gain.cancelScheduledValues(this._ctx.currentTime);
                 this._masterGain.gain.setValueAtTime(this._masterGain.gain.value, this._ctx.currentTime);
-                this._masterGain.gain.linearRampToValueAtTime(0, this._ctx.currentTime + 0.1);
+                this._masterGain.gain.linearRampToValueAtTime(0, this._ctx.currentTime + fadeSec);
             } catch {}
         }
 
-        // Stop all oscillators
-        for (const { osc, gain } of this._nodes) {
-            try { osc.stop(); osc.disconnect(); gain.disconnect(); } catch {}
+        // Stop all oscillators after fade completes
+        const cleanup = () => {
+            for (const { osc, gain } of this._nodes) {
+                try { osc.stop(); osc.disconnect(); gain.disconnect(); } catch {}
+            }
+            this._nodes = [];
+        };
+        if (fadeSec > 0) {
+            setTimeout(cleanup, fadeSec * 1000 + 50);
+        } else {
+            cleanup();
         }
-        this._nodes = [];
     }
 
     destroy() {

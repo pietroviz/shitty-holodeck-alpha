@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_mustache",
       "facialHairColor": "#4a4a4a",
       "glassesStyle": "prop_square_glasses",
-      "glassesColor": "#4a4a4a"
-    }
+      "glassesColor": "#4a4a4a",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#4a4a4a"
+    },
+    "catchphrase": "Read the rules. I beg you."
   }
 }

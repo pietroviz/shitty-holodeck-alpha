@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_british",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#c8a06a"
+    },
+    "catchphrase": "Peace through discipline."
   }
 }

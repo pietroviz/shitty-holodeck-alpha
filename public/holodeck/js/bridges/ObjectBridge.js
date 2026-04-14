@@ -630,6 +630,7 @@ export class ObjectBridge extends BaseBridge {
         // ── Shapes tab: delete element ──
         panel.querySelectorAll('.cb-el-delete').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (!confirm('Delete this shape?')) return;
                 const i = parseInt(btn.dataset.idx);
                 this._state.elements.splice(i, 1);
                 this._selectedIdx = -1;

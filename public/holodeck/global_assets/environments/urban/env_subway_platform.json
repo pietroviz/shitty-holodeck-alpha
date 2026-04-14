@@ -1,0 +1,38 @@
+{
+  "id": "env_subway_platform",
+  "type": "environment",
+  "name": "Subway Platform",
+  "tags": [
+    "urban",
+    "underground",
+    "transit"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A fluorescent-lit subway platform with tile walls",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#2a2a2a",
+      "bottomColor": "#4a4a4a"
+    },
+    "ground": {
+      "color": "#555555",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#555555",
+      "skyTopColor": "#2a2a2a",
+      "skyHorizonColor": "#4a4a4a",
+      "wallCount": 2,
+      "musicId": "mus_neon_pulse"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

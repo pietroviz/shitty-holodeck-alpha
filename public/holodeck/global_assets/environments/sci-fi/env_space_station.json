@@ -1,0 +1,38 @@
+{
+  "id": "env_space_station",
+  "type": "environment",
+  "name": "Space Station",
+  "tags": [
+    "sci-fi",
+    "space",
+    "station"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A gleaming orbital station with panoramic views of Earth below",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#000011",
+      "bottomColor": "#0d47a1"
+    },
+    "ground": {
+      "color": "#37474f",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#37474f",
+      "skyTopColor": "#000011",
+      "skyHorizonColor": "#0d47a1",
+      "wallCount": 2,
+      "musicId": "mus_deep_space_drift"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

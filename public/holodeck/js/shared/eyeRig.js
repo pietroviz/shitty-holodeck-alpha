@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { EYE_RIG, EYE_SHAPES } from './charConfig.js';
+import { EYE_RIG, EYE_SHAPES, EYELASH_STYLES } from './charConfig.js';
 
 const SIZE = EYE_RIG.canvasSize;
 const HALF = SIZE / 2;
@@ -28,6 +28,8 @@ export class EyeRig {
             pupilSize: EYE_RIG.pupilSize,
             irisSize: EYE_RIG.irisSize,
             shape: 'circle',
+            eyelashStyle: 'none',
+            eyelashColor: '#1a1a1a',
         };
         this._dirty = true;
         this._render();
@@ -66,6 +68,18 @@ export class EyeRig {
     setShape(key) {
         if (!EYE_SHAPES[key] || this.params.shape === key) return;
         this.params.shape = key;
+        this._dirty = true; this._render();
+    }
+
+    setEyelashStyle(style) {
+        if (this.params.eyelashStyle === style) return;
+        this.params.eyelashStyle = style;
+        this._dirty = true; this._render();
+    }
+
+    setEyelashColor(color) {
+        if (this.params.eyelashColor === color) return;
+        this.params.eyelashColor = color;
         this._dirty = true; this._render();
     }
 
@@ -161,6 +175,57 @@ export class EyeRig {
                 ctx.ellipse(cx, cy, scleraRx, scleraRy, 0, Math.PI, Math.PI * 2);
             }
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)'; ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        // ── Eyelashes ──
+        const lashCfg = EYELASH_STYLES[p.eyelashStyle];
+        if (lashCfg && p.eyelashStyle !== 'none') {
+            ctx.strokeStyle = p.eyelashColor || '#1a1a1a';
+            ctx.lineWidth = lashCfg.width || 1.8;
+            ctx.lineCap = 'round';
+            const baseR = HALF * 0.78;
+
+            if (!lashCfg.bottomOnly) {
+                const count = lashCfg.count;
+                const spread = Math.PI * 0.7;
+                const startAngle = -Math.PI / 2 - spread / 2;
+                for (let i = 0; i < count; i++) {
+                    const t = count === 1 ? 0.5 : i / (count - 1);
+                    const angle = startAngle + t * spread;
+                    const sx = cx + Math.cos(angle) * scleraRx;
+                    const sy = cy + Math.sin(angle) * scleraRy;
+                    const len = baseR * lashCfg.length * (1 - 0.3 * Math.abs(t - 0.5));
+                    const curveAmt = baseR * lashCfg.curve;
+                    const ex = sx + Math.cos(angle) * len;
+                    const ey = sy + Math.sin(angle) * len;
+                    const cpx = sx + Math.cos(angle) * len * 0.6 - curveAmt * Math.sin(angle) * 0.3;
+                    const cpy = sy + Math.sin(angle) * len * 0.6 - curveAmt;
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.quadraticCurveTo(cpx, cpy, ex, ey);
+                    ctx.stroke();
+                }
+            }
+
+            if (lashCfg.bottomOnly || p.eyelashStyle === 'dramatic') {
+                const bCount = lashCfg.bottomOnly ? lashCfg.count : Math.max(2, lashCfg.count - 2);
+                const bSpread = Math.PI * 0.5;
+                const bStart = Math.PI / 2 - bSpread / 2;
+                const bLen = baseR * (lashCfg.bottomOnly ? lashCfg.length : lashCfg.length * 0.5);
+                for (let i = 0; i < bCount; i++) {
+                    const t = bCount === 1 ? 0.5 : i / (bCount - 1);
+                    const angle = bStart + t * bSpread;
+                    const sx = cx + Math.cos(angle) * scleraRx;
+                    const sy = cy + Math.sin(angle) * scleraRy;
+                    const len = bLen * (1 - 0.3 * Math.abs(t - 0.5));
+                    const ex = sx + Math.cos(angle) * len;
+                    const ey = sy + Math.sin(angle) * len;
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.lineTo(ex, ey);
+                    ctx.stroke();
+                }
+            }
         }
 
         this.texture.needsUpdate = true;

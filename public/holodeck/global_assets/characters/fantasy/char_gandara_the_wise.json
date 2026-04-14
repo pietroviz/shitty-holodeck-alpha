@@ -46,7 +46,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "prop_round_glasses",
-      "glassesColor": "#c0a040"
-    }
+      "glassesColor": "#c0a040",
+      "voiceId": "voice_elderly_woman",
+      "eyebrowStyle": "bushy",
+      "eyebrowColor": "#c0c0c0"
+    },
+    "catchphrase": "Knowledge is the greatest magic of all."
   }
 }

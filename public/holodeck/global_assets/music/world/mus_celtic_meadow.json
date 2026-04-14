@@ -2,7 +2,11 @@
   "id": "mus_celtic_meadow",
   "type": "music",
   "name": "Celtic Meadow",
-  "tags": ["world", "folk", "mystical"],
+  "tags": [
+    "world",
+    "folk",
+    "mystical"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "harp_string_texture",
         "pattern": "D4 F#4 A4 D5 F#5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_celtic",
         "pattern": "F#5 A5 D5 F#5 A5",
-        "gain": 0.72
+        "gain": 0.72,
+        "oscType": "square"
       },
       {
         "name": "pad_ambient_mystical",
         "pattern": "A4 D5 F#5 A5",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "sine"
       },
       {
         "name": "bass_foundation_folk",
         "pattern": "D2 D2 A2 D2",
-        "gain": 0.52
+        "gain": 0.52,
+        "oscType": "sawtooth"
       }
     ],
     "duration_behavior": "loop",

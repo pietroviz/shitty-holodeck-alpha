@@ -718,6 +718,7 @@ export class ImageBridge extends BaseBridge {
         // Delete element
         panel.querySelectorAll('.cb-el-delete').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (!confirm('Delete this shape?')) return;
                 this._state.elements.splice(parseInt(btn.dataset.idx), 1);
                 this._selectedIdx = -1;
                 this._renderCanvasPlane();

@@ -1,0 +1,38 @@
+{
+  "id": "env_infinite_library",
+  "type": "environment",
+  "name": "Infinite Library",
+  "tags": [
+    "dream",
+    "books",
+    "surreal"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Endless shelves of books stretching into a warm amber infinity",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#4e342e",
+      "bottomColor": "#ffcc80"
+    },
+    "ground": {
+      "color": "#5d4037",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#5d4037",
+      "skyTopColor": "#4e342e",
+      "skyHorizonColor": "#ffcc80",
+      "wallCount": 2,
+      "musicId": "mus_vinyl_memories"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

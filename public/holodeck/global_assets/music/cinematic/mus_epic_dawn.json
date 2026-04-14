@@ -24,22 +24,26 @@
       {
         "name": "pad_orchestral_swell",
         "pattern": "D4 F#4 A4 D5 F#5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "sine"
       },
       {
         "name": "bass_foundation_deep",
         "pattern": "D2 D2 A2 D2",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "sawtooth"
       },
       {
         "name": "bright_lead_heroic",
         "pattern": "F#5 A5 D5 F#5 A5 D6",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "square"
       },
       {
         "name": "harp_string_bright",
         "pattern": "A4 D5 F#5 A5",
-        "gain": 0.52
+        "gain": 0.52,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

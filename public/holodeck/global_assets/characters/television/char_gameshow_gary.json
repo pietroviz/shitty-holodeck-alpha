@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_soul_patch",
       "facialHairColor": "#d4a843",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_sports_announcer",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#d4a843"
+    },
+    "catchphrase": "Come on down!"
   }
 }

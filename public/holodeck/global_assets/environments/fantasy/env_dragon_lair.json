@@ -1,0 +1,38 @@
+{
+  "id": "env_dragon_lair",
+  "type": "environment",
+  "name": "Dragon's Lair",
+  "tags": [
+    "fantasy",
+    "dragon",
+    "cave"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A vast cavern filled with treasure and the glow of molten rock",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#1a0a00",
+      "bottomColor": "#bf360c"
+    },
+    "ground": {
+      "color": "#3e2723",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#3e2723",
+      "skyTopColor": "#1a0a00",
+      "skyHorizonColor": "#bf360c",
+      "wallCount": 2,
+      "musicId": "mus_epic_dawn"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

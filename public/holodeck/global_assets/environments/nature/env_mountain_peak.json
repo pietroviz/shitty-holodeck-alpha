@@ -1,0 +1,38 @@
+{
+  "id": "env_mountain_peak",
+  "type": "environment",
+  "name": "Mountain Peak",
+  "tags": [
+    "nature",
+    "mountain",
+    "epic"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A windswept mountain summit above the clouds",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#1565c0",
+      "bottomColor": "#e3f2fd"
+    },
+    "ground": {
+      "color": "#78909c",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#78909c",
+      "skyTopColor": "#1565c0",
+      "skyHorizonColor": "#e3f2fd",
+      "wallCount": 0,
+      "musicId": "mus_mountain_wind"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

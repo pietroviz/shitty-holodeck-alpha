@@ -2,7 +2,11 @@
   "id": "mus_tokyo_nights",
   "type": "music",
   "name": "Tokyo Nights",
-  "tags": ["world", "urban", "fusion"],
+  "tags": [
+    "world",
+    "urban",
+    "fusion"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "drum_beat_modern",
         "pattern": "F#2 F#2 C#2 F#2",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "triangle"
       },
       {
         "name": "pad_synth_neon",
         "pattern": "F#3 A3 C#4 F#4 A4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_fusion",
         "pattern": "C#5 F#5 A5 C#5 F#5",
-        "gain": 0.72
+        "gain": 0.72,
+        "oscType": "square"
       },
       {
         "name": "texture_ambient_urban",
         "pattern": "A5 C#5 F#5 A5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 1.2,
-    "fade_out": 2.0,
+    "fade_out": 2,
     "mood_color": "#FF69B4"
   }
 }

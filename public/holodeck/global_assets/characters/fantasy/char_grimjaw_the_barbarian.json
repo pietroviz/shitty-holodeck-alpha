@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "angry",
+      "eyebrowColor": "#cc3300"
+    },
+    "catchphrase": "RAAAGH! Hit first, think never!"
   }
 }

@@ -24,22 +24,26 @@
       {
         "name": "drum_beat_perc",
         "pattern": "C2 C2 G1 C2",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "triangle"
       },
       {
         "name": "bass_sub_chiptune",
         "pattern": "C3 E3 G3 C4 E4",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "sawtooth"
       },
       {
         "name": "melody_lead_square",
         "pattern": "E5 G5 C5 E5 G5 C6",
-        "gain": 0.72
+        "gain": 0.72,
+        "oscType": "square"
       },
       {
         "name": "harp_bell_shimmer",
         "pattern": "G4 C5 E5 G5",
-        "gain": 0.55
+        "gain": 0.55,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

@@ -8,6 +8,7 @@ import { ObjectBridge } from './ObjectBridge.js';
 import { ImageBridge }  from './ImageBridge.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, removeRef } from '../db.js';
+import { MusicEngine } from '../shared/musicEngine.js';
 
 export class EnvironmentBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
@@ -21,7 +22,12 @@ export class EnvironmentBridge extends BaseBridge {
             skyTopColor:     d.skyTopColor      || '#87ceeb',
             skyHorizonColor: d.skyHorizonColor  || '#e0f6ff',
             wallCount:       d.wallCount        ?? 0,
+            musicId:         d.musicId          || '',
         };
+
+        // Music state
+        this._musicAssets = null;   // loaded lazily
+        this._musicEngine = null;
 
         // Props state
         this._showPropPicker = false;
@@ -39,6 +45,9 @@ export class EnvironmentBridge extends BaseBridge {
     _buildScene() {
         this._camera.position.set(5.2, 3.9, 5.2);
         this._camera.lookAt(0, 0, 0);
+
+        // Sky gradient background
+        this._updateSky();
 
         // Green ground overlay (5×5 stage area)
         const envGround = new THREE.Mesh(
@@ -59,6 +68,9 @@ export class EnvironmentBridge extends BaseBridge {
             new THREE.LineBasicMaterial({ color: parseInt(UI.accent.slice(1), 16) }),
         );
         this._scene.add(outline);
+
+        // Walls
+        this._renderWalls();
 
         // Render placed props and images from refs
         this._renderPlacedProps();
@@ -429,6 +441,23 @@ export class EnvironmentBridge extends BaseBridge {
             </div>
           </div>
           <div class="cb-section">
+            <div class="cb-section-title">Music</div>
+            <div class="cb-color-row">
+              <label class="cb-color-label">Track:</label>
+              <select class="cb-select" id="env-music-select" data-property="musicId">
+                <option value=""${!s.musicId ? ' selected' : ''}>None</option>
+                ${(this._musicAssets || []).map(m =>
+                  `<option value="${_esc(m.id)}"${s.musicId === m.id ? ' selected' : ''}>${_esc(m.name)}</option>`
+                ).join('')}
+              </select>
+            </div>
+            ${s.musicId ? `<div class="cb-color-row" style="gap:6px;">
+              <button class="cb-save-btn" id="env-music-preview" style="width:auto;padding:4px 12px;font-size:11px;">&#9654; Preview</button>
+              <button class="cb-save-btn" id="env-music-stop" style="width:auto;padding:4px 12px;font-size:11px;">&#9632; Stop</button>
+            </div>` : ''}
+            ${!this._musicAssets ? `<p style="color:var(--text-dim);font-size:11px;margin:4px 0;cursor:pointer;" id="env-music-load">Loading tracks...</p>` : ''}
+          </div>
+          <div class="cb-section">
             <div class="cb-section-title">Props (${placedProps.length})</div>
             ${propsListHtml}
             <button class="cb-prop-browse-btn">+ Add Prop</button>
@@ -448,6 +477,10 @@ export class EnvironmentBridge extends BaseBridge {
             const handler = () => {
                 this._state[inp.dataset.property] = inp.value;
                 this._updateGround();
+                // Live-update sky gradient when sky colors change
+                if (inp.dataset.property === 'skyTopColor' || inp.dataset.property === 'skyHorizonColor') {
+                    this._updateSky();
+                }
             };
             inp.addEventListener('input', handler);
             inp.addEventListener('change', handler);
@@ -456,9 +489,25 @@ export class EnvironmentBridge extends BaseBridge {
         // Wall count select
         this.panelEl.querySelectorAll('.cb-select').forEach(sel => {
             sel.addEventListener('change', () => {
-                this._state[sel.dataset.property] = parseInt(sel.value);
+                const prop = sel.dataset.property;
+                if (prop === 'musicId') {
+                    this._state.musicId = sel.value;
+                    this._stopMusic();
+                } else if (prop === 'wallCount') {
+                    this._state.wallCount = parseInt(sel.value);
+                    this._renderWalls();
+                } else {
+                    this._state[prop] = parseInt(sel.value);
+                }
             });
         });
+
+        // Music preview / stop buttons
+        this.panelEl.querySelector('#env-music-preview')?.addEventListener('click', () => this._previewMusic());
+        this.panelEl.querySelector('#env-music-stop')?.addEventListener('click', () => this._stopMusic());
+
+        // Lazy-load music assets when section first renders
+        if (!this._musicAssets) this._loadMusicAssets();
 
         // Prop edit buttons
         this.panelEl.querySelectorAll('.cb-prop-edit-btn').forEach(btn => {
@@ -519,12 +568,103 @@ export class EnvironmentBridge extends BaseBridge {
         });
     }
 
+    /** Load global music assets for the music selector dropdown. */
+    async _loadMusicAssets() {
+        if (this._musicAssets) return;
+        try {
+            this._musicAssets = await loadGlobalAssets('Music');
+        } catch {
+            this._musicAssets = [];
+        }
+        this._renderPanel();
+    }
+
+    /** Preview the currently assigned music track. */
+    async _previewMusic() {
+        if (!this._state.musicId) return;
+        if (!this._musicAssets) await this._loadMusicAssets();
+        const track = this._musicAssets?.find(m => m.id === this._state.musicId);
+        if (!track) return;
+        if (!this._musicEngine) {
+            this._musicEngine = new MusicEngine();
+            await this._musicEngine.init();
+        }
+        this._musicEngine.play(track);
+    }
+
+    /** Stop music preview. */
+    _stopMusic() {
+        if (this._musicEngine) this._musicEngine.stop();
+    }
+
     _updateGround() {
         this._scene.traverse(obj => {
             if (obj.userData.role === 'envGround') {
                 obj.material.color.set(this._state.groundColor);
             }
         });
+    }
+
+    /** Build a gradient sky background from state colors. */
+    _updateSky() {
+        if (!this._scene) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = 2; canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 256);
+        grad.addColorStop(0, this._state.skyTopColor);
+        grad.addColorStop(1, this._state.skyHorizonColor);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 2, 256);
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.minFilter = THREE.LinearFilter;
+        // Dispose previous background texture if any
+        if (this._scene.background?.isTexture) this._scene.background.dispose();
+        this._scene.background = tex;
+    }
+
+    /** Render wall planes around the stage perimeter based on wallCount. */
+    _renderWalls() {
+        // Remove existing walls
+        const toRemove = [];
+        this._scene.traverse(obj => { if (obj.userData.role === 'envWall') toRemove.push(obj); });
+        for (const w of toRemove) {
+            this._scene.remove(w);
+            if (w.geometry) w.geometry.dispose();
+            if (w.material) w.material.dispose();
+        }
+
+        const count = this._state.wallCount || 0;
+        if (count === 0) return;
+
+        const wallH = 2.5;
+        const wallW = 5;
+        const wallMat = new THREE.MeshStandardMaterial({
+            color: 0xcccccc, roughness: 0.9, metalness: 0.0, side: THREE.DoubleSide,
+        });
+
+        // Wall 1: back wall (z = -2.5)
+        const back = new THREE.Mesh(new THREE.PlaneGeometry(wallW, wallH), wallMat);
+        back.position.set(0, wallH / 2, -2.5);
+        back.userData.role = 'envWall';
+        back.receiveShadow = true;
+        this._scene.add(back);
+
+        // Wall 2: left wall (x = -2.5)
+        if (count >= 2) {
+            const left = new THREE.Mesh(new THREE.PlaneGeometry(wallW, wallH), wallMat.clone());
+            left.position.set(-2.5, wallH / 2, 0);
+            left.rotation.y = Math.PI / 2;
+            left.userData.role = 'envWall';
+            left.receiveShadow = true;
+            this._scene.add(left);
+        }
+    }
+
+    destroy() {
+        this._stopMusic();
+        if (this._musicEngine) { this._musicEngine.destroy(); this._musicEngine = null; }
+        super.destroy();
     }
 
     _getState() {

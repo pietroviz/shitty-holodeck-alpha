@@ -24,27 +24,31 @@
       {
         "name": "deep_bass_sub",
         "pattern": "B1 B1 B1 F#2",
-        "gain": 0.55
+        "gain": 0.55,
+        "oscType": "sawtooth"
       },
       {
         "name": "pad_ambient_resonance",
         "pattern": "B3 D4 F#4 A4 B4",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "texture_space_noise",
         "pattern": "D5 F#5 A5 D5",
-        "gain": 0.45
+        "gain": 0.45,
+        "oscType": "sine"
       },
       {
         "name": "lead_melody_floating",
         "pattern": "F#4 A4 B4 D5 A4",
-        "gain": 0.5
+        "gain": 0.5,
+        "oscType": "square"
       }
     ],
     "duration_behavior": "loop",
-    "fade_in": 3.0,
-    "fade_out": 4.0,
+    "fade_in": 3,
+    "fade_out": 4,
     "mood_color": "#1A1A2E"
   }
 }

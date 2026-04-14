@@ -1,0 +1,38 @@
+{
+  "id": "env_neon_district",
+  "type": "environment",
+  "name": "Neon District",
+  "tags": [
+    "sci-fi",
+    "cyberpunk",
+    "neon"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A rain-soaked cyberpunk district pulsing with holographic advertisements",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#0a0a1a",
+      "bottomColor": "#e040fb"
+    },
+    "ground": {
+      "color": "#1a1a2e",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#1a1a2e",
+      "skyTopColor": "#0a0a1a",
+      "skyHorizonColor": "#e040fb",
+      "wallCount": 1,
+      "musicId": "mus_cyber_chase"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

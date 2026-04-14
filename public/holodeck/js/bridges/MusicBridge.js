@@ -38,6 +38,67 @@ const MOODS = [
 // ── Duration behaviors ──────────────────────────────────────────
 const DURATIONS = ['loop', 'play-once', 'fade-out'];
 
+// ── Scale intervals (semitones from root) ──────────────────────
+const SCALE_INTERVALS = {
+    major:       [0, 2, 4, 5, 7, 9, 11],
+    minor:       [0, 2, 3, 5, 7, 8, 10],
+    dorian:      [0, 2, 3, 5, 7, 9, 10],
+    mixolydian:  [0, 2, 4, 5, 7, 9, 10],
+    pentatonic:  [0, 2, 4, 7, 9],
+    blues:       [0, 3, 5, 6, 7, 10],
+};
+
+const ALL_NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+function getScaleNotes(key, scale, octLow = 3, octHigh = 5) {
+    const intervals = SCALE_INTERVALS[scale] || SCALE_INTERVALS.minor;
+    const rootIdx = ALL_NOTES.indexOf(key);
+    if (rootIdx < 0) return [];
+    const notes = [];
+    for (let oct = octLow; oct <= octHigh; oct++) {
+        for (const interval of intervals) {
+            const noteIdx = (rootIdx + interval) % 12;
+            const noteOct = oct + Math.floor((rootIdx + interval) / 12);
+            if (noteOct > octHigh) break;
+            notes.push(`${ALL_NOTES[noteIdx]}${noteOct}`);
+        }
+    }
+    return notes;
+}
+
+function generateLayerPattern(scaleNotes, oscType, count = 8) {
+    if (scaleNotes.length === 0) return '';
+    if (oscType === 'sawtooth') {
+        // Bass: lower octave, fewer notes
+        const pool = scaleNotes.filter(n => parseInt(n.slice(-1)) <= 3);
+        const src = pool.length > 0 ? pool : scaleNotes.slice(0, 5);
+        return Array.from({ length: Math.min(count, 4) }, () => src[Math.floor(Math.random() * src.length)]).join(' ');
+    }
+    if (oscType === 'square') {
+        // Lead: mid-high melodic
+        const pool = scaleNotes.filter(n => { const o = parseInt(n.slice(-1)); return o >= 4 && o <= 5; });
+        const src = pool.length > 0 ? pool : scaleNotes;
+        return Array.from({ length: count }, () => src[Math.floor(Math.random() * src.length)]).join(' ');
+    }
+    if (oscType === 'triangle') {
+        // Perc: rhythmic, limited range
+        const src = scaleNotes.slice(0, 3);
+        return Array.from({ length: count }, () => src[Math.floor(Math.random() * src.length)]).join(' ');
+    }
+    // Sine/pad: slow, wide
+    const pool = scaleNotes.filter(n => parseInt(n.slice(-1)) >= 3);
+    const src = pool.length > 0 ? pool : scaleNotes;
+    return Array.from({ length: Math.min(count, 6) }, () => src[Math.floor(Math.random() * src.length)]).join(' ');
+}
+
+// ── Oscillator types for instrument selection ──────────────────
+const OSC_TYPES = [
+    { id: 'sine',     label: 'Sine (Pad)' },
+    { id: 'square',   label: 'Square (Lead)' },
+    { id: 'sawtooth', label: 'Sawtooth (Bass)' },
+    { id: 'triangle', label: 'Triangle (Perc)' },
+];
+
 export class MusicBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
         super(sceneContainer, panelEl, options);
@@ -218,12 +279,19 @@ export class MusicBridge extends BaseBridge {
         if (layers.length === 0) {
             layerHtml = '<div class="cb-hint">No layers yet — add one below</div>';
         } else {
-            layerHtml = layers.map((layer, i) => `
+            layerHtml = layers.map((layer, i) => {
+                const oscOpts = OSC_TYPES.map(o =>
+                    `<option value="${o.id}" ${(layer.oscType || 'sine') === o.id ? 'selected' : ''}>${o.label}</option>`
+                ).join('');
+                return `
                 <div class="cb-element-row" style="display:flex;gap:8px;align-items:center;padding:8px;background:${UI.panelRaised};border-radius:8px;margin-bottom:6px;">
                     <div style="flex:1;">
                         <input type="text" class="cb-input cb-layer-name" data-idx="${i}"
                                value="${_esc(layer.name || `Layer ${i + 1}`)}"
                                placeholder="Layer name" style="margin-bottom:4px;width:100%;">
+                        <select class="cb-acc-select cb-layer-osc" data-idx="${i}" style="margin-bottom:4px;width:100%;font-size:11px;">
+                            ${oscOpts}
+                        </select>
                         <div style="display:flex;align-items:center;gap:8px;">
                             <label class="cb-color-label" style="font-size:10px;white-space:nowrap;">Gain:</label>
                             <input type="range" class="cb-range cb-layer-gain" data-idx="${i}"
@@ -234,8 +302,8 @@ export class MusicBridge extends BaseBridge {
                     </div>
                     <button class="cb-btn-sm cb-layer-del" data-idx="${i}" title="Remove layer"
                             style="color:${UI.danger};">✕</button>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         return `
@@ -273,6 +341,18 @@ export class MusicBridge extends BaseBridge {
           <div class="cb-section">
             <div class="cb-section-title">Scale</div>
             <div class="cb-shape-grid" style="grid-template-columns:repeat(3,1fr);">${scaleBtns}</div>
+          </div>
+          <div class="cb-section">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="cb-section-title" style="margin:0;">Generate</div>
+              <button class="cb-btn-sm cb-generate-notes" style="font-size:11px;">
+                🎲 Generate from ${s.key} ${_capitalize(s.scale)}
+              </button>
+            </div>
+            <div class="cb-hint" style="margin-top:4px;">
+              Auto-fill layer patterns using the selected key &amp; scale.
+              ${s.layers.length === 0 ? '<br><em>Add layers first in the Layers tab.</em>' : `Will update ${s.layers.length} layer(s).`}
+            </div>
           </div>
           <div class="cb-section">
             <div class="cb-section-title">Master Pattern</div>
@@ -372,6 +452,15 @@ export class MusicBridge extends BaseBridge {
                 this.markDirty('Adjust gain');
             });
         });
+        panel.querySelectorAll('.cb-layer-osc').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.idx);
+                if (this._state.layers[i]) {
+                    this._state.layers[i].oscType = sel.value;
+                    this.markDirty('Change instrument');
+                }
+            });
+        });
         panel.querySelectorAll('.cb-layer-del').forEach(btn => {
             btn.addEventListener('click', () => {
                 this._state.layers.splice(parseInt(btn.dataset.idx), 1);
@@ -384,7 +473,8 @@ export class MusicBridge extends BaseBridge {
             this._state.layers.push({
                 name: `Layer ${this._state.layers.length + 1}`,
                 gain: 0.8,
-                instrument: '',
+                oscType: 'sine',
+                pattern: '',
             });
             this._buildVisualizer();
             this.markDirty('Add layer');
@@ -422,6 +512,17 @@ export class MusicBridge extends BaseBridge {
                 this.markDirty('Change scale');
                 this._renderPanel();
             });
+        });
+
+        // Generate Notes button
+        panel.querySelector('.cb-generate-notes')?.addEventListener('click', () => {
+            const scaleNotes = getScaleNotes(this._state.key, this._state.scale);
+            if (scaleNotes.length === 0 || this._state.layers.length === 0) return;
+            for (const layer of this._state.layers) {
+                layer.pattern = generateLayerPattern(scaleNotes, layer.oscType || 'sine');
+            }
+            this.markDirty('Generate notes');
+            this._renderPanel();
         });
 
         // Pattern code

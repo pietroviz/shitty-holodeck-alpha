@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "prop_monocle",
-      "glassesColor": "#d4a843"
-    }
+      "glassesColor": "#d4a843",
+      "voiceId": "voice_villain",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#1a1a1a"
+    },
+    "catchphrase": "I never drink... wine."
   }
 }

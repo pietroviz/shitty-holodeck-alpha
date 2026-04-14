@@ -47,7 +47,10 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_robot",
+      "eyebrowStyle": "none"
+    },
+    "catchphrase": "PROTECT. SERVE. CRUSH."
   }
 }

@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#6a4a2a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_giant",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#6a4a2a"
+    },
+    "catchphrase": "The forest remembers all who trespass."
   }
 }

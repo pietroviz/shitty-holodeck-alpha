@@ -2,7 +2,11 @@
   "id": "mus_synthwave_sunset",
   "type": "music",
   "name": "Synthwave Sunset",
-  "tags": ["retro", "synthwave", "dreamy"],
+  "tags": [
+    "retro",
+    "synthwave",
+    "dreamy"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "drum_beat_synth",
         "pattern": "A2 A2 E2 A2",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "triangle"
       },
       {
         "name": "pad_lush_synth",
         "pattern": "A3 C#4 E4 A4 C#5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_ethereal",
         "pattern": "E5 A5 C#5 E5 A5",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "square"
       },
       {
         "name": "texture_shimmer_fx",
         "pattern": "C#5 E5 A5 E5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 1.2,
-    "fade_out": 2.0,
+    "fade_out": 2,
     "mood_color": "#FF1493"
   }
 }

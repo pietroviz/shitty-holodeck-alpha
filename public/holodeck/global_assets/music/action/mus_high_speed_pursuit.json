@@ -2,7 +2,11 @@
   "id": "mus_high_speed_pursuit",
   "type": "music",
   "name": "High Speed Pursuit",
-  "tags": ["action", "intense", "fast"],
+  "tags": [
+    "action",
+    "intense",
+    "fast"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "drum_kick_snare",
         "pattern": "B2 B2 F#2 B2",
-        "gain": 0.75
+        "gain": 0.75,
+        "oscType": "triangle"
       },
       {
         "name": "bass_fat_drive",
         "pattern": "B3 D4 F#4 B4 D5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "sawtooth"
       },
       {
         "name": "melody_lead_sharp",
         "pattern": "F#5 B5 D5 F#5 B5 D6",
-        "gain": 0.75
+        "gain": 0.75,
+        "oscType": "square"
       },
       {
         "name": "texture_noise_edge",
         "pattern": "D5 F#5 B5 D5",
-        "gain": 0.52
+        "gain": 0.52,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

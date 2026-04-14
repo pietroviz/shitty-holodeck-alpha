@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#ff6600",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_villain",
+      "eyebrowStyle": "angry",
+      "eyebrowColor": "#ff6600"
+    },
+    "catchphrase": "Actually, I think you'll find..."
   }
 }

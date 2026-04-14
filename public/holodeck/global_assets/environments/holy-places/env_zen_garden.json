@@ -1,0 +1,38 @@
+{
+  "id": "env_zen_garden",
+  "type": "environment",
+  "name": "Zen Garden",
+  "tags": [
+    "sacred",
+    "zen",
+    "peaceful"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A meticulously raked sand garden with carefully placed stones",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#90a4ae",
+      "bottomColor": "#eceff1"
+    },
+    "ground": {
+      "color": "#d7ccc8",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#d7ccc8",
+      "skyTopColor": "#90a4ae",
+      "skyHorizonColor": "#eceff1",
+      "wallCount": 1,
+      "musicId": "mus_morning_fog"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

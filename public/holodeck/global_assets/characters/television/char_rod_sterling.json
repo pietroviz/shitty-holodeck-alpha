@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_mustache",
       "facialHairColor": "#2a2a2a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_narrator",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#2a2a2a"
+    },
+    "catchphrase": "You're about to enter... another dimension."
   }
 }

@@ -1,0 +1,38 @@
+{
+  "id": "env_startup_loft",
+  "type": "environment",
+  "name": "Startup Loft",
+  "tags": [
+    "interior",
+    "office",
+    "casual"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An open-plan loft workspace with exposed brick and whiteboards",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#ffcc80",
+      "bottomColor": "#fff3e0"
+    },
+    "ground": {
+      "color": "#8d6e63",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#8d6e63",
+      "skyTopColor": "#ffcc80",
+      "skyHorizonColor": "#fff3e0",
+      "wallCount": 1,
+      "musicId": "mus_late_night_lofi"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

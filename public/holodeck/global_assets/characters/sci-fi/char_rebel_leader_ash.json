@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#cc3300",
       "glassesStyle": "prop_sunglasses",
-      "glassesColor": "#1a1a1a"
-    }
+      "glassesColor": "#1a1a1a",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#cc3300"
+    },
+    "catchphrase": "The revolution will not be monetized."
   }
 }

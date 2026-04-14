@@ -1,0 +1,38 @@
+{
+  "id": "env_ancient_temple",
+  "type": "environment",
+  "name": "Ancient Temple",
+  "tags": [
+    "sacred",
+    "temple",
+    "ancient"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A crumbling stone temple with shafts of golden light through the ceiling",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#4e342e",
+      "bottomColor": "#d7ccc8"
+    },
+    "ground": {
+      "color": "#795548",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#795548",
+      "skyTopColor": "#4e342e",
+      "skyHorizonColor": "#d7ccc8",
+      "wallCount": 2,
+      "musicId": "mus_crystal_cave"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#4a6a2a",
       "glassesStyle": "prop_round_glasses",
-      "glassesColor": "#4a6a2a"
-    }
+      "glassesColor": "#4a6a2a",
+      "voiceId": "voice_professor",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#4a6a2a"
+    },
+    "catchphrase": "Fascinating. Don't touch it though."
   }
 }

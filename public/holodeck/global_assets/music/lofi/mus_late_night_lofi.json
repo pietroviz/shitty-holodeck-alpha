@@ -2,7 +2,11 @@
   "id": "mus_late_night_lofi",
   "type": "music",
   "name": "Late Night Lofi",
-  "tags": ["lofi", "chill", "relaxed"],
+  "tags": [
+    "lofi",
+    "chill",
+    "relaxed"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "drum_beat_lofi",
         "pattern": "A1 A1 E2 A1",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "triangle"
       },
       {
         "name": "pad_jazz_warm",
         "pattern": "A3 C4 E4 A4 C5",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sine"
       },
       {
         "name": "bass_melody_funky",
         "pattern": "E3 A3 C4 E4 A4",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "sawtooth"
       },
       {
         "name": "texture_vinyl_noise",
         "pattern": "C5 E5 A5 E5",
-        "gain": 0.38
+        "gain": 0.38,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

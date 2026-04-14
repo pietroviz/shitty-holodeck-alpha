@@ -2,7 +2,11 @@
   "id": "mus_ocean_waves",
   "type": "music",
   "name": "Ocean Waves",
-  "tags": ["nature", "aquatic", "flowing"],
+  "tags": [
+    "nature",
+    "aquatic",
+    "flowing"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "texture_wave_sound",
         "pattern": "E5 G5 C5 E5 G5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       },
       {
         "name": "pad_aquatic_depth",
         "pattern": "C3 E3 G3 C4 E4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_fluid",
         "pattern": "G4 C5 E5 G5 C5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "square"
       },
       {
         "name": "bass_ocean_deep",
         "pattern": "C2 C2 G2 C2",
-        "gain": 0.55
+        "gain": 0.55,
+        "oscType": "sawtooth"
       }
     ],
     "duration_behavior": "loop",

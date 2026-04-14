@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "prop_square_glasses",
-      "glassesColor": "#d4a843"
-    }
+      "glassesColor": "#d4a843",
+      "voiceId": "voice_female",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#1a1a1a"
+    },
+    "catchphrase": "Order! Order in my court!"
   }
 }

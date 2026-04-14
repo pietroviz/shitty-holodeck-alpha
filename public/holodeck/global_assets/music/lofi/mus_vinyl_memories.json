@@ -2,7 +2,11 @@
   "id": "mus_vinyl_memories",
   "type": "music",
   "name": "Vinyl Memories",
-  "tags": ["lofi", "nostalgic", "groovy"],
+  "tags": [
+    "lofi",
+    "nostalgic",
+    "groovy"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "drum_beat_funk",
         "pattern": "G1 G1 D2 G1",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "triangle"
       },
       {
         "name": "pad_soul_warm",
         "pattern": "G3 Bb3 D4 G4 Bb4",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_soulful",
         "pattern": "D5 G5 Bb5 G5 D5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "square"
       },
       {
         "name": "texture_vinyl_crackle",
         "pattern": "Bb5 D5 G5 Bb5",
-        "gain": 0.4
+        "gain": 0.4,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

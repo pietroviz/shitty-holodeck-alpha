@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_mustache",
       "facialHairColor": "#c0c0c0",
       "glassesStyle": "prop_round_glasses",
-      "glassesColor": "#c0c0c0"
-    }
+      "glassesColor": "#c0c0c0",
+      "voiceId": "voice_professor",
+      "eyebrowStyle": "bushy",
+      "eyebrowColor": "#c0c0c0"
+    },
+    "catchphrase": "Science is basically magic with receipts!"
   }
 }

@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#4a3a2a",
       "glassesStyle": "prop_sunglasses",
-      "glassesColor": "#ff4400"
-    }
+      "glassesColor": "#ff4400",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "angry",
+      "eyebrowColor": "#4a3a2a"
+    },
+    "catchphrase": "Everyone's got a price. Even you."
   }
 }

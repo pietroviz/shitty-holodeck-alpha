@@ -293,7 +293,12 @@ function render() {
           environment: ICON.trees, object: ICON.box, image: ICON.image, voice: ICON.music
         }[displayAsset.type] || ICON.box
     ) : '';
-    E.titleThumb.innerHTML   = isNew ? ICON.wand : assetTypeIcon;
+    // Show asset thumbnail in title row (fall back to type icon)
+    if (!isNew && displayAsset) {
+        E.titleThumb.innerHTML = _thumbHTML(displayAsset);
+    } else {
+        E.titleThumb.innerHTML = isNew ? ICON.wand : assetTypeIcon;
+    }
     E.titleText.textContent  = isNew
         ? (createType ? `Create New ${createType}…` : 'Create New…')
         : (displayAsset ? displayAsset.name : 'Untitled');
@@ -657,6 +662,7 @@ function renderPanelItems() {
                 <div class="pi-name">${it.name || 'Untitled'}</div>
                 <div class="pi-detail">${it.type || ''}</div>
                 <div class="pi-detail">${it.tags ? it.tags.slice(0,3).join(', ') : ''}</div>
+                ${it.payload?.catchphrase ? `<div class="pi-catchphrase">${it.payload.catchphrase}</div>` : ''}
             </div>
             <button class="pi-action pi-edit" data-idx="${idx}" data-id="${it.id}" title="Edit">${ICON.pencil}</button>
             <div class="pi-more-wrap">
@@ -804,6 +810,7 @@ function renderPanel() {
                         <div class="pi-name">${it.name || 'Untitled'}</div>
                         <div class="pi-detail">${it.type || ''}</div>
                         <div class="pi-detail">${it.tags ? it.tags.slice(0,3).join(', ') : ''}</div>
+                ${it.payload?.catchphrase ? `<div class="pi-catchphrase">${it.payload.catchphrase}</div>` : ''}
                     </div>
                     <button class="pi-action pi-edit" data-idx="${idx}" data-id="${it.id}" title="Edit">${ICON.pencil}</button>
                     <div class="pi-more-wrap">
@@ -1075,8 +1082,8 @@ function _autoPlayCurrentAsset() {
         const speakText = assetState.previewText || "Look at me, I'm a character.";
         previewSpeakWhenReady(speakText);
     } else if (asset.type === 'character') {
-        // Characters use their greeting text or a default
-        const speakText = assetState.greeting || assetState.previewText || "Look at me, I'm a character.";
+        // Characters use catchphrase, greeting, or default
+        const speakText = asset.payload?.catchphrase || assetState.greeting || assetState.previewText || "Look at me, I'm a character.";
         previewSpeakWhenReady(speakText);
     } else if (asset.type === 'music') {
         previewPlayMusic(asset);
@@ -1449,6 +1456,14 @@ function initKeyboard() {
             return;
         }
 
+        // ── Spacebar play/stop in browse mode ──
+        if (e.key === ' ' && !S.builderMode && !S.isNew && S.previewAsset
+            && !e.target.closest('input, textarea, select')) {
+            e.preventDefault();
+            E.playBtn.click();
+            return;
+        }
+
         if (e.key !== 'Escape') return;
         const aboutEl = document.getElementById('about-overlay');
         if (aboutEl && aboutEl.style.display !== 'none') {
@@ -1602,7 +1617,7 @@ function init() {
                 const assetState = S.previewAsset.payload?.state || S.previewAsset.state || {};
                 const speakText = (S.previewAsset.type === 'voice' && assetState.previewText)
                     ? assetState.previewText
-                    : "Look at me, I'm a character.";
+                    : (S.previewAsset.payload?.catchphrase || assetState.greeting || "Look at me, I'm a character.");
                 previewSpeak(speakText);
             }
         }

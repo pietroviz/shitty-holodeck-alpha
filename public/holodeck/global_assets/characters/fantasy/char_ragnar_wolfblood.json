@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_full_beard",
       "facialHairColor": "#8a6a4a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "angry",
+      "eyebrowColor": "#8a6a4a"
+    },
+    "catchphrase": "The wolf within hungers for battle!"
   }
 }

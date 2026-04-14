@@ -2,7 +2,11 @@
   "id": "mus_mountain_wind",
   "type": "music",
   "name": "Mountain Wind",
-  "tags": ["nature", "majestic", "serene"],
+  "tags": [
+    "nature",
+    "majestic",
+    "serene"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "pad_majestic_high",
         "pattern": "A4 C#5 E5 A5 C#5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "wind_texture_howl",
         "pattern": "E5 A5 C#5 E5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_soaring",
         "pattern": "C#5 E5 A5 C#5 E5 A5",
-        "gain": 0.72
+        "gain": 0.72,
+        "oscType": "square"
       },
       {
         "name": "bass_foundation_solid",
         "pattern": "A2 A2 E3 A2",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "sawtooth"
       }
     ],
     "duration_behavior": "loop",

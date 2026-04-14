@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_elf",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#d4a843"
+    },
+    "catchphrase": "Be not afraid."
   }
 }

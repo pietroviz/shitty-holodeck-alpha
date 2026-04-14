@@ -1,0 +1,38 @@
+{
+  "id": "env_cozy_living_room",
+  "type": "environment",
+  "name": "Cozy Living Room",
+  "tags": [
+    "interior",
+    "home",
+    "cozy"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A warm living room with soft lighting and comfortable furniture",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#5d4037",
+      "bottomColor": "#8d6e63"
+    },
+    "ground": {
+      "color": "#6d4c41",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#6d4c41",
+      "skyTopColor": "#5d4037",
+      "skyHorizonColor": "#8d6e63",
+      "wallCount": 2,
+      "musicId": "mus_vinyl_memories"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

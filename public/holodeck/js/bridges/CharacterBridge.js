@@ -18,7 +18,7 @@ import {
     BODY_HEIGHT_PRESETS, BODY_WIDTH_PRESETS,
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     BONE_HIERARCHY, BASE_BONES, EYE_SHAPES,
-    HAIR_STYLES, HAT_STYLES, GLASSES_STYLES, FACIAL_HAIR_STYLES,
+    HAIR_STYLES, HAT_STYLES, GLASSES_STYLES, FACIAL_HAIR_STYLES, EYELASH_STYLES, EYEBROW_STYLES,
     PROP_REF_WIDTH, FACE_PROP_REF_WIDTH, FACIAL_HAIR_REF_WIDTH,
     VOICE_PRESETS,
 } from '../shared/charConfig.js';
@@ -240,6 +240,10 @@ export class CharacterBridge extends BaseBridge {
             bottomColor: d.bottomColor || DEFAULT_COLORS.bottom,
             eyeIrisColor: d.eyeIrisColor || null,
             eyeShape: d.eyeShape || 'circle',
+            eyelashStyle: d.eyelashStyle || 'none',
+            eyelashColor: d.eyelashColor || '#1a1a1a',
+            eyebrowStyle: d.eyebrowStyle || 'none',
+            eyebrowColor: d.eyebrowColor || d.scalpColor || '#4a3728',
             lipColor: d.lipColor || null,
             hairStyle: d.hairStyle || 'none',
             hairColor: d.hairColor || '#4a3728',
@@ -385,6 +389,14 @@ export class CharacterBridge extends BaseBridge {
 
         if (s.eyeIrisColor) { this._leftEye.setIrisColor(s.eyeIrisColor); this._rightEye.setIrisColor(s.eyeIrisColor); }
         if (s.eyeShape !== 'circle') { this._leftEye.setShape(s.eyeShape); this._rightEye.setShape(s.eyeShape); }
+        if (s.eyelashStyle && s.eyelashStyle !== 'none') {
+            this._leftEye.setEyelashStyle(s.eyelashStyle);
+            this._rightEye.setEyelashStyle(s.eyelashStyle);
+            if (s.eyelashColor) {
+                this._leftEye.setEyelashColor(s.eyelashColor);
+                this._rightEye.setEyelashColor(s.eyelashColor);
+            }
+        }
         if (s.lipColor) this._mouthRig.setLipColor(s.lipColor);
 
         this._blinkCtrl.clear(); this._blinkCtrl.register(this._leftEye, this._rightEye);
@@ -776,6 +788,10 @@ export class CharacterBridge extends BaseBridge {
         } else if (tab === 'face') {
             content = `
                 ${_presetRow('Eyes', 'eyeShape', Object.entries(EYE_SHAPES).map(([k,v])=>({key:k,label:v.label})), s.eyeShape)}
+                ${_presetRow('Lashes', 'eyelashStyle', Object.entries(EYELASH_STYLES).map(([k,v])=>({key:k,label:v.label})), s.eyelashStyle)}
+                ${s.eyelashStyle && s.eyelashStyle !== 'none' ? _swatchRow('Lash Color', 'eyelashColor', s.eyelashColor) : ''}
+                ${_presetRow('Brows', 'eyebrowStyle', Object.entries(EYEBROW_STYLES).map(([k,v])=>({key:k,label:v.label})), s.eyebrowStyle)}
+                ${s.eyebrowStyle && s.eyebrowStyle !== 'none' ? _swatchRow('Brow Color', 'eyebrowColor', s.eyebrowColor) : ''}
                 ${_triRow('Placement', 'facePlacement', FACE_PLACEMENT_PRESETS, s.facePlacement)}
                 ${_triRow('Face Height', 'faceHeightPreset', { squat:{label:'Squat'}, medium:{label:'Medium'}, tall:{label:'Tall'} }, s.faceHeightPreset)}
                 ${_triRow('Face Width', 'faceWidthPreset', { narrow:{label:'Narrow'}, moderate:{label:'Moderate'}, wide:{label:'Wide'} }, s.faceWidthPreset)}

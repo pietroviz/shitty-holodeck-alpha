@@ -1,0 +1,38 @@
+{
+  "id": "env_alien_landscape",
+  "type": "environment",
+  "name": "Alien Landscape",
+  "tags": [
+    "sci-fi",
+    "alien",
+    "exotic"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A bizarre alien world with bioluminescent flora and twin suns",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#880e4f",
+      "bottomColor": "#f8bbd0"
+    },
+    "ground": {
+      "color": "#4a148c",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#4a148c",
+      "skyTopColor": "#880e4f",
+      "skyHorizonColor": "#f8bbd0",
+      "wallCount": 0,
+      "musicId": "mus_glitch_groove"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

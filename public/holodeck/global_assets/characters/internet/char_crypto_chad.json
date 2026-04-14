@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#d4a843",
       "glassesStyle": "prop_sunglasses",
-      "glassesColor": "#ff4400"
-    }
+      "glassesColor": "#ff4400",
+      "voiceId": "voice_male",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#d4a843"
+    },
+    "catchphrase": "Diamond hands, baby. To the moon!"
   }
 }

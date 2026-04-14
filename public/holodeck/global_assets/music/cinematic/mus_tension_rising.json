@@ -2,7 +2,11 @@
   "id": "mus_tension_rising",
   "type": "music",
   "name": "Tension Rising",
-  "tags": ["cinematic", "suspenseful", "intense"],
+  "tags": [
+    "cinematic",
+    "suspenseful",
+    "intense"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "drum_beat_driving",
         "pattern": "C2 C2 G2 C2",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "triangle"
       },
       {
         "name": "bass_tense_deep",
         "pattern": "C3 Eb3 G3 C4 Eb4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sawtooth"
       },
       {
         "name": "melody_arp_ascending",
         "pattern": "G4 Bb4 C5 Eb5 G5 Bb5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "sine"
       },
       {
         "name": "texture_noise_drone",
         "pattern": "Eb5 G5 Bb5 Eb5",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 1.2,
-    "fade_out": 2.0,
+    "fade_out": 2,
     "mood_color": "#8B0000"
   }
 }

@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_soul_patch",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#2a4a1a"
+    },
+    "catchphrase": "Strength is the only law."
   }
 }

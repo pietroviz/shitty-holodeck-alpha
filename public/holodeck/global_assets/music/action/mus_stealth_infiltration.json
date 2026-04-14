@@ -2,7 +2,11 @@
   "id": "mus_stealth_infiltration",
   "type": "music",
   "name": "Stealth Infiltration",
-  "tags": ["action", "suspenseful", "tactical"],
+  "tags": [
+    "action",
+    "suspenseful",
+    "tactical"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "drum_beat_sparse",
         "pattern": "F2 F2 C2 F2",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "triangle"
       },
       {
         "name": "bass_sneaky_sub",
         "pattern": "F3 Ab3 C4 F4 Ab4",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "sawtooth"
       },
       {
         "name": "lead_pluck_stealth",
         "pattern": "C5 F5 Ab5 C5 F5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "square"
       },
       {
         "name": "texture_ambient_edge",
         "pattern": "Ab5 C5 F5 Ab5",
-        "gain": 0.45
+        "gain": 0.45,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 0.8,
-    "fade_out": 2.0,
+    "fade_out": 2,
     "mood_color": "#2F4F4F"
   }
 }

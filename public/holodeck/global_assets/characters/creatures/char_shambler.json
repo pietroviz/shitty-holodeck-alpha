@@ -47,7 +47,10 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "prop_eye_patch",
-      "glassesColor": "#4a4a4a"
-    }
+      "glassesColor": "#4a4a4a",
+      "voiceId": "voice_ogre",
+      "eyebrowStyle": "none"
+    },
+    "catchphrase": "Braaains... just kidding. Or am I?"
   }
 }

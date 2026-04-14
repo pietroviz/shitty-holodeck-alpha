@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_long_beard",
       "facialHairColor": "#4a6a2a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_treant",
+      "eyebrowStyle": "bushy",
+      "eyebrowColor": "#4a6a2a"
+    },
+    "catchphrase": "I was old when the mountains were young."
   }
 }

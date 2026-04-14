@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_female",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#4a3a8a"
+    },
+    "catchphrase": "I know these stars like the back of my hand."
   }
 }

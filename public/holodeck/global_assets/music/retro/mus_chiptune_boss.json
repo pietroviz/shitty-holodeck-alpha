@@ -24,22 +24,26 @@
       {
         "name": "drum_beat_intense",
         "pattern": "F#2 F#2 C#2 F#2",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "triangle"
       },
       {
         "name": "bass_sub_deep",
         "pattern": "F#3 A3 C#4 F#4 A4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sawtooth"
       },
       {
         "name": "arp_ascending_fast",
         "pattern": "C#5 F#5 A5 C#5 F#5 A5",
-        "gain": 0.75
+        "gain": 0.75,
+        "oscType": "sine"
       },
       {
         "name": "melody_lead_stab",
         "pattern": "A5 C#5 F#5 A5",
-        "gain": 0.58
+        "gain": 0.58,
+        "oscType": "square"
       }
     ],
     "duration_behavior": "loop",

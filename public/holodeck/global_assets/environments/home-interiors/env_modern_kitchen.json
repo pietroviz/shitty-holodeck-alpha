@@ -1,0 +1,38 @@
+{
+  "id": "env_modern_kitchen",
+  "type": "environment",
+  "name": "Modern Kitchen",
+  "tags": [
+    "interior",
+    "kitchen",
+    "modern"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A sleek modern kitchen with stainless steel and marble counters",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#eceff1",
+      "bottomColor": "#cfd8dc"
+    },
+    "ground": {
+      "color": "#e0e0e0",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#e0e0e0",
+      "skyTopColor": "#eceff1",
+      "skyHorizonColor": "#cfd8dc",
+      "wallCount": 2,
+      "musicId": "mus_late_night_lofi"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

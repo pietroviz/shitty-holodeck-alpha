@@ -1,0 +1,38 @@
+{
+  "id": "env_ocean_shore",
+  "type": "environment",
+  "name": "Ocean Shore",
+  "tags": [
+    "nature",
+    "beach",
+    "ocean"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A sandy beach with gentle waves lapping at the shore",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#4fc3f7",
+      "bottomColor": "#e0f7fa"
+    },
+    "ground": {
+      "color": "#d7ccc8",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#d7ccc8",
+      "skyTopColor": "#4fc3f7",
+      "skyHorizonColor": "#e0f7fa",
+      "wallCount": 0,
+      "musicId": "mus_ocean_waves"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

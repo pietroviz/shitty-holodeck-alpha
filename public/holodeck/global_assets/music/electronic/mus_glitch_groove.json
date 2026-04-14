@@ -24,27 +24,31 @@
       {
         "name": "glitch_drum_electronic",
         "pattern": "G2 D2 G2 D2",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "triangle"
       },
       {
         "name": "bass_groove_funky",
         "pattern": "G3 Bb3 D4 G4 Bb4",
-        "gain": 0.55
+        "gain": 0.55,
+        "oscType": "sawtooth"
       },
       {
         "name": "lead_pluck_stab",
         "pattern": "D5 G5 Bb5 D5 G5",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "square"
       },
       {
         "name": "texture_noise_fx",
         "pattern": "G5 Bb5 D5 Bb5",
-        "gain": 0.45
+        "gain": 0.45,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 0.8,
-    "fade_out": 2.0,
+    "fade_out": 2,
     "mood_color": "#FF00FF"
   }
 }

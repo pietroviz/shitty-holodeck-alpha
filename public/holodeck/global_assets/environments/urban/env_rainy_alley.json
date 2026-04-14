@@ -1,0 +1,38 @@
+{
+  "id": "env_rainy_alley",
+  "type": "environment",
+  "name": "Rainy Alley",
+  "tags": [
+    "urban",
+    "rain",
+    "noir"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A narrow alley slick with rain, neon signs reflected in puddles",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#2d2d3f",
+      "bottomColor": "#4a4a5e"
+    },
+    "ground": {
+      "color": "#333340",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#333340",
+      "skyTopColor": "#2d2d3f",
+      "skyHorizonColor": "#4a4a5e",
+      "wallCount": 2,
+      "musicId": "mus_rainy_window"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

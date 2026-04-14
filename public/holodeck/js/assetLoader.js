@@ -61,12 +61,12 @@ export async function loadGlobalAssets(category) {
     if (cfg.hasManifest) {
         assets = await _loadFromManifest(cfg.folder, cfg.subFilter);
     } else if (category === '2D Images') {
-        // Images have sub-folders; load a few key ones
+        // Images have sub-folders; load all in parallel
         const subfolders = ['man-made-props', 'natural-props', 'walls', 'textures'];
-        for (const sub of subfolders) {
-            const items = await _loadAllJsonInFolder(`${BASE_PATH}/images/${sub}`);
-            assets.push(...items);
-        }
+        const subResults = await Promise.all(
+            subfolders.map(sub => _loadAllJsonInFolder(`${BASE_PATH}/images/${sub}`))
+        );
+        for (const items of subResults) assets.push(...items);
     }
 
     _globalCache[category] = assets;
@@ -127,22 +127,23 @@ async function _loadFromManifest(folder, subFilter) {
     const manifest = _manifestCache[folder];
     const assets = [];
 
+    // Build flat list of all fetch promises across all categories (parallel)
+    const fetchJobs = [];
     for (const [catKey, catData] of Object.entries(manifest.categories || {})) {
-        // If we only want a sub-category (e.g. "environment" from objects)
         if (subFilter && catKey !== subFilter) continue;
-
         const catFolder = `${BASE_PATH}/${folder}/${catKey}`;
+        const catLabel = catData.name || catKey;
         for (const filename of (catData.files || [])) {
-            try {
-                const res = await fetch(`${catFolder}/${filename}`);
-                if (res.ok) {
-                    const asset = await res.json();
-                    asset._category = catData.name || catKey;
-                    assets.push(asset);
-                }
-            } catch { /* skip failed loads */ }
+            fetchJobs.push(
+                fetch(`${catFolder}/${filename}`)
+                    .then(r => r.ok ? r.json() : null)
+                    .then(a => { if (a) a._category = catLabel; return a; })
+                    .catch(() => null)
+            );
         }
     }
+    const results = await Promise.all(fetchJobs);
+    for (const a of results) { if (a) assets.push(a); }
 
     return assets;
 }
@@ -162,31 +163,29 @@ async function _loadAllJsonInFolder(folderPath) {
             const assets = [];
             // Manifest might have flat files array or categories
             if (manifest.files) {
-                for (const f of manifest.files) {
-                    try {
-                        const r = await fetch(`${folderPath}/${f}`);
-                        if (r.ok) assets.push(await r.json());
-                    } catch { /* skip */ }
-                }
-                return assets;
+                const results = await Promise.all(
+                    manifest.files.map(f =>
+                        fetch(`${folderPath}/${f}`).then(r => r.ok ? r.json() : null).catch(() => null)
+                    )
+                );
+                return results.filter(Boolean);
             }
             if (manifest.categories) {
+                const jobs = [];
                 for (const cat of Object.values(manifest.categories)) {
                     for (const f of (cat.files || [])) {
-                        try {
-                            const catPath = cat.folder
-                                ? `${folderPath}/${cat.folder}/${f}`
-                                : `${folderPath}/${f}`;
-                            const r = await fetch(catPath);
-                            if (r.ok) {
-                                const a = await r.json();
-                                a._category = cat.name;
-                                assets.push(a);
-                            }
-                        } catch { /* skip */ }
+                        const catPath = cat.folder
+                            ? `${folderPath}/${cat.folder}/${f}`
+                            : `${folderPath}/${f}`;
+                        jobs.push(
+                            fetch(catPath)
+                                .then(r => r.ok ? r.json() : null)
+                                .then(a => { if (a) a._category = cat.name; return a; })
+                                .catch(() => null)
+                        );
                     }
                 }
-                return assets;
+                return (await Promise.all(jobs)).filter(Boolean);
             }
         }
     } catch { /* no manifest, try index */ }
@@ -196,14 +195,12 @@ async function _loadAllJsonInFolder(folderPath) {
         const res = await fetch(`${folderPath}/_index.json`);
         if (res.ok) {
             const filenames = await res.json();
-            const assets = [];
-            for (const f of filenames) {
-                try {
-                    const r = await fetch(`${folderPath}/${f}`);
-                    if (r.ok) assets.push(await r.json());
-                } catch { /* skip */ }
-            }
-            return assets;
+            const results = await Promise.all(
+                filenames.map(f =>
+                    fetch(`${folderPath}/${f}`).then(r => r.ok ? r.json() : null).catch(() => null)
+                )
+            );
+            return results.filter(Boolean);
         }
     } catch { /* no index */ }
 

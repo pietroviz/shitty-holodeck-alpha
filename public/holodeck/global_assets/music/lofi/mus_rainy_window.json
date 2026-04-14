@@ -2,7 +2,11 @@
   "id": "mus_rainy_window",
   "type": "music",
   "name": "Rainy Window",
-  "tags": ["lofi", "atmospheric", "calm"],
+  "tags": [
+    "lofi",
+    "atmospheric",
+    "calm"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,27 +24,31 @@
       {
         "name": "drum_beat_soft",
         "pattern": "E1 E1 B1 E1",
-        "gain": 0.55
+        "gain": 0.55,
+        "oscType": "triangle"
       },
       {
         "name": "piano_key_gentle",
         "pattern": "E3 G3 B3 E4 G4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sine"
       },
       {
         "name": "rain_texture_falling",
         "pattern": "G5 B5 E5 G5 B5",
-        "gain": 0.42
+        "gain": 0.42,
+        "oscType": "sine"
       },
       {
         "name": "pad_ambient_hazy",
         "pattern": "B3 E4 G4 B4",
-        "gain": 0.5
+        "gain": 0.5,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
     "fade_in": 1.8,
-    "fade_out": 3.0,
+    "fade_out": 3,
     "mood_color": "#4B5B6B"
   }
 }

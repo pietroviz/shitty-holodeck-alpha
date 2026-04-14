@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_soul_patch",
       "facialHairColor": "#4a3a2a",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_teenager",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#4a3a2a"
+    },
+    "catchphrase": "Smash that like button!"
   }
 }

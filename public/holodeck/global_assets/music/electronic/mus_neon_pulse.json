@@ -24,22 +24,26 @@
       {
         "name": "modern_synth_beat",
         "pattern": "F#2 F#2 F#2 C#3",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "triangle"
       },
       {
         "name": "bass_fat_pulse",
         "pattern": "F#3 A#3 C#4 F#4 A#4",
-        "gain": 0.62
+        "gain": 0.62,
+        "oscType": "sawtooth"
       },
       {
         "name": "melody_lead_bright",
         "pattern": "C#5 F#5 A#5 C#5 F#5",
-        "gain": 0.68
+        "gain": 0.68,
+        "oscType": "square"
       },
       {
         "name": "texture_fx_shimmer",
         "pattern": "A#5 F#5 C#5 A#4",
-        "gain": 0.48
+        "gain": 0.48,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

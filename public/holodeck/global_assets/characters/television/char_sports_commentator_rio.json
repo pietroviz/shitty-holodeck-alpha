@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_sports_announcer",
+      "eyebrowStyle": "thick",
+      "eyebrowColor": "#2a2a2a"
+    },
+    "catchphrase": "AND THE CROWD GOES WILD!"
   }
 }

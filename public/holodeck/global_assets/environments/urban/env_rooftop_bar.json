@@ -1,0 +1,38 @@
+{
+  "id": "env_rooftop_bar",
+  "type": "environment",
+  "name": "Rooftop Bar",
+  "tags": [
+    "urban",
+    "nightlife",
+    "rooftop"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A stylish rooftop lounge overlooking the city skyline at dusk",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#1a1a3e",
+      "bottomColor": "#ff6b35"
+    },
+    "ground": {
+      "color": "#3d3d3d",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#3d3d3d",
+      "skyTopColor": "#1a1a3e",
+      "skyHorizonColor": "#ff6b35",
+      "wallCount": 1,
+      "musicId": "mus_tokyo_nights"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

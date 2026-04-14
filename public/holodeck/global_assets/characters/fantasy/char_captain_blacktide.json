@@ -46,7 +46,11 @@
       "facialHairStyle": "prop_mustache",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "prop_eye_patch",
-      "glassesColor": "#1a1a1a"
-    }
+      "glassesColor": "#1a1a1a",
+      "voiceId": "voice_gruff",
+      "eyebrowStyle": "bushy",
+      "eyebrowColor": "#1a1a1a"
+    },
+    "catchphrase": "Dead men tell no tales, but I do!"
   }
 }

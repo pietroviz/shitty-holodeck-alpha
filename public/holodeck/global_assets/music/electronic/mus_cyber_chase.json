@@ -2,7 +2,11 @@
   "id": "mus_cyber_chase",
   "type": "music",
   "name": "Cyber Chase",
-  "tags": ["electronic", "energetic", "futuristic"],
+  "tags": [
+    "electronic",
+    "energetic",
+    "futuristic"
+  ],
   "meta": {
     "origin": "template",
     "created": "2026-03-30T00:00:00.000Z",
@@ -20,22 +24,26 @@
       {
         "name": "drum_beat_kick",
         "pattern": "E2 E2 E2 E2",
-        "gain": 0.7
+        "gain": 0.7,
+        "oscType": "triangle"
       },
       {
         "name": "bass_synth_fat",
         "pattern": "E3 G3 B3 E4 G4",
-        "gain": 0.6
+        "gain": 0.6,
+        "oscType": "sawtooth"
       },
       {
         "name": "arp_lead_melodic",
         "pattern": "B4 D5 E5 G5 B5 D5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "square"
       },
       {
         "name": "texture_glitch_fx",
         "pattern": "G5 D5 B4 E5",
-        "gain": 0.4
+        "gain": 0.4,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",

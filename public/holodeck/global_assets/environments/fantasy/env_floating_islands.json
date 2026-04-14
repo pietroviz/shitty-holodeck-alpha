@@ -1,0 +1,38 @@
+{
+  "id": "env_floating_islands",
+  "type": "environment",
+  "name": "Floating Islands",
+  "tags": [
+    "fantasy",
+    "sky",
+    "magical"
+  ],
+  "meta": {
+    "created": "2026-04-14T13:36:48.887Z",
+    "modified": "2026-04-14T13:36:48.887Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Grassy islands suspended in a pastel sky with waterfalls cascading into clouds",
+    "format": "environment_scene",
+    "skybox": {
+      "type": "gradient",
+      "topColor": "#7e57c2",
+      "bottomColor": "#e1bee7"
+    },
+    "ground": {
+      "color": "#4caf50",
+      "material": "default"
+    },
+    "state": {
+      "groundColor": "#4caf50",
+      "skyTopColor": "#7e57c2",
+      "skyHorizonColor": "#e1bee7",
+      "wallCount": 0,
+      "musicId": "mus_deep_space_drift"
+    },
+    "walls": [],
+    "objects": []
+  }
+}

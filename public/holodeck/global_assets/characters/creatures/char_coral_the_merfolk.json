@@ -47,7 +47,11 @@
       "facialHairStyle": "none",
       "facialHairColor": "#4a3728",
       "glassesStyle": "none",
-      "glassesColor": "#333333"
-    }
+      "glassesColor": "#333333",
+      "voiceId": "voice_female",
+      "eyebrowStyle": "arched",
+      "eyebrowColor": "#2a8aaa"
+    },
+    "catchphrase": "The tide answers to no one."
   }
 }

@@ -24,27 +24,31 @@
       {
         "name": "pad_ambient_soft",
         "pattern": "D4 F4 A4 C5 D5",
-        "gain": 0.65
+        "gain": 0.65,
+        "oscType": "sine"
       },
       {
         "name": "string_harp_texture",
         "pattern": "A3 D4 F4 A4",
-        "gain": 0.5
+        "gain": 0.5,
+        "oscType": "sine"
       },
       {
         "name": "rain_texture_falling",
         "pattern": "C5 F5 A5 D5 C5",
-        "gain": 0.4
+        "gain": 0.4,
+        "oscType": "sine"
       },
       {
         "name": "wind_texture_gentle",
         "pattern": "D2 D2 D3 A2",
-        "gain": 0.35
+        "gain": 0.35,
+        "oscType": "sine"
       }
     ],
     "duration_behavior": "loop",
-    "fade_in": 2.0,
-    "fade_out": 3.0,
+    "fade_in": 2,
+    "fade_out": 3,
     "mood_color": "#A8A8A8"
   }
 }

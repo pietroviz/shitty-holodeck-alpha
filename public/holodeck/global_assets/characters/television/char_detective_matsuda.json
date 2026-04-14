@@ -47,7 +47,11 @@
       "facialHairStyle": "prop_goatee",
       "facialHairColor": "#1a1a1a",
       "glassesStyle": "prop_square_glasses",
-      "glassesColor": "#1a1a1a"
-    }
+      "glassesColor": "#1a1a1a",
+      "voiceId": "voice_male",
+      "eyebrowStyle": "natural",
+      "eyebrowColor": "#1a1a1a"
+    },
+    "catchphrase": "The truth always leaves a trail."
   }
 }
