@@ -45,17 +45,19 @@ export class MusicBridge extends BaseBridge {
         this.storeName   = 'music';
 
         const d = this.asset?.payload?.state || this.asset?.state || {};
+        const p = this.asset?.payload || {};
 
+        // Prefer saved state (from auto-save), fall back to direct payload fields (stock assets)
         this._state = {
-            bpm:       d.bpm       || 120,
-            key:       d.key       || 'C',
-            scale:     d.scale     || 'minor',
-            pattern:   d.pattern   || '',
-            duration:  d.duration  || 'loop',
-            fadeIn:    d.fadeIn    ?? 2.0,
-            fadeOut:   d.fadeOut   ?? 3.0,
-            moodColor: d.moodColor || '#5b9bd5',
-            layers:    structuredClone(d.layers || []),
+            bpm:       d.bpm       || p.bpm       || 120,
+            key:       d.key       || p.key       || 'C',
+            scale:     d.scale     || p.scale     || 'minor',
+            pattern:   d.pattern   || p.pattern   || '',
+            duration:  d.duration  || p.duration_behavior || 'loop',
+            fadeIn:    d.fadeIn    ?? p.fade_in    ?? 2.0,
+            fadeOut:   d.fadeOut   ?? p.fade_out   ?? 3.0,
+            moodColor: d.moodColor || p.mood_color || '#5b9bd5',
+            layers:    structuredClone(d.layers || p.layers || []),
         };
 
         // UI state

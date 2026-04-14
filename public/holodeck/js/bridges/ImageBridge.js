@@ -132,15 +132,16 @@ export class ImageBridge extends BaseBridge {
         this.storeName   = 'images';
 
         const payload = this.asset?.payload || {};
+        const d  = payload.state || this.asset?.state || {};
         const ed = payload._editor || this.asset?._editor || {};
-        const colorAssignments = ed.color_assignments || payload.color_assignments || {};
+        const colorAssignments = d.colorAssignments || ed.color_assignments || payload.color_assignments || {};
 
         this._state = {
-            elements:         structuredClone(ed.elements || []),
+            elements:         structuredClone(d.elements || ed.elements || []),
             colorAssignments: { primary: '#888888', ...colorAssignments },
-            backgroundColor:  payload.background_color || null,
-            framePreset:      payload.framePreset || '1:1',
-            anchorPoint:      payload.anchorPoint || { x: 256, y: 256 },
+            backgroundColor:  d.backgroundColor || payload.background_color || null,
+            framePreset:      d.framePreset || payload.framePreset || '1:1',
+            anchorPoint:      d.anchorPoint || payload.anchorPoint || { x: 256, y: 256 },
         };
 
         // UI state

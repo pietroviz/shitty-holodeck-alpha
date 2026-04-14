@@ -113,17 +113,34 @@ export class ObjectBridge extends BaseBridge {
         const d  = this.asset?.payload?.state || this.asset?.state || {};
         const ed = this.asset?.payload?._editor || this.asset?._editor || {};
 
-        const colorAssignments = ed.color_assignments
+        const colorAssignments = d.colorAssignments
+            || ed.color_assignments
             || this.asset?.payload?.color_assignments
-            || d.colorAssignments || {};
+            || {};
+
+        // Normalize elements: prefer saved state (from auto-save), fall back to _editor
+        // Then convert flat-format elements (mailbox-style) into the
+        // nested { primitiveId, params } format used by the editor.
+        const rawEls = structuredClone(d.elements || ed.elements || []);
+        const elements = rawEls.map(el => {
+            if (el.params) return el; // already nested format (sword-style)
+            // Flat format: { type: "box", px: 0, width: 0.5, fill: "primary", ... }
+            const { id, type, primitiveId, primitive, zIndex, ...rest } = el;
+            return {
+                id:          id || undefined,
+                primitiveId: primitiveId || primitive || type || 'box',
+                zIndex:      zIndex || 0,
+                params:      rest,
+            };
+        });
 
         // Editable state (included in undo/redo)
         this._state = {
-            elements:         structuredClone(ed.elements || []),
+            elements,
             colorAssignments: { primary: '#888888', ...colorAssignments },
             roughness:        d.roughness ?? 0.5,
-            anchorPoint:      d.anchorPoint || { x: 0, y: 0, z: 0 },
-            attachPoints:     d.attachPoints || [],
+            anchorPoint:      d.anchorPoint || this.asset?.payload?.anchor_point || { x: 0, y: 0, z: 0 },
+            attachPoints:     d.attachPoints || this.asset?.payload?.attach_points || [],
         };
 
         // UI-only state
@@ -330,7 +347,7 @@ export class ObjectBridge extends BaseBridge {
             listHtml = '<div class="cb-hint">Click a shape above to add it</div>';
         } else {
             listHtml = els.map((el, i) => {
-                const prim = el.primitiveId || el.primitive || 'box';
+                const prim = el.primitiveId || el.primitive || el.type || 'box';
                 const sel  = i === this._selectedIdx;
                 const icon = PRIM_GRID.find(p => p.id === prim)?.icon || '?';
                 return `<button class="cb-element-row cb-el-select ${sel ? 'active' : ''}" data-idx="${i}">
@@ -360,8 +377,8 @@ export class ObjectBridge extends BaseBridge {
 
     /** Render properties for a selected element. */
     _renderElementProps(el, idx) {
-        const p    = el.params || {};
-        const prim = el.primitiveId || el.primitive || 'box';
+        const p    = el.params || el;
+        const prim = el.primitiveId || el.primitive || el.type || 'box';
         const defs = SHAPE_PARAMS[prim] || [];
 
         // Position

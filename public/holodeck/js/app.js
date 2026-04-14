@@ -7,7 +7,7 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
 import { VoiceBridge }          from './bridges/VoiceBridge.js';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking } from './previewRenderer.js';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying } from './previewRenderer.js';
 import { generateId }                       from './db.js';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -158,7 +158,7 @@ let panelLoading  = false;
 let panelSource   = '';   // 'explore' | 'mystuff'
 
 /** Panel labels that support auto-play preview when browsing. */
-const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters']);
+const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters', 'Music']);
 function _canAutoPlay(label) { return AUTO_PLAY_PANELS.has(label); }
 
 /* ══════════════════════════════════════════════════════════
@@ -205,11 +205,19 @@ let _savedBrowseState = null;
 function _duplicateAssetForEdit(asset) {
     const state = asset.payload?.state || asset.state || {};
     const now = Date.now();
+
+    // Carry forward the full payload so bridges can read _editor, color_assignments, etc.
+    const srcPayload = asset.payload || {};
+    const payload = structuredClone(srcPayload);
+    // Merge top-level state into payload.state so bridges always find it
+    if (!payload.state) payload.state = {};
+    Object.assign(payload.state, structuredClone(state));
+
     return {
         id:   generateId(),
         type: asset.type,
         name: (asset.name || 'Untitled') + ' (Copy)',
-        description: asset.payload?.description || asset.description || '',
+        description: payload.description || asset.description || '',
         tags: [...(asset.tags || [])],
         meta: {
             created:   now,
@@ -219,6 +227,7 @@ function _duplicateAssetForEdit(asset) {
             owner:     'user',
             templateId: asset.id,  // track which template this came from
         },
+        payload,
         state: { ...state },
     };
 }
@@ -1069,6 +1078,8 @@ function _autoPlayCurrentAsset() {
         // Characters use their greeting text or a default
         const speakText = assetState.greeting || assetState.previewText || "Look at me, I'm a character.";
         previewSpeakWhenReady(speakText);
+    } else if (asset.type === 'music') {
+        previewPlayMusic(asset);
     }
 }
 
@@ -1077,8 +1088,9 @@ function selectAsset(idx, items) {
     const asset = items?.[idx];
     if (!asset) return;
 
-    // Stop any currently playing voice before switching
+    // Stop any currently playing voice/music before switching
     previewStopVoice();
+    previewStopMusic();
 
     S.selectedIndex = idx;
     S.previewAsset  = asset;
@@ -1575,7 +1587,16 @@ function init() {
             }
         } else if (S.previewAsset) {
             // Browse view — toggle play/stop
-            if (isPreviewSpeaking()) {
+            if (S.previewAsset.type === 'music') {
+                // Music toggle
+                if (isPreviewMusicPlaying()) {
+                    previewStopMusic();
+                    _setPlayBtnState(false);
+                } else {
+                    previewPlayMusic(S.previewAsset);
+                    _setPlayBtnState(true);
+                }
+            } else if (isPreviewSpeaking()) {
                 previewStopVoice();
             } else {
                 const assetState = S.previewAsset.payload?.state || S.previewAsset.state || {};

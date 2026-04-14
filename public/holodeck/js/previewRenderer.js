@@ -14,6 +14,7 @@ import { standard, groundMaterial, gridColors } from './shared/materials.js';
 import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
+import { MusicEngine } from './shared/musicEngine.js';
 import { makeEyeTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
@@ -46,6 +47,21 @@ let _mouthRig    = null;    // MouthRig instance for the current character previ
 let _voiceEngine = null;    // VoiceEngine shared across previews
 let _voiceReady  = false;
 let _voiceConfigured = null; // Promise that resolves when voice state is applied for current preview
+
+// ── Browse music engine (for music asset preview playback) ──
+let _musicEngine = null;
+let _musicReady  = false;
+
+async function _ensureMusic() {
+    if (_musicEngine) return;
+    _musicEngine = new MusicEngine();
+    try {
+        await _musicEngine.init();
+        _musicReady = true;
+    } catch (e) {
+        console.warn('[previewRenderer] Music init failed:', e.message);
+    }
+}
 
 async function _ensureVoice() {
     if (_voiceEngine) return;
@@ -95,6 +111,21 @@ export function previewStopVoice() {
     if (_onSpeakStateChange) _onSpeakStateChange(false);
 }
 
+/** Play music in the browse preview. */
+export async function previewPlayMusic(asset) {
+    if (!_musicReady) await _ensureMusic();
+    if (!_musicReady || !_musicEngine) return;
+    _musicEngine.play(asset, { loop: true });
+}
+
+/** Stop any active browse-preview music. */
+export function previewStopMusic() {
+    if (_musicEngine) _musicEngine.stop();
+}
+
+/** Check if music is currently playing. */
+export function isPreviewMusicPlaying() { return _musicEngine?.isPlaying ?? false; }
+
 /** Wire up the voiceEngine's onSpeakEnd to notify the state change callback. */
 function _wireOnSpeakEnd() {
     if (!_voiceEngine || _voiceEngine._endHooked) return;
@@ -127,6 +158,7 @@ export function showPreview(container, asset, opts = {}) {
 
     // Tear down previous preview if any
     _stopLoop();
+    if (_musicEngine) _musicEngine.stop();
 
     // Create or reuse renderer
     if (!_renderer) {
@@ -240,6 +272,7 @@ export function showPreview(container, asset, opts = {}) {
 export function destroyPreview() {
     _stopLoop();
     if (_voiceEngine) _voiceEngine.stop();
+    if (_musicEngine) _musicEngine.stop();
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }
     if (_controls) { _controls.dispose(); _controls = null; }
     if (_ro) { _ro.disconnect(); _ro = null; }
