@@ -14,6 +14,9 @@ import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGen
 // ── Thumbnail cache (persists across category switches within session) ──
 const _thumbCache = new Map();
 
+// ── Pre-rendered thumbnail path for stock assets ──
+const THUMB_PATH = 'thumbnails';
+
 // ── Type-based placeholder icons for items without thumbnails ──
 const _THUMB_PLACEHOLDERS = {
     character:   { icon: '👤', bg: '#2A3240' },
@@ -28,7 +31,15 @@ const _THUMB_PLACEHOLDERS = {
 function _thumbHTML(item) {
     const cached = item.meta?.thumbnail || _thumbCache.get(item.id);
     if (cached) return `<img src="${cached}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
+    // For stock assets, try the pre-rendered thumbnail path
+    if (item.id && item.meta?.owner !== 'user') {
+        return `<img src="${THUMB_PATH}/${item.id}.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.parentElement.innerHTML='${_placeholderSpan(item.type)}'">`;
+    }
     const ph = _THUMB_PLACEHOLDERS[item.type] || { icon: '•', bg: '#2A3240' };
+    return `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:${ph.bg};border-radius:6px;font-size:20px;">${ph.icon}</span>`;
+}
+function _placeholderSpan(type) {
+    const ph = _THUMB_PLACEHOLDERS[type] || { icon: '•', bg: '#2A3240' };
     return `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:${ph.bg};border-radius:6px;font-size:20px;">${ph.icon}</span>`;
 }
 
@@ -634,9 +645,7 @@ function renderPanelItems() {
         : items.map((it, idx) => `
         <div class="panel-item ${idx === S.selectedIndex ? 'selected' : ''}"
              data-idx="${idx}" data-id="${it.id}">
-            <div class="pi-thumb">${(it.meta?.thumbnail || _thumbCache.get(it.id))
-                ? `<img src="${it.meta?.thumbnail || _thumbCache.get(it.id)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`
-                : ''}</div>
+            <div class="pi-thumb">${_thumbHTML(it)}</div>
             <div class="pi-text">
                 <div class="pi-name">${it.name || 'Untitled'}</div>
                 <div class="pi-detail">${it.type || ''}</div>
@@ -1166,8 +1175,11 @@ async function openPanel(label, source = 'explore') {
     panelLoading = false;
     render();
 
-    // Generate thumbnails in the background for items that don't have one
-    const needsThumbs = panelItems.filter(it => !it.meta?.thumbnail && !_thumbCache.has(it.id));
+    // Generate thumbnails in the background ONLY for user-created assets that don't have one.
+    // Stock assets use pre-rendered thumbnails from the thumbnails/ folder (loaded via _thumbHTML).
+    const needsThumbs = panelItems.filter(it =>
+        it.meta?.owner === 'user' && !it.meta?.thumbnail && !_thumbCache.has(it.id)
+    );
     if (needsThumbs.length > 0) {
         generateThumbnailBatch(needsThumbs, (asset, dataURL) => {
             if (!asset.meta) asset.meta = {};
