@@ -221,6 +221,8 @@ The magic link and confirmation emails are configured in Supabase. They should s
 - Environment variables are set in both `.env.local` (local dev) and Vercel dashboard (production)
 - To push from terminal: `git push origin main` (requires GitHub auth)
 
+**Branch note:** The local repo may be on the `master` branch while Vercel deploys from `main`. If you're on `master` locally, use `git push origin master:main` to push to the production branch. Pushing to `master` alone only creates a Vercel preview deployment — it won't update the live site at shittyholodeck.com.
+
 ---
 
 ## Naming Conventions
@@ -326,6 +328,11 @@ python3 scripts/generate-thumbnails.py environments
 
 After running, commit the new thumbnails and push — they deploy as static files with the site.
 
+**Important notes:**
+- You need Pillow installed (`pip install Pillow` or `pip3 install Pillow`). It's not in the Node dependencies — it's a one-time Python setup.
+- The thumbnails are simplified 2D drawings, not screenshots of the 3D models. They use each asset's actual colors but the shapes are simplified (e.g., characters are a rectangle body + ellipse head, not the full rounded 3D mesh). They won't match the 3D preview exactly, but they're good enough for browse panel identification.
+- Make sure to push to `main` (not just `master`) so thumbnails appear on the live site. See the Deployment section above.
+
 ### User-created asset thumbnails (in-browser)
 
 When a user creates or edits an asset, the in-browser `thumbnailGenerator.js` renders a single thumbnail using the main viewport's preview renderer (via the `onThumbnail` callback in `previewRenderer.js`). This avoids the dual-WebGL-context issue since it reuses the existing renderer. The thumbnail is cached in IndexedDB for the user's browser.
@@ -346,9 +353,9 @@ public/holodeck/
 
 ---
 
-## Recent Changes (April 13, 2026 session — Claude Code terminal)
+## Recent Changes (April 13, 2026 sessions — Claude Code terminal + Cowork)
 
-Changes made based on feedback submitted via the in-app Feedback tab. All changes are in the holodeck frontend (`public/holodeck/`).
+Changes made across two sessions. The first session (Claude Code terminal) addressed feedback from the in-app Feedback tab. The second session (Cowork) resolved the thumbnail system and deployed it live.
 
 ### Bugs Fixed
 - **Search typing backwards** (`app.js`) — Panel search input triggered a full `render()` on every keystroke, which rebuilt the HTML and reset the cursor to position 0. Fixed by adding `renderPanelItems()` that only re-renders the item list, leaving the search input untouched.
@@ -365,9 +372,11 @@ Changes made based on feedback submitted via the in-app Feedback tab. All change
 - **Body proportions shifted** (`shared/charConfig.js`) — `bottomHeight` increased from 0.13 → 0.156 (20% taller), `skinHeight` reduced from 0.62 → 0.594 to compensate. Overall character height unchanged.
 - **Gear color selectors** (`bridges/CharacterBridge.js`) — Added color swatch pickers for Hair, Hat, Glasses, and Facial Hair in the Gear tab. Color swatches only appear when the corresponding accessory is not "none". Gear colors update live by traversing the accessory mesh group.
 
-### Thumbnail System (work in progress)
-- **Placeholder icons** (`app.js`) — Added `_thumbHTML()` helper with emoji-based type placeholders (👤 character, 🌄 environment, etc.) so browse items always show something.
-- **Offscreen generator** (`thumbnailGenerator.js` — NEW FILE) — Background thumbnail generation using a separate 128x128 WebGL renderer. Generates thumbnails when the browse panel opens and updates them in the DOM as they complete. **Status: generates data but camera framing needs fixing — thumbnails appear blank. Needs debugging next session.**
+### Thumbnail System (resolved)
+- **Placeholder icons** (`app.js`) — Added `_thumbHTML()` helper with emoji-based type placeholders (👤 character, 🌄 environment, etc.) as fallbacks when a thumbnail can't load.
+- **Pre-rendered static thumbnails** (`scripts/generate-thumbnails.py` — NEW FILE) — Python/Pillow script that generates 128x128 JPEG thumbnails from asset JSON files. Run this after updating stock assets. See the "Thumbnail Generation" section above for details.
+- **Stock vs. user logic** (`app.js`) — `_thumbHTML()` now serves static thumbnails (`thumbnails/{id}.jpg`) for stock assets, and only uses the in-browser generator for user-created assets. The batch generator in `_openBrowsePanel()` is filtered to `meta.owner === 'user'` only.
+- **In-browser generator fixed** (`thumbnailGenerator.js`) — Fixed `CHARACTER.neckGap` → `HEAD.neckGap` bug and switched to `MeshBasicMaterial` (no lights needed). Kept for single user-asset thumbnail generation only — the dual-WebGL-context issue makes batch generation unreliable.
 
 ### Feedback from the Feedback Tab (for reference)
 The following items from the feedback table were NOT addressed in this session and remain open:

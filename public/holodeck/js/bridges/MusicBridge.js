@@ -1,6 +1,42 @@
+/**
+ * MusicBridge.js — Full music theme editor bridge.
+ *
+ * Tabs: File · Layers · Pattern · Settings
+ *
+ * File     — name, description, tags
+ * Layers   — audio layer list with gain sliders, add/remove
+ * Pattern  — BPM slider, key selector, scale selector, Strudel pattern code
+ * Settings — duration behavior, fade in/out, mood colour, delete
+ */
+
 import { BaseBridge } from './BaseBridge.js';
 import * as THREE from 'three';
 import { standard } from '../shared/materials.js';
+import { UI }       from '../shared/palette.js';
+
+// ── Tab definitions ─────────────────────────────────────────────
+const TABS = [
+    { id: 'file',     label: 'File',     icon: '📄' },
+    { id: 'layers',   label: 'Layers',   icon: '≡' },
+    { id: 'pattern',  label: 'Pattern',  icon: '♫' },
+    { id: 'settings', label: 'Settings', icon: '⚙' },
+];
+
+// ── Musical keys & scales ───────────────────────────────────────
+const KEYS   = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const SCALES = ['major','minor','dorian','mixolydian','pentatonic','blues'];
+
+// ── Mood colours ────────────────────────────────────────────────
+const MOODS = [
+    { id: 'calm',      label: 'Calm',      color: '#5b9bd5' },
+    { id: 'energetic', label: 'Energetic', color: '#ff6b6b' },
+    { id: 'dark',      label: 'Dark',      color: '#4a4a6a' },
+    { id: 'warm',      label: 'Warm',      color: '#f0a050' },
+    { id: 'cool',      label: 'Cool',      color: '#50c8f0' },
+];
+
+// ── Duration behaviors ──────────────────────────────────────────
+const DURATIONS = ['loop', 'play-once', 'fade-out'];
 
 export class MusicBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
@@ -9,93 +45,454 @@ export class MusicBridge extends BaseBridge {
         this.storeName   = 'music';
 
         const d = this.asset?.payload?.state || this.asset?.state || {};
+
         this._state = {
-            bpm:   d.bpm   || 120,
-            genre: d.genre || 'Electronic',
-            mood:  d.mood  || 'Energetic',
+            bpm:       d.bpm       || 120,
+            key:       d.key       || 'C',
+            scale:     d.scale     || 'minor',
+            pattern:   d.pattern   || '',
+            duration:  d.duration  || 'loop',
+            fadeIn:    d.fadeIn    ?? 2.0,
+            fadeOut:   d.fadeOut   ?? 3.0,
+            moodColor: d.moodColor || '#5b9bd5',
+            layers:    structuredClone(d.layers || []),
         };
 
-        this._meshes = [];
+        // UI state
+        this._activeTab = 'file';
+        this._meshes    = [];
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  SCENE — Animated music visualizer
+    // ═══════════════════════════════════════════════════════════════
 
     _buildScene() {
         this._camera.position.set(0, 3, 5);
-        this._camera.lookAt(0, 0, 0);
-        this._camera.fov = 75;
+        this._camera.lookAt(0, 1, 0);
+        this._camera.fov = 60;
         this._camera.updateProjectionMatrix();
 
-        // Rotating visualiser shapes
-        const shapes = [
-            { geo: new THREE.OctahedronGeometry(0.5), color: 0xff4444, pos: [0, 1.5, 0],    axis: [1,1,1]  },
-            { geo: new THREE.BoxGeometry(0.4, 0.4, 0.4), color: 0x00ffff, pos: [1, 2, -1],   axis: [0,1,0.5] },
-            { geo: new THREE.SphereGeometry(0.3, 32, 24), color: 0xffff00, pos: [-1.5, 1, 0.5], axis: [1,0,1] },
-        ];
-
-        for (const s of shapes) {
-            const mesh = new THREE.Mesh(s.geo, standard(s.color));
-            mesh.position.set(...s.pos);
-            mesh.userData.rotAxis = new THREE.Vector3(...s.axis).normalize();
-            this._scene.add(mesh);
-            this._meshes.push(mesh);
-        }
+        this._buildVisualizer();
     }
 
-    _onTick() {
+    /** Build visualizer meshes that react to state. */
+    _buildVisualizer() {
+        // Remove old
         for (const m of this._meshes) {
-            if (m.userData.rotAxis) m.rotateOnWorldAxis(m.userData.rotAxis, 0.005);
+            this._scene.remove(m);
+            m.geometry.dispose();
+            m.material.dispose();
+        }
+        this._meshes = [];
+
+        const moodHex = this._state.moodColor || '#5b9bd5';
+        const moodInt = parseInt(moodHex.slice(1), 16);
+
+        // Central pulsing sphere (mood colour)
+        const sphere = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(0.6, 2),
+            standard(moodInt, { emissive: moodInt, emissiveIntensity: 0.15 }),
+        );
+        sphere.position.set(0, 1.5, 0);
+        sphere.userData.rotAxis = new THREE.Vector3(0, 1, 0).normalize();
+        sphere.userData.baseScale = 1;
+        this._scene.add(sphere);
+        this._meshes.push(sphere);
+
+        // Orbiting rings (one per layer, up to 4)
+        const layers = this._state.layers;
+        const ringCount = Math.min(layers.length, 4) || 1;
+        for (let i = 0; i < ringCount; i++) {
+            const hue = (i * 0.25 + 0.55) % 1;
+            const color = new THREE.Color().setHSL(hue, 0.6, 0.55);
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.9 + i * 0.35, 0.04, 8, 32),
+                standard(color, { transparent: true, opacity: 0.6 }),
+            );
+            ring.position.set(0, 1.5, 0);
+            ring.userData.rotAxis = new THREE.Vector3(
+                Math.sin(i * 1.2), 1, Math.cos(i * 1.2),
+            ).normalize();
+            ring.userData.speed = 0.003 + i * 0.001;
+            this._scene.add(ring);
+            this._meshes.push(ring);
+        }
+
+        // Beat indicator dots (based on BPM)
+        const dotCount = Math.min(Math.round(this._state.bpm / 30), 8);
+        for (let i = 0; i < dotCount; i++) {
+            const angle = (i / dotCount) * Math.PI * 2;
+            const dot = new THREE.Mesh(
+                new THREE.SphereGeometry(0.08, 8, 8),
+                standard(0xffffff, { emissive: 0xffffff, emissiveIntensity: 0.3 }),
+            );
+            dot.position.set(Math.cos(angle) * 2, 1.5 + Math.sin(angle) * 0.5, Math.sin(angle) * 2);
+            dot.userData.orbitAngle = angle;
+            dot.userData.orbitSpeed = (this._state.bpm / 120) * 0.01;
+            this._scene.add(dot);
+            this._meshes.push(dot);
         }
     }
+
+    _onTick(delta) {
+        const time = performance.now() * 0.001;
+        const bpmFactor = this._state.bpm / 120;
+
+        for (const m of this._meshes) {
+            // Rotation
+            if (m.userData.rotAxis) {
+                const speed = m.userData.speed || 0.004;
+                m.rotateOnWorldAxis(m.userData.rotAxis, speed * bpmFactor);
+            }
+
+            // Orbit (beat dots)
+            if (m.userData.orbitAngle !== undefined) {
+                m.userData.orbitAngle += m.userData.orbitSpeed;
+                const a = m.userData.orbitAngle;
+                m.position.set(Math.cos(a) * 2, 1.5 + Math.sin(a * 2) * 0.3, Math.sin(a) * 2);
+            }
+
+            // Pulse central sphere
+            if (m.userData.baseScale) {
+                const pulse = 1 + Math.sin(time * bpmFactor * 2) * 0.08;
+                m.scale.setScalar(pulse);
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PANEL
+    // ═══════════════════════════════════════════════════════════════
 
     _renderPanelBody() {
+        const tab = this._activeTab;
+
+        const tabBar = `<div class="cb-tabs-list">${
+            TABS.map(t =>
+                `<button class="cb-tab-trigger ${t.id === tab ? 'active' : ''}" data-tab="${t.id}">
+                    <span class="cb-tab-icon">${t.icon}</span>${t.label}
+                 </button>`
+            ).join('')
+        }</div>`;
+
+        let body = '';
+        if (tab === 'file')     body = this._renderFileTab();
+        if (tab === 'layers')   body = this._renderLayersTab();
+        if (tab === 'pattern')  body = this._renderPatternTab();
+        if (tab === 'settings') body = this._renderSettingsTab();
+
+        return tabBar + `<div class="cb-tab-content">${body}</div>`;
+    }
+
+    // ── File Tab ────────────────────────────────────────────────
+    _renderFileTab() {
         const name = _esc(this.asset?.name || '');
-        const s    = this._state;
+        const desc = _esc(this.asset?.payload?.description || '');
+        const tags = _esc((this.asset?.tags || []).join(', '));
         return `
           <div class="cb-section">
+            <div class="cb-label">Name</div>
             <input type="text" class="bridge-name-input cb-name-input"
-                   value="${name}" placeholder="Music name...">
+                   value="${name}" placeholder="Music theme name..." maxlength="40">
           </div>
           <div class="cb-section">
-            <div class="cb-section-title">Tempo</div>
-            <div class="cb-color-row">
-              <label class="cb-color-label">BPM:</label>
-              <input type="number" class="cb-input" data-property="bpm"
-                     value="${s.bpm}" min="40" max="300" step="1">
-            </div>
+            <div class="cb-label">Description</div>
+            <textarea class="cb-desc-input" placeholder="Describe this music theme..."
+                      rows="3" maxlength="200">${desc}</textarea>
           </div>
           <div class="cb-section">
-            <div class="cb-section-title">Genre</div>
-            <div class="cb-color-row">
-              <input type="text" class="cb-input" data-property="genre"
-                     value="${_esc(s.genre)}" placeholder="e.g. Electronic, Jazz...">
-            </div>
-          </div>
-          <div class="cb-section">
-            <div class="cb-section-title">Mood</div>
-            <div class="cb-color-row">
-              <input type="text" class="cb-input" data-property="mood"
-                     value="${_esc(s.mood)}" placeholder="e.g. Energetic, Calm...">
-            </div>
+            <div class="cb-label">Tags</div>
+            <input type="text" class="cb-tags-input"
+                   value="${tags}" placeholder="e.g. lofi, jazz, ambient" maxlength="100">
           </div>`;
     }
 
+    // ── Layers Tab ──────────────────────────────────────────────
+    _renderLayersTab() {
+        const layers = this._state.layers;
+
+        let layerHtml = '';
+        if (layers.length === 0) {
+            layerHtml = '<div class="cb-hint">No layers yet — add one below</div>';
+        } else {
+            layerHtml = layers.map((layer, i) => `
+                <div class="cb-element-row" style="display:flex;gap:8px;align-items:center;padding:8px;background:${UI.panelRaised};border-radius:8px;margin-bottom:6px;">
+                    <div style="flex:1;">
+                        <input type="text" class="cb-input cb-layer-name" data-idx="${i}"
+                               value="${_esc(layer.name || `Layer ${i + 1}`)}"
+                               placeholder="Layer name" style="margin-bottom:4px;width:100%;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <label class="cb-color-label" style="font-size:10px;white-space:nowrap;">Gain:</label>
+                            <input type="range" class="cb-range cb-layer-gain" data-idx="${i}"
+                                   value="${layer.gain ?? 0.8}" min="0" max="1" step="0.05"
+                                   style="flex:1;">
+                            <span class="cb-color-label" style="font-size:10px;min-width:28px;">${(layer.gain ?? 0.8).toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <button class="cb-btn-sm cb-layer-del" data-idx="${i}" title="Remove layer"
+                            style="color:${UI.danger};">✕</button>
+                </div>
+            `).join('');
+        }
+
+        return `
+          <div class="cb-section">
+            <div class="cb-section-title">Music Layers (${layers.length})</div>
+            ${layerHtml}
+            <button class="cb-btn-sm cb-layer-add" style="margin-top:8px;">+ Add Layer</button>
+          </div>`;
+    }
+
+    // ── Pattern Tab ─────────────────────────────────────────────
+    _renderPatternTab() {
+        const s = this._state;
+
+        const keyBtns = KEYS.map(k =>
+            `<button class="cb-shape-btn cb-key-btn ${s.key === k ? 'active' : ''}" data-key="${k}">${k}</button>`
+        ).join('');
+
+        const scaleBtns = SCALES.map(sc =>
+            `<button class="cb-shape-btn cb-scale-btn ${s.scale === sc ? 'active' : ''}" data-scale="${sc}">${_capitalize(sc)}</button>`
+        ).join('');
+
+        return `
+          <div class="cb-section">
+            <div class="cb-section-title">Tempo</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="range" class="cb-range cb-bpm-slider" value="${s.bpm}" min="40" max="200" step="1" style="flex:1;">
+              <span class="cb-bpm-display" style="font-size:14px;font-weight:600;min-width:60px;text-align:right;color:${UI.textPrimary};">${s.bpm} BPM</span>
+            </div>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Key</div>
+            <div class="cb-shape-grid" style="grid-template-columns:repeat(6,1fr);">${keyBtns}</div>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Scale</div>
+            <div class="cb-shape-grid" style="grid-template-columns:repeat(3,1fr);">${scaleBtns}</div>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Master Pattern</div>
+            <textarea class="cb-input cb-pattern-code" rows="4"
+                      placeholder="stack(s('piano').n('0 2 4 7'), s('hh*8'))"
+                      style="font-family:monospace;font-size:12px;width:100%;resize:vertical;">${_esc(s.pattern)}</textarea>
+            <div class="cb-hint" style="margin-top:4px;">Strudel / TidalCycles pattern syntax</div>
+          </div>`;
+    }
+
+    // ── Settings Tab ────────────────────────────────────────────
+    _renderSettingsTab() {
+        const s = this._state;
+
+        const durOpts = DURATIONS.map(d =>
+            `<option value="${d}" ${s.duration === d ? 'selected' : ''}>${_capitalize(d.replace('-', ' '))}</option>`
+        ).join('');
+
+        const moodBtns = MOODS.map(m =>
+            `<button class="cb-shape-btn cb-mood-btn ${s.moodColor === m.color ? 'active' : ''}"
+                     data-color="${m.color}" title="${m.label}"
+                     style="display:flex;align-items:center;gap:4px;">
+                <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${m.color};"></span>
+                ${m.label}
+             </button>`
+        ).join('');
+
+        return `
+          <div class="cb-section">
+            <div class="cb-section-title">Duration Behavior</div>
+            <select class="cb-acc-select cb-duration-select">${durOpts}</select>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Fade In</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="range" class="cb-range cb-fade-in" value="${s.fadeIn}" min="0" max="10" step="0.5" style="flex:1;">
+              <span class="cb-color-label" style="min-width:36px;">${s.fadeIn.toFixed(1)}s</span>
+            </div>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Fade Out</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="range" class="cb-range cb-fade-out" value="${s.fadeOut}" min="0" max="10" step="0.5" style="flex:1;">
+              <span class="cb-color-label" style="min-width:36px;">${s.fadeOut.toFixed(1)}s</span>
+            </div>
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Mood Colour</div>
+            <div class="cb-shape-grid" style="grid-template-columns:repeat(3,1fr);">${moodBtns}</div>
+          </div>`;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  EVENT WIRING
+    // ═══════════════════════════════════════════════════════════════
+
     _wirePanelEvents() {
-        this.panelEl.querySelectorAll('.cb-input').forEach(inp => {
-            const handler = () => {
-                const prop = inp.dataset.property;
-                this._state[prop] = inp.type === 'number' ? parseInt(inp.value) : inp.value;
-            };
-            inp.addEventListener('input', handler);
-            inp.addEventListener('change', handler);
+        const panel = this.panelEl;
+
+        // Tab switching
+        panel.querySelectorAll('.cb-tab-trigger').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._activeTab = btn.dataset.tab;
+                this._renderPanel();
+            });
+        });
+
+        // ── File tab ──
+        panel.querySelector('.cb-desc-input')?.addEventListener('input', e => {
+            if (this.asset?.payload) this.asset.payload.description = e.target.value;
+        });
+        panel.querySelector('.cb-tags-input')?.addEventListener('input', e => {
+            if (this.asset) this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+        });
+
+        // ── Layers tab ──
+        panel.querySelectorAll('.cb-layer-name').forEach(inp => {
+            inp.addEventListener('change', () => {
+                const i = parseInt(inp.dataset.idx);
+                if (this._state.layers[i]) {
+                    this._state.layers[i].name = inp.value;
+                    this.markDirty('Rename layer');
+                }
+            });
+        });
+        panel.querySelectorAll('.cb-layer-gain').forEach(inp => {
+            inp.addEventListener('input', () => {
+                const i = parseInt(inp.dataset.idx);
+                if (this._state.layers[i]) {
+                    this._state.layers[i].gain = parseFloat(inp.value);
+                    // Update display label
+                    const label = inp.parentElement?.querySelector('.cb-color-label:last-child');
+                    if (label) label.textContent = parseFloat(inp.value).toFixed(2);
+                }
+            });
+            inp.addEventListener('change', () => {
+                this.markDirty('Adjust gain');
+            });
+        });
+        panel.querySelectorAll('.cb-layer-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._state.layers.splice(parseInt(btn.dataset.idx), 1);
+                this._buildVisualizer();
+                this.markDirty('Remove layer');
+                this._renderPanel();
+            });
+        });
+        panel.querySelector('.cb-layer-add')?.addEventListener('click', () => {
+            this._state.layers.push({
+                name: `Layer ${this._state.layers.length + 1}`,
+                gain: 0.8,
+                instrument: '',
+            });
+            this._buildVisualizer();
+            this.markDirty('Add layer');
+            this._renderPanel();
+        });
+
+        // ── Pattern tab ──
+        // BPM slider
+        const bpmSlider = panel.querySelector('.cb-bpm-slider');
+        if (bpmSlider) {
+            bpmSlider.addEventListener('input', () => {
+                this._state.bpm = parseInt(bpmSlider.value);
+                const display = panel.querySelector('.cb-bpm-display');
+                if (display) display.textContent = `${this._state.bpm} BPM`;
+            });
+            bpmSlider.addEventListener('change', () => {
+                this._buildVisualizer();
+                this.markDirty('Change BPM');
+            });
+        }
+
+        // Key buttons
+        panel.querySelectorAll('.cb-key-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._state.key = btn.dataset.key;
+                this.markDirty('Change key');
+                this._renderPanel();
+            });
+        });
+
+        // Scale buttons
+        panel.querySelectorAll('.cb-scale-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._state.scale = btn.dataset.scale;
+                this.markDirty('Change scale');
+                this._renderPanel();
+            });
+        });
+
+        // Pattern code
+        panel.querySelector('.cb-pattern-code')?.addEventListener('input', (e) => {
+            this._state.pattern = e.target.value;
+        });
+        panel.querySelector('.cb-pattern-code')?.addEventListener('change', () => {
+            this.markDirty('Edit pattern');
+        });
+
+        // ── Settings tab ──
+        // Duration
+        panel.querySelector('.cb-duration-select')?.addEventListener('change', (e) => {
+            this._state.duration = e.target.value;
+            this.markDirty('Change duration');
+        });
+
+        // Fade in
+        const fadeInSlider = panel.querySelector('.cb-fade-in');
+        if (fadeInSlider) {
+            fadeInSlider.addEventListener('input', () => {
+                this._state.fadeIn = parseFloat(fadeInSlider.value);
+                const label = fadeInSlider.parentElement?.querySelector('.cb-color-label');
+                if (label) label.textContent = `${this._state.fadeIn.toFixed(1)}s`;
+            });
+            fadeInSlider.addEventListener('change', () => this.markDirty('Change fade in'));
+        }
+
+        // Fade out
+        const fadeOutSlider = panel.querySelector('.cb-fade-out');
+        if (fadeOutSlider) {
+            fadeOutSlider.addEventListener('input', () => {
+                this._state.fadeOut = parseFloat(fadeOutSlider.value);
+                const label = fadeOutSlider.parentElement?.querySelector('.cb-color-label');
+                if (label) label.textContent = `${this._state.fadeOut.toFixed(1)}s`;
+            });
+            fadeOutSlider.addEventListener('change', () => this.markDirty('Change fade out'));
+        }
+
+        // Mood colour buttons
+        panel.querySelectorAll('.cb-mood-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._state.moodColor = btn.dataset.color;
+                this._buildVisualizer();
+                this.markDirty('Change mood');
+                this._renderPanel();
+            });
         });
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════════════════
+
     _getState() {
-        return { ...this._state };
+        return {
+            bpm:       this._state.bpm,
+            key:       this._state.key,
+            scale:     this._state.scale,
+            pattern:   this._state.pattern,
+            duration:  this._state.duration,
+            fadeIn:    this._state.fadeIn,
+            fadeOut:   this._state.fadeOut,
+            moodColor: this._state.moodColor,
+            layers:    structuredClone(this._state.layers),
+        };
     }
 
     _applyState(state) {
-        this._state = { ...state };
+        this._state = { ...state, layers: structuredClone(state.layers || []) };
+        this._buildVisualizer();
     }
 }
 
 function _esc(t) { return String(t).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
+function _capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }

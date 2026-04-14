@@ -34,28 +34,11 @@ import { VoiceBridge } from './VoiceBridge.js';
 import { ObjectBridge } from './ObjectBridge.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, removeRef, getState as dbGetState } from '../db.js';
+import { loadPalette } from '../shared/paletteLoader.js';
 
 /* ═══════════════════════════════════════════════════════
    SINGLETONS (loaded once, shared across instances)
    ═══════════════════════════════════════════════════════ */
-
-let _db32Colors = null;
-async function loadPalette() {
-    if (_db32Colors) return _db32Colors;
-    try {
-        const resp = await fetch('global_assets/pallettes/db32.json');
-        const data = await resp.json();
-        _db32Colors = data.colors;
-    } catch {
-        _db32Colors = [
-            '#000000','#222034','#45283c','#663931','#8f563b','#df7126','#d9a066','#eec39a',
-            '#fbf236','#99e550','#6abe30','#37946e','#4b692f','#524b24','#323c39','#3f3f74',
-            '#306082','#5b6ee1','#639bff','#5fcde4','#cbdbfc','#ffffff','#9badb7','#847e87',
-            '#696a6a','#595652','#76428a','#ac3232','#d95763','#d77bba','#8f974a','#8a6f30',
-        ].map((hex, i) => ({ index: i, hex, name: '' }));
-    }
-    return _db32Colors;
-}
 
 const _propCache = {};
 async function fetchProp(propId) {

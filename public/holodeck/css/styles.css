@@ -1609,6 +1609,159 @@ svg    { display: block; flex-shrink: 0; }
 }
 
 /* ══════════════════════════════════════════════════════
+   BUILDER BRIDGES — shared extra styles
+   (element rows, number inputs, tags, sliders, etc.)
+   ══════════════════════════════════════════════════════ */
+
+/* Generic text input (number fields, text fields) */
+.cb-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.cb-input:focus { border-color: var(--accent); }
+.cb-input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.cb-input[type="number"]::-webkit-inner-spin-button,
+.cb-input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.5;
+}
+
+/* Tags input */
+.cb-tags-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: inherit;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.cb-tags-input:focus { border-color: var(--accent); }
+
+/* Character count */
+.cb-char-count {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: right;
+    margin-top: 2px;
+}
+
+/* Range slider (shared across builders) */
+.cb-range {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+.cb-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--panel-bg);
+    transition: transform 0.12s;
+}
+.cb-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+.cb-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--panel-bg);
+}
+
+/* Element row (clickable list item for shapes/layers) */
+.cb-element-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 3px;
+}
+.cb-element-row:hover { background: rgba(255,255,255,0.08); }
+.cb-element-row.active {
+    background: rgba(0,217,217,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Small utility button */
+.cb-btn-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    white-space: nowrap;
+}
+.cb-btn-sm:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+}
+.cb-btn-sm:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Properties section (selected shape details) */
+.cb-props-section {
+    border: 1px solid rgba(0,217,217,0.2);
+}
+
+/* Number input mini (for XYZ coordinates) */
+.cb-num {
+    text-align: center;
+}
+
+/* Override shape-grid to use CSS Grid when grid-template-columns is set inline */
+.cb-shape-grid[style*="grid-template-columns"] {
+    display: grid !important;
+    flex-wrap: unset;
+}
+.cb-shape-grid[style*="grid-template-columns"] .cb-shape-btn {
+    flex: unset;
+}
+
+/* ══════════════════════════════════════════════════════
    PANEL — category dropdown (Figma Make filter style)
    ══════════════════════════════════════════════════════ */
 .panel-category-select {
