@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { SCENE, LIGHT } from './shared/palette.js';
 import { standard, groundMaterial } from './shared/materials.js';
 import {
-    CHARACTER, BODY_HEIGHT_PRESETS, BODY_WIDTH_PRESETS,
+    CHARACTER, HEAD, BODY_HEIGHT_PRESETS, BODY_WIDTH_PRESETS,
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     FACE_FEATURES, DEFAULT_COLORS,
 } from './shared/charConfig.js';
@@ -75,11 +75,14 @@ function _buildCharacter(scene, camera, asset) {
     const bodyH = heightP.height;
     const bodyW = widthP.width;
 
+    const floatY = CHARACTER.floatHeight;
+    const neckGap = HEAD.neckGap;
+
     // Body — simple cylinder (avoid complex geometry generators for reliability)
     const bodyGeo = new THREE.CylinderGeometry(bodyW / 2, bodyW / 2, bodyH, 12);
-    const torsoColor = s.torsoColor || DEFAULT_COLORS.torsoColor;
+    const torsoColor = s.torsoColor || DEFAULT_COLORS.torso;
     const body = new THREE.Mesh(bodyGeo, standard(torsoColor));
-    body.position.y = bodyH / 2;
+    body.position.y = floatY + bodyH / 2;
     group.add(body);
 
     // Head
@@ -90,9 +93,10 @@ function _buildCharacter(scene, camera, asset) {
 
     const headGeo = new THREE.SphereGeometry(Math.max(headW, headH) / 2, 12, 10);
     headGeo.scale(headW / Math.max(headW, headH), headH / Math.max(headW, headH), headW / Math.max(headW, headH));
-    const skinColor = s.skinColor || DEFAULT_COLORS.skinColor;
+    const skinColor = s.skinColor || DEFAULT_COLORS.skin;
     const head = new THREE.Mesh(headGeo, standard(skinColor));
-    head.position.y = bodyH + CHARACTER.neckGap + headH / 2;
+    const headY = floatY + bodyH + neckGap + headH / 2;
+    head.position.y = headY;
     group.add(head);
 
     // Eyes
@@ -100,7 +104,7 @@ function _buildCharacter(scene, camera, asset) {
     const eyeGeo = new THREE.SphereGeometry(eyeSize, 8, 8);
     const eyeMat = new THREE.MeshBasicMaterial({ color: '#ffffff' });
     const faceZ = headW * 0.45;
-    const eyeY = head.position.y + headH * 0.05;
+    const eyeY = headY + headH * 0.05;
     const eyeX = headW * 0.18;
 
     for (const xSign of [-1, 1]) {
@@ -117,8 +121,8 @@ function _buildCharacter(scene, camera, asset) {
 
     scene.add(group);
 
-    const charHeight = bodyH + CHARACTER.neckGap + headH;
-    camera.position.set(0.4, charHeight * 0.5, 1.5);
+    const charHeight = floatY + bodyH + neckGap + headH;
+    camera.position.set(0.4, charHeight * 0.55, 1.5);
     camera.lookAt(0, charHeight * 0.45, 0);
 }
 
