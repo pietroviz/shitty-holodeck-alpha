@@ -290,8 +290,59 @@ These files form the auth/infrastructure layer and should not be overwritten:
 2. **The `simulators` table and route paths** still use the old naming. The DB table doesn't need renaming (it's internal), but if new routes are created, prefer `/experiences/` over `/simulators/`.
 3. **There's a `Simulator` type in `types.ts`** — keep it for now since it matches the DB table name, but new types should use the updated naming.
 4. **Cookie clearing quirks:** The `site_access` cookie is `httpOnly`, so browser extensions and some "clear cookies" options don't remove it. Users need to do a full site data clear or use incognito to reset the gate.
-5. **Thumbnail generator not rendering correctly yet** — `thumbnailGenerator.js` was added to generate browse panel thumbnails via an offscreen Three.js canvas, but the camera/scene setup produces blank or background-only captures. The module loads and runs without errors, but the rendered output needs debugging. The approach is sound (offscreen WebGLRenderer at 128x128), but the simplified character/prop builders may not match the main `previewRenderer.js` output. Next session should compare the two rendering pipelines and either fix the offscreen version or find a way to reuse `showPreview()` in a hidden container.
+5. **Thumbnail system (resolved)** — The offscreen Three.js `thumbnailGenerator.js` had two bugs: (1) referenced `CHARACTER.neckGap` which doesn't exist (should be `HEAD.neckGap`), causing NaN camera positions; (2) dual WebGL contexts on the same page caused the second renderer's mesh draw calls to silently fail. Fixed by switching to pre-rendered static thumbnails generated via a Python script (`scripts/generate-thumbnails.py`). The in-browser `thumbnailGenerator.js` is kept only for user-created assets (one at a time). See "Thumbnail Generation" section below for the process.
 6. **Guest feedback silently dropped** — The RLS policy on the `feedback` table requires `auth.uid() = user_id` for inserts. Guests (no auth) submit with `user_id: null`, which fails RLS, but the API returns `{ success: true }` anyway (line 45-46 of `api/feedback/route.ts`). To fix: add an RLS policy `CREATE POLICY "Allow guest feedback inserts" ON public.feedback FOR INSERT WITH CHECK (user_id IS NULL);` via the Supabase SQL Editor. Pietro decided not to do this yet.
+
+---
+
+## Thumbnail Generation
+
+Browse panel thumbnails are **pre-rendered static images** for stock assets and **generated in-browser** for user-created assets.
+
+### Stock asset thumbnails (pre-rendered)
+
+A Python script reads the asset JSON files and draws simplified 2D thumbnails using each asset's actual colors. The output goes to `public/holodeck/thumbnails/{asset_id}.jpg`.
+
+**When to run:** After adding, removing, or updating stock assets in `global_assets/`.
+
+**How to run:**
+```bash
+# All asset types
+python3 scripts/generate-thumbnails.py
+
+# Just one type
+python3 scripts/generate-thumbnails.py characters
+python3 scripts/generate-thumbnails.py objects
+python3 scripts/generate-thumbnails.py environments
+```
+
+**Requirements:** Python 3 + Pillow (`pip install Pillow`)
+
+**What it does:** For each asset JSON in the manifest, draws a simplified representation:
+- **Characters:** Colored body (torso + bottom zone), head (skin + scalp), eyes with iris color
+- **Props/Objects:** Colored shape blocks based on the object's elements
+- **Environments:** Sky + ground color split
+- **Voice/Music:** Colored circle placeholder
+
+After running, commit the new thumbnails and push — they deploy as static files with the site.
+
+### User-created asset thumbnails (in-browser)
+
+When a user creates or edits an asset, the in-browser `thumbnailGenerator.js` renders a single thumbnail using the main viewport's preview renderer (via the `onThumbnail` callback in `previewRenderer.js`). This avoids the dual-WebGL-context issue since it reuses the existing renderer. The thumbnail is cached in IndexedDB for the user's browser.
+
+### File structure
+```
+scripts/
+  generate-thumbnails.py       # Stock thumbnail generator
+public/holodeck/
+  thumbnails/                  # Pre-rendered stock thumbnails (committed)
+    char_asterion.jpg
+    char_blobsworth.jpg
+    ...
+  js/
+    thumbnailGenerator.js      # In-browser generator (user assets only)
+    app.js                     # Loads static thumbs for stock, browser gen for user
+```
 
 ---
 
