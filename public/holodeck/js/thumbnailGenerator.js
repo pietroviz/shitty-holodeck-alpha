@@ -3,11 +3,13 @@
  *
  * Uses a small hidden WebGL canvas to render asset previews and capture
  * JPEG thumbnails. Processes one asset at a time to avoid GPU contention.
+ *
+ * All meshes use MeshBasicMaterial (flat color, no lighting) for reliable
+ * rendering in a secondary WebGL context. At 128px, flat colors look fine.
  */
 
 import * as THREE from 'three';
-import { SCENE, LIGHT } from './shared/palette.js';
-import { standard, groundMaterial } from './shared/materials.js';
+import { SCENE } from './shared/palette.js';
 import {
     CHARACTER, HEAD, BODY_HEIGHT_PRESETS, BODY_WIDTH_PRESETS,
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
@@ -17,6 +19,11 @@ import {
 const THUMB_SIZE = 128;
 let _renderer = null;
 let _initFailed = false;
+
+/** Flat-color material — reliable in any WebGL context. */
+function _mat(color) {
+    return new THREE.MeshBasicMaterial({ color });
+}
 
 function _ensureRenderer() {
     if (_renderer) return _renderer;
@@ -29,12 +36,9 @@ function _ensureRenderer() {
             canvas,
             antialias: false,
             preserveDrawingBuffer: true,
-            powerPreference: 'low-power',
         });
         _renderer.setSize(THUMB_SIZE, THUMB_SIZE);
         _renderer.shadowMap.enabled = false;
-        _renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        _renderer.toneMappingExposure = 1.0;
         return _renderer;
     } catch (e) {
         console.warn('[ThumbGen] WebGL init failed:', e);
@@ -49,15 +53,13 @@ function _buildScene() {
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
 
-    scene.add(new THREE.AmbientLight(SCENE.ambient, LIGHT.ambientIntensity));
-    const key = new THREE.DirectionalLight(SCENE.keyLight, LIGHT.keyIntensity);
-    key.position.set(...LIGHT.keyPosition);
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(SCENE.fillLight, LIGHT.fillIntensity);
-    fill.position.set(...LIGHT.fillPosition);
-    scene.add(fill);
+    // No lights needed — all meshes use MeshBasicMaterial
 
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), groundMaterial());
+    // Ground plane (flat dark color)
+    const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(10, 10),
+        _mat(SCENE.ground)
+    );
     ground.rotation.x = -Math.PI / 2;
     scene.add(ground);
 
@@ -78,10 +80,10 @@ function _buildCharacter(scene, camera, asset) {
     const floatY = CHARACTER.floatHeight;
     const neckGap = HEAD.neckGap;
 
-    // Body — simple cylinder (avoid complex geometry generators for reliability)
+    // Body — simple cylinder
     const bodyGeo = new THREE.CylinderGeometry(bodyW / 2, bodyW / 2, bodyH, 12);
     const torsoColor = s.torsoColor || DEFAULT_COLORS.torso;
-    const body = new THREE.Mesh(bodyGeo, standard(torsoColor));
+    const body = new THREE.Mesh(bodyGeo, _mat(torsoColor));
     body.position.y = floatY + bodyH / 2;
     group.add(body);
 
@@ -94,7 +96,7 @@ function _buildCharacter(scene, camera, asset) {
     const headGeo = new THREE.SphereGeometry(Math.max(headW, headH) / 2, 12, 10);
     headGeo.scale(headW / Math.max(headW, headH), headH / Math.max(headW, headH), headW / Math.max(headW, headH));
     const skinColor = s.skinColor || DEFAULT_COLORS.skin;
-    const head = new THREE.Mesh(headGeo, standard(skinColor));
+    const head = new THREE.Mesh(headGeo, _mat(skinColor));
     const headY = floatY + bodyH + neckGap + headH / 2;
     head.position.y = headY;
     group.add(head);
@@ -102,19 +104,17 @@ function _buildCharacter(scene, camera, asset) {
     // Eyes
     const eyeSize = FACE_FEATURES.eye.scleraDiameter * 0.5;
     const eyeGeo = new THREE.SphereGeometry(eyeSize, 8, 8);
-    const eyeMat = new THREE.MeshBasicMaterial({ color: '#ffffff' });
     const faceZ = headW * 0.45;
     const eyeY = headY + headH * 0.05;
     const eyeX = headW * 0.18;
 
     for (const xSign of [-1, 1]) {
-        const eye = new THREE.Mesh(eyeGeo, eyeMat);
+        const eye = new THREE.Mesh(eyeGeo, _mat('#ffffff'));
         eye.position.set(xSign * eyeX, eyeY, faceZ);
         group.add(eye);
 
         const pupilGeo = new THREE.SphereGeometry(eyeSize * 0.5, 8, 8);
-        const pupilMat = new THREE.MeshBasicMaterial({ color: s.eyeIrisColor || '#4a7a8c' });
-        const pupil = new THREE.Mesh(pupilGeo, pupilMat);
+        const pupil = new THREE.Mesh(pupilGeo, _mat(s.eyeIrisColor || '#4a7a8c'));
         pupil.position.set(xSign * eyeX, eyeY, faceZ + eyeSize * 0.6);
         group.add(pupil);
     }
@@ -153,8 +153,7 @@ function _buildProp(scene, camera, asset) {
         if (fill === 'primary') color = payload.primaryColor || '#888888';
         else if (colorMap[fill]) color = colorMap[fill];
         else if (typeof fill === 'string' && fill.startsWith('#')) color = fill;
-        const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.7 });
-        const mesh = new THREE.Mesh(geo, mat);
+        const mesh = new THREE.Mesh(geo, _mat(color));
         mesh.position.set(p.px||0, p.py||0, p.pz||0);
         const d = Math.PI / 180;
         mesh.rotation.set((p.rx||0)*d, (p.ry||0)*d, (p.rz||0)*d);
@@ -177,7 +176,7 @@ function _buildEnvironment(scene, camera, asset) {
     const skyGeo = new THREE.SphereGeometry(5, 16, 12);
     scene.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ color: skyColor, side: THREE.BackSide })));
 
-    const gMesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({ color: groundColor, roughness: 0.9 }));
+    const gMesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), _mat(groundColor));
     gMesh.rotation.x = -Math.PI / 2;
     gMesh.position.y = 0.01;
     scene.add(gMesh);
@@ -193,7 +192,7 @@ function _buildFallback(scene, camera, asset) {
     const color = typeColors[asset.type] || '#888888';
     const mesh = new THREE.Mesh(
         new THREE.SphereGeometry(0.5, 16, 12),
-        new THREE.MeshStandardMaterial({ color, roughness: 0.5 })
+        _mat(color)
     );
     mesh.position.y = 0.5;
     scene.add(mesh);
