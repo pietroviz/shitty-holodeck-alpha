@@ -36,10 +36,13 @@ export type SimulationRun = {
   created_at: string;
 };
 
+export type FeedbackStatus = "todo" | "doing" | "done";
+
 export type Feedback = {
   id: string;
   user_id: string | null;
   page_url: string | null;
   message: string;
+  status: FeedbackStatus;
   created_at: string;
 };
