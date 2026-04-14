@@ -29,17 +29,15 @@ const _THUMB_PLACEHOLDERS = {
     asset:       { icon: '🖼', bg: '#2A3240' },
 };
 function _thumbHTML(item) {
+    // Stock assets: ALWAYS use pre-rendered static thumbnail (never the browser-gen cache)
+    if (item.id && item.meta?.owner !== 'user') {
+        const esc = _THUMB_PLACEHOLDERS[item.type] || { icon: '•', bg: '#2A3240' };
+        return `<img src="${THUMB_PATH}/${item.id}.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;background:${esc.bg};border-radius:6px;font-size:20px;">${esc.icon}</span>`;
+    }
+    // User assets: check thumbnail cache
     const cached = item.meta?.thumbnail || _thumbCache.get(item.id);
     if (cached) return `<img src="${cached}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
-    // For stock assets, try the pre-rendered thumbnail path
-    if (item.id && item.meta?.owner !== 'user') {
-        return `<img src="${THUMB_PATH}/${item.id}.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" onerror="this.parentElement.innerHTML='${_placeholderSpan(item.type)}'">`;
-    }
     const ph = _THUMB_PLACEHOLDERS[item.type] || { icon: '•', bg: '#2A3240' };
-    return `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:${ph.bg};border-radius:6px;font-size:20px;">${ph.icon}</span>`;
-}
-function _placeholderSpan(type) {
-    const ph = _THUMB_PLACEHOLDERS[type] || { icon: '•', bg: '#2A3240' };
     return `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:${ph.bg};border-radius:6px;font-size:20px;">${ph.icon}</span>`;
 }
 
