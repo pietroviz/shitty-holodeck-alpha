@@ -9,9 +9,28 @@ import { VoiceBridge }          from './bridges/VoiceBridge.js';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking } from './previewRenderer.js';
 import { generateId }                       from './db.js';
+import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
 // ── Thumbnail cache (persists across category switches within session) ──
 const _thumbCache = new Map();
+
+// ── Type-based placeholder icons for items without thumbnails ──
+const _THUMB_PLACEHOLDERS = {
+    character:   { icon: '👤', bg: '#2A3240' },
+    environment: { icon: '🌄', bg: '#2A3240' },
+    voice:       { icon: '🎙', bg: '#2A3240' },
+    music:       { icon: '🎵', bg: '#2A3240' },
+    prop:        { icon: '📦', bg: '#2A3240' },
+    object:      { icon: '📦', bg: '#2A3240' },
+    image:       { icon: '🖼', bg: '#2A3240' },
+    asset:       { icon: '🖼', bg: '#2A3240' },
+};
+function _thumbHTML(item) {
+    const cached = item.meta?.thumbnail || _thumbCache.get(item.id);
+    if (cached) return `<img src="${cached}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
+    const ph = _THUMB_PLACEHOLDERS[item.type] || { icon: '•', bg: '#2A3240' };
+    return `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:${ph.bg};border-radius:6px;font-size:20px;">${ph.icon}</span>`;
+}
 
 /** Map menu labels → bridge classes for Create/Edit. */
 const BRIDGE_MAP = {
@@ -598,6 +617,66 @@ function sortedItems(items) {
     return list;
 }
 
+/* ── Panel items-only update (avoids re-rendering search input) ── */
+function renderPanelItems() {
+    const items = sortedItems(panelItems);
+
+    // Update item count
+    const countEl = E.panelInner.querySelector('.ps-count');
+    if (countEl) countEl.textContent = `${items.length} items`;
+
+    // Update items list only
+    const listEl = E.panelInner.querySelector('#panel-items-list');
+    if (!listEl) return;
+    const savedScroll = listEl.scrollTop;
+    listEl.innerHTML = items.length === 0
+        ? `<div class="panel-empty-state"><p style="color:var(--text-dim);">No results</p></div>`
+        : items.map((it, idx) => `
+        <div class="panel-item ${idx === S.selectedIndex ? 'selected' : ''}"
+             data-idx="${idx}" data-id="${it.id}">
+            <div class="pi-thumb">${(it.meta?.thumbnail || _thumbCache.get(it.id))
+                ? `<img src="${it.meta?.thumbnail || _thumbCache.get(it.id)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`
+                : ''}</div>
+            <div class="pi-text">
+                <div class="pi-name">${it.name || 'Untitled'}</div>
+                <div class="pi-detail">${it.type || ''}</div>
+                <div class="pi-detail">${it.tags ? it.tags.slice(0,3).join(', ') : ''}</div>
+            </div>
+            <button class="pi-action pi-edit" data-idx="${idx}" data-id="${it.id}" title="Edit">${ICON.pencil}</button>
+            <div class="pi-more-wrap">
+                <button class="pi-action pi-more" data-idx="${idx}" title="More">${ICON.more}</button>
+            </div>
+        </div>`).join('');
+    listEl.scrollTop = savedScroll;
+
+    // Re-wire item click events
+    E.panelInner.querySelectorAll('.panel-item').forEach(el => {
+        el.addEventListener('click', (e) => {
+            if (e.target.closest('.pi-action')) return;
+            selectAsset(parseInt(el.dataset.idx), items);
+        });
+    });
+    E.panelInner.querySelectorAll('.pi-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id    = btn.dataset.id;
+            const asset = items.find(it => it.id === id);
+            if (!asset) return;
+            const label = TYPE_TO_LABEL[asset.type] || 'Character';
+            const BridgeClass = BRIDGE_MAP[label];
+            if (BridgeClass) {
+                _savedBrowseState = {
+                    panelLabel: S.panelLabel, panelSource, panelItems: [...panelItems],
+                    selectedIndex: S.selectedIndex, previewAsset: S.previewAsset,
+                    sortOrder: S.sortOrder, panelCategory: S.panelCategory,
+                };
+                const isTemplate = panelSource === 'explore' || asset.meta?.owner !== 'user';
+                openBuilder(BridgeClass, isTemplate ? _duplicateAssetForEdit(asset) : asset, label);
+            }
+        });
+    });
+}
+
 /* ── Panel HTML ─────────────────────────────────────────── */
 function renderPanel() {
     const { panelLabel, panelSearchMode, panelSearchQuery,
@@ -687,6 +766,7 @@ function renderPanel() {
         <div class="panel-items" id="panel-items-list">
             ${panelLoading ? `
                 <div class="panel-empty-state">
+                    <div class="panel-spinner"></div>
                     <p style="color:var(--text-dim);">Loading assets...</p>
                 </div>
             ` : isEmpty ? `
@@ -703,9 +783,7 @@ function renderPanel() {
             ` : items.map((it, idx) => `
                 <div class="panel-item ${idx === selectedIndex ? 'selected' : ''}"
                      data-idx="${idx}" data-id="${it.id}">
-                    <div class="pi-thumb">${(it.meta?.thumbnail || _thumbCache.get(it.id))
-                        ? `<img src="${it.meta?.thumbnail || _thumbCache.get(it.id)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`
-                        : ''}</div>
+                    <div class="pi-thumb">${_thumbHTML(it)}</div>
                     <div class="pi-text">
                         <div class="pi-name">${it.name || 'Untitled'}</div>
                         <div class="pi-detail">${it.type || ''}</div>
@@ -763,7 +841,7 @@ function renderPanel() {
     if (panelSearchMode) {
         const inp = E.panelInner.querySelector('#panel-search-input');
         if (inp) {
-            inp.addEventListener('input', (e) => { S.panelSearchQuery = e.target.value; render(); });
+            inp.addEventListener('input', (e) => { S.panelSearchQuery = e.target.value; renderPanelItems(); });
             inp.focus();
         }
     }
@@ -1087,6 +1165,21 @@ async function openPanel(label, source = 'explore') {
 
     panelLoading = false;
     render();
+
+    // Generate thumbnails in the background for items that don't have one
+    const needsThumbs = panelItems.filter(it => !it.meta?.thumbnail && !_thumbCache.has(it.id));
+    if (needsThumbs.length > 0) {
+        generateThumbnailBatch(needsThumbs, (asset, dataURL) => {
+            if (!asset.meta) asset.meta = {};
+            asset.meta.thumbnail = dataURL;
+            _thumbCache.set(asset.id, dataURL);
+            // Update visible thumbnail in the panel
+            const thumb = E.panelInner?.querySelector(`.panel-item[data-id="${asset.id}"] .pi-thumb`);
+            if (thumb) {
+                thumb.innerHTML = `<img src="${dataURL}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
+            }
+        }).then(() => disposeThumbnailRenderer());
+    }
 }
 
 function closePanel() {

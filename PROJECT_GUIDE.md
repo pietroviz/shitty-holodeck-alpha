@@ -290,9 +290,45 @@ These files form the auth/infrastructure layer and should not be overwritten:
 2. **The `simulators` table and route paths** still use the old naming. The DB table doesn't need renaming (it's internal), but if new routes are created, prefer `/experiences/` over `/simulators/`.
 3. **There's a `Simulator` type in `types.ts`** — keep it for now since it matches the DB table name, but new types should use the updated naming.
 4. **Cookie clearing quirks:** The `site_access` cookie is `httpOnly`, so browser extensions and some "clear cookies" options don't remove it. Users need to do a full site data clear or use incognito to reset the gate.
+5. **Thumbnail generator not rendering correctly yet** — `thumbnailGenerator.js` was added to generate browse panel thumbnails via an offscreen Three.js canvas, but the camera/scene setup produces blank or background-only captures. The module loads and runs without errors, but the rendered output needs debugging. The approach is sound (offscreen WebGLRenderer at 128x128), but the simplified character/prop builders may not match the main `previewRenderer.js` output. Next session should compare the two rendering pipelines and either fix the offscreen version or find a way to reuse `showPreview()` in a hidden container.
+6. **Guest feedback silently dropped** — The RLS policy on the `feedback` table requires `auth.uid() = user_id` for inserts. Guests (no auth) submit with `user_id: null`, which fails RLS, but the API returns `{ success: true }` anyway (line 45-46 of `api/feedback/route.ts`). To fix: add an RLS policy `CREATE POLICY "Allow guest feedback inserts" ON public.feedback FOR INSERT WITH CHECK (user_id IS NULL);` via the Supabase SQL Editor. Pietro decided not to do this yet.
+
+---
+
+## Recent Changes (April 13, 2026 session — Claude Code terminal)
+
+Changes made based on feedback submitted via the in-app Feedback tab. All changes are in the holodeck frontend (`public/holodeck/`).
+
+### Bugs Fixed
+- **Search typing backwards** (`app.js`) — Panel search input triggered a full `render()` on every keystroke, which rebuilt the HTML and reset the cursor to position 0. Fixed by adding `renderPanelItems()` that only re-renders the item list, leaving the search input untouched.
+- **3D asset orientation** (`previewRenderer.js`) — Torus (ring) geometry rotated 90° upright (`rotateX(Math.PI/2)`), cone geometry flipped (`rotateX(Math.PI)`) to fix wrong tilt direction.
+
+### UI/Visual Improvements
+- **Mid-grey text lightened** (`styles.css`) — `--text-dim` and `--text-secondary` changed from `#5A6676` → `#8494A7` for better readability.
+- **Pink reference frame opacity** (`styles.css`) — Safe-area border reduced from 15% → 10% opacity.
+- **Loading spinner** (`styles.css`, `app.js`) — Added animated spinner (`.panel-spinner`) to browse panel loading state.
+- **2D image auto-rotate disabled** (`previewRenderer.js`) — Images now default to no rotation, matching voice behavior.
+- **3D auto-rotate ping-pong** (`previewRenderer.js`) — Replaced continuous 360° rotation with smooth oscillation between 3/4 left and 3/4 right views. Uses manual azimuth control instead of OrbitControls autoRotate.
+
+### Character Builder
+- **Body proportions shifted** (`shared/charConfig.js`) — `bottomHeight` increased from 0.13 → 0.156 (20% taller), `skinHeight` reduced from 0.62 → 0.594 to compensate. Overall character height unchanged.
+- **Gear color selectors** (`bridges/CharacterBridge.js`) — Added color swatch pickers for Hair, Hat, Glasses, and Facial Hair in the Gear tab. Color swatches only appear when the corresponding accessory is not "none". Gear colors update live by traversing the accessory mesh group.
+
+### Thumbnail System (work in progress)
+- **Placeholder icons** (`app.js`) — Added `_thumbHTML()` helper with emoji-based type placeholders (👤 character, 🌄 environment, etc.) so browse items always show something.
+- **Offscreen generator** (`thumbnailGenerator.js` — NEW FILE) — Background thumbnail generation using a separate 128x128 WebGL renderer. Generates thumbnails when the browse panel opens and updates them in the DOM as they complete. **Status: generates data but camera framing needs fixing — thumbnails appear blank. Needs debugging next session.**
+
+### Feedback from the Feedback Tab (for reference)
+The following items from the feedback table were NOT addressed in this session and remain open:
+- Add optional eyelashes to eye shapes
+- Use 2D assets for facial hair + add eyebrow options/thicknesses
+- Add thumbnails to bottom nav next to item titles
+- Assign voices from standard voice set to stock characters
+- Add character catchphrases/taglines to character files and preview
+- Browse menu load time optimization (spinner added, but underlying speed not addressed)
 
 ---
 
 ## Working With Pietro
 
-Pietro is non-technical (not a developer) but very engaged with the product. He prefers clear, step-by-step communication. When explaining technical decisions, keep it simple and concrete. He uses Cowork/Claude sessions to build and iterate on the project, so this guide and `AGENTS.md` are the primary ways context is preserved between sessions.
+Pietro is non-technical (not a developer) but very engaged with the product. He prefers clear, step-by-step communication. When explaining technical decisions, keep it simple and concrete. He uses Cowork/Claude sessions to build and iterate on the project, so this guide and `AGENTS.md` are the primary ways context is preserved between sessions. Pietro prefers working with the Claude desktop app over the terminal/CLI.

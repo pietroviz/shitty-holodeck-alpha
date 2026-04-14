@@ -30,8 +30,8 @@ export const HEAD = {
 // ── Color Zone Heights ──────────────────────────────────
 export const COLOR_ZONES = {
     scalpHeight:  0.13,
-    skinHeight:   0.62,
-    bottomHeight: 0.13,
+    skinHeight:   0.594,
+    bottomHeight: 0.156,
 };
 
 // ── Face Feature Dimensions ──────────────────────────

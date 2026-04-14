@@ -34,6 +34,10 @@ let _container = null;
 let _clock     = new THREE.Clock();
 let _previewGroup = null;   // the group containing asset meshes (for rotation)
 let _autoSpin = true;
+let _pingPongAngle = 0;       // current oscillation angle (radians)
+let _pingPongDir   = 1;       // 1 = moving right, -1 = moving left
+const _PP_RANGE    = Math.PI * 0.45; // ~81° total sweep (3/4 left to 3/4 right)
+const _PP_SPEED    = 0.15;           // radians per second
 let _thumbnailCallback = null;  // called once after first render with dataURL
 let _currentAsset = null;       // asset being previewed (for thumbnail caching)
 
@@ -157,6 +161,8 @@ export function showPreview(container, asset, opts = {}) {
     _controls.maxDistance   = 8;
     _controls.maxPolarAngle = Math.PI * 0.85;
     _autoSpin = true;
+    _pingPongAngle = 0;
+    _pingPongDir   = 1;
     const stopSpin = () => { _autoSpin = false; };
     _renderer.domElement.addEventListener('pointerdown', stopSpin);
     _renderer.domElement.addEventListener('wheel', stopSpin);
@@ -206,6 +212,7 @@ export function showPreview(container, asset, opts = {}) {
         if (_controls) _controls.target.set(0, 0.7, 0);
     } else if (type === 'asset' || type === 'image') {
         _buildImagePreview(asset);
+        _autoSpin = false;  // 2D images don't rotate
         if (_controls) _controls.target.set(0, 1, 0);
     } else {
         _buildFallbackPreview(asset);
@@ -258,10 +265,19 @@ function _startLoop() {
         const delta = _clock.getDelta();
         const deltaMs = delta * 1000;
 
-        // Auto-spin via OrbitControls (stops when user interacts)
+        // Ping-pong rotation between 3/4 views (stops when user interacts)
         if (_controls) {
-            _controls.autoRotate      = _autoSpin;
-            _controls.autoRotateSpeed = 0.8;
+            if (_autoSpin) {
+                _pingPongAngle += _PP_SPEED * delta * _pingPongDir;
+                if (_pingPongAngle >= _PP_RANGE)  { _pingPongAngle = _PP_RANGE;  _pingPongDir = -1; }
+                if (_pingPongAngle <= -_PP_RANGE) { _pingPongAngle = -_PP_RANGE; _pingPongDir =  1; }
+                const dist  = _controls.getDistance();
+                const polar = _controls.getPolarAngle();
+                const baseAzimuth = 0; // front-facing center
+                _controls.object.position.setFromSpherical(
+                    new THREE.Spherical(dist, polar, baseAzimuth + _pingPongAngle)
+                ).add(_controls.target);
+            }
             _controls.update();
         }
 
@@ -331,8 +347,8 @@ function _renderPropGroup(propData, primaryColor, scale) {
         box(p) { return new THREE.BoxGeometry(p.width||p.sx||1, p.height||p.sy||1, p.depth||p.sz||1); },
         sphere(p) { return new THREE.SphereGeometry(p.radius||0.5, 16, 12); },
         cylinder(p) { return new THREE.CylinderGeometry(p.radiusTop??p.radius??0.5, p.radiusBottom??p.radius??0.5, p.height||1, 16); },
-        cone(p) { return new THREE.ConeGeometry(p.radius||0.5, p.height||1, 16); },
-        torus(p) { return new THREE.TorusGeometry(p.radius||0.5, p.tubeRadius||p.tube||0.15, 12, 24); },
+        cone(p) { const g = new THREE.ConeGeometry(p.radius||0.5, p.height||1, 16); g.rotateX(Math.PI); return g; },
+        torus(p) { const g = new THREE.TorusGeometry(p.radius||0.5, p.tubeRadius||p.tube||0.15, 12, 24); g.rotateX(Math.PI/2); return g; },
         capsule(p) { return new THREE.CapsuleGeometry(p.radius||0.3, p.length||1, 8, 12); },
         hemisphere(p) { return new THREE.SphereGeometry(p.radius||0.5, 16, 12, 0, Math.PI*2, 0, Math.PI/2); },
         pyramid(p) { return new THREE.ConeGeometry((p.baseWidth||1)/2, p.height||1, 4); },

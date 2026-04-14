@@ -856,9 +856,14 @@ export class CharacterBridge extends BaseBridge {
 
             content = `
                 ${_selectRow('Hair', 'hairStyle', HAIR_STYLES, s.hairStyle)}
+                ${s.hairStyle !== 'none' ? _swatchRow('Hair Color', 'hairColor', s.hairColor) : ''}
                 ${_selectRow('Hat', 'hatStyle', HAT_STYLES, s.hatStyle)}
+                ${s.hatStyle !== 'none' ? _swatchRow('Hat Color', 'hatColor', s.hatColor) : ''}
                 ${_selectRow('Glasses', 'glassesStyle', GLASSES_STYLES, s.glassesStyle)}
+                ${s.glassesStyle !== 'none' ? _swatchRow('Glasses Color', 'glassesColor', s.glassesColor) : ''}
                 ${_selectRow('Facial Hair', 'facialHairStyle', FACIAL_HAIR_STYLES, s.facialHairStyle)}
+                ${s.facialHairStyle !== 'none' ? _swatchRow('Facial Hair Color', 'facialHairColor', s.facialHairColor) : ''}
+                <div class="cb-palette-grid" style="display:none;">${palHtml}</div>
                 <div class="cb-section-divider"></div>
                 <div class="cb-section-title" style="margin-bottom:8px;">Voice</div>
                 <div class="cb-voice-card">
@@ -947,6 +952,10 @@ export class CharacterBridge extends BaseBridge {
                 if (el) el.style.background = hex;
                 if (p === 'eyeIrisColor') { this._leftEye?.setIrisColor(hex); this._rightEye?.setIrisColor(hex); }
                 else if (p === 'lipColor') { this._mouthRig?.setLipColor(hex); }
+                else if (p === 'hairColor' || p === 'hatColor' || p === 'glassesColor' || p === 'facialHairColor') {
+                    const grp = p === 'hairColor' ? this._hairGroup : p === 'hatColor' ? this._hatGroup : p === 'glassesColor' ? this._glassesGroup : this._facialHairGrp;
+                    if (grp) grp.traverse(c => { if (c.isMesh && c.material && !c.material.map) c.material.color.set(hex); });
+                }
                 else this._applyColors();
             });
         });
