@@ -1,19 +1,22 @@
 /**
  * EnvironmentBridge.js — Fresh minimal rebuild (April 2026).
  *
- * Rebuilt from scratch. Renders the canonical "Scene3D" look as the
- * blank-slate template:
+ * The blank-slate baseline renders the canonical "Scene3D" look:
  *   - Mid-grey backdrop (#5A5A5A)
- *   - 21×21 world grid
- *   - 5×5 stage perimeter (thick light-grey line) + inner grid lines
- *   - Ambient + single directional light (flat, even)
- *   - No placeholder cube — clean stage
+ *   - Colored ground plane + colored stage plane
+ *   - World grid that scales with ground size
+ *   - 5×5 stage perimeter (thick light-grey Line2) + inner stage grid
+ *   - Flat lighting (ambient + one directional), no placeholder cube
  *
- * Panel is tab-based (File, Ground, Sky, Walls, Music). Only the File
- * tab is wired right now; other tabs are stubs we'll fill in together.
+ * Tabs: File · Land · Sky · Stuff · FX.
+ *   File   — name / description / tags (wired)
+ *   Land   — ground size + ground color + stage color (wired)
+ *            walls + stage-size controls coming next
+ *   Sky    — stub
+ *   Stuff  — stub (object placement)
+ *   FX     — stub (lighting + atmosphere effects)
  *
- * See docs/environment-builder-notes.md for a running log of features
- * we may bring back from EnvironmentBridge.legacy.js.
+ * See docs/environment-builder-notes.md for a running design log.
  */
 
 import * as THREE from 'three';
@@ -23,18 +26,29 @@ import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { BaseBridge } from './BaseBridge.js?v=3';
+import { loadPalette } from '../shared/paletteLoader.js';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
 const _PP_SPEED = 0.15;
 
-// ── Tabs ────────────────────────────────────────────────────────
+// Land tab tuning
+const GROUND_SIZE_MIN = 5;
+const GROUND_SIZE_MAX = 27;
+const STAGE_SIZE      = 5;
+
+// DB32-picked defaults that feel like an "inviting little world"
+const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
+const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
+const DEFAULT_GROUND_SIZE  = 21;
+
+// ── Tabs (File · Land · Sky · Stuff · FX) ───────────────────────
 const TABS = [
-    { id: 'file',   label: 'File',   icon: '📄' },
-    { id: 'ground', label: 'Ground', icon: '▭'  },
-    { id: 'sky',    label: 'Sky',    icon: '☁️' },
-    { id: 'walls',  label: 'Walls',  icon: '▮'  },
-    { id: 'music',  label: 'Music',  icon: '🎵' },
+    { id: 'file',  label: 'File'  },
+    { id: 'land',  label: 'Land'  },
+    { id: 'sky',   label: 'Sky'   },
+    { id: 'stuff', label: 'Stuff' },
+    { id: 'fx',    label: 'FX'    },
 ];
 
 // Small HTML escape helper
@@ -43,7 +57,7 @@ const _esc = (s = '') =>
         { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]
     ));
 
-// Small "dice" icon used in Surprise buttons. Single face with five pips.
+// Dice icon for per-field Surprise buttons
 const DICE_ICON = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
      fill="none" stroke="currentColor" stroke-width="1.75"
@@ -56,14 +70,27 @@ const DICE_ICON = `
   <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
 </svg>`;
 
-// Render a field head row (label on left, Surprise action on right).
+// Render a field head row (label on left, Surprise dice on right).
 const _fieldHead = (label, surpriseKey) => `
     <div class="cb-field-head">
         <div class="cb-label">${label}</div>
-        <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}" title="Surprise me">
-            ${DICE_ICON}<span>Surprise</span>
+        <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}" aria-label="Surprise me" title="Surprise me">
+            ${DICE_ICON}
         </button>
     </div>`;
+
+// Palette swatch grid with a selection highlight
+const _paletteGrid = (palette, selectedHex, field) => {
+    if (!palette) return '<div class="cb-hint">Loading palette…</div>';
+    return `<div class="cb-palette-grid" data-field="${field}">${
+        palette.map(c => {
+            const sel = c.hex.toLowerCase() === (selectedHex || '').toLowerCase();
+            return `<button type="button" class="cb-pal-swatch ${sel ? 'selected' : ''}"
+                        data-hex="${c.hex}" title="${c.name || c.hex}"
+                        style="background:${c.hex};"></button>`;
+        }).join('')
+    }</div>`;
+};
 
 export class EnvironmentBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
@@ -71,29 +98,36 @@ export class EnvironmentBridge extends BaseBridge {
         this.displayName = 'Environment';
         this.storeName   = 'environments';
 
-        // Minimal editable state. Anything the legacy builder tracked
-        // (groundColor, sky, walls, music, props, images) is intentionally
-        // NOT here — we'll reintroduce fields one at a time as we flesh
-        // out tabs.
+        // Carry forward any previously-saved state
+        const d = this.asset?.payload?.state || this.asset?.state || {};
+
         this._state = {
-            // Reserved for future use. Empty for now.
+            groundColor: d.groundColor || DEFAULT_GROUND_COLOR,
+            stageColor:  d.stageColor  || DEFAULT_STAGE_COLOR,
+            groundSize:  d.groundSize  ?? DEFAULT_GROUND_SIZE,
+            // Future: walls, skyTop/Mid/Bot, objects, fx, lighting
         };
 
         this._activeTab = 'file';
 
-        // Holders for scene elements we own (so we can dispose cleanly)
+        // Scene object references (so we can update / dispose cleanly)
+        this._groundMesh  = null;
+        this._stageMesh   = null;
+        this._worldGrid   = null;
         this._perimMat    = null;
-        this._lineObjs    = [];
+        this._perimLine   = null;
+        this._stageInner  = [];
         this._extraLights = [];
 
-        // Viewport interaction — matches browse preview behaviour:
-        //   - OrbitControls for click-drag orbit / wheel zoom
-        //   - Play button toggles ping-pong rotation; user drag stops it
-        this._controls        = null;
-        this._autoSpin        = false;
-        this._pingPongAngle   = 0;
-        this._pingPongDir     = 1;
-        this._isPlaying       = false;   // mirrors auto-spin for the global play button
+        // Viewport interaction (matches browse preview)
+        this._controls      = null;
+        this._autoSpin      = false;
+        this._pingPongAngle = 0;
+        this._pingPongDir   = 1;
+        this._isPlaying     = false;
+
+        // DB32 palette (loaded async in _buildScene)
+        this._palette = null;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -101,20 +135,20 @@ export class EnvironmentBridge extends BaseBridge {
     // ═══════════════════════════════════════════════════════════════
 
     async _buildScene() {
-        // BaseBridge already added a ground plane, 10×10 GridHelper,
-        // cyan 1m reference square, and a three-point-ish light rig.
-        // Strip those out so the bridge scene matches Scene3D exactly.
+        // Clear the ground/grid/lights BaseBridge added so we can own them
         this._stripBaseSceneDefaults();
 
-        // Scene background — mid grey, matching Scene3D
+        // Load the DB32 palette in parallel with scene setup
+        const paletteP = loadPalette();
+
+        // Scene background — mid grey
         this._scene.background = new THREE.Color(0x5A5A5A);
 
         // Camera pose — matches Scene3D
         this._camera.position.set(5.2, 3.9, 5.2);
         this._camera.lookAt(0, 0, 0);
 
-        // Orbit controls — click/drag to orbit, wheel to zoom.
-        // Matches the browse preview for a consistent feel.
+        // Orbit controls
         this._controls = new OrbitControls(this._camera, this._renderer.domElement);
         this._controls.target.set(0, 0, 0);
         this._controls.enableDamping = true;
@@ -124,9 +158,7 @@ export class EnvironmentBridge extends BaseBridge {
         this._controls.maxPolarAngle = Math.PI * 0.49;
         this._controls.update();
 
-        // Any user interaction with the viewport stops auto-rotate
-        // (same pattern as browse preview). Dispatches a DOM event so
-        // the global play button can update its visual state.
+        // Pointer interaction stops auto-rotate
         const stopSpin = () => {
             if (this._autoSpin) {
                 this._autoSpin  = false;
@@ -139,15 +171,102 @@ export class EnvironmentBridge extends BaseBridge {
         this._renderer.domElement.addEventListener('pointerdown', stopSpin);
         this._renderer.domElement.addEventListener('wheel',       stopSpin);
 
-        // 21×21 world-unit grid (thin, low-opacity)
-        const gridHelper = new THREE.GridHelper(21, 21, 0x2F2F2F, 0x2F2F2F);
-        gridHelper.material.opacity     = 0.3;
-        gridHelper.material.transparent = true;
-        this._scene.add(gridHelper);
-        this._lineObjs.push(gridHelper);
+        // Ground + stage planes
+        this._buildGroundPlane();
+        this._buildStagePlane();
 
-        // 5×5 stage perimeter (Line2 so the stroke stays a consistent
-        // thickness regardless of zoom / pixel ratio)
+        // World grid (scales with groundSize)
+        this._buildWorldGrid();
+
+        // 5×5 stage perimeter + inner grid
+        this._buildStagePerimeter();
+        this._buildStageInnerGrid();
+
+        // Flat lighting
+        const amb = new THREE.AmbientLight(0xffffff, 0.6);
+        this._scene.add(amb);
+        this._extraLights.push(amb);
+
+        const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+        dir.position.set(5, 10, 5);
+        this._scene.add(dir);
+        this._extraLights.push(dir);
+
+        // Resize observer keeps the perimeter line resolution fresh
+        const c = this.container;
+        this._ro?.disconnect();
+        this._ro = new ResizeObserver(() => {
+            this._camera.aspect = c.clientWidth / c.clientHeight;
+            this._camera.updateProjectionMatrix();
+            this._renderer.setSize(c.clientWidth, c.clientHeight);
+            this._perimMat?.resolution.set(c.clientWidth, c.clientHeight);
+        });
+        this._ro.observe(c);
+
+        // Wait for palette so the panel can render swatches on first paint
+        this._palette = await paletteP;
+    }
+
+    _stripBaseSceneDefaults() {
+        const toRemove = [];
+        this._scene.traverse(obj => {
+            if (obj === this._scene) return;
+            if (obj.isMesh || obj.isLine || obj.isGridHelper || obj.isLight) {
+                toRemove.push(obj);
+            }
+        });
+        for (const obj of toRemove) {
+            obj.geometry?.dispose?.();
+            if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose?.());
+            else obj.material?.dispose?.();
+            this._scene.remove(obj);
+        }
+    }
+
+    // ── Scene builders (break up _buildScene for clarity) ───────
+
+    _buildGroundPlane() {
+        const size = this._state.groundSize;
+        const geom = new THREE.PlaneGeometry(size, size);
+        const mat  = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(this._state.groundColor),
+            roughness: 0.95,
+            metalness: 0,
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.y = 0;
+        mesh.receiveShadow = true;
+        this._scene.add(mesh);
+        this._groundMesh = mesh;
+    }
+
+    _buildStagePlane() {
+        const geom = new THREE.PlaneGeometry(STAGE_SIZE, STAGE_SIZE);
+        const mat  = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(this._state.stageColor),
+            roughness: 0.85,
+            metalness: 0,
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.y = 0.002; // just above the ground plane
+        mesh.receiveShadow = true;
+        this._scene.add(mesh);
+        this._stageMesh = mesh;
+    }
+
+    _buildWorldGrid() {
+        const size = this._state.groundSize;
+        const grid = new THREE.GridHelper(size, size, 0x2F2F2F, 0x2F2F2F);
+        grid.material.opacity     = 0.3;
+        grid.material.transparent = true;
+        grid.position.y = 0.004; // above the stage plane so lines stay visible
+        this._scene.add(grid);
+        this._worldGrid = grid;
+    }
+
+    _buildStagePerimeter() {
         const c = this.container;
         const perimPositions = [
             -2.5, 0.01, -2.5,
@@ -166,73 +285,56 @@ export class EnvironmentBridge extends BaseBridge {
         const perimLine = new Line2(perimGeo, perimMat);
         perimLine.computeLineDistances();
         this._scene.add(perimLine);
-        this._perimMat = perimMat;
-        this._lineObjs.push(perimLine);
+        this._perimMat  = perimMat;
+        this._perimLine = perimLine;
+    }
 
-        // Inner grid lines inside the 5×5 stage
-        const innerMat = new THREE.LineBasicMaterial({
+    _buildStageInnerGrid() {
+        const mat = new THREE.LineBasicMaterial({
             color: 0xB0B0B0, opacity: 0.4, transparent: true,
         });
         for (let i = -1.5; i <= 1.5; i += 1) {
-            const vLine = new THREE.Line(
+            const v = new THREE.Line(
                 new THREE.BufferGeometry().setFromPoints([
                     new THREE.Vector3(i, 0.01, -2.5),
                     new THREE.Vector3(i, 0.01,  2.5),
-                ]), innerMat
-            );
-            const hLine = new THREE.Line(
+                ]), mat);
+            const h = new THREE.Line(
                 new THREE.BufferGeometry().setFromPoints([
                     new THREE.Vector3(-2.5, 0.01, i),
                     new THREE.Vector3( 2.5, 0.01, i),
-                ]), innerMat
-            );
-            this._scene.add(vLine);
-            this._scene.add(hLine);
-            this._lineObjs.push(vLine, hLine);
+                ]), mat);
+            this._scene.add(v);
+            this._scene.add(h);
+            this._stageInner.push(v, h);
         }
-
-        // Flat lighting — Scene3D-style: ambient + one directional.
-        // BaseBridge's key/fill/ambient rig was removed in the strip
-        // step above, so we own lighting here.
-        const amb = new THREE.AmbientLight(0xffffff, 0.6);
-        this._scene.add(amb);
-        this._extraLights.push(amb);
-
-        const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-        dir.position.set(5, 10, 5);
-        this._scene.add(dir);
-        this._extraLights.push(dir);
-
-        // Keep perimeter line resolution in sync with viewport
-        this._ro?.disconnect(); // remove BaseBridge's observer
-        this._ro = new ResizeObserver(() => {
-            this._camera.aspect = c.clientWidth / c.clientHeight;
-            this._camera.updateProjectionMatrix();
-            this._renderer.setSize(c.clientWidth, c.clientHeight);
-            this._perimMat?.resolution.set(c.clientWidth, c.clientHeight);
-        });
-        this._ro.observe(c);
     }
 
-    /**
-     * Remove the default scene contents BaseBridge added so we can
-     * render the Scene3D look cleanly. BaseBridge adds: a PlaneGeometry
-     * ground mesh, a GridHelper, a cyan Line (1m square), an AmbientLight,
-     * and two DirectionalLights. We clear all of those.
-     */
-    _stripBaseSceneDefaults() {
-        const toRemove = [];
-        this._scene.traverse(obj => {
-            if (obj === this._scene) return;
-            if (obj.isMesh || obj.isLine || obj.isGridHelper || obj.isLight) {
-                toRemove.push(obj);
-            }
-        });
-        for (const obj of toRemove) {
-            obj.geometry?.dispose?.();
-            if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose?.());
-            else obj.material?.dispose?.();
-            this._scene.remove(obj);
+    // ── Live scene updates from panel controls ──────────────────
+
+    _applyGroundColor(hex) {
+        this._state.groundColor = hex;
+        this._groundMesh?.material.color.set(hex);
+    }
+
+    _applyStageColor(hex) {
+        this._state.stageColor = hex;
+        this._stageMesh?.material.color.set(hex);
+    }
+
+    _applyGroundSize(n) {
+        const clamped = Math.max(GROUND_SIZE_MIN, Math.min(GROUND_SIZE_MAX, Math.round(n)));
+        this._state.groundSize = clamped;
+        // Rebuild ground + grid with the new size
+        if (this._groundMesh) {
+            this._groundMesh.geometry.dispose();
+            this._groundMesh.geometry = new THREE.PlaneGeometry(clamped, clamped);
+        }
+        if (this._worldGrid) {
+            this._scene.remove(this._worldGrid);
+            this._worldGrid.geometry.dispose();
+            this._worldGrid.material.dispose();
+            this._buildWorldGrid();
         }
     }
 
@@ -241,8 +343,6 @@ export class EnvironmentBridge extends BaseBridge {
     // ═══════════════════════════════════════════════════════════════
 
     _getState() {
-        // Pass through description + tags (BaseBridge auto-save reads these).
-        // No scene-specific fields yet — we'll add them as we wire tabs.
         return {
             ...this._state,
             description: this.asset?.payload?.description || '',
@@ -251,8 +351,16 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     _applyState(state) {
-        // Nothing scene-affecting to restore yet.
-        // Reserved for when we add ground/sky/walls/etc.
+        if (!state) return;
+        if (state.groundColor && state.groundColor !== this._state.groundColor) {
+            this._applyGroundColor(state.groundColor);
+        }
+        if (state.stageColor && state.stageColor !== this._state.stageColor) {
+            this._applyStageColor(state.stageColor);
+        }
+        if (typeof state.groundSize === 'number' && state.groundSize !== this._state.groundSize) {
+            this._applyGroundSize(state.groundSize);
+        }
         super._applyState(state);
     }
 
@@ -266,22 +374,22 @@ export class EnvironmentBridge extends BaseBridge {
         const tabBar = `<div class="cb-tabs-list">${
             TABS.map(t =>
                 `<button class="cb-tab-trigger ${t.id === tab ? 'active' : ''}" data-tab="${t.id}">
-                    <span class="cb-tab-icon">${t.icon}</span>${t.label}
+                    ${t.label}
                  </button>`
             ).join('')
         }</div>`;
 
         let body = '';
-        if (tab === 'file')   body = this._renderFileTab();
-        if (tab === 'ground') body = this._renderStubTab('Ground');
-        if (tab === 'sky')    body = this._renderStubTab('Sky');
-        if (tab === 'walls')  body = this._renderStubTab('Walls');
-        if (tab === 'music')  body = this._renderStubTab('Music');
+        if (tab === 'file')  body = this._renderFileTab();
+        if (tab === 'land')  body = this._renderLandTab();
+        if (tab === 'sky')   body = this._renderStubTab('Sky');
+        if (tab === 'stuff') body = this._renderStubTab('Stuff');
+        if (tab === 'fx')    body = this._renderStubTab('FX');
 
         return tabBar + `<div class="cb-tab-content">${body}</div>`;
     }
 
-    // ── File tab (wired) ────────────────────────────────────────
+    // ── File tab ────────────────────────────────────────────────
     _renderFileTab() {
         const name = _esc(this.asset?.name || '');
         const desc = _esc(this.asset?.payload?.description || '');
@@ -304,7 +412,33 @@ export class EnvironmentBridge extends BaseBridge {
           </div>`;
     }
 
-    // ── Stub tab (placeholder) ──────────────────────────────────
+    // ── Land tab ────────────────────────────────────────────────
+    _renderLandTab() {
+        const s = this._state;
+        return `
+          <div class="cb-field">
+            ${_fieldHead('Ground Size', 'groundSize')}
+            <div class="cb-range-row">
+              <input type="range" class="cb-range" id="land-size"
+                     min="${GROUND_SIZE_MIN}" max="${GROUND_SIZE_MAX}" step="1"
+                     value="${s.groundSize}">
+              <span class="cb-range-value" id="land-size-val">${s.groundSize}×${s.groundSize}</span>
+            </div>
+          </div>
+
+          <div class="cb-field">
+            ${_fieldHead('Ground Color', 'groundColor')}
+            ${_paletteGrid(this._palette, s.groundColor, 'groundColor')}
+          </div>
+
+          <div class="cb-field">
+            ${_fieldHead('Stage Color', 'stageColor')}
+            ${_paletteGrid(this._palette, s.stageColor, 'stageColor')}
+          </div>
+        `;
+    }
+
+    // ── Stub tab ────────────────────────────────────────────────
     _renderStubTab(label) {
         return `
           <div class="cb-section">
@@ -329,14 +463,12 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // ── File tab inputs ─────────────────────────────────────
-        // Name
+        // ── File tab ───────────────────────────────────────────
         panel.querySelector('.bridge-name-input')?.addEventListener('input', (e) => {
             if (this.asset) this.asset.name = e.target.value.trim();
             this._scheduleAutoSave();
         });
 
-        // Description
         panel.querySelector('.cb-desc-input')?.addEventListener('input', (e) => {
             if (!this.asset) return;
             if (!this.asset.payload) {
@@ -351,27 +483,73 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
         });
 
-        // Tags
         panel.querySelector('.cb-tags-input')?.addEventListener('input', (e) => {
             if (!this.asset) return;
-            const tags = e.target.value
-                .split(',')
-                .map(t => t.trim())
-                .filter(Boolean);
-            this.asset.tags = tags;
+            this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
             this._scheduleAutoSave();
         });
 
-        // Surprise buttons — stub until the building-intelligence layer
-        // is hooked up. For now, just log which field was randomized so
-        // we know the wiring is live.
+        // ── Land tab ───────────────────────────────────────────
+        const sizeInput = panel.querySelector('#land-size');
+        const sizeLabel = panel.querySelector('#land-size-val');
+        sizeInput?.addEventListener('input', (e) => {
+            const n = parseInt(e.target.value, 10);
+            this._applyGroundSize(n);
+            if (sizeLabel) sizeLabel.textContent = `${this._state.groundSize}×${this._state.groundSize}`;
+            this._scheduleAutoSave();
+        });
+
+        panel.querySelectorAll('.cb-palette-grid .cb-pal-swatch').forEach(sw => {
+            sw.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const hex   = sw.dataset.hex;
+                const field = sw.closest('.cb-palette-grid')?.dataset.field;
+                if (!hex || !field) return;
+                if (field === 'groundColor') this._applyGroundColor(hex);
+                if (field === 'stageColor')  this._applyStageColor(hex);
+                // Update selection highlight without a full re-render
+                sw.parentElement.querySelectorAll('.cb-pal-swatch').forEach(s =>
+                    s.classList.toggle('selected', s.dataset.hex.toLowerCase() === hex.toLowerCase())
+                );
+                this._scheduleAutoSave();
+            });
+        });
+
+        // ── Surprise buttons ───────────────────────────────────
         panel.querySelectorAll('.cb-field-surprise').forEach(btn => {
             btn.addEventListener('click', () => {
                 const which = btn.dataset.surprise;
-                this._onSurpriseField?.(which);
-                console.debug(`[EnvironmentBridge] surprise requested for "${which}" (stub)`);
+                this._onSurpriseField(which);
             });
         });
+    }
+
+    _onSurpriseField(field) {
+        const pal = this._palette || [];
+        if (field === 'groundSize') {
+            const n = GROUND_SIZE_MIN + Math.floor(Math.random() * (GROUND_SIZE_MAX - GROUND_SIZE_MIN + 1));
+            this._applyGroundSize(n);
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+        if (field === 'groundColor' && pal.length) {
+            const c = pal[Math.floor(Math.random() * pal.length)].hex;
+            this._applyGroundColor(c);
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+        if (field === 'stageColor' && pal.length) {
+            const c = pal[Math.floor(Math.random() * pal.length)].hex;
+            this._applyStageColor(c);
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+        // File-tab fields (name, description, tags) are placeholders until
+        // the building-intelligence layer lands.
+        console.debug(`[EnvironmentBridge] surprise requested for "${field}" (stub — intelligence pending)`);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -395,7 +573,6 @@ export class EnvironmentBridge extends BaseBridge {
         this._controls.update();
     }
 
-    /** Called by the global play button when in builder mode. */
     play() {
         this._pingPongAngle = 0;
         this._pingPongDir   = 1;
@@ -403,16 +580,11 @@ export class EnvironmentBridge extends BaseBridge {
         this._isPlaying     = true;
     }
 
-    /** Called by the global play button when already playing. */
     stop() {
         this._autoSpin  = false;
         this._isPlaying = false;
     }
 
-    /**
-     * Tween the camera back to the default pose (matches Scene3D's reset).
-     * Stops any auto-rotate in progress.
-     */
     resetView() {
         this.stop();
         document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
@@ -427,7 +599,6 @@ export class EnvironmentBridge extends BaseBridge {
         const duration  = 500;
         const ease = (t) => 1 - Math.pow(1 - t, 4);
 
-        // Cancel any prior tween
         if (this._resetRaf) cancelAnimationFrame(this._resetRaf);
         const step = (now) => {
             const t = Math.min(1, (now - startTime) / duration);
