@@ -219,6 +219,9 @@ export class BaseBridge {
                 this._scheduleAutoSave();
             }
         } catch (_) { /* ignore serialization errors */ }
+        // Refresh the autosave indicator every tick so dirty/saved/idle
+        // transitions are reflected in the UI without a full panel rebuild.
+        this._updateAutoSaveLabel();
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -230,11 +233,9 @@ export class BaseBridge {
             ? `Edit ${this.displayName}`
             : `New ${this.displayName}`;
 
-        const statusHtml = this._autoSaveStatus === 'saved'
-            ? '<span class="bridge-autosave-label">Auto-saved</span>'
-            : this._autoSaveStatus === 'saving'
-            ? '<span class="bridge-autosave-label saving">Saving...</span>'
-            : '';
+        // Persistent autosave status — always rendered under the title.
+        const { cls, text } = this._autoSaveStatusView();
+        const statusHtml = `<span class="bridge-autosave-label ${cls}">${text}</span>`;
 
         const canUndo = this._undoStack.length > 1;
 
@@ -392,28 +393,52 @@ export class BaseBridge {
         }, 2000);
     }
 
+    /**
+     * Compute the persistent autosave status view — always returns a label.
+     * States:
+     *   saving → "Saving…"
+     *   saved  → "All changes saved"
+     *   dirty  (pending debounced save) → "Unsaved — autosaving…"
+     *   idle   → "All changes saved"  (or "Auto-saves as you edit" if no save yet)
+     */
+    _autoSaveStatusView() {
+        if (this._autoSaveStatus === 'saving') {
+            return { cls: 'saving', text: 'Saving…' };
+        }
+        if (this._autoSaveStatus === 'saved') {
+            return { cls: 'saved', text: 'All changes saved' };
+        }
+        if (this._autoSaveTimer) {
+            return { cls: 'dirty', text: 'Unsaved — autosaving…' };
+        }
+        // No timer pending, no recent save status → dirty check
+        try {
+            const cur = JSON.stringify(this._getState());
+            if (this._lastSavedJSON && cur !== this._lastSavedJSON) {
+                return { cls: 'dirty', text: 'Unsaved changes' };
+            }
+            if (this._lastSavedJSON) {
+                return { cls: '', text: 'All changes saved' };
+            }
+        } catch (_) { /* ignore */ }
+        return { cls: '', text: 'Auto-saves as you edit' };
+    }
+
     /** Update just the auto-save label without re-rendering the whole panel. */
     _updateAutoSaveLabel() {
         const el = this.panelEl.querySelector('.bridge-autosave-label');
-        if (!el && this._autoSaveStatus) {
-            // Need a full re-render to create the element
-            // But only if we're not in the middle of a panel rebuild
+        const { cls, text } = this._autoSaveStatusView();
+        if (el) {
+            el.textContent = text;
+            el.className = `bridge-autosave-label ${cls}`;
+        } else {
+            // Element missing — create it inside the title group if possible
             const titleGroup = this.panelEl.querySelector('.ph-title-group');
             if (titleGroup) {
-                const existing = titleGroup.querySelector('.bridge-autosave-label');
-                if (!existing && this._autoSaveStatus) {
-                    const span = document.createElement('span');
-                    span.className = `bridge-autosave-label ${this._autoSaveStatus === 'saving' ? 'saving' : ''}`;
-                    span.textContent = this._autoSaveStatus === 'saved' ? 'Auto-saved' : 'Saving...';
-                    titleGroup.appendChild(span);
-                }
-            }
-        } else if (el) {
-            if (!this._autoSaveStatus) {
-                el.remove();
-            } else {
-                el.textContent = this._autoSaveStatus === 'saved' ? 'Auto-saved' : 'Saving...';
-                el.classList.toggle('saving', this._autoSaveStatus === 'saving');
+                const span = document.createElement('span');
+                span.className = `bridge-autosave-label ${cls}`;
+                span.textContent = text;
+                titleGroup.appendChild(span);
             }
         }
         // Update undo button state

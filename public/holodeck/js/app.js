@@ -7,7 +7,7 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
 import { VoiceBridge }          from './bridges/VoiceBridge.js';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying } from './previewRenderer.js?v=2';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying } from './previewRenderer.js?v=3';
 import { generateId }                       from './db.js';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -193,7 +193,7 @@ let panelLoading  = false;
 let panelSource   = '';   // 'explore' | 'mystuff'
 
 /** Panel labels that support auto-play preview when browsing. */
-const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters', 'Music']);
+const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters', 'Music', 'Environments']);
 function _canAutoPlay(label) { return AUTO_PLAY_PANELS.has(label); }
 
 /* ══════════════════════════════════════════════════════════
@@ -817,8 +817,8 @@ function renderPanel() {
             </span>` : ''}
             ${_canAutoPlay(panelLabel) ? `
             <label class="panel-autoplay">
-                <input type="checkbox" id="panel-autoplay-cb" ${S.autoPlayVoice ? 'checked' : ''}>
                 <span>Auto-play</span>
+                <input type="checkbox" id="panel-autoplay-cb" ${S.autoPlayVoice ? 'checked' : ''}>
             </label>` : ''}
         </div>
 
@@ -912,9 +912,19 @@ function renderPanel() {
     if (autoplayCb) {
         autoplayCb.addEventListener('change', (e) => {
             S.autoPlayVoice = e.target.checked;
-            // If just turned on and we have a preview asset, play it
             if (S.autoPlayVoice && S.previewAsset) {
+                // Just turned on → play the current asset
                 _autoPlayCurrentAsset();
+            } else if (!S.autoPlayVoice && S.previewAsset) {
+                // Just turned off → stop any in-flight playback
+                if (S.previewAsset.type === 'music') {
+                    previewStopMusic();
+                } else if (S.previewAsset.type === 'environment') {
+                    previewStopEnvironment();
+                } else if (S.previewAsset.type === 'voice' || S.previewAsset.type === 'character') {
+                    previewStopVoice();
+                }
+                _setPlayBtnState(false);
             }
         });
     }
@@ -1125,6 +1135,11 @@ function _autoPlayCurrentAsset() {
         previewSpeakWhenReady(speakText);
     } else if (asset.type === 'music') {
         previewPlayMusic(asset);
+    } else if (asset.type === 'environment') {
+        // For environments, "play" = rotate the camera. Later we'll add
+        // music/effects tied to the env's own settings.
+        previewPlayEnvironment();
+        _setPlayBtnState(true);
     }
 }
 
@@ -1133,9 +1148,11 @@ function selectAsset(idx, items) {
     const asset = items?.[idx];
     if (!asset) return;
 
-    // Stop any currently playing voice/music before switching
+    // Stop any currently playing voice/music/rotation before switching
     previewStopVoice();
     previewStopMusic();
+    previewStopEnvironment();
+    _setPlayBtnState(false);
 
     S.selectedIndex = idx;
     S.previewAsset  = asset;
@@ -1649,6 +1666,15 @@ function init() {
                     _setPlayBtnState(false);
                 } else {
                     previewPlayMusic(S.previewAsset);
+                    _setPlayBtnState(true);
+                }
+            } else if (S.previewAsset.type === 'environment') {
+                // Environment toggle: rotation on/off (later: +music/effects)
+                if (isPreviewEnvironmentPlaying()) {
+                    previewStopEnvironment();
+                    _setPlayBtnState(false);
+                } else {
+                    previewPlayEnvironment();
                     _setPlayBtnState(true);
                 }
             } else if (isPreviewSpeaking()) {

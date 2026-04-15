@@ -9,7 +9,7 @@
  * Settings — duration behavior, fade in/out, mood colour, delete
  */
 
-import { BaseBridge } from './BaseBridge.js';
+import { BaseBridge } from './BaseBridge.js?v=2';
 import * as THREE from 'three';
 import { standard } from '../shared/materials.js';
 import { UI }       from '../shared/palette.js';

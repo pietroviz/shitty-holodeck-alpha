@@ -148,6 +148,18 @@ export function previewStopMusic() {
 /** Check if music is currently playing. */
 export function isPreviewMusicPlaying() { return _musicEngine?.isPlaying ?? false; }
 
+/* ── Environment preview: rotation on/off is the "playback" control ── */
+export function previewPlayEnvironment() {
+    // Reset ping-pong so rotation starts from a neutral angle.
+    _pingPongAngle = 0;
+    _pingPongDir   = 1;
+    _autoSpin = true;
+}
+export function previewStopEnvironment() {
+    _autoSpin = false;
+}
+export function isPreviewEnvironmentPlaying() { return _autoSpin; }
+
 /** Auto-play music for an environment preview by fetching the music asset by ID. */
 async function _autoPlayEnvironmentMusic(musicId) {
     if (!musicId) return;
@@ -277,6 +289,7 @@ export function showPreview(container, asset, opts = {}) {
         if (_controls) _controls.target.set(0, 0.5, 0);
     } else if (type === 'environment') {
         _buildEnvironmentPreview(asset);
+        _autoSpin = false;  // envs stay still until user hits Play or toggles Auto-play
         if (_controls) _controls.target.set(0, 0.3, 0);
     } else if (type === 'music') {
         _buildMusicPreview(asset);

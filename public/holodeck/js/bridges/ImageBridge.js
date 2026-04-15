@@ -9,7 +9,7 @@
  * Colours  — colour roles with DB32 palette, quick palettes, randomize
  */
 
-import { BaseBridge } from './BaseBridge.js';
+import { BaseBridge } from './BaseBridge.js?v=2';
 import * as THREE from 'three';
 import { UI }       from '../shared/palette.js';
 import { renderImage } from '../shared/imageRenderer.js';

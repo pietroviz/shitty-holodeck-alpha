@@ -21,7 +21,7 @@ import { Line2 }        from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 
-import { BaseBridge } from './BaseBridge.js';
+import { BaseBridge } from './BaseBridge.js?v=2';
 
 // ── Tabs ────────────────────────────────────────────────────────
 const TABS = [

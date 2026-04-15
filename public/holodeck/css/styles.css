@@ -102,7 +102,8 @@ svg    { display: block; flex-shrink: 0; }
 .ph-row {
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
+    min-height: 52px;
+    margin-bottom: 26px; /* extra breathing room below header */
 }
 .ph-title {
     flex: 1;
@@ -136,18 +137,23 @@ svg    { display: block; flex-shrink: 0; }
 }
 .ph-title-group .ph-title { margin: 0; }
 
-/* Auto-save status label */
+/* Auto-save status label — always visible under the title */
 .bridge-autosave-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    color: var(--accent);
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-    margin-top: 2px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+    margin-top: 3px;
+    transition: color 0.2s ease;
+}
+.bridge-autosave-label.dirty {
+    color: var(--text-dim);
 }
 .bridge-autosave-label.saving {
     color: var(--text-dim);
-    opacity: 0.6;
+}
+.bridge-autosave-label.saved {
+    color: var(--accent);
 }
 
 /* Panel header more-wrap (for sort dropdown positioning) */
@@ -248,14 +254,14 @@ svg    { display: block; flex-shrink: 0; }
 }
 .search-toggle {
     width: 44px; height: 44px;
-    background: var(--ui-hover);
+    background: var(--panel-raised);
     border: none;
     border-radius: var(--radius-md);
     color: var(--text-primary);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
 }
-.search-toggle:hover { background: var(--ui-hover2); }
+.search-toggle:hover { background: #323B4B; }
 
 /* Sort dropdown */
 .sort-dropdown {
@@ -1100,7 +1106,7 @@ svg    { display: block; flex-shrink: 0; }
     gap: 2px;
     padding: 3px;
     border-radius: var(--radius-xl);
-    background: rgba(255,255,255,0.06);          /* --muted equivalent */
+    background: var(--panel-raised);
     margin-bottom: 12px;
 }
 .cb-tab-trigger {
@@ -1108,11 +1114,10 @@ svg    { display: block; flex-shrink: 0; }
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
     height: 100%;
-    padding: 0 6px;
-    border: 1px solid transparent;
-    border-radius: calc(var(--radius-xl) - 3px);  /* inner radius */
+    padding: 0 10px;
+    border: none;
+    border-radius: calc(var(--radius-xl) - 3px);
     background: transparent;
     color: var(--text-dim);
     font-size: 12px;
@@ -1120,23 +1125,19 @@ svg    { display: block; flex-shrink: 0; }
     font-family: inherit;
     white-space: nowrap;
     cursor: pointer;
-    transition: color 0.15s, background 0.15s, border-color 0.15s,
-                box-shadow 0.15s;
+    transition: color 0.15s, background 0.15s;
 }
 .cb-tab-trigger:hover {
     color: var(--text-primary);
-    background: rgba(255,255,255,0.04);
 }
 .cb-tab-trigger.active {
-    background: var(--panel-raised);
-    color: var(--text-primary);
+    background: #ffffff;
+    color: #1A2332;
     font-weight: 600;
-    border-color: rgba(255,255,255,0.06);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
+/* Legacy .cb-tab-icon rule kept for any remaining icons elsewhere; no-op for env tabs */
 .cb-tab-icon {
-    font-size: 13px;
-    line-height: 1;
+    display: none;
 }
 
 /* ── Tab content wrapper ── */
@@ -1784,7 +1785,7 @@ svg    { display: block; flex-shrink: 0; }
     padding: 0 14px;
     border-radius: var(--radius-md);
     border: none;
-    background: var(--ui-hover);
+    background: var(--panel-raised);
     color: var(--text-primary);
     font-size: 14px;
     font-family: inherit;
@@ -1797,7 +1798,7 @@ svg    { display: block; flex-shrink: 0; }
     background-position: right 12px center;
     padding-right: 36px;
 }
-.panel-category-select:hover { background: var(--ui-hover2); }
+.panel-category-select:hover { background: #323B4B; }
 .panel-category-select:focus {
     outline: none;
 }
@@ -1806,7 +1807,7 @@ svg    { display: block; flex-shrink: 0; }
    PANEL — selected item + empty state
    ══════════════════════════════════════════════════════ */
 .panel-item.selected {
-    background: var(--ui-hover2);
+    background: var(--panel-raised);
 }
 .panel-empty-state {
     display: flex;

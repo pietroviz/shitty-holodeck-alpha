@@ -9,7 +9,7 @@
  *   - Text input + play/stop button
  */
 
-import { BaseBridge } from './BaseBridge.js';
+import { BaseBridge } from './BaseBridge.js?v=2';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
