@@ -1799,8 +1799,7 @@ svg    { display: block; flex-shrink: 0; }
 }
 .panel-category-select:hover { background: var(--ui-hover2); }
 .panel-category-select:focus {
-    outline: 1px solid var(--accent);
-    outline-offset: -1px;
+    outline: none;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1808,7 +1807,6 @@ svg    { display: block; flex-shrink: 0; }
    ══════════════════════════════════════════════════════ */
 .panel-item.selected {
     background: var(--ui-hover2);
-    border-left: 3px solid var(--accent);
 }
 .panel-empty-state {
     display: flex;

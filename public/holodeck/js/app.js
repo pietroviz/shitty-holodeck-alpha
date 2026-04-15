@@ -14,6 +14,41 @@ import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGen
 // ── Thumbnail cache (persists across category switches within session) ──
 const _thumbCache = new Map();
 
+/**
+ * Format a ms timestamp as a relative time like "Modified 2 days ago".
+ * Falls back to an empty string if no valid timestamp is available.
+ */
+function _relTime(ms) {
+    if (!ms || isNaN(ms)) return '';
+    const now = Date.now();
+    const diff = Math.max(0, now - ms);
+    const sec  = Math.round(diff / 1000);
+    const min  = Math.round(sec / 60);
+    const hr   = Math.round(min / 60);
+    const day  = Math.round(hr  / 24);
+    const wk   = Math.round(day / 7);
+    const mo   = Math.round(day / 30);
+    const yr   = Math.round(day / 365);
+
+    if (sec  < 60)  return 'Modified just now';
+    if (min  < 60)  return `Modified ${min} ${min === 1 ? 'minute' : 'minutes'} ago`;
+    if (hr   < 24)  return `Modified ${hr} ${hr === 1 ? 'hour' : 'hours'} ago`;
+    if (day  < 7)   return `Modified ${day} ${day === 1 ? 'day' : 'days'} ago`;
+    if (wk   < 5)   return `Modified ${wk} ${wk === 1 ? 'week' : 'weeks'} ago`;
+    if (mo   < 12)  return `Modified ${mo} ${mo === 1 ? 'month' : 'months'} ago`;
+    return `Modified ${yr} ${yr === 1 ? 'year' : 'years'} ago`;
+}
+
+function _itemModifiedLabel(item) {
+    // Try common places the modified timestamp might live
+    const ms = item?.meta?.modified
+            ?? item?.modified
+            ?? item?.meta?.updated
+            ?? item?.meta?.created;
+    if (typeof ms === 'string') return _relTime(new Date(ms).getTime());
+    return _relTime(ms);
+}
+
 // ── Pre-rendered thumbnail path for stock assets ──
 const THUMB_PATH = 'thumbnails';
 
@@ -661,7 +696,7 @@ function renderPanelItems() {
             <div class="pi-text">
                 <div class="pi-name">${it.name || 'Untitled'}</div>
                 <div class="pi-detail">${it.type || ''}</div>
-                <div class="pi-detail">${it.tags ? it.tags.slice(0,3).join(', ') : ''}</div>
+                <div class="pi-detail">${_itemModifiedLabel(it)}</div>
                 ${it.payload?.catchphrase ? `<div class="pi-catchphrase">${it.payload.catchphrase}</div>` : ''}
             </div>
             <button class="pi-action pi-edit" data-idx="${idx}" data-id="${it.id}" title="Edit">${ICON.pencil}</button>
@@ -749,7 +784,10 @@ function renderPanel() {
                                const subcats = _extractSubcategories(panelItems);
                                const _isMyStuff = panelSource === 'mystuff';
                                const typeLabel = panelLabel;
-                               let opts = `<option value="All"${!S.panelCategory || S.panelCategory === 'All' ? ' selected' : ''}>All</option>`;
+                               // In mystuff view, the "show everything" option is labelled
+                               // "My <Type>" for clarity. In explore view it's just "All".
+                               const allLabel = _isMyStuff ? `My ${typeLabel}` : 'All';
+                               let opts = `<option value="All"${!S.panelCategory || S.panelCategory === 'All' ? ' selected' : ''}>${allLabel}</option>`;
                                for (const [name, count] of subcats) {
                                    opts += `<option value="${name}"${S.panelCategory === name ? ' selected' : ''}>${name} (${count})</option>`;
                                }
@@ -809,7 +847,7 @@ function renderPanel() {
                     <div class="pi-text">
                         <div class="pi-name">${it.name || 'Untitled'}</div>
                         <div class="pi-detail">${it.type || ''}</div>
-                        <div class="pi-detail">${it.tags ? it.tags.slice(0,3).join(', ') : ''}</div>
+                        <div class="pi-detail">${_itemModifiedLabel(it)}</div>
                 ${it.payload?.catchphrase ? `<div class="pi-catchphrase">${it.payload.catchphrase}</div>` : ''}
                     </div>
                     <button class="pi-action pi-edit" data-idx="${idx}" data-id="${it.id}" title="Edit">${ICON.pencil}</button>
@@ -1338,8 +1376,10 @@ function onStackChange({ depth, label, isEmpty, savedAsset }) {
             const wasTemplateCopy = savedAsset && savedAsset.meta?.owner === 'user'
                 && (savedAsset.meta?.templateId || bs.panelSource === 'explore');
             if (wasTemplateCopy) {
-                const myCategory = `My ${bs.panelLabel}`;
-                S.panelCategory = myCategory;
+                // Land in "My <Type>" view. The dropdown renders "All" value as
+                // "My <Type>" label when panelSource === 'mystuff', so set
+                // panelCategory = 'All' to match.
+                S.panelCategory = 'All';
                 panelSource = 'mystuff';
                 panelLoading = true;
                 panelItems = [];
