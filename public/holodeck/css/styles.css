@@ -98,12 +98,16 @@ svg    { display: block; flex-shrink: 0; }
     to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Panel header row */
+/* Panel header row (browse panels) */
 .ph-row {
     display: flex;
     align-items: center;
-    min-height: 52px;
-    margin-bottom: 26px; /* extra breathing room below header */
+    margin-bottom: 16px;
+}
+/* Edit-panel (bridge) header — slightly more room so the absolute-positioned
+   autosave label can sit below the title without overlapping the body. */
+.ph-row.bridge-header {
+    margin-bottom: 26px;
 }
 .ph-title {
     flex: 1;
@@ -130,6 +134,7 @@ svg    { display: block; flex-shrink: 0; }
 /* Title group (title + auto-save subtitle) */
 .ph-title-group {
     flex: 1;
+    position: relative; /* anchor for the absolute autosave label below */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -137,13 +142,19 @@ svg    { display: block; flex-shrink: 0; }
 }
 .ph-title-group .ph-title { margin: 0; }
 
-/* Auto-save status label — always visible under the title */
+/* Auto-save status label — always visible, anchored below the title
+   without affecting the title's vertical centering in the header row. */
 .bridge-autosave-label {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2px;
     font-size: 10px;
     font-weight: 500;
     color: var(--text-dim);
     letter-spacing: 0.02em;
-    margin-top: 3px;
+    white-space: nowrap;
     transition: color 0.2s ease;
 }
 .bridge-autosave-label.dirty {
@@ -476,6 +487,13 @@ svg    { display: block; flex-shrink: 0; }
 }
 #hamburger-btn:hover { background: var(--overlay-hover); }
 #hamburger-btn.hidden { display: none; }
+#hamburger-btn {
+    transition: opacity 0.2s ease;
+}
+#hamburger-btn.faded {
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* ── Menu click-away backdrop ── */
 #menu-backdrop {
@@ -825,7 +843,7 @@ svg    { display: block; flex-shrink: 0; }
 .cb-body::-webkit-scrollbar { width: 4px; }
 .cb-body::-webkit-scrollbar-thumb { background: var(--panel-raised); border-radius: 2px; }
 
-/* Section block */
+/* Section block — used for element/object cards that can be swapped or edited */
 .cb-section {
     background: var(--panel-raised);
     border-radius: var(--radius-md);
@@ -834,6 +852,16 @@ svg    { display: block; flex-shrink: 0; }
     flex-direction: column;
     gap: 10px;
     margin-bottom: 6px;
+}
+
+/* Plain form field — flat label + input stack, no card chrome.
+   Use this for simple inputs (name, description, tags, etc.). */
+.cb-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+    margin-bottom: 14px;
 }
 
 .cb-section-title {
@@ -1776,8 +1804,63 @@ svg    { display: block; flex-shrink: 0; }
 }
 
 /* ══════════════════════════════════════════════════════
-   PANEL — category dropdown (Figma Make filter style)
+   PANEL — category dropdown (custom button + popover)
    ══════════════════════════════════════════════════════ */
+.panel-category-btn {
+    flex: 1;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--panel-raised);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+.panel-category-btn:hover { background: #323B4B; }
+.panel-category-btn-label {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.panel-category-btn-chev {
+    display: flex;
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+.panel-category-btn-chev svg {
+    width: 16px;
+    height: 16px;
+}
+.panel-category-menu {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    min-width: 200px;
+    max-width: calc(100% - 52px);
+    background: var(--panel-raised);
+    border-radius: var(--radius-md);
+    padding: 6px 0;
+    z-index: 60;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.panel-category-menu-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 4px 0;
+}
+
+/* Legacy — kept in case anything still references the native select */
 .panel-category-select {
     flex: 1;
     width: 100%;

@@ -38,12 +38,25 @@ export default function FeedbackTab() {
   );
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [holodeckContext, setHolodeckContext] = useState("");
+  const [isChromeFaded, setIsChromeFaded] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       setIsLoggedIn(!!user);
     });
+  }, []);
+
+  // Listen for UI-fade signals from the holodeck iframe so the feedback
+  // tab can hide while the user is interacting with the 3D viewport.
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e?.data?.type === "holodeck-ui-fade") {
+        setIsChromeFaded(!!e.data.faded);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
   }, []);
 
   // When panel opens, capture holodeck context
@@ -96,10 +109,12 @@ export default function FeedbackTab() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed right-0 top-1/2 -translate-y-1/2 z-50
+          className={`fixed right-0 top-1/2 -translate-y-1/2 z-50
             bg-[#00D9D9] hover:bg-[#00B8B8] text-[#1A2332] text-sm font-medium
-            px-2 py-3 rounded-l-lg shadow-lg transition-colors
-            writing-vertical"
+            px-2 py-3 rounded-l-lg shadow-lg
+            transition-opacity duration-200
+            ${isChromeFaded ? "opacity-0 pointer-events-none" : "opacity-100"}
+            writing-vertical`}
           style={{
             writingMode: "vertical-rl",
             textOrientation: "mixed",

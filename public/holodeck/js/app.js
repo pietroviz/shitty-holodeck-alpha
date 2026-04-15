@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=2';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=5';
 import { MusicBridge }          from './bridges/MusicBridge.js';
 import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
@@ -209,6 +209,7 @@ const S = {
     sortDropdownOpen:   false,
     sortOrder:          'newest',   // newest | az | za | oldest
     sortMenuOpen:       false,      // ellipsis → sort dropdown
+    categoryMenuOpen:   false,      // custom category/source dropdown
     panelSearchMode:    false,
     panelSearchQuery:   '',
     itemMenuOpenId:     null,       // which item's ellipsis menu is open
@@ -305,8 +306,10 @@ function render() {
     E.menuDropdown.classList.toggle('visible', menuOpen);
     if (menuOpen) renderMenu();
 
-    // ── Reset btn: hide in new mode ────────
-    E.resetBtn.classList.toggle('hidden', isNew);
+    // ── Reset btn: hide in new mode or while a preview/env is auto-rotating ────────
+    const bridgePlaying   = S.builderMode && bridgeStack.top()?.bridge?._isPlaying;
+    const previewPlaying  = !S.builderMode && isPreviewEnvironmentPlaying();
+    E.resetBtn.classList.toggle('hidden', isNew || bridgePlaying || previewPlaying);
 
     // ── Safe-area ──────────────────────────
     // Border fades to transparent when panel is open OR when UI is hiding
@@ -778,30 +781,45 @@ function renderPanel() {
                               value="${panelSearchQuery}"
                               placeholder="Search ${panelLabel.toLowerCase()}..." autofocus>
                    </div>`
-                : `<div class="panel-filter-wrap" id="panel-filter-wrap">
-                       <select class="panel-category-select" id="panel-category-select">
-                           ${(() => {
-                               const subcats = _extractSubcategories(panelItems);
-                               const _isMyStuff = panelSource === 'mystuff';
-                               const typeLabel = panelLabel;
-                               // In mystuff view, the "show everything" option is labelled
-                               // "My <Type>" for clarity. In explore view it's just "All".
-                               const allLabel = _isMyStuff ? `My ${typeLabel}` : 'All';
-                               let opts = `<option value="All"${!S.panelCategory || S.panelCategory === 'All' ? ' selected' : ''}>${allLabel}</option>`;
-                               for (const [name, count] of subcats) {
-                                   opts += `<option value="${name}"${S.panelCategory === name ? ' selected' : ''}>${name} (${count})</option>`;
-                               }
-                               if (_isMyStuff) {
-                                   opts += `<option disabled>───────</option>`;
-                                   opts += `<option value="All ${typeLabel}">Browse All ${typeLabel}</option>`;
-                               } else {
-                                   opts += `<option disabled>───────</option>`;
-                                   opts += `<option value="My ${typeLabel}">My ${typeLabel}</option>`;
-                               }
-                               return opts;
-                           })()}
-                       </select>
-                   </div>`
+                : (() => {
+                       const subcats   = _extractSubcategories(panelItems);
+                       const isMy      = panelSource === 'mystuff';
+                       const typeLabel = panelLabel;
+                       const topLabel     = isMy ? `My ${typeLabel}` : 'All Templates';
+                       const switchValue  = isMy ? `All ${typeLabel}` : `My ${typeLabel}`;
+                       const switchLabel  = isMy ? 'All Templates'    : `My ${typeLabel}`;
+                       // What to show on the button face
+                       let activeLabel = topLabel;
+                       if (S.panelCategory && S.panelCategory !== 'All') {
+                           const match = subcats.find(([n]) => n === S.panelCategory);
+                           if (match) activeLabel = match[0];
+                       }
+                       const topActive = !S.panelCategory || S.panelCategory === 'All';
+                       return `
+                       <div class="panel-filter-wrap" id="panel-filter-wrap">
+                           <button class="panel-category-btn" id="panel-category-btn" type="button">
+                               <span class="panel-category-btn-label">${activeLabel}</span>
+                               <span class="panel-category-btn-chev">${ICON.chevronDown}</span>
+                           </button>
+                           ${S.categoryMenuOpen ? `
+                           <div class="panel-category-menu" id="panel-category-menu">
+                               <button class="sort-menu-item" data-cat-value="All">
+                                   <span>${topLabel}</span>
+                                   ${topActive ? `<span class="check-icon">${ICON.check}</span>` : ''}
+                               </button>
+                               ${subcats.map(([name, count]) => `
+                                   <button class="sort-menu-item" data-cat-value="${name}">
+                                       <span>${name} (${count})</span>
+                                       ${S.panelCategory === name ? `<span class="check-icon">${ICON.check}</span>` : ''}
+                                   </button>
+                               `).join('')}
+                               <div class="panel-category-menu-divider"></div>
+                               <button class="sort-menu-item" data-cat-value="${switchValue}">
+                                   <span>${switchLabel}</span>
+                               </button>
+                           </div>` : ''}
+                       </div>`;
+                   })()
             }
             <button class="search-toggle" id="search-toggle">
                 ${panelSearchMode ? ICON.x : ICON.search}
@@ -1063,11 +1081,46 @@ function renderPanel() {
         }
     }, { once: true });
 
-    // Category dropdown
-    const catSelect = E.panelInner.querySelector('#panel-category-select');
-    if (catSelect) {
-        catSelect.addEventListener('change', async () => {
-            const val = catSelect.value;
+    // Custom category dropdown (replaces native <select>)
+    const catBtn = E.panelInner.querySelector('#panel-category-btn');
+    if (catBtn) {
+        catBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            S.categoryMenuOpen = !S.categoryMenuOpen;
+            // Close sort menu if open (mutually exclusive)
+            if (S.categoryMenuOpen) S.sortMenuOpen = false;
+            render();
+        });
+    }
+    // Outside-click closes the menu
+    if (S.categoryMenuOpen) {
+        const closeOnOutside = (e) => {
+            const menu = E.panelInner.querySelector('#panel-category-menu');
+            const btn  = E.panelInner.querySelector('#panel-category-btn');
+            if (menu && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
+                S.categoryMenuOpen = false;
+                document.removeEventListener('mousedown', closeOnOutside);
+                document.removeEventListener('keydown', closeOnEsc);
+                render();
+            }
+        };
+        const closeOnEsc = (e) => {
+            if (e.key === 'Escape') {
+                S.categoryMenuOpen = false;
+                document.removeEventListener('mousedown', closeOnOutside);
+                document.removeEventListener('keydown', closeOnEsc);
+                render();
+            }
+        };
+        document.addEventListener('mousedown', closeOnOutside);
+        document.addEventListener('keydown', closeOnEsc);
+    }
+    // Menu item clicks
+    E.panelInner.querySelectorAll('#panel-category-menu .sort-menu-item').forEach(item => {
+        item.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const val = item.dataset.catValue;
+            S.categoryMenuOpen = false;
 
             // "My X" → switch to user assets and reload
             if (val.startsWith('My ')) {
@@ -1086,7 +1139,7 @@ function renderPanel() {
                 panelLoading = false;
                 render();
             }
-            // "All X" (e.g., "All Characters") → switch back to explore/global assets
+            // "All X" (e.g., "All Templates" / "All Environments") → switch back to explore
             else if (val.startsWith('All ') && val !== 'All') {
                 S.panelCategory = 'All';
                 panelLoading = true;
@@ -1103,14 +1156,14 @@ function renderPanel() {
                 panelLoading = false;
                 render();
             }
-            // Subcategory filter — no reload needed, just re-render
+            // Subcategory filter — no reload, just re-render
             else {
                 S.panelCategory = val;
                 S.selectedIndex = -1;
                 render();
             }
         });
-    }
+    });
 
     // Restore scroll position after innerHTML rebuild, then nudge if needed
     const newList = E.panelInner.querySelector('#panel-items-list');
@@ -1473,15 +1526,35 @@ function isUiTarget(el) {
     return el.closest('[data-ui], button, nav, input, textarea');
 }
 
-function fadeOut() { S.uiVisible = false; render(); }
-function fadeIn()  { S.uiVisible = true;  render(); }
+function fadeOut() {
+    S.uiVisible = false;
+    render();
+    _notifyChromeFade(true);
+}
+function fadeIn() {
+    S.uiVisible = true;
+    render();
+    _notifyChromeFade(false);
+}
+
+/** Toggle fade on chrome elements that live outside #ui-elements:
+ *  the hamburger (inside the iframe) and the feedback tab (outside, in
+ *  the parent window — via postMessage). */
+function _notifyChromeFade(faded) {
+    if (E.hamburgerBtn) E.hamburgerBtn.classList.toggle('faded', faded);
+    try {
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'holodeck-ui-fade', faded }, '*');
+        }
+    } catch (_) { /* cross-origin or no parent — ignore */ }
+}
 
 function initUiFade() {
     const vp = E.viewport;
 
     vp.addEventListener('pointerdown', (e) => {
-        if (S.panelOpen || S.isNew) return;
-        if (isUiTarget(e.target)) return;
+        if (S.isNew) return;                      // don't fade during "new" overlay
+        if (isUiTarget(e.target)) return;         // button/input clicks don't fade
         fadeOut();
     }, true);
 
@@ -1490,7 +1563,7 @@ function initUiFade() {
     }, true);
 
     vp.addEventListener('wheel', (e) => {
-        if (S.panelOpen || S.isNew) return;
+        if (S.isNew) return;
         if (isUiTarget(e.target)) return;
         fadeOut();
         clearTimeout(wheelTimer);
@@ -1547,6 +1620,13 @@ function _setPlayBtnState(isSpeaking) {
     if (!E.playBtn) return;
     E.playBtn.innerHTML = isSpeaking ? ICON.stop : ICON.play;
     E.playBtn.classList.toggle('is-speaking', isSpeaking);
+    // Reset button hides while the viewport is actively auto-rotating
+    // (so the reset action doesn't clash visually with a moving camera).
+    if (E.resetBtn) {
+        const bridgePlaying  = S.builderMode && bridgeStack.top()?.bridge?._isPlaying;
+        const previewPlaying = !S.builderMode && isPreviewEnvironmentPlaying();
+        E.resetBtn.classList.toggle('hidden', S.isNew || bridgePlaying || previewPlaying);
+    }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1615,7 +1695,15 @@ function init() {
 
     E.menuBackdrop.addEventListener('click', closeMenu);
 
-    E.resetBtn.addEventListener('click', () => scene?.resetView());
+    E.resetBtn.addEventListener('click', () => {
+        // Priority: active bridge (edit mode) → Scene3D (index)
+        if (S.builderMode) {
+            const entry = bridgeStack.top();
+            if (entry?.bridge?.resetView) entry.bridge.resetView();
+        } else {
+            scene?.resetView();
+        }
+    });
 
     E.newOverlay.addEventListener('click', () => {
         S.isNew      = false;
@@ -1691,6 +1779,13 @@ function init() {
 
     // Update play button visual when speaking state changes
     setOnSpeakStateChange((isSpeaking) => _setPlayBtnState(isSpeaking));
+
+    // Bridges can dispatch this event to sync the global play button
+    // state when their own _isPlaying flag flips (e.g. user drags the
+    // env viewport and auto-rotate stops).
+    document.addEventListener('bridge-play-state', (e) => {
+        _setPlayBtnState(!!e.detail?.playing);
+    });
 
     E.editBtn.addEventListener('click', () => {
         const asset = S.previewAsset || S.lastSavedAsset;

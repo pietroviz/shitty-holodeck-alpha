@@ -20,8 +20,13 @@ import * as THREE from 'three';
 import { Line2 }        from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+
+// Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
+const _PP_RANGE = Math.PI * 0.45;
+const _PP_SPEED = 0.15;
 
 // ── Tabs ────────────────────────────────────────────────────────
 const TABS = [
@@ -58,6 +63,15 @@ export class EnvironmentBridge extends BaseBridge {
         this._perimMat    = null;
         this._lineObjs    = [];
         this._extraLights = [];
+
+        // Viewport interaction — matches browse preview behaviour:
+        //   - OrbitControls for click-drag orbit / wheel zoom
+        //   - Play button toggles ping-pong rotation; user drag stops it
+        this._controls        = null;
+        this._autoSpin        = false;
+        this._pingPongAngle   = 0;
+        this._pingPongDir     = 1;
+        this._isPlaying       = false;   // mirrors auto-spin for the global play button
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -76,6 +90,32 @@ export class EnvironmentBridge extends BaseBridge {
         // Camera pose — matches Scene3D
         this._camera.position.set(5.2, 3.9, 5.2);
         this._camera.lookAt(0, 0, 0);
+
+        // Orbit controls — click/drag to orbit, wheel to zoom.
+        // Matches the browse preview for a consistent feel.
+        this._controls = new OrbitControls(this._camera, this._renderer.domElement);
+        this._controls.target.set(0, 0, 0);
+        this._controls.enableDamping = true;
+        this._controls.dampingFactor = 0.08;
+        this._controls.minDistance   = 2;
+        this._controls.maxDistance   = 20;
+        this._controls.maxPolarAngle = Math.PI * 0.49;
+        this._controls.update();
+
+        // Any user interaction with the viewport stops auto-rotate
+        // (same pattern as browse preview). Dispatches a DOM event so
+        // the global play button can update its visual state.
+        const stopSpin = () => {
+            if (this._autoSpin) {
+                this._autoSpin  = false;
+                this._isPlaying = false;
+                document.dispatchEvent(new CustomEvent('bridge-play-state', {
+                    detail: { playing: false },
+                }));
+            }
+        };
+        this._renderer.domElement.addEventListener('pointerdown', stopSpin);
+        this._renderer.domElement.addEventListener('wheel',       stopSpin);
 
         // 21×21 world-unit grid (thin, low-opacity)
         const gridHelper = new THREE.GridHelper(21, 21, 0x2F2F2F, 0x2F2F2F);
@@ -225,17 +265,17 @@ export class EnvironmentBridge extends BaseBridge {
         const desc = _esc(this.asset?.payload?.description || '');
         const tags = _esc((this.asset?.tags || []).join(', '));
         return `
-          <div class="cb-section">
+          <div class="cb-field">
             <div class="cb-label">Name</div>
             <input type="text" class="bridge-name-input cb-name-input"
                    value="${name}" placeholder="Environment name..." maxlength="40">
           </div>
-          <div class="cb-section">
+          <div class="cb-field">
             <div class="cb-label">Description</div>
             <textarea class="cb-desc-input" placeholder="Describe this environment..."
                       rows="3" maxlength="200">${desc}</textarea>
           </div>
-          <div class="cb-section">
+          <div class="cb-field">
             <div class="cb-label">Tags</div>
             <input type="text" class="cb-tags-input"
                    value="${tags}" placeholder="e.g. template, outdoor, warm" maxlength="100">
@@ -299,5 +339,72 @@ export class EnvironmentBridge extends BaseBridge {
             this.asset.tags = tags;
             this._scheduleAutoSave();
         });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  VIEWPORT TICK + PLAYBACK
+    // ═══════════════════════════════════════════════════════════════
+
+    _onTick(delta) {
+        if (!this._controls) return;
+
+        if (this._autoSpin) {
+            this._pingPongAngle += _PP_SPEED * delta * this._pingPongDir;
+            if (this._pingPongAngle >=  _PP_RANGE) { this._pingPongAngle =  _PP_RANGE; this._pingPongDir = -1; }
+            if (this._pingPongAngle <= -_PP_RANGE) { this._pingPongAngle = -_PP_RANGE; this._pingPongDir =  1; }
+            const dist  = this._controls.getDistance();
+            const polar = this._controls.getPolarAngle();
+            this._controls.object.position.setFromSpherical(
+                new THREE.Spherical(dist, polar, this._pingPongAngle)
+            ).add(this._controls.target);
+        }
+
+        this._controls.update();
+    }
+
+    /** Called by the global play button when in builder mode. */
+    play() {
+        this._pingPongAngle = 0;
+        this._pingPongDir   = 1;
+        this._autoSpin      = true;
+        this._isPlaying     = true;
+    }
+
+    /** Called by the global play button when already playing. */
+    stop() {
+        this._autoSpin  = false;
+        this._isPlaying = false;
+    }
+
+    /**
+     * Tween the camera back to the default pose (matches Scene3D's reset).
+     * Stops any auto-rotate in progress.
+     */
+    resetView() {
+        this.stop();
+        document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
+
+        if (!this._controls) return;
+        const target = new THREE.Vector3(0, 0, 0);
+        const toPos  = new THREE.Vector3(5.2, 3.9, 5.2);
+        const fromPos = this._camera.position.clone();
+        const fromTarget = this._controls.target.clone();
+
+        const startTime = performance.now();
+        const duration  = 500;
+        const ease = (t) => 1 - Math.pow(1 - t, 4);
+
+        // Cancel any prior tween
+        if (this._resetRaf) cancelAnimationFrame(this._resetRaf);
+        const step = (now) => {
+            const t = Math.min(1, (now - startTime) / duration);
+            const e = ease(t);
+            this._camera.position.lerpVectors(fromPos, toPos, e);
+            this._controls.target.lerpVectors(fromTarget, target, e);
+            this._controls.update();
+            if (t < 1) this._resetRaf = requestAnimationFrame(step);
+            else       this._resetRaf = null;
+        };
+        this._resetRaf = requestAnimationFrame(step);
     }
 }
