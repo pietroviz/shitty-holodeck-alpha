@@ -1144,6 +1144,113 @@ svg    { display: block; flex-shrink: 0; }
     font-variant-numeric: tabular-nums;
 }
 
+/* Compact row inside a card — label on left, control(s) on right */
+.cb-card-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 28px;
+}
+.cb-card-row-label {
+    flex-shrink: 0;
+    min-width: 48px;
+    font-size: 12px;
+    color: var(--text-dim);
+}
+.cb-card-row .cb-range { flex: 1; }
+.cb-card-row .cb-field-surprise {
+    margin-left: auto;
+}
+
+/* Single-swatch "color trigger" button — shows current color, opens modal */
+.cb-color-trigger {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.12s, transform 0.12s;
+}
+.cb-color-trigger:hover {
+    border-color: var(--accent);
+    transform: scale(1.08);
+}
+
+/* ══════════════════════════════════════════════════════
+   Shared color picker modal (used by any bridge)
+   ══════════════════════════════════════════════════════ */
+.color-picker-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+.color-picker-backdrop.visible { opacity: 1; }
+.color-picker-card {
+    background: var(--panel-raised);
+    border-radius: var(--radius-md);
+    padding: 14px 16px 16px;
+    min-width: 280px;
+    max-width: 360px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+.color-picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.color-picker-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+}
+.color-picker-close {
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.color-picker-close:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+}
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+}
+.color-picker-swatch {
+    aspect-ratio: 1;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.12s, transform 0.12s;
+    min-width: 0;
+    padding: 0;
+}
+.color-picker-swatch:hover {
+    border-color: var(--accent);
+    transform: scale(1.15);
+    z-index: 1;
+}
+.color-picker-swatch.selected {
+    border-color: var(--accent);
+}
+
 /* ── Accessory select dropdown ── */
 .cb-acc-select {
     flex: 1;

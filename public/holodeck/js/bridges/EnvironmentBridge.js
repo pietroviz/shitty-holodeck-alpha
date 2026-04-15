@@ -26,7 +26,8 @@ import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { BaseBridge } from './BaseBridge.js?v=3';
-import { loadPalette } from '../shared/paletteLoader.js';
+import { loadPalette }     from '../shared/paletteLoader.js';
+import { showColorPicker } from '../shared/colorPicker.js';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -42,13 +43,13 @@ const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
 const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_GROUND_SIZE  = 21;
 
-// ── Tabs (File · Land · Sky · Stuff · FX) ───────────────────────
+// ── Tabs (File · Ground · Sky · Stuff · FX) ─────────────────────
 const TABS = [
-    { id: 'file',  label: 'File'  },
-    { id: 'land',  label: 'Land'  },
-    { id: 'sky',   label: 'Sky'   },
-    { id: 'stuff', label: 'Stuff' },
-    { id: 'fx',    label: 'FX'    },
+    { id: 'file',   label: 'File'   },
+    { id: 'ground', label: 'Ground' },
+    { id: 'sky',    label: 'Sky'    },
+    { id: 'stuff',  label: 'Stuff'  },
+    { id: 'fx',     label: 'FX'     },
 ];
 
 // Small HTML escape helper
@@ -56,6 +57,15 @@ const _esc = (s = '') =>
     String(s).replace(/[&<>"']/g, m => (
         { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]
     ));
+
+// Snap an integer to the nearest odd value within [GROUND_SIZE_MIN..MAX]
+const _snapOdd = (n) => {
+    let v = Math.round(n);
+    if (v < GROUND_SIZE_MIN) v = GROUND_SIZE_MIN;
+    if (v > GROUND_SIZE_MAX) v = GROUND_SIZE_MAX;
+    if (v % 2 === 0) v = (v + 1 <= GROUND_SIZE_MAX) ? v + 1 : v - 1;
+    return v;
+};
 
 // Dice icon for per-field Surprise buttons
 const DICE_ICON = `
@@ -104,7 +114,9 @@ export class EnvironmentBridge extends BaseBridge {
         this._state = {
             groundColor: d.groundColor || DEFAULT_GROUND_COLOR,
             stageColor:  d.stageColor  || DEFAULT_STAGE_COLOR,
-            groundSize:  d.groundSize  ?? DEFAULT_GROUND_SIZE,
+            // Ground size is odd-only (5, 7, 9, ... 27) so the ground
+            // grows/shrinks one row around the perimeter at a time.
+            groundSize:  _snapOdd(d.groundSize ?? DEFAULT_GROUND_SIZE),
             // Future: walls, skyTop/Mid/Bot, objects, fx, lighting
         };
 
@@ -323,7 +335,7 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     _applyGroundSize(n) {
-        const clamped = Math.max(GROUND_SIZE_MIN, Math.min(GROUND_SIZE_MAX, Math.round(n)));
+        const clamped = _snapOdd(n);
         this._state.groundSize = clamped;
         // Rebuild ground + grid with the new size
         if (this._groundMesh) {
@@ -380,11 +392,11 @@ export class EnvironmentBridge extends BaseBridge {
         }</div>`;
 
         let body = '';
-        if (tab === 'file')  body = this._renderFileTab();
-        if (tab === 'land')  body = this._renderLandTab();
-        if (tab === 'sky')   body = this._renderStubTab('Sky');
-        if (tab === 'stuff') body = this._renderStubTab('Stuff');
-        if (tab === 'fx')    body = this._renderStubTab('FX');
+        if (tab === 'file')   body = this._renderFileTab();
+        if (tab === 'ground') body = this._renderGroundTab();
+        if (tab === 'sky')    body = this._renderStubTab('Sky');
+        if (tab === 'stuff')  body = this._renderStubTab('Stuff');
+        if (tab === 'fx')     body = this._renderStubTab('FX');
 
         return tabBar + `<div class="cb-tab-content">${body}</div>`;
     }
@@ -412,28 +424,44 @@ export class EnvironmentBridge extends BaseBridge {
           </div>`;
     }
 
-    // ── Land tab ────────────────────────────────────────────────
-    _renderLandTab() {
+    // ── Ground tab ──────────────────────────────────────────────
+    _renderGroundTab() {
         const s = this._state;
+        const surpriseBtn = (key) => `
+            <button type="button" class="cb-field-surprise" data-surprise="${key}"
+                    aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>`;
+        const colorTrigger = (field, hex) => `
+            <button type="button" class="cb-color-trigger" data-color-field="${field}"
+                    style="background:${hex};" aria-label="Choose color"></button>`;
+
         return `
-          <div class="cb-field">
-            ${_fieldHead('Ground Size', 'groundSize')}
-            <div class="cb-range-row">
-              <input type="range" class="cb-range" id="land-size"
-                     min="${GROUND_SIZE_MIN}" max="${GROUND_SIZE_MAX}" step="1"
+          <div class="cb-section">
+            <div class="cb-section-title">Ground Plane</div>
+
+            <div class="cb-card-row">
+              <div class="cb-card-row-label">Size</div>
+              <input type="range" class="cb-range" id="ground-size"
+                     min="${GROUND_SIZE_MIN}" max="${GROUND_SIZE_MAX}" step="2"
                      value="${s.groundSize}">
-              <span class="cb-range-value" id="land-size-val">${s.groundSize}×${s.groundSize}</span>
+              <span class="cb-range-value" id="ground-size-val">${s.groundSize}×${s.groundSize}</span>
+              ${surpriseBtn('groundSize')}
+            </div>
+
+            <div class="cb-card-row">
+              <div class="cb-card-row-label">Color</div>
+              ${colorTrigger('groundColor', s.groundColor)}
+              ${surpriseBtn('groundColor')}
             </div>
           </div>
 
-          <div class="cb-field">
-            ${_fieldHead('Ground Color', 'groundColor')}
-            ${_paletteGrid(this._palette, s.groundColor, 'groundColor')}
-          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Stage</div>
 
-          <div class="cb-field">
-            ${_fieldHead('Stage Color', 'stageColor')}
-            ${_paletteGrid(this._palette, s.stageColor, 'stageColor')}
+            <div class="cb-card-row">
+              <div class="cb-card-row-label">Color</div>
+              ${colorTrigger('stageColor', s.stageColor)}
+              ${surpriseBtn('stageColor')}
+            </div>
           </div>
         `;
     }
@@ -489,9 +517,9 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
         });
 
-        // ── Land tab ───────────────────────────────────────────
-        const sizeInput = panel.querySelector('#land-size');
-        const sizeLabel = panel.querySelector('#land-size-val');
+        // ── Ground tab ─────────────────────────────────────────
+        const sizeInput = panel.querySelector('#ground-size');
+        const sizeLabel = panel.querySelector('#ground-size-val');
         sizeInput?.addEventListener('input', (e) => {
             const n = parseInt(e.target.value, 10);
             this._applyGroundSize(n);
@@ -499,19 +527,24 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
         });
 
-        panel.querySelectorAll('.cb-palette-grid .cb-pal-swatch').forEach(sw => {
-            sw.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const hex   = sw.dataset.hex;
-                const field = sw.closest('.cb-palette-grid')?.dataset.field;
-                if (!hex || !field) return;
-                if (field === 'groundColor') this._applyGroundColor(hex);
-                if (field === 'stageColor')  this._applyStageColor(hex);
-                // Update selection highlight without a full re-render
-                sw.parentElement.querySelectorAll('.cb-pal-swatch').forEach(s =>
-                    s.classList.toggle('selected', s.dataset.hex.toLowerCase() === hex.toLowerCase())
-                );
-                this._scheduleAutoSave();
+        // Color triggers — open the shared color picker modal
+        panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const field = trigger.dataset.colorField;
+                const current = field === 'groundColor' ? this._state.groundColor
+                              : field === 'stageColor'  ? this._state.stageColor
+                              : '';
+                const titleMap = { groundColor: 'Ground Color', stageColor: 'Stage Color' };
+                showColorPicker({
+                    currentHex: current,
+                    title: titleMap[field] || 'Choose color',
+                    onPick: (hex) => {
+                        if (field === 'groundColor') this._applyGroundColor(hex);
+                        if (field === 'stageColor')  this._applyStageColor(hex);
+                        trigger.style.background = hex;
+                        this._scheduleAutoSave();
+                    },
+                });
             });
         });
 
