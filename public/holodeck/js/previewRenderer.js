@@ -9,6 +9,9 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Line2 }        from 'three/addons/lines/Line2.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { SCENE, LIGHT } from './shared/palette.js';
 import { standard, groundMaterial, gridColors } from './shared/materials.js';
 import { BUILDERS } from './shared/primitives.js';
@@ -785,6 +788,90 @@ function _buildPropPreview(asset) {
 //  ENVIRONMENT PREVIEW
 // ─────────────────────────────────────────────────────────────────
 
+/**
+ * Apply the canonical Scene3D look to the preview scene —
+ * mid-grey backdrop, 21x21 world grid, 5x5 stage perimeter,
+ * inner stage grid, flat lighting, no placeholder cube.
+ * Used for blank-template environments (e.g. env_default).
+ */
+function _applyScene3DLook() {
+    // Nuke everything in the current scene except the _previewGroup root
+    // so we can start from a clean canvas.
+    const toRemove = [];
+    _scene.traverse(obj => {
+        if (obj === _scene || obj === _previewGroup) return;
+        if (obj.parent === _previewGroup) return;
+        if (obj.isMesh || obj.isLine || obj.isGridHelper || obj.isLight) {
+            toRemove.push(obj);
+        }
+    });
+    for (const obj of toRemove) {
+        obj.geometry?.dispose?.();
+        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose?.());
+        else obj.material?.dispose?.();
+        obj.parent?.remove(obj);
+    }
+
+    // Mid-grey scene background
+    _scene.background = new THREE.Color(0x5A5A5A);
+
+    // Camera pose matching Scene3D
+    _camera.position.set(5.2, 3.9, 5.2);
+    _camera.lookAt(0, 0, 0);
+    if (_controls) _controls.target.set(0, 0, 0);
+
+    // 21x21 world grid
+    const worldGrid = new THREE.GridHelper(21, 21, 0x2F2F2F, 0x2F2F2F);
+    worldGrid.material.opacity     = 0.3;
+    worldGrid.material.transparent = true;
+    _scene.add(worldGrid);
+
+    // 5x5 stage perimeter (thick line)
+    const c = _container;
+    const perimPositions = [
+        -2.5, 0.01, -2.5,
+         2.5, 0.01, -2.5,
+         2.5, 0.01,  2.5,
+        -2.5, 0.01,  2.5,
+        -2.5, 0.01, -2.5,
+    ];
+    const perimGeo = new LineGeometry();
+    perimGeo.setPositions(perimPositions);
+    const perimMat = new LineMaterial({
+        color: 0xC8C8C8,
+        linewidth: 3,
+        resolution: new THREE.Vector2(c.clientWidth, c.clientHeight),
+    });
+    const perimLine = new Line2(perimGeo, perimMat);
+    perimLine.computeLineDistances();
+    _scene.add(perimLine);
+
+    // Inner stage grid lines
+    const innerMat = new THREE.LineBasicMaterial({
+        color: 0xB0B0B0, opacity: 0.4, transparent: true,
+    });
+    for (let i = -1.5; i <= 1.5; i += 1) {
+        _scene.add(new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(i, 0.01, -2.5),
+                new THREE.Vector3(i, 0.01,  2.5),
+            ]), innerMat
+        ));
+        _scene.add(new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-2.5, 0.01, i),
+                new THREE.Vector3( 2.5, 0.01, i),
+            ]), innerMat
+        ));
+    }
+
+    // Flat lights — ambient + one directional
+    _scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 10, 5);
+    _scene.add(dir);
+}
+
 async function _buildEnvironmentPreview(asset) {
     _camera.position.set(4, 3, 5);
     _camera.lookAt(0, 0.3, 0);
@@ -800,9 +887,22 @@ async function _buildEnvironmentPreview(asset) {
         _autoPlayEnvironmentMusic(musicId);
     }
 
-    // Skybox as scene background — support both payload.skybox and state-based sky colors
+    // Blank-template detection: no sky, no ground, no walls/objects/images.
+    // Render the canonical Scene3D look (mid-grey backdrop, 21×21 grid,
+    // 5×5 stage perimeter, flat lighting) to match the edit-view template.
     const skyTop    = p.skybox?.topColor    || s.skyTopColor;
     const skyBottom = p.skybox?.bottomColor || s.skyHorizonColor;
+    const groundColor = p.ground?.color || s.groundColor;
+    const isBlankTemplate =
+        asset.id === 'env_default' ||
+        (!skyTop && !skyBottom && !groundColor &&
+         !(p.walls?.length) && !(p.objects?.length) && !(p.images?.length));
+
+    if (isBlankTemplate) {
+        _applyScene3DLook();
+        return;
+    }
+
     if (skyTop && skyBottom) {
         const canvas = document.createElement('canvas');
         canvas.width = 2; canvas.height = 256;
@@ -818,7 +918,6 @@ async function _buildEnvironmentPreview(asset) {
     }
 
     // Ground color override — support both payload.ground and state-based ground color
-    const groundColor = p.ground?.color || s.groundColor;
     if (groundColor) {
         const ground = _scene.children.find(c => c.geometry?.type === 'PlaneGeometry');
         if (ground) ground.material.color.set(groundColor);
