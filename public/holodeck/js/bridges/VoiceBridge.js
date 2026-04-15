@@ -9,7 +9,8 @@
  *   - Text input + play/stop button
  */
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+import { tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
@@ -558,6 +559,25 @@ export class VoiceBridge extends BaseBridge {
         this._isSpeaking = false;
         if (this._mouthRig) this._mouthRig.setRest();
         this._renderPanel();
+        document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
+    }
+
+    /** Tween camera back to its initial pose. */
+    resetView() {
+        this.stopPlayback();
+        if (!this._controls || !this._camera) return;
+        this._resetCancel?.();
+        const headCenterY = 0.72; // mirrors _buildScene's initial pose
+        this._resetCancel = tweenToPose(
+            this._camera, this._controls,
+            new THREE.Vector3(0, headCenterY, 1.6),
+            new THREE.Vector3(0, headCenterY, 0),
+        );
+    }
+
+    suspend() {
+        if (this._isSpeaking) this.stopPlayback();
+        super.suspend();
     }
 
     _togglePlay() {

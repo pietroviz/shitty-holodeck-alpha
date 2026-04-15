@@ -1,11 +1,11 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
-import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=11';
-import { MusicBridge }          from './bridges/MusicBridge.js';
-import { ObjectBridge }         from './bridges/ObjectBridge.js';
-import { ImageBridge }          from './bridges/ImageBridge.js';
-import { VoiceBridge }          from './bridges/VoiceBridge.js';
+import { CharacterBridge }      from './bridges/CharacterBridge.js?v=2';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=12';
+import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
+import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
+import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
+import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewResetView } from './previewRenderer.js?v=4';
 import { generateId }                       from './db.js';

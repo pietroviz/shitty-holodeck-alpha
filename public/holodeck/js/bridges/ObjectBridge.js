@@ -9,7 +9,8 @@
  * Colours  — color roles (primary/secondary/tertiary) with DB32 palette, roughness, randomize
  */
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+import { renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { UI }       from '../shared/palette.js';
@@ -279,25 +280,11 @@ export class ObjectBridge extends BaseBridge {
 
     // ── File Tab ────────────────────────────────────────────────
     _renderFileTab() {
-        const name = _esc(this.asset?.name || '');
-        const desc = _esc(this.asset?.payload?.description || '');
-        const tags = _esc((this.asset?.tags || []).join(', '));
-        return `
-          <div class="cb-section">
-            <div class="cb-label">Name</div>
-            <input type="text" class="bridge-name-input cb-name-input"
-                   value="${name}" placeholder="Object name..." maxlength="40">
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Description</div>
-            <textarea class="cb-desc-input" placeholder="Describe this object..."
-                      rows="3" maxlength="200">${desc}</textarea>
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Tags</div>
-            <input type="text" class="cb-tags-input"
-                   value="${tags}" placeholder="e.g. furniture, chair, wood" maxlength="100">
-          </div>`;
+        return renderFileTab(this.asset, {
+            namePlaceholder: 'Object name…',
+            descPlaceholder: 'Describe this object…',
+            tagsPlaceholder: 'e.g. furniture, chair, wood',
+        });
     }
 
     // ── Bounds Tab ──────────────────────────────────────────────
@@ -493,13 +480,8 @@ export class ObjectBridge extends BaseBridge {
             });
         });
 
-        // ── File tab ──
-        panel.querySelector('.cb-desc-input')?.addEventListener('input', e => {
-            if (this.asset?.payload) this.asset.payload.description = e.target.value;
-        });
-        panel.querySelector('.cb-tags-input')?.addEventListener('input', e => {
-            if (this.asset) this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
-        });
+        // ── File tab (shared wiring) ──
+        wireFileTabEvents(panel, this, { formatType: 'object_state' });
 
         // ── Bounds tab: anchor point ──
         for (const axis of ['x', 'y', 'z']) {
@@ -718,6 +700,17 @@ export class ObjectBridge extends BaseBridge {
         };
         this._selectedIdx = -1;
         this._rebuildProp();
+    }
+
+    /** Tween camera back to the initial pose. */
+    resetView() {
+        if (!this._orbitControls || !this._camera) return;
+        this._resetCancel?.();
+        this._resetCancel = tweenToPose(
+            this._camera, this._orbitControls,
+            new THREE.Vector3(3, 2.5, 4),
+            new THREE.Vector3(0, 0.5, 0),
+        );
     }
 
     destroy() {

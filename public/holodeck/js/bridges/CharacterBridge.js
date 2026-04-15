@@ -7,7 +7,8 @@
  * OrbitControls with auto-spin, meSpeak voice + viseme mouth movement.
  */
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+import { renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -721,9 +722,28 @@ export class CharacterBridge extends BaseBridge {
         this._isPlaying = false;
         if (this._animManager) this._animManager.stop();
         this._voiceEngine.stop();
+        document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
     }
 
-    /* ── Destroy (cleanup orbit + voice + animation) ── */
+    /** Tween camera back to its initial pose. */
+    resetView() {
+        this.stopPlayback();
+        if (!this._controls || !this._camera) return;
+        this._resetCancel?.();
+        this._resetCancel = tweenToPose(
+            this._camera, this._controls,
+            new THREE.Vector3(0, 1.3, 3.5),
+            new THREE.Vector3(0, 0.8, 0),
+        );
+    }
+
+    /* ── Suspend / destroy (cleanup orbit + voice + animation) ── */
+
+    suspend() {
+        // Stop any ongoing playback so it doesn't bleed into other views
+        if (this._isPlaying) this.stopPlayback();
+        super.suspend();
+    }
 
     destroy() {
         this._voiceEngine.stop();
@@ -756,23 +776,11 @@ export class CharacterBridge extends BaseBridge {
         // Tab content
         let content = '';
         if (tab === 'file') {
-            content = `
-                <div class="cb-preset-row">
-                  <label class="cb-color-label">Name:</label>
-                  <input type="text" class="bridge-name-input cb-name-input" value="${name}" placeholder="Character name..." style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;font-family:inherit;outline:none;">
-                  <span class="cb-char-count" style="font-size:11px;color:var(--text-dim);margin-top:2px;">${name.length}/50</span>
-                </div>
-                <div class="cb-preset-row">
-                  <label class="cb-color-label">Description:</label>
-                  <textarea class="cb-desc-input" placeholder="Describe your character..." rows="3" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:#fff;font-size:13px;font-family:inherit;outline:none;resize:vertical;">${desc}</textarea>
-                  <span class="cb-char-count" style="font-size:11px;color:var(--text-dim);margin-top:2px;">${desc.length}/200</span>
-                </div>
-                <div class="cb-preset-row">
-                  <label class="cb-color-label">Tags:</label>
-                  <input type="text" class="cb-tags-input" value="${tags}" placeholder="e.g. hero, warrior, npc" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:#fff;font-size:13px;font-family:inherit;outline:none;">
-                  <span class="cb-char-count" style="font-size:11px;color:var(--text-dim);margin-top:2px;">${tags.length}/100</span>
-                </div>
-            `;
+            content = renderFileTab(this.asset, {
+                namePlaceholder: 'Character name…',
+                descPlaceholder: 'Describe your character…',
+                tagsPlaceholder: 'e.g. hero, warrior, npc',
+            });
         } else if (tab === 'body') {
             content = `
                 ${_presetRow('Shape', 'bodyShape', BODY_SHAPE_OPTIONS, s.bodyShape)}
@@ -1032,15 +1040,20 @@ export class CharacterBridge extends BaseBridge {
             this._renderPanel();
         });
 
-        // Description input
+        // Description input → mirror to _state for char's own state path
         panel.querySelector('.cb-desc-input')?.addEventListener('input', (e) => {
             this._state.description = e.target.value;
         });
 
-        // Tags input
+        // Tags input → mirror to _state for char's own state path
         panel.querySelector('.cb-tags-input')?.addEventListener('input', (e) => {
             this._state.tags = e.target.value.split(',').map(t => t.trim()).filter(t => t);
         });
+
+        // Shared File tab wiring — adds name handler, schedules autosave on
+        // any field change, and routes file-tab Surprise dice through the
+        // bridge stub.
+        wireFileTabEvents(panel, this, { formatType: 'character_state' });
     }
 
     _getState() { return { ...this._state }; }

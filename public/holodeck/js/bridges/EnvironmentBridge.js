@@ -28,6 +28,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { BaseBridge } from './BaseBridge.js?v=3';
 import { loadPalette }     from '../shared/paletteLoader.js';
 import { showColorPicker } from '../shared/colorPicker.js';
+import { renderSubtitle, renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -95,40 +96,7 @@ const _snapOdd = (n) => {
     return v;
 };
 
-// Dice icon for per-field Surprise buttons
-const DICE_ICON = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-     fill="none" stroke="currentColor" stroke-width="1.75"
-     stroke-linecap="round" stroke-linejoin="round">
-  <rect x="3" y="3" width="18" height="18" rx="3"/>
-  <circle cx="8"  cy="8"  r="1.2" fill="currentColor" stroke="none"/>
-  <circle cx="16" cy="8"  r="1.2" fill="currentColor" stroke="none"/>
-  <circle cx="8"  cy="16" r="1.2" fill="currentColor" stroke="none"/>
-  <circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/>
-  <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
-</svg>`;
-
-// Render a field head row (label on left, Surprise dice on right).
-const _fieldHead = (label, surpriseKey) => `
-    <div class="cb-field-head">
-        <div class="cb-label">${label}</div>
-        <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}" aria-label="Surprise me" title="Surprise me">
-            ${DICE_ICON}
-        </button>
-    </div>`;
-
-// Palette swatch grid with a selection highlight
-const _paletteGrid = (palette, selectedHex, field) => {
-    if (!palette) return '<div class="cb-hint">Loading palette…</div>';
-    return `<div class="cb-palette-grid" data-field="${field}">${
-        palette.map(c => {
-            const sel = c.hex.toLowerCase() === (selectedHex || '').toLowerCase();
-            return `<button type="button" class="cb-pal-swatch ${sel ? 'selected' : ''}"
-                        data-hex="${c.hex}" title="${c.name || c.hex}"
-                        style="background:${c.hex};"></button>`;
-        }).join('')
-    }</div>`;
-};
+// DICE_ICON / renderFieldHead / renderFileTab live in shared/builderUI.js
 
 export class EnvironmentBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
@@ -529,38 +497,17 @@ export class EnvironmentBridge extends BaseBridge {
 
     // ── File tab ────────────────────────────────────────────────
     _renderFileTab() {
-        const name = _esc(this.asset?.name || '');
-        const desc = _esc(this.asset?.payload?.description || '');
-        const tags = _esc((this.asset?.tags || []).join(', '));
-        return `
-          <div class="cb-field">
-            ${_fieldHead('Name', 'name')}
-            <input type="text" class="bridge-name-input cb-name-input"
-                   value="${name}" placeholder="Environment name..." maxlength="40">
-          </div>
-          <div class="cb-field">
-            ${_fieldHead('Description', 'description')}
-            <textarea class="cb-desc-input" placeholder="Describe this environment..."
-                      rows="3" maxlength="200">${desc}</textarea>
-          </div>
-          <div class="cb-field">
-            ${_fieldHead('Tags', 'tags')}
-            <input type="text" class="cb-tags-input"
-                   value="${tags}" placeholder="e.g. template, outdoor, warm" maxlength="100">
-          </div>`;
+        return renderFileTab(this.asset, {
+            namePlaceholder: 'Environment name…',
+            descPlaceholder: 'Describe this environment…',
+            tagsPlaceholder: 'e.g. template, outdoor, warm',
+        });
     }
 
     // ── Ground tab ──────────────────────────────────────────────
     _renderGroundTab() {
         const s = this._state;
-
-        // Subtitle row with a single dice for the whole subsection
-        const subtitle = (text, surpriseKey) => `
-          <div class="cb-subtitle-row">
-            <div class="cb-subtitle">${text}</div>
-            <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}"
-                    aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>
-          </div>`;
+        const subtitle = renderSubtitle;
 
         const colorTrigger = (field, hex) => `
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
@@ -685,31 +632,8 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // ── File tab ───────────────────────────────────────────
-        panel.querySelector('.bridge-name-input')?.addEventListener('input', (e) => {
-            if (this.asset) this.asset.name = e.target.value.trim();
-            this._scheduleAutoSave();
-        });
-
-        panel.querySelector('.cb-desc-input')?.addEventListener('input', (e) => {
-            if (!this.asset) return;
-            if (!this.asset.payload) {
-                this.asset.payload = {
-                    description: '',
-                    format: 'environment_state',
-                    state: {},
-                    _editor: null,
-                };
-            }
-            this.asset.payload.description = e.target.value;
-            this._scheduleAutoSave();
-        });
-
-        panel.querySelector('.cb-tags-input')?.addEventListener('input', (e) => {
-            if (!this.asset) return;
-            this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
-            this._scheduleAutoSave();
-        });
+        // ── File tab (shared wiring) ───────────────────────────
+        wireFileTabEvents(panel, this, { formatType: 'environment_state' });
 
         // ── Ground tab ─────────────────────────────────────────
         const sizeInput = panel.querySelector('#ground-size');
@@ -773,11 +697,14 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // ── Surprise buttons ───────────────────────────────────
+        // ── Surprise buttons (env-specific subtitles) ──────────
+        // File-tab dice (name/description/tags) are wired by
+        // wireFileTabEvents above; these handle Ground tab subtitles.
+        const FILE_KEYS = new Set(['name', 'description', 'tags']);
         panel.querySelectorAll('.cb-field-surprise').forEach(btn => {
+            if (FILE_KEYS.has(btn.dataset.surprise)) return;
             btn.addEventListener('click', () => {
-                const which = btn.dataset.surprise;
-                this._onSurpriseField(which);
+                this._onSurpriseField(btn.dataset.surprise);
             });
         });
     }
@@ -862,27 +789,11 @@ export class EnvironmentBridge extends BaseBridge {
     resetView() {
         this.stop();
         document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
-
         if (!this._controls) return;
-        const target = new THREE.Vector3(0, 0, 0);
-        const toPos  = new THREE.Vector3(5.2, 3.9, 5.2);
-        const fromPos = this._camera.position.clone();
-        const fromTarget = this._controls.target.clone();
-
-        const startTime = performance.now();
-        const duration  = 500;
-        const ease = (t) => 1 - Math.pow(1 - t, 4);
-
-        if (this._resetRaf) cancelAnimationFrame(this._resetRaf);
-        const step = (now) => {
-            const t = Math.min(1, (now - startTime) / duration);
-            const e = ease(t);
-            this._camera.position.lerpVectors(fromPos, toPos, e);
-            this._controls.target.lerpVectors(fromTarget, target, e);
-            this._controls.update();
-            if (t < 1) this._resetRaf = requestAnimationFrame(step);
-            else       this._resetRaf = null;
-        };
-        this._resetRaf = requestAnimationFrame(step);
+        this._resetCancel?.();
+        this._resetCancel = tweenToPose(
+            this._camera, this._controls,
+            new THREE.Vector3(5.2, 3.9, 5.2), new THREE.Vector3(0, 0, 0)
+        );
     }
 }

@@ -9,7 +9,8 @@
  * Settings — duration behavior, fade in/out, mood colour, delete
  */
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+import { renderFileTab, wireFileTabEvents } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { standard } from '../shared/materials.js';
 import { UI }       from '../shared/palette.js';
@@ -250,25 +251,11 @@ export class MusicBridge extends BaseBridge {
 
     // ── File Tab ────────────────────────────────────────────────
     _renderFileTab() {
-        const name = _esc(this.asset?.name || '');
-        const desc = _esc(this.asset?.payload?.description || '');
-        const tags = _esc((this.asset?.tags || []).join(', '));
-        return `
-          <div class="cb-section">
-            <div class="cb-label">Name</div>
-            <input type="text" class="bridge-name-input cb-name-input"
-                   value="${name}" placeholder="Music theme name..." maxlength="40">
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Description</div>
-            <textarea class="cb-desc-input" placeholder="Describe this music theme..."
-                      rows="3" maxlength="200">${desc}</textarea>
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Tags</div>
-            <input type="text" class="cb-tags-input"
-                   value="${tags}" placeholder="e.g. lofi, jazz, ambient" maxlength="100">
-          </div>`;
+        return renderFileTab(this.asset, {
+            namePlaceholder: 'Music theme name…',
+            descPlaceholder: 'Describe this music theme…',
+            tagsPlaceholder: 'e.g. lofi, jazz, ambient',
+        });
     }
 
     // ── Layers Tab ──────────────────────────────────────────────
@@ -420,13 +407,8 @@ export class MusicBridge extends BaseBridge {
             });
         });
 
-        // ── File tab ──
-        panel.querySelector('.cb-desc-input')?.addEventListener('input', e => {
-            if (this.asset?.payload) this.asset.payload.description = e.target.value;
-        });
-        panel.querySelector('.cb-tags-input')?.addEventListener('input', e => {
-            if (this.asset) this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
-        });
+        // ── File tab (shared wiring) ──
+        wireFileTabEvents(panel, this, { formatType: 'music_state' });
 
         // ── Layers tab ──
         panel.querySelectorAll('.cb-layer-name').forEach(inp => {

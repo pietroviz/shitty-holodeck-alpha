@@ -9,7 +9,8 @@
  * Colours  — colour roles with DB32 palette, quick palettes, randomize
  */
 
-import { BaseBridge } from './BaseBridge.js?v=2';
+import { BaseBridge } from './BaseBridge.js?v=3';
+import { renderFileTab, wireFileTabEvents } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { UI }       from '../shared/palette.js';
 import { renderImage } from '../shared/imageRenderer.js';
@@ -293,27 +294,12 @@ export class ImageBridge extends BaseBridge {
 
     // ── File Tab ────────────────────────────────────────────────
     _renderFileTab() {
-        const name = _esc(this.asset?.name || '');
-        const desc = _esc(this.asset?.payload?.description || '');
-        const tags = _esc((this.asset?.tags || []).join(', '));
         return `
-          <div class="cb-section">
-            <div class="cb-label">Name</div>
-            <input type="text" class="bridge-name-input cb-name-input"
-                   value="${name}" placeholder="Image name..." maxlength="40">
-            <div class="cb-char-count">${(this.asset?.name || '').length}/40</div>
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Description</div>
-            <textarea class="cb-desc-input" placeholder="What is this asset?"
-                      rows="3" maxlength="200">${desc}</textarea>
-            <div class="cb-char-count">${(this.asset?.payload?.description || '').length}/200</div>
-          </div>
-          <div class="cb-section">
-            <div class="cb-label">Tags</div>
-            <input type="text" class="cb-tags-input"
-                   value="${tags}" placeholder="e.g. sky, cloud, nature" maxlength="100">
-          </div>
+          ${renderFileTab(this.asset, {
+              namePlaceholder: 'Image name…',
+              descPlaceholder: 'What is this asset?',
+              tagsPlaceholder: 'e.g. sky, cloud, nature',
+          })}
           <div class="cb-section">
             <button class="cb-btn-sm cb-img-browse-btn">Browse Templates</button>
             ${this._renderTemplatePicker()}
@@ -549,15 +535,8 @@ export class ImageBridge extends BaseBridge {
         });
 
         // ── File tab ──
-        panel.querySelector('.cb-desc-input')?.addEventListener('input', e => {
-            if (this.asset?.payload) this.asset.payload.description = e.target.value;
-            // Update char count
-            const counter = panel.querySelector('.cb-desc-input')?.parentElement?.querySelector('.cb-char-count');
-            if (counter) counter.textContent = `${e.target.value.length}/200`;
-        });
-        panel.querySelector('.cb-tags-input')?.addEventListener('input', e => {
-            if (this.asset) this.asset.tags = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
-        });
+        // ── File tab (shared wiring) ──
+        wireFileTabEvents(panel, this, { formatType: 'image_state' });
 
         // Template browsing
         panel.querySelector('.cb-img-browse-btn')?.addEventListener('click', () => this._browseTemplates());
