@@ -33,7 +33,7 @@ import { showColorPicker } from '../shared/colorPicker.js';
 const _PP_RANGE = Math.PI * 0.45;
 const _PP_SPEED = 0.15;
 
-// Land tab tuning
+// Ground tab tuning
 const GROUND_SIZE_MIN = 5;
 const GROUND_SIZE_MAX = 27;
 const STAGE_SIZE      = 5;
@@ -42,6 +42,11 @@ const STAGE_SIZE      = 5;
 const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
 const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_GROUND_SIZE  = 21;
+const DEFAULT_WALLS        = 'off';
+
+// Wall heights (meters)
+const WALL_HEIGHTS = { off: 0, low: 1, med: 3, high: 5 };
+const WALL_THICK   = 0.25;
 
 // ── Tabs (File · Ground · Sky · Stuff · FX) ─────────────────────
 const TABS = [
@@ -117,7 +122,8 @@ export class EnvironmentBridge extends BaseBridge {
             // Ground size is odd-only (5, 7, 9, ... 27) so the ground
             // grows/shrinks one row around the perimeter at a time.
             groundSize:  _snapOdd(d.groundSize ?? DEFAULT_GROUND_SIZE),
-            // Future: walls, skyTop/Mid/Bot, objects, fx, lighting
+            walls:       d.walls || DEFAULT_WALLS,
+            // Future: skyTop/Mid/Bot, objects, fx, lighting
         };
 
         this._activeTab = 'file';
@@ -129,6 +135,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._perimMat    = null;
         this._perimLine   = null;
         this._stageInner  = [];
+        this._wallBack    = null;     // back wall (along -z edge of stage)
+        this._wallLeft    = null;     // left wall (along -x edge of stage)
         this._extraLights = [];
 
         // Viewport interaction (matches browse preview)
@@ -193,6 +201,10 @@ export class EnvironmentBridge extends BaseBridge {
         // 5×5 stage perimeter + inner grid
         this._buildStagePerimeter();
         this._buildStageInnerGrid();
+
+        // Two back-corner walls (only the back & left edges, away from
+        // default camera). Visible only when state.walls != 'off'.
+        this._buildWalls();
 
         // Flat lighting
         const amb = new THREE.AmbientLight(0xffffff, 0.6);
@@ -322,6 +334,41 @@ export class EnvironmentBridge extends BaseBridge {
         }
     }
 
+    /**
+     * Build the two back-corner walls (back edge along -z, left edge
+     * along -x). Both walls are 0.25m thick. Their visible height is
+     * driven by state.walls ('off' | 'low' | 'med' | 'high').
+     */
+    _buildWalls() {
+        const half = STAGE_SIZE / 2;       // 2.5
+        const t    = WALL_THICK;
+        const matBack = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(this._state.stageColor), roughness: 0.85,
+        });
+        const matLeft = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(this._state.stageColor), roughness: 0.85,
+        });
+
+        // Back wall: full 5m wide along x, sits just outside the stage's -z edge
+        const backGeo = new THREE.BoxGeometry(STAGE_SIZE + t, 1, t);
+        this._wallBack = new THREE.Mesh(backGeo, matBack);
+        this._wallBack.position.set(-t / 2, 0.5, -half - t / 2);
+        this._wallBack.castShadow = true;
+        this._wallBack.receiveShadow = true;
+        this._scene.add(this._wallBack);
+
+        // Left wall: full 5m deep along z, sits just outside the stage's -x edge
+        const leftGeo = new THREE.BoxGeometry(t, 1, STAGE_SIZE + t);
+        this._wallLeft = new THREE.Mesh(leftGeo, matLeft);
+        this._wallLeft.position.set(-half - t / 2, 0.5, -t / 2);
+        this._wallLeft.castShadow = true;
+        this._wallLeft.receiveShadow = true;
+        this._scene.add(this._wallLeft);
+
+        // Apply current state — sets visibility + height
+        this._applyWalls(this._state.walls, /*skipState*/ true);
+    }
+
     // ── Live scene updates from panel controls ──────────────────
 
     _applyGroundColor(hex) {
@@ -332,6 +379,9 @@ export class EnvironmentBridge extends BaseBridge {
     _applyStageColor(hex) {
         this._state.stageColor = hex;
         this._stageMesh?.material.color.set(hex);
+        // Walls share the stage color for now
+        this._wallBack?.material.color.set(hex);
+        this._wallLeft?.material.color.set(hex);
     }
 
     _applyGroundSize(n) {
@@ -347,6 +397,22 @@ export class EnvironmentBridge extends BaseBridge {
             this._worldGrid.geometry.dispose();
             this._worldGrid.material.dispose();
             this._buildWorldGrid();
+        }
+    }
+
+    _applyWalls(mode, skipState = false) {
+        if (!skipState) this._state.walls = mode;
+        const h = WALL_HEIGHTS[mode] ?? 0;
+        const visible = h > 0;
+        for (const wall of [this._wallBack, this._wallLeft]) {
+            if (!wall) continue;
+            wall.visible = visible;
+            if (visible) {
+                wall.scale.y = h;
+                // Box geometry is unit-tall (height=1), so y position must
+                // shift to keep the wall sitting on the ground.
+                wall.position.y = h / 2;
+            }
         }
     }
 
@@ -372,6 +438,9 @@ export class EnvironmentBridge extends BaseBridge {
         }
         if (typeof state.groundSize === 'number' && state.groundSize !== this._state.groundSize) {
             this._applyGroundSize(state.groundSize);
+        }
+        if (state.walls && state.walls !== this._state.walls) {
+            this._applyWalls(state.walls);
         }
         super._applyState(state);
     }
@@ -427,41 +496,69 @@ export class EnvironmentBridge extends BaseBridge {
     // ── Ground tab ──────────────────────────────────────────────
     _renderGroundTab() {
         const s = this._state;
-        const surpriseBtn = (key) => `
-            <button type="button" class="cb-field-surprise" data-surprise="${key}"
-                    aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>`;
+
+        // Subtitle row with a single dice for the whole subsection
+        const subtitle = (text, surpriseKey) => `
+          <div class="cb-subtitle-row">
+            <div class="cb-subtitle">${text}</div>
+            <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}"
+                    aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>
+          </div>`;
+
         const colorTrigger = (field, hex) => `
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
                     style="background:${hex};" aria-label="Choose color"></button>`;
 
+        // Default-position % for the size slider's faint default tick
+        const defPos = ((DEFAULT_GROUND_SIZE - GROUND_SIZE_MIN) /
+                        (GROUND_SIZE_MAX - GROUND_SIZE_MIN)) * 100;
+
+        const wallOpts = ['off', 'low', 'med', 'high'];
+        const wallLabels = { off: 'Off', low: 'Low', med: 'Med', high: 'High' };
+
         return `
-          <div class="cb-section">
-            <div class="cb-section-title">Ground Plane</div>
+          ${subtitle('Ground Plane', 'groundPlane')}
 
-            <div class="cb-card-row">
-              <div class="cb-card-row-label">Size</div>
-              <input type="range" class="cb-range" id="ground-size"
-                     min="${GROUND_SIZE_MIN}" max="${GROUND_SIZE_MAX}" step="2"
-                     value="${s.groundSize}">
-              <span class="cb-range-value" id="ground-size-val">${s.groundSize}×${s.groundSize}</span>
-              ${surpriseBtn('groundSize')}
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Size</div>
+            <div class="cb-card-tight-control">
+              <div class="cb-slider-wrap" style="--default-pos:${defPos}%;">
+                <input type="range" class="cb-range" id="ground-size"
+                       min="${GROUND_SIZE_MIN}" max="${GROUND_SIZE_MAX}" step="2"
+                       value="${s.groundSize}">
+              </div>
             </div>
-
-            <div class="cb-card-row">
-              <div class="cb-card-row-label">Color</div>
-              ${colorTrigger('groundColor', s.groundColor)}
-              ${surpriseBtn('groundColor')}
-            </div>
+            <div class="cb-card-tight-value" id="ground-size-val">${s.groundSize}×${s.groundSize}</div>
           </div>
 
-          <div class="cb-section">
-            <div class="cb-section-title">Stage</div>
-
-            <div class="cb-card-row">
-              <div class="cb-card-row-label">Color</div>
-              ${colorTrigger('stageColor', s.stageColor)}
-              ${surpriseBtn('stageColor')}
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('groundColor', s.groundColor)}
             </div>
+            <div class="cb-card-tight-value" id="ground-color-val">${s.groundColor}</div>
+          </div>
+
+          ${subtitle('Stage', 'stage')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('stageColor', s.stageColor)}
+            </div>
+            <div class="cb-card-tight-value" id="stage-color-val">${s.stageColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Walls</div>
+            <div class="cb-card-tight-control">
+              <div class="cb-segmented" id="walls-seg">
+                ${wallOpts.map(o => `
+                  <button type="button" data-walls="${o}"
+                          class="${s.walls === o ? 'active' : ''}">${wallLabels[o]}</button>`).join('')}
+              </div>
+            </div>
+            <div class="cb-card-tight-value">${WALL_HEIGHTS[s.walls] ? `${WALL_HEIGHTS[s.walls]}m` : '—'}</div>
           </div>
         `;
     }
@@ -535,6 +632,9 @@ export class EnvironmentBridge extends BaseBridge {
                               : field === 'stageColor'  ? this._state.stageColor
                               : '';
                 const titleMap = { groundColor: 'Ground Color', stageColor: 'Stage Color' };
+                const valueElId = field === 'groundColor' ? '#ground-color-val'
+                                : field === 'stageColor'  ? '#stage-color-val'
+                                : null;
                 showColorPicker({
                     currentHex: current,
                     title: titleMap[field] || 'Choose color',
@@ -542,9 +642,21 @@ export class EnvironmentBridge extends BaseBridge {
                         if (field === 'groundColor') this._applyGroundColor(hex);
                         if (field === 'stageColor')  this._applyStageColor(hex);
                         trigger.style.background = hex;
+                        const valEl = valueElId ? panel.querySelector(valueElId) : null;
+                        if (valEl) valEl.textContent = hex;
                         this._scheduleAutoSave();
                     },
                 });
+            });
+        });
+
+        // Walls segmented toggle
+        panel.querySelectorAll('#walls-seg button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.walls;
+                this._applyWalls(mode);
+                this._renderPanel();   // refresh active state + value column
+                this._scheduleAutoSave();
             });
         });
 
@@ -557,32 +669,34 @@ export class EnvironmentBridge extends BaseBridge {
         });
     }
 
-    _onSurpriseField(field) {
+    _onSurpriseField(key) {
         const pal = this._palette || [];
-        if (field === 'groundSize') {
-            const n = GROUND_SIZE_MIN + Math.floor(Math.random() * (GROUND_SIZE_MAX - GROUND_SIZE_MIN + 1));
-            this._applyGroundSize(n);
+        const randHex = () => pal.length ? pal[Math.floor(Math.random() * pal.length)].hex : null;
+        const randSize = () => {
+            // Random odd value in [MIN..MAX]
+            const span = (GROUND_SIZE_MAX - GROUND_SIZE_MIN) / 2 + 1;
+            return GROUND_SIZE_MIN + 2 * Math.floor(Math.random() * span);
+        };
+
+        // Per-subtitle (whole-section) randomizers
+        if (key === 'groundPlane') {
+            this._applyGroundSize(randSize());
+            const c = randHex(); if (c) this._applyGroundColor(c);
             this._renderPanel();
             this._scheduleAutoSave();
             return;
         }
-        if (field === 'groundColor' && pal.length) {
-            const c = pal[Math.floor(Math.random() * pal.length)].hex;
-            this._applyGroundColor(c);
+        if (key === 'stage') {
+            const c = randHex(); if (c) this._applyStageColor(c);
+            const opts = ['off', 'low', 'med', 'high'];
+            this._applyWalls(opts[Math.floor(Math.random() * opts.length)]);
             this._renderPanel();
             this._scheduleAutoSave();
             return;
         }
-        if (field === 'stageColor' && pal.length) {
-            const c = pal[Math.floor(Math.random() * pal.length)].hex;
-            this._applyStageColor(c);
-            this._renderPanel();
-            this._scheduleAutoSave();
-            return;
-        }
-        // File-tab fields (name, description, tags) are placeholders until
-        // the building-intelligence layer lands.
-        console.debug(`[EnvironmentBridge] surprise requested for "${field}" (stub — intelligence pending)`);
+
+        // File-tab per-field stubs (intelligence layer pending)
+        console.debug(`[EnvironmentBridge] surprise requested for "${key}" (stub — intelligence pending)`);
     }
 
     // ═══════════════════════════════════════════════════════════════
