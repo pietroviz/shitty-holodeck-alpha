@@ -1,13 +1,13 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=6';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=7';
 import { MusicBridge }          from './bridges/MusicBridge.js';
 import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
 import { VoiceBridge }          from './bridges/VoiceBridge.js';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying } from './previewRenderer.js?v=3';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewResetView } from './previewRenderer.js?v=4';
 import { generateId }                       from './db.js';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -1696,10 +1696,15 @@ function init() {
     E.menuBackdrop.addEventListener('click', closeMenu);
 
     E.resetBtn.addEventListener('click', () => {
-        // Priority: active bridge (edit mode) → Scene3D (index)
+        // Priority:
+        //   1. active bridge (edit mode)
+        //   2. preview renderer (while browsing an asset)
+        //   3. Scene3D (index)
         if (S.builderMode) {
             const entry = bridgeStack.top();
             if (entry?.bridge?.resetView) entry.bridge.resetView();
+        } else if (S.previewAsset) {
+            previewResetView();
         } else {
             scene?.resetView();
         }

@@ -44,6 +44,9 @@ const _PP_RANGE    = Math.PI * 0.45; // ~81° total sweep (3/4 left to 3/4 right
 const _PP_SPEED    = 0.15;           // radians per second
 let _thumbnailCallback = null;  // called once after first render with dataURL
 let _currentAsset = null;       // asset being previewed (for thumbnail caching)
+let _initialCamPos = null;      // camera pose captured at preview build time
+let _initialTarget = null;      // controls target captured at preview build time
+let _resetRaf = null;           // active reset tween
 
 // ── Browse voice + mouth rig (for "Look at me" in browse preview) ──
 let _mouthRig    = null;    // MouthRig instance for the current character preview
@@ -148,6 +151,36 @@ export function previewStopMusic() {
 /** Check if music is currently playing. */
 export function isPreviewMusicPlaying() { return _musicEngine?.isPlaying ?? false; }
 
+/**
+ * Tween the preview camera back to the pose captured when the current
+ * preview was built. Used by the global reset button while browsing.
+ */
+export function previewResetView() {
+    if (!_controls || !_initialCamPos) return;
+    // Also stop any auto-rotate so the camera doesn't fight the tween.
+    _autoSpin = false;
+
+    const fromPos = _camera.position.clone();
+    const fromTgt = _controls.target.clone();
+    const toPos   = _initialCamPos.clone();
+    const toTgt   = _initialTarget ? _initialTarget.clone() : new THREE.Vector3(0, 0, 0);
+    const duration = 500;
+    const startTime = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 4);
+
+    if (_resetRaf) cancelAnimationFrame(_resetRaf);
+    const step = (now) => {
+        const t = Math.min(1, (now - startTime) / duration);
+        const e = ease(t);
+        _camera.position.lerpVectors(fromPos, toPos, e);
+        _controls.target.lerpVectors(fromTgt, toTgt, e);
+        _controls.update();
+        if (t < 1) _resetRaf = requestAnimationFrame(step);
+        else       _resetRaf = null;
+    };
+    _resetRaf = requestAnimationFrame(step);
+}
+
 /* ── Environment preview: rotation on/off is the "playback" control ── */
 export function previewPlayEnvironment() {
     // Reset ping-pong so rotation starts from a neutral angle.
@@ -158,7 +191,13 @@ export function previewPlayEnvironment() {
 export function previewStopEnvironment() {
     _autoSpin = false;
 }
-export function isPreviewEnvironmentPlaying() { return _autoSpin; }
+export function isPreviewEnvironmentPlaying() {
+    // Only "playing" when an environment is actively being previewed
+    // AND auto-rotate is on. Otherwise (no preview, or previewing a
+    // different asset type), report false so UI like the reset button
+    // doesn't wrongly hide itself.
+    return _currentAsset?.type === 'environment' && _autoSpin;
+}
 
 /** Auto-play music for an environment preview by fetching the music asset by ID. */
 async function _autoPlayEnvironmentMusic(musicId) {
@@ -307,6 +346,10 @@ export function showPreview(container, asset, opts = {}) {
         if (_controls) _controls.target.set(0, 0.5, 0);
     }
     if (_controls) _controls.update();
+
+    // Snapshot the initial camera pose so resetView() can return to it.
+    _initialCamPos = _camera.position.clone();
+    _initialTarget = _controls ? _controls.target.clone() : null;
 
     // Resize observer
     if (_ro) _ro.disconnect();
