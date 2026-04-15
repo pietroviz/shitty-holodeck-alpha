@@ -1,5 +1,12 @@
 {
     "categories": {
+        "templates": {
+            "name": "Templates",
+            "count": 1,
+            "files": [
+                "env_default.json"
+            ]
+        },
         "urban": {
             "name": "Urban",
             "count": 4,

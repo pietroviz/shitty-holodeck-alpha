@@ -269,10 +269,42 @@ def draw_prop(asset):
 
 # ── Environment Thumbnail ────────────────────────────────────
 
+def _draw_blank_template():
+    """Blank environment template — matches the in-app Scene3D look."""
+    BG, GRID, PERIM, INNER = (0x5A,0x5A,0x5A), (0x2F,0x2F,0x2F), (0xC8,0xC8,0xC8), (0xB0,0xB0,0xB0)
+    img = Image.new("RGB", (THUMB_SIZE, THUMB_SIZE), BG)
+    d = ImageDraw.Draw(img)
+    step = max(1, THUMB_SIZE // 21)
+    for i in range(0, THUMB_SIZE, step):
+        d.line([(i, 0), (i, THUMB_SIZE)], fill=GRID, width=1)
+        d.line([(0, i), (THUMB_SIZE, i)], fill=GRID, width=1)
+    pad = THUMB_SIZE * 0.22
+    left, top = int(pad), int(pad + THUMB_SIZE * 0.08)
+    right, bottom = THUMB_SIZE - int(pad), THUMB_SIZE - int(pad - THUMB_SIZE * 0.04)
+    for k in range(1, 5):
+        x = left + (right - left) * k / 5
+        d.line([(x, top), (x, bottom)], fill=INNER, width=1)
+        y = top + (bottom - top) * k / 5
+        d.line([(left, y), (right, y)], fill=INNER, width=1)
+    d.rectangle([left, top, right, bottom], outline=PERIM, width=2)
+    return img
+
+
 def draw_environment(asset):
     """Draw a simplified environment thumbnail — sky + ground colors."""
     payload = asset.get("payload", {})
     state = payload.get("state", {})
+
+    # Blank template: render the Scene3D look (grey backdrop + stage
+    # perimeter + inner grid) instead of sky/ground.
+    origin = asset.get("meta", {}).get("origin")
+    is_blank_template = (
+        asset.get("id") == "env_default"
+        or (origin == "template" and not state)
+    )
+    if is_blank_template:
+        return _draw_blank_template()
+
     sky_color = state.get("skyColor", payload.get("skyColor", "#87CEEB"))
     ground_color = state.get("groundColor", payload.get("groundColor", "#4a7a4a"))
 

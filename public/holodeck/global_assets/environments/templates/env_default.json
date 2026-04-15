@@ -1,0 +1,20 @@
+{
+  "id": "env_default",
+  "type": "environment",
+  "name": "Default",
+  "tags": [
+    "template",
+    "blank"
+  ],
+  "meta": {
+    "created": "2026-04-14T00:00:00.000Z",
+    "modified": "2026-04-14T00:00:00.000Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Blank starting template — the canonical empty stage (grey backdrop, 21×21 world grid, 5×5 stage perimeter, flat lighting).",
+    "format": "environment_state",
+    "state": {}
+  }
+}

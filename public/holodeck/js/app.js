@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=2';
 import { MusicBridge }          from './bridges/MusicBridge.js';
 import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
