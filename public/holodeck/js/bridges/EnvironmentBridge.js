@@ -43,6 +43,28 @@ const _esc = (s = '') =>
         { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]
     ));
 
+// Small "dice" icon used in Surprise buttons. Single face with five pips.
+const DICE_ICON = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.75"
+     stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="3"/>
+  <circle cx="8"  cy="8"  r="1.2" fill="currentColor" stroke="none"/>
+  <circle cx="16" cy="8"  r="1.2" fill="currentColor" stroke="none"/>
+  <circle cx="8"  cy="16" r="1.2" fill="currentColor" stroke="none"/>
+  <circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/>
+  <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+</svg>`;
+
+// Render a field head row (label on left, Surprise action on right).
+const _fieldHead = (label, surpriseKey) => `
+    <div class="cb-field-head">
+        <div class="cb-label">${label}</div>
+        <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}" title="Surprise me">
+            ${DICE_ICON}<span>Surprise</span>
+        </button>
+    </div>`;
+
 export class EnvironmentBridge extends BaseBridge {
     constructor(sceneContainer, panelEl, options = {}) {
         super(sceneContainer, panelEl, options);
@@ -266,17 +288,17 @@ export class EnvironmentBridge extends BaseBridge {
         const tags = _esc((this.asset?.tags || []).join(', '));
         return `
           <div class="cb-field">
-            <div class="cb-label">Name</div>
+            ${_fieldHead('Name', 'name')}
             <input type="text" class="bridge-name-input cb-name-input"
                    value="${name}" placeholder="Environment name..." maxlength="40">
           </div>
           <div class="cb-field">
-            <div class="cb-label">Description</div>
+            ${_fieldHead('Description', 'description')}
             <textarea class="cb-desc-input" placeholder="Describe this environment..."
                       rows="3" maxlength="200">${desc}</textarea>
           </div>
           <div class="cb-field">
-            <div class="cb-label">Tags</div>
+            ${_fieldHead('Tags', 'tags')}
             <input type="text" class="cb-tags-input"
                    value="${tags}" placeholder="e.g. template, outdoor, warm" maxlength="100">
           </div>`;
@@ -338,6 +360,17 @@ export class EnvironmentBridge extends BaseBridge {
                 .filter(Boolean);
             this.asset.tags = tags;
             this._scheduleAutoSave();
+        });
+
+        // Surprise buttons — stub until the building-intelligence layer
+        // is hooked up. For now, just log which field was randomized so
+        // we know the wiring is live.
+        panel.querySelectorAll('.cb-field-surprise').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const which = btn.dataset.surprise;
+                this._onSurpriseField?.(which);
+                console.debug(`[EnvironmentBridge] surprise requested for "${which}" (stub)`);
+            });
         });
     }
 

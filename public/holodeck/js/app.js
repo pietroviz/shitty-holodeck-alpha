@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=5';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=6';
 import { MusicBridge }          from './bridges/MusicBridge.js';
 import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
@@ -797,12 +797,12 @@ function renderPanel() {
                        const topActive = !S.panelCategory || S.panelCategory === 'All';
                        return `
                        <div class="panel-filter-wrap" id="panel-filter-wrap">
-                           <button class="panel-category-btn" id="panel-category-btn" type="button">
-                               <span class="panel-category-btn-label">${activeLabel}</span>
-                               <span class="panel-category-btn-chev">${ICON.chevronDown}</span>
+                           <button class="panel-source-btn" id="panel-source-btn" type="button">
+                               <span class="panel-source-btn-label">${activeLabel}</span>
+                               <span class="panel-source-btn-chev">${ICON.chevronDown}</span>
                            </button>
                            ${S.categoryMenuOpen ? `
-                           <div class="panel-category-menu" id="panel-category-menu">
+                           <div class="panel-source-menu" id="panel-source-menu">
                                <button class="sort-menu-item" data-cat-value="All">
                                    <span>${topLabel}</span>
                                    ${topActive ? `<span class="check-icon">${ICON.check}</span>` : ''}
@@ -813,7 +813,7 @@ function renderPanel() {
                                        ${S.panelCategory === name ? `<span class="check-icon">${ICON.check}</span>` : ''}
                                    </button>
                                `).join('')}
-                               <div class="panel-category-menu-divider"></div>
+                               <div class="panel-source-menu-divider"></div>
                                <button class="sort-menu-item" data-cat-value="${switchValue}">
                                    <span>${switchLabel}</span>
                                </button>
@@ -1081,8 +1081,8 @@ function renderPanel() {
         }
     }, { once: true });
 
-    // Custom category dropdown (replaces native <select>)
-    const catBtn = E.panelInner.querySelector('#panel-category-btn');
+    // Custom source dropdown (replaces native <select>)
+    const catBtn = E.panelInner.querySelector('#panel-source-btn');
     if (catBtn) {
         catBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1095,8 +1095,8 @@ function renderPanel() {
     // Outside-click closes the menu
     if (S.categoryMenuOpen) {
         const closeOnOutside = (e) => {
-            const menu = E.panelInner.querySelector('#panel-category-menu');
-            const btn  = E.panelInner.querySelector('#panel-category-btn');
+            const menu = E.panelInner.querySelector('#panel-source-menu');
+            const btn  = E.panelInner.querySelector('#panel-source-btn');
             if (menu && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
                 S.categoryMenuOpen = false;
                 document.removeEventListener('mousedown', closeOnOutside);
@@ -1116,7 +1116,7 @@ function renderPanel() {
         document.addEventListener('keydown', closeOnEsc);
     }
     // Menu item clicks
-    E.panelInner.querySelectorAll('#panel-category-menu .sort-menu-item').forEach(item => {
+    E.panelInner.querySelectorAll('#panel-source-menu .sort-menu-item').forEach(item => {
         item.addEventListener('click', async (e) => {
             e.stopPropagation();
             const val = item.dataset.catValue;

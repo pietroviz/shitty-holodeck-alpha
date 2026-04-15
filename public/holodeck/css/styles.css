@@ -157,12 +157,9 @@ svg    { display: block; flex-shrink: 0; }
     white-space: nowrap;
     transition: color 0.2s ease;
 }
-.bridge-autosave-label.dirty {
-    color: var(--text-dim);
-}
-.bridge-autosave-label.saving {
-    color: var(--text-dim);
-}
+/* Active autosave states — cyan to signal "working" */
+.bridge-autosave-label.dirty,
+.bridge-autosave-label.saving,
 .bridge-autosave-label.saved {
     color: var(--accent);
 }
@@ -859,9 +856,38 @@ svg    { display: block; flex-shrink: 0; }
 .cb-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 9px;             /* a touch more air between label row and input */
     padding: 0 4px;
     margin-bottom: 14px;
+}
+/* Label row: label on the left, optional action (e.g. Surprise) on the right */
+.cb-field-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+/* Surprise action — mirrors the Auto-play treatment (small, dim, icon + text) */
+.cb-field-surprise {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 4px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+.cb-field-surprise:hover { color: var(--text-primary); }
+.cb-field-surprise svg {
+    width: 13px;
+    height: 13px;
 }
 
 .cb-section-title {
@@ -1804,9 +1830,11 @@ svg    { display: block; flex-shrink: 0; }
 }
 
 /* ══════════════════════════════════════════════════════
-   PANEL — category dropdown (custom button + popover)
+   PANEL — source/category dropdown (custom button + popover).
+   Renamed from .panel-category-btn to avoid collision with the
+   Templates menu's own .panel-category-btn (different thing).
    ══════════════════════════════════════════════════════ */
-.panel-category-btn {
+.panel-source-btn {
     flex: 1;
     width: 100%;
     height: 44px;
@@ -1824,8 +1852,8 @@ svg    { display: block; flex-shrink: 0; }
     font-weight: 500;
     cursor: pointer;
 }
-.panel-category-btn:hover { background: #323B4B; }
-.panel-category-btn-label {
+.panel-source-btn:hover { background: #323B4B; }
+.panel-source-btn-label {
     flex: 1;
     min-width: 0;
     text-align: left;
@@ -1833,16 +1861,16 @@ svg    { display: block; flex-shrink: 0; }
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.panel-category-btn-chev {
+.panel-source-btn-chev {
     display: flex;
     color: var(--text-dim);
     flex-shrink: 0;
 }
-.panel-category-btn-chev svg {
+.panel-source-btn-chev svg {
     width: 16px;
     height: 16px;
 }
-.panel-category-menu {
+.panel-source-menu {
     position: absolute;
     top: 48px;
     left: 0;
@@ -1854,7 +1882,7 @@ svg    { display: block; flex-shrink: 0; }
     z-index: 60;
     box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
-.panel-category-menu-divider {
+.panel-source-menu-divider {
     height: 1px;
     background: rgba(255,255,255,0.08);
     margin: 4px 0;
