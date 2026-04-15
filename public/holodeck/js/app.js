@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=10';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=11';
 import { MusicBridge }          from './bridges/MusicBridge.js';
 import { ObjectBridge }         from './bridges/ObjectBridge.js';
 import { ImageBridge }          from './bridges/ImageBridge.js';
@@ -341,7 +341,11 @@ function render() {
         ? (createType ? `Create New ${createType}…` : 'Create New…')
         : (displayAsset ? displayAsset.name : 'Untitled');
     E.elCount.classList.toggle('hidden', isNew);
-    E.editBtn.classList.toggle('hidden', isNew || !displayAsset);
+    // Edit button: only meaningful while actively previewing an asset
+    // in the browse panel. The index page is reserved for full
+    // simulations (not built yet), so don't show Edit there.
+    const canEditNow = !!S.previewAsset && S.panelOpen;
+    E.editBtn.classList.toggle('hidden', isNew || !canEditNow);
     E.surpriseBtn.classList.toggle('hidden', !isNew);
 
     // ── New toggle btn ─────────────────────
@@ -1793,7 +1797,11 @@ function init() {
     });
 
     E.editBtn.addEventListener('click', () => {
-        const asset = S.previewAsset || S.lastSavedAsset;
+        // Index-page Edit is reserved for full simulations later.
+        // Until then, only act when actively previewing an asset
+        // in the browse panel.
+        if (!S.panelOpen || !S.previewAsset) return;
+        const asset = S.previewAsset;
         if (asset) {
             const label = TYPE_TO_LABEL[asset.type] || 'Character';
             const BridgeClass = BRIDGE_MAP[label];

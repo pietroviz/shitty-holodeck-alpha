@@ -35,18 +35,41 @@ const _PP_SPEED = 0.15;
 
 // Ground tab tuning
 const GROUND_SIZE_MIN = 5;
-const GROUND_SIZE_MAX = 27;
+const GROUND_SIZE_MAX = 25;
 const STAGE_SIZE      = 5;
 
 // DB32-picked defaults that feel like an "inviting little world"
 const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
 const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
-const DEFAULT_GROUND_SIZE  = 21;
+const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
+const DEFAULT_GROUND_SIZE  = 19;
 const DEFAULT_WALLS        = 'off';
+const DEFAULT_TEXTURE      = 'none';
 
 // Wall heights (meters)
 const WALL_HEIGHTS = { off: 0, low: 1, med: 3, high: 5 };
 const WALL_THICK   = 0.25;
+
+// Cached texture asset list (id, name) loaded from images/textures/_index.json
+let _TEXTURE_OPTS = null;
+async function _loadTextureOpts() {
+    if (_TEXTURE_OPTS) return _TEXTURE_OPTS;
+    try {
+        const idxRes = await fetch('global_assets/images/textures/_index.json');
+        const files  = await idxRes.json();
+        const items  = await Promise.all(files.map(async f => {
+            try {
+                const r = await fetch(`global_assets/images/textures/${f}`);
+                const a = await r.json();
+                return { id: a.id, name: a.name || a.id };
+            } catch { return null; }
+        }));
+        _TEXTURE_OPTS = items.filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
+    } catch {
+        _TEXTURE_OPTS = [];
+    }
+    return _TEXTURE_OPTS;
+}
 
 // ── Tabs (File · Ground · Sky · Stuff · FX) ─────────────────────
 const TABS = [
@@ -117,14 +140,23 @@ export class EnvironmentBridge extends BaseBridge {
         const d = this.asset?.payload?.state || this.asset?.state || {};
 
         this._state = {
-            groundColor: d.groundColor || DEFAULT_GROUND_COLOR,
-            stageColor:  d.stageColor  || DEFAULT_STAGE_COLOR,
-            // Ground size is odd-only (5, 7, 9, ... 27) so the ground
+            groundColor:    d.groundColor || DEFAULT_GROUND_COLOR,
+            stageColor:     d.stageColor  || DEFAULT_STAGE_COLOR,
+            wallColor:      d.wallColor   || DEFAULT_WALL_COLOR,
+            // Ground size is odd-only (5, 7, 9, ... 25) so the ground
             // grows/shrinks one row around the perimeter at a time.
-            groundSize:  _snapOdd(d.groundSize ?? DEFAULT_GROUND_SIZE),
-            walls:       d.walls || DEFAULT_WALLS,
+            groundSize:     _snapOdd(d.groundSize ?? DEFAULT_GROUND_SIZE),
+            walls:          d.walls || DEFAULT_WALLS,
+            // Texture choices (stub for now — we just store the id;
+            // applying real textures comes later)
+            groundTexture:  d.groundTexture || DEFAULT_TEXTURE,
+            stageTexture:   d.stageTexture  || DEFAULT_TEXTURE,
+            wallTexture:    d.wallTexture   || DEFAULT_TEXTURE,
             // Future: skyTop/Mid/Bot, objects, fx, lighting
         };
+
+        // Texture options cache (loaded with palette in _buildScene)
+        this._textureOpts = null;
 
         this._activeTab = 'file';
 
@@ -158,8 +190,9 @@ export class EnvironmentBridge extends BaseBridge {
         // Clear the ground/grid/lights BaseBridge added so we can own them
         this._stripBaseSceneDefaults();
 
-        // Load the DB32 palette in parallel with scene setup
+        // Load the DB32 palette + texture options in parallel with setup
         const paletteP = loadPalette();
+        const texturesP = _loadTextureOpts();
 
         // Scene background — mid grey
         this._scene.background = new THREE.Color(0x5A5A5A);
@@ -227,8 +260,9 @@ export class EnvironmentBridge extends BaseBridge {
         });
         this._ro.observe(c);
 
-        // Wait for palette so the panel can render swatches on first paint
-        this._palette = await paletteP;
+        // Wait for palette + texture list so the panel renders fully
+        this._palette     = await paletteP;
+        this._textureOpts = await texturesP;
     }
 
     _stripBaseSceneDefaults() {
@@ -343,10 +377,10 @@ export class EnvironmentBridge extends BaseBridge {
         const half = STAGE_SIZE / 2;       // 2.5
         const t    = WALL_THICK;
         const matBack = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(this._state.stageColor), roughness: 0.85,
+            color: new THREE.Color(this._state.wallColor), roughness: 0.85,
         });
         const matLeft = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(this._state.stageColor), roughness: 0.85,
+            color: new THREE.Color(this._state.wallColor), roughness: 0.85,
         });
 
         // Back wall: full 5m wide along x, sits just outside the stage's -z edge
@@ -379,9 +413,20 @@ export class EnvironmentBridge extends BaseBridge {
     _applyStageColor(hex) {
         this._state.stageColor = hex;
         this._stageMesh?.material.color.set(hex);
-        // Walls share the stage color for now
+    }
+
+    _applyWallColor(hex) {
+        this._state.wallColor = hex;
         this._wallBack?.material.color.set(hex);
         this._wallLeft?.material.color.set(hex);
+    }
+
+    _applyTexture(field, id) {
+        if (field === 'groundTexture') this._state.groundTexture = id;
+        if (field === 'stageTexture')  this._state.stageTexture  = id;
+        if (field === 'wallTexture')   this._state.wallTexture   = id;
+        // Texture rendering is a stub for now — the chosen id is saved
+        // in state. Visual application will land in a future pass.
     }
 
     _applyGroundSize(n) {
@@ -436,11 +481,23 @@ export class EnvironmentBridge extends BaseBridge {
         if (state.stageColor && state.stageColor !== this._state.stageColor) {
             this._applyStageColor(state.stageColor);
         }
+        if (state.wallColor && state.wallColor !== this._state.wallColor) {
+            this._applyWallColor(state.wallColor);
+        }
         if (typeof state.groundSize === 'number' && state.groundSize !== this._state.groundSize) {
             this._applyGroundSize(state.groundSize);
         }
         if (state.walls && state.walls !== this._state.walls) {
             this._applyWalls(state.walls);
+        }
+        if (state.groundTexture && state.groundTexture !== this._state.groundTexture) {
+            this._applyTexture('groundTexture', state.groundTexture);
+        }
+        if (state.stageTexture && state.stageTexture !== this._state.stageTexture) {
+            this._applyTexture('stageTexture', state.stageTexture);
+        }
+        if (state.wallTexture && state.wallTexture !== this._state.wallTexture) {
+            this._applyTexture('wallTexture', state.wallTexture);
         }
         super._applyState(state);
     }
@@ -509,11 +566,20 @@ export class EnvironmentBridge extends BaseBridge {
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
                     style="background:${hex};" aria-label="Choose color"></button>`;
 
+        const textureSelect = (field, currentId) => {
+            const opts = this._textureOpts || [];
+            const optionsHtml = `<option value="none"${currentId === 'none' ? ' selected' : ''}>None</option>` +
+                opts.map(o =>
+                    `<option value="${o.id}"${currentId === o.id ? ' selected' : ''}>${_esc(o.name)}</option>`
+                ).join('');
+            return `<select class="cb-tex-select" data-tex-field="${field}">${optionsHtml}</select>`;
+        };
+
         // Default-position % for the size slider's faint default tick
         const defPos = ((DEFAULT_GROUND_SIZE - GROUND_SIZE_MIN) /
                         (GROUND_SIZE_MAX - GROUND_SIZE_MIN)) * 100;
 
-        const wallOpts = ['off', 'low', 'med', 'high'];
+        const wallOpts   = ['off', 'low', 'med', 'high'];
         const wallLabels = { off: 'Off', low: 'Low', med: 'Med', high: 'High' };
 
         return `
@@ -539,6 +605,13 @@ export class EnvironmentBridge extends BaseBridge {
             <div class="cb-card-tight-value" id="ground-color-val">${s.groundColor}</div>
           </div>
 
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Texture</div>
+            <div class="cb-card-tight-control">
+              ${textureSelect('groundTexture', s.groundTexture)}
+            </div>
+          </div>
+
           ${subtitle('Stage', 'stage')}
 
           <div class="cb-card-tight">
@@ -550,7 +623,16 @@ export class EnvironmentBridge extends BaseBridge {
           </div>
 
           <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Walls</div>
+            <div class="cb-card-tight-label">Texture</div>
+            <div class="cb-card-tight-control">
+              ${textureSelect('stageTexture', s.stageTexture)}
+            </div>
+          </div>
+
+          ${subtitle('Walls', 'walls')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Height</div>
             <div class="cb-card-tight-control">
               <div class="cb-segmented" id="walls-seg">
                 ${wallOpts.map(o => `
@@ -559,6 +641,21 @@ export class EnvironmentBridge extends BaseBridge {
               </div>
             </div>
             <div class="cb-card-tight-value">${WALL_HEIGHTS[s.walls] ? `${WALL_HEIGHTS[s.walls]}m` : '—'}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('wallColor', s.wallColor)}
+            </div>
+            <div class="cb-card-tight-value" id="wall-color-val">${s.wallColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Texture</div>
+            <div class="cb-card-tight-control">
+              ${textureSelect('wallTexture', s.wallTexture)}
+            </div>
           </div>
         `;
     }
@@ -630,10 +727,16 @@ export class EnvironmentBridge extends BaseBridge {
                 const field = trigger.dataset.colorField;
                 const current = field === 'groundColor' ? this._state.groundColor
                               : field === 'stageColor'  ? this._state.stageColor
+                              : field === 'wallColor'   ? this._state.wallColor
                               : '';
-                const titleMap = { groundColor: 'Ground Color', stageColor: 'Stage Color' };
+                const titleMap = {
+                    groundColor: 'Ground Color',
+                    stageColor:  'Stage Color',
+                    wallColor:   'Wall Color',
+                };
                 const valueElId = field === 'groundColor' ? '#ground-color-val'
                                 : field === 'stageColor'  ? '#stage-color-val'
+                                : field === 'wallColor'   ? '#wall-color-val'
                                 : null;
                 showColorPicker({
                     currentHex: current,
@@ -641,6 +744,7 @@ export class EnvironmentBridge extends BaseBridge {
                     onPick: (hex) => {
                         if (field === 'groundColor') this._applyGroundColor(hex);
                         if (field === 'stageColor')  this._applyStageColor(hex);
+                        if (field === 'wallColor')   this._applyWallColor(hex);
                         trigger.style.background = hex;
                         const valEl = valueElId ? panel.querySelector(valueElId) : null;
                         if (valEl) valEl.textContent = hex;
@@ -660,6 +764,15 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
+        // Texture dropdowns (stub for now — saves choice to state)
+        panel.querySelectorAll('.cb-tex-select').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                const field = sel.dataset.texField;
+                this._applyTexture(field, e.target.value);
+                this._scheduleAutoSave();
+            });
+        });
+
         // ── Surprise buttons ───────────────────────────────────
         panel.querySelectorAll('.cb-field-surprise').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -671,9 +784,14 @@ export class EnvironmentBridge extends BaseBridge {
 
     _onSurpriseField(key) {
         const pal = this._palette || [];
+        const tex = this._textureOpts || [];
         const randHex = () => pal.length ? pal[Math.floor(Math.random() * pal.length)].hex : null;
+        const randTex = () => {
+            // Roughly 50/50 None vs an actual texture
+            if (!tex.length || Math.random() < 0.5) return 'none';
+            return tex[Math.floor(Math.random() * tex.length)].id;
+        };
         const randSize = () => {
-            // Random odd value in [MIN..MAX]
             const span = (GROUND_SIZE_MAX - GROUND_SIZE_MIN) / 2 + 1;
             return GROUND_SIZE_MIN + 2 * Math.floor(Math.random() * span);
         };
@@ -682,14 +800,23 @@ export class EnvironmentBridge extends BaseBridge {
         if (key === 'groundPlane') {
             this._applyGroundSize(randSize());
             const c = randHex(); if (c) this._applyGroundColor(c);
+            this._applyTexture('groundTexture', randTex());
             this._renderPanel();
             this._scheduleAutoSave();
             return;
         }
         if (key === 'stage') {
             const c = randHex(); if (c) this._applyStageColor(c);
+            this._applyTexture('stageTexture', randTex());
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+        if (key === 'walls') {
             const opts = ['off', 'low', 'med', 'high'];
             this._applyWalls(opts[Math.floor(Math.random() * opts.length)]);
+            const c = randHex(); if (c) this._applyWallColor(c);
+            this._applyTexture('wallTexture', randTex());
             this._renderPanel();
             this._scheduleAutoSave();
             return;

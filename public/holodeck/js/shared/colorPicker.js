@@ -9,20 +9,26 @@
  *       onPick: (hex) => { ... },
  *   });
  *
- * Renders a centered modal over the current document with the DB32
- * palette. Clicking a swatch calls onPick(hex) and closes the modal.
- * ESC or clicking the backdrop also closes without picking.
+ * By default the modal overlays just the left panel (#left-panel)
+ * so the 3D viewport stays visible behind it. Pass `targetSelector`
+ * to overlay a different element. The modal repositions itself if
+ * the window is resized while open.
  */
 
 import { loadPalette } from './paletteLoader.js';
 
 let _currentInstance = null;
 
-export async function showColorPicker({ currentHex = '', title = 'Choose color', onPick = () => {} } = {}) {
-    // Only one modal at a time
+export async function showColorPicker({
+    currentHex = '',
+    title = 'Choose color',
+    onPick = () => {},
+    targetSelector = '#left-panel',
+} = {}) {
     if (_currentInstance) _currentInstance.close();
 
     const palette = await loadPalette();
+    const target = document.querySelector(targetSelector) || document.body;
 
     const backdrop = document.createElement('div');
     backdrop.className = 'color-picker-backdrop';
@@ -44,12 +50,27 @@ export async function showColorPicker({ currentHex = '', title = 'Choose color',
     `;
     document.body.appendChild(backdrop);
 
+    // Position the backdrop over the target element only (not full screen).
+    const place = () => {
+        const r = target.getBoundingClientRect();
+        backdrop.style.left   = r.left + 'px';
+        backdrop.style.top    = r.top + 'px';
+        backdrop.style.width  = r.width + 'px';
+        backdrop.style.height = r.height + 'px';
+    };
+    place();
+
+    // Reposition if the window resizes (e.g. orientation change on mobile).
+    const onResize = () => place();
+    window.addEventListener('resize', onResize);
+
     // Fade in
     requestAnimationFrame(() => backdrop.classList.add('visible'));
 
     const close = () => {
         backdrop.classList.remove('visible');
         document.removeEventListener('keydown', onKey);
+        window.removeEventListener('resize', onResize);
         setTimeout(() => backdrop.remove(), 150);
         _currentInstance = null;
     };
@@ -59,13 +80,11 @@ export async function showColorPicker({ currentHex = '', title = 'Choose color',
     };
     document.addEventListener('keydown', onKey);
 
-    // Close on backdrop click (but not card click)
     backdrop.addEventListener('click', (e) => {
         if (e.target === backdrop) close();
     });
     backdrop.querySelector('.color-picker-close').addEventListener('click', close);
 
-    // Pick a swatch
     backdrop.querySelectorAll('.color-picker-swatch').forEach(sw => {
         sw.addEventListener('click', () => {
             const hex = sw.dataset.hex;
