@@ -45,6 +45,9 @@ const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
 const DEFAULT_GROUND_SIZE  = 19;
 const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–8 = blocks
+const DEFAULT_WINDOW_STYLE = 'none'; // none | single | row | grid
+const DEFAULT_WINDOW_COLOR = '#8ec8f0'; // translucent pane tint (pale sky blue)
+const WINDOW_PANE_OPACITY  = 0.25;
 const DEFAULT_TEXTURE      = 'none';
 
 // Sky gradient defaults (top-to-bottom, subtle dusk)
@@ -236,6 +239,8 @@ export class EnvironmentBridge extends BaseBridge {
                             : typeof d.walls === 'string'
                             ? ({ off: 0, low: 1, med: 3, high: 5 }[d.walls] ?? 0)
                             : DEFAULT_WALL_HEIGHT,
+            windowStyle:    d.windowStyle || DEFAULT_WINDOW_STYLE,
+            windowColor:    d.windowColor || DEFAULT_WINDOW_COLOR,
             // Texture choices (stub for now — we just store the id;
             // applying real textures comes later)
             groundTexture:  d.groundTexture || DEFAULT_TEXTURE,
@@ -510,44 +515,167 @@ export class EnvironmentBridge extends BaseBridge {
     _buildWalls() {
         const half = STAGE_SIZE / 2;       // 2.5
         const t    = WALL_THICK;
-        const makeMat = () => new THREE.MeshStandardMaterial({
-            color: new THREE.Color(this._state.wallColor), roughness: 0.85,
-        });
 
-        // Back wall (−z edge): runs along x
-        const backGeo = new THREE.BoxGeometry(STAGE_SIZE + t, 1, t);
-        this._wallBack = new THREE.Mesh(backGeo, makeMat());
-        this._wallBack.position.set(0, 0.5, -half - t / 2);
-        this._wallBack.castShadow = true;
-        this._wallBack.receiveShadow = true;
+        // Each wall is a Group so we can rebuild its blocks when window style changes.
+        // Position the group at the wall's fixed edge; blocks are children.
+        this._wallBack  = new THREE.Group();
+        this._wallBack.position.set(0, 0, -half - t / 2);
         this._scene.add(this._wallBack);
 
-        // Front wall (+z edge): runs along x
-        const frontGeo = new THREE.BoxGeometry(STAGE_SIZE + t, 1, t);
-        this._wallFront = new THREE.Mesh(frontGeo, makeMat());
-        this._wallFront.position.set(0, 0.5, half + t / 2);
-        this._wallFront.castShadow = true;
-        this._wallFront.receiveShadow = true;
+        this._wallFront = new THREE.Group();
+        this._wallFront.position.set(0, 0, half + t / 2);
         this._scene.add(this._wallFront);
 
-        // Left wall (−x edge): runs along z
-        const leftGeo = new THREE.BoxGeometry(t, 1, STAGE_SIZE + t);
-        this._wallLeft = new THREE.Mesh(leftGeo, makeMat());
-        this._wallLeft.position.set(-half - t / 2, 0.5, 0);
-        this._wallLeft.castShadow = true;
-        this._wallLeft.receiveShadow = true;
+        this._wallLeft  = new THREE.Group();
+        this._wallLeft.position.set(-half - t / 2, 0, 0);
         this._scene.add(this._wallLeft);
 
-        // Right wall (+x edge): runs along z
-        const rightGeo = new THREE.BoxGeometry(t, 1, STAGE_SIZE + t);
-        this._wallRight = new THREE.Mesh(rightGeo, makeMat());
-        this._wallRight.position.set(half + t / 2, 0.5, 0);
-        this._wallRight.castShadow = true;
-        this._wallRight.receiveShadow = true;
+        this._wallRight = new THREE.Group();
+        this._wallRight.position.set(half + t / 2, 0, 0);
         this._scene.add(this._wallRight);
 
-        // Apply current state — sets visibility + height
+        // Build the block content and apply current state
+        this._rebuildWallBlocks();
         this._applyWalls(this._state.walls, /*skipState*/ true);
+    }
+
+    /**
+     * Window layout definitions.
+     * Each function returns a Set of "col,row" keys where windows go.
+     * col: 0..cols-1 (along wall length), row: 0..rows-1 (bottom to top).
+     */
+    _windowCells(cols, rows) {
+        const style = this._state.windowStyle || 'none';
+        const cells = new Set();
+        if (style === 'none' || rows < 2) return cells;
+
+        if (style === 'single') {
+            // One window centred, in the upper-middle area
+            const midC = Math.floor(cols / 2);
+            const midR = Math.floor(rows * 0.6);
+            cells.add(`${midC},${midR}`);
+            // Make it 2 wide if wall is wide enough
+            if (cols >= 3) cells.add(`${midC - 1},${midR}`);
+            if (cols >= 3 && rows >= 3) {
+                cells.add(`${midC},${midR - 1}`);
+                cells.add(`${midC - 1},${midR - 1}`);
+            }
+            return cells;
+        }
+
+        if (style === 'row') {
+            // Horizontal band of windows at ~60% height, skip edge columns
+            const bandR = Math.floor(rows * 0.6);
+            for (let c = 1; c < cols - 1; c++) {
+                cells.add(`${c},${bandR}`);
+            }
+            // Add a second row if wall is tall enough
+            if (rows >= 5 && bandR > 0) {
+                for (let c = 1; c < cols - 1; c++) {
+                    cells.add(`${c},${bandR - 1}`);
+                }
+            }
+            return cells;
+        }
+
+        if (style === 'grid') {
+            // Evenly spaced windows — skip bottom row and edge columns
+            const colStep = cols <= 4 ? 2 : 3;
+            const rowStep = rows <= 4 ? 2 : 3;
+            for (let c = 1; c < cols - 1; c += colStep) {
+                for (let r = 1; r < rows; r += rowStep) {
+                    cells.add(`${c},${r}`);
+                    // Make each window 2-wide if space allows
+                    if (c + 1 < cols - 1) cells.add(`${c + 1},${r}`);
+                }
+            }
+            return cells;
+        }
+
+        return cells;
+    }
+
+    /**
+     * Rebuild the block meshes inside each wall group.
+     * Called when window style, wall height, or wall colour changes.
+     */
+    _rebuildWallBlocks() {
+        const h     = this._state.walls || 0;
+        const rows  = h;          // 1 block = 1 row
+        const cols  = STAGE_SIZE; // 5 blocks wide (each 1m)
+        const t     = WALL_THICK;
+        const wallColor   = new THREE.Color(this._state.wallColor);
+        const windowColor = new THREE.Color(this._state.windowColor || DEFAULT_WINDOW_COLOR);
+
+        // Shared geometries (reused across all blocks)
+        const solidGeoH = new THREE.BoxGeometry(1, 1, t);      // horizontal wall (back/front)
+        const solidGeoV = new THREE.BoxGeometry(t, 1, 1);      // vertical wall (left/right)
+        const paneGeoH  = new THREE.BoxGeometry(0.85, 0.85, t * 0.3);
+        const paneGeoV  = new THREE.BoxGeometry(t * 0.3, 0.85, 0.85);
+        // Thin frame around window (same as wall colour)
+        const frameGeoH = new THREE.BoxGeometry(1, 1, t);
+        const frameGeoV = new THREE.BoxGeometry(t, 1, 1);
+
+        const wallMat = new THREE.MeshStandardMaterial({ color: wallColor, roughness: 0.85 });
+        const paneMat = new THREE.MeshStandardMaterial({
+            color: windowColor, roughness: 0.3, metalness: 0.1,
+            transparent: true, opacity: WINDOW_PANE_OPACITY,
+            side: THREE.DoubleSide,
+        });
+
+        const buildWall = (group, isVertical) => {
+            // Clear old children
+            while (group.children.length) {
+                const c = group.children[0];
+                c.geometry?.dispose?.();
+                // Materials are shared, don't dispose per-child
+                group.remove(c);
+            }
+            if (rows === 0) return;
+
+            const winCells = this._windowCells(cols, rows);
+
+            for (let c = 0; c < cols; c++) {
+                for (let r = 0; r < rows; r++) {
+                    const isWindow = winCells.has(`${c},${r}`);
+                    const posAlongWall = c - (cols - 1) / 2;  // centre the blocks
+                    const posY = r + 0.5;                      // bottom of first block at y=0
+
+                    if (isWindow) {
+                        // Translucent pane (slightly smaller than the block)
+                        const pane = new THREE.Mesh(
+                            isVertical ? paneGeoV.clone() : paneGeoH.clone(),
+                            paneMat
+                        );
+                        if (isVertical) {
+                            pane.position.set(0, posY, posAlongWall);
+                        } else {
+                            pane.position.set(posAlongWall, posY, 0);
+                        }
+                        group.add(pane);
+                    } else {
+                        // Solid wall block
+                        const block = new THREE.Mesh(
+                            isVertical ? solidGeoV.clone() : solidGeoH.clone(),
+                            wallMat
+                        );
+                        if (isVertical) {
+                            block.position.set(0, posY, posAlongWall);
+                        } else {
+                            block.position.set(posAlongWall, posY, 0);
+                        }
+                        block.castShadow = true;
+                        block.receiveShadow = true;
+                        group.add(block);
+                    }
+                }
+            }
+        };
+
+        buildWall(this._wallBack, false);
+        buildWall(this._wallFront, false);
+        buildWall(this._wallLeft, true);
+        buildWall(this._wallRight, true);
     }
 
     /**
@@ -1024,8 +1152,14 @@ export class EnvironmentBridge extends BaseBridge {
 
     _applyWallColor(hex) {
         this._state.wallColor = hex;
-        for (const w of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
-            w?.material.color.set(hex);
+        const color = new THREE.Color(hex);
+        for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
+            if (!wall) continue;
+            wall.traverse(child => {
+                if (child.material && !child.material.transparent) {
+                    child.material.color.copy(color);
+                }
+            });
         }
     }
 
@@ -1062,16 +1196,36 @@ export class EnvironmentBridge extends BaseBridge {
         const height = Math.max(0, Math.min(WALL_HEIGHT_MAX, Math.round(h)));
         if (!skipState) this._state.walls = height;
         this._wallsEnabled = height > 0;
+
+        // Rebuild wall blocks (the block count depends on height)
+        this._rebuildWallBlocks();
+
         for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
             if (!wall) continue;
             wall.visible = this._wallsEnabled;
-            if (this._wallsEnabled) {
-                wall.scale.y = height;
-                wall.position.y = height / 2;
-            }
         }
         // Run a single dynamic-cull pass so the camera-facing walls hide immediately
         if (this._wallsEnabled) this._cullWallsByCamera();
+    }
+
+    /** Update window style and rebuild walls. */
+    _applyWindowStyle(style) {
+        this._state.windowStyle = style;
+        this._rebuildWallBlocks();
+    }
+
+    /** Update window pane colour on existing panes. */
+    _applyWindowColor(hex) {
+        this._state.windowColor = hex;
+        const color = new THREE.Color(hex);
+        for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
+            if (!wall) continue;
+            wall.traverse(child => {
+                if (child.material?.transparent) {
+                    child.material.color.copy(color);
+                }
+            });
+        }
     }
 
     /**
@@ -1206,6 +1360,13 @@ export class EnvironmentBridge extends BaseBridge {
         }
         if (state.wallTexture && state.wallTexture !== this._state.wallTexture) {
             this._applyTexture('wallTexture', state.wallTexture);
+        }
+        // Windows
+        if (state.windowStyle && state.windowStyle !== this._state.windowStyle) {
+            this._applyWindowStyle(state.windowStyle);
+        }
+        if (state.windowColor && state.windowColor !== this._state.windowColor) {
+            this._applyWindowColor(state.windowColor);
         }
         // Sky gradient
         for (const f of ['skyTop', 'skyMid', 'skyBot']) {
@@ -1376,6 +1537,26 @@ export class EnvironmentBridge extends BaseBridge {
               ${textureSelect('wallTexture', s.wallTexture)}
             </div>
           </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Windows</div>
+            <div class="cb-card-tight-control">
+              <select id="window-style-select">
+                ${['none', 'single', 'row', 'grid'].map(v =>
+                    `<option value="${v}"${s.windowStyle === v ? ' selected' : ''}>${v[0].toUpperCase() + v.slice(1)}</option>`
+                ).join('')}
+              </select>
+            </div>
+          </div>
+
+          ${s.windowStyle !== 'none' ? `
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Pane</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('windowColor', s.windowColor)}
+            </div>
+            <div class="cb-card-tight-value" id="window-color-val">${s.windowColor}</div>
+          </div>` : ''}
 
           ${subtitle('Ground Objects', 'groundObjects')}
           ${this._renderGroundObjectSlots()}
@@ -1687,6 +1868,8 @@ export class EnvironmentBridge extends BaseBridge {
                            apply: (h) => this._applySkyColor('skyMid', h) },
             skyBot:      { title: 'Sky — Bottom',  valId: '#sky-bot-val',
                            apply: (h) => this._applySkyColor('skyBot', h) },
+            windowColor: { title: 'Window Pane',   valId: '#window-color-val',
+                           apply: (h) => this._applyWindowColor(h) },
         };
         panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
@@ -1717,6 +1900,16 @@ export class EnvironmentBridge extends BaseBridge {
                 if (valEl) valEl.textContent = h === 0 ? 'Off' : `${h} block${h > 1 ? 's' : ''}`;
             });
             wallSlider.addEventListener('change', () => {
+                this._scheduleAutoSave();
+            });
+        }
+
+        // Window style dropdown
+        const winSelect = panel.querySelector('#window-style-select');
+        if (winSelect) {
+            winSelect.addEventListener('change', () => {
+                this._applyWindowStyle(winSelect.value);
+                this._renderPanel();          // show/hide pane colour picker
                 this._scheduleAutoSave();
             });
         }
@@ -1954,6 +2147,10 @@ export class EnvironmentBridge extends BaseBridge {
             this._applyWalls(Math.floor(Math.random() * (WALL_HEIGHT_MAX + 1)));
             const c = randHex(); if (c) this._applyWallColor(c);
             this._applyTexture('wallTexture', randTex());
+            // Randomise window style + pane colour
+            const winStyles = ['none', 'none', 'single', 'row', 'grid']; // bias toward none
+            this._applyWindowStyle(winStyles[Math.floor(Math.random() * winStyles.length)]);
+            const wc = randHex(); if (wc) this._applyWindowColor(wc);
             this._renderPanel();
             this._scheduleAutoSave();
             return;
