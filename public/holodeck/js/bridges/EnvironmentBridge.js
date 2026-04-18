@@ -52,6 +52,9 @@ const DEFAULT_SKY_TOP = '#222034';   // DB32 deep navy
 const DEFAULT_SKY_MID = '#394b5a';   // muted blue-grey
 const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 
+// Stage item cap
+const MAX_STAGE_ITEMS = 5;
+
 // Wall heights (meters)
 const WALL_HEIGHTS = { off: 0, low: 1, med: 3, high: 5 };
 const WALL_THICK   = 0.25;
@@ -141,17 +144,33 @@ const _snapOdd = (n) => {
     return v;
 };
 
-// ── Row-major numbering for the 5×5 stage grid ─────────────────
-// Squares 1–5 = back row (−z, left to right), 6–10 = second row, …,
-// 21–25 = front row (+z, closest to default camera).
-function _squareCenter(n) {
-    if (n < 1 || n > 25) return null;
-    const idx = n - 1;
-    const col = idx % 5;
-    const row = Math.floor(idx / 5);
-    // col/row 0–4 → world x/z −2..+2  (centre of each 1×1 cell)
+// ── BINGO grid for the 5×5 stage ────────────────────────────────
+// Columns B-I-N-G-O (left to right, −x → +x).
+// Rows 1–5 (back to front, −z → +z toward the camera).
+//   B1 = back-left (wall corner)   O1 = back-right
+//   B5 = front-left                O5 = front-right (nearest camera)
+//   N3 = dead centre
+const BINGO_COLS = 'BINGO';
+
+/** Return a cell label like "N3" for a (col, row) pair. */
+function _cellLabel(col, row) {
+    return BINGO_COLS[col] + (row + 1);
+}
+
+/** Parse a BINGO cell label → world-space {x, z} centre, or null. */
+function _cellToWorld(cell) {
+    if (!cell || cell.length < 2) return null;
+    const col = BINGO_COLS.indexOf(cell[0].toUpperCase());
+    const row = parseInt(cell.slice(1), 10) - 1;
+    if (col < 0 || row < 0 || row > 4) return null;
     return { x: col - 2, z: row - 2 };
 }
+
+/** All 25 cell labels in row-major order. */
+const ALL_CELLS = [];
+for (let r = 0; r < 5; r++)
+    for (let c = 0; c < 5; c++)
+        ALL_CELLS.push(_cellLabel(c, r));
 
 // DICE_ICON / renderFieldHead / renderFileTab live in shared/builderUI.js
 
@@ -183,9 +202,9 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Stage items — array of { type, square }
             stageItems:     d.stageItems || [
-                { type: 'greybox', square: 4  },
-                { type: 'greybox', square: 12 },
-                { type: 'greybox', square: 14 },
+                { type: 'greybox', cell: 'G1' },
+                { type: 'greybox', cell: 'I3' },
+                { type: 'greybox', cell: 'G3' },
             ],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
@@ -500,28 +519,30 @@ export class EnvironmentBridge extends BaseBridge {
      * by _SQUARE_MAP so artists can reference positions by number.
      */
     _buildGridNumbers() {
-        for (let n = 1; n <= 25; n++) {
-            const pos = _squareCenter(n);
-            if (!pos) continue;
+        for (let r = 0; r < 5; r++) {
+            for (let c = 0; c < 5; c++) {
+                const label = _cellLabel(c, r);
+                const pos   = _cellToWorld(label);
+                if (!pos) continue;
 
-            // Draw the number onto a small canvas
-            const canvas  = document.createElement('canvas');
-            canvas.width  = 64;
-            canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle    = 'rgba(255, 255, 255, 0.35)';
-            ctx.font         = 'bold 38px sans-serif';
-            ctx.textAlign    = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(String(n), 32, 32);
+                const canvas  = document.createElement('canvas');
+                canvas.width  = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle    = 'rgba(255, 255, 255, 0.35)';
+                ctx.font         = 'bold 28px sans-serif';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, 32, 32);
 
-            const tex    = new THREE.CanvasTexture(canvas);
-            const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
-            const sprite = new THREE.Sprite(mat);
-            sprite.position.set(pos.x, 0.06, pos.z);
-            sprite.scale.set(0.12, 0.12, 1);  // small reference labels
-            this._scene.add(sprite);
-            this._gridNumbers.push(sprite);
+                const tex    = new THREE.CanvasTexture(canvas);
+                const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+                const sprite = new THREE.Sprite(mat);
+                sprite.position.set(pos.x, 0.06, pos.z);
+                sprite.scale.set(0.18, 0.18, 1);  // small reference labels
+                this._scene.add(sprite);
+                this._gridNumbers.push(sprite);
+            }
         }
     }
 
@@ -532,7 +553,7 @@ export class EnvironmentBridge extends BaseBridge {
     _buildStageItems() {
         this._clearStageItems();
         for (const item of this._state.stageItems) {
-            const pos = _squareCenter(item.square);
+            const pos = _cellToWorld(item.cell);
             if (!pos) continue;
             if (item.type === 'greybox') {
                 const group = this._makeGreyboxCharacter();
@@ -1074,7 +1095,7 @@ export class EnvironmentBridge extends BaseBridge {
                </p>`
             : items.map((item, i) => `
                 <div class="cb-card-tight">
-                    <div class="cb-card-tight-label">Sq ${item.square}</div>
+                    <div class="cb-card-tight-label">${_esc(item.cell || '?')}</div>
                     <div class="cb-card-tight-control" style="font-size:0.8rem; color:var(--text-dim);">
                         ${item.type === 'greybox' ? 'Character placeholder' : _esc(item.type)}
                     </div>
@@ -1300,15 +1321,15 @@ export class EnvironmentBridge extends BaseBridge {
             return;
         }
         if (key === 'stageItems') {
-            // Random 1–5 greybox characters on random squares
-            const count = 1 + Math.floor(Math.random() * 5);
-            const usedSquares = new Set();
+            // Random 1–MAX_STAGE_ITEMS greybox characters on random cells
+            const count = 1 + Math.floor(Math.random() * MAX_STAGE_ITEMS);
+            const usedCells = new Set();
             const items = [];
-            while (items.length < count && usedSquares.size < 25) {
-                const sq = 1 + Math.floor(Math.random() * 25);
-                if (usedSquares.has(sq)) continue;
-                usedSquares.add(sq);
-                items.push({ type: 'greybox', square: sq });
+            while (items.length < count && usedCells.size < 25) {
+                const cell = ALL_CELLS[Math.floor(Math.random() * 25)];
+                if (usedCells.has(cell)) continue;
+                usedCells.add(cell);
+                items.push({ type: 'greybox', cell });
             }
             this._state.stageItems = items;
             this._buildStageItems();
