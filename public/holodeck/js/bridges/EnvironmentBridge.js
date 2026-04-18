@@ -133,7 +133,8 @@ const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
 
 // Stage set-dressing constants
 const SET_DRESSING_SLOTS = 5;
-const SET_DRESSING_HEIGHT_CAP = 1.15;   // max height in world units (just below character eye level)
+const SET_DRESSING_HEIGHT_CAP = 0.6;    // max height in world units (~waist height, won't block cast faces)
+const GROUND_OBJ_HEIGHT_CAP  = 1.5;    // max height for ground plane objects
 const _STAGE_SCATTER_COUNTS = { low: 3, med: 6, high: 10 };
 const _STAGE_TILE_SPACING   = { low: 2.0, med: 1.4, high: 1.0 };
 
@@ -1020,9 +1021,14 @@ export class EnvironmentBridge extends BaseBridge {
                 clone.rotation.y = pt.rotY;
 
                 // Scale: scatter gets ±30% random variation, tile is uniform
-                const s = isScatter
+                const templateH = template.userData._templateHeight || 1;
+                let s = isScatter
                     ? baseScale * (0.7 + Math.random() * 0.6)
                     : baseScale;
+                // Height-cap: scale down if it would exceed the ground object cap
+                if (templateH * s > GROUND_OBJ_HEIGHT_CAP) {
+                    s = GROUND_OBJ_HEIGHT_CAP / templateH;
+                }
                 clone.scale.set(s, s, s);
 
                 // Store actual world height for dynamic camera culling
@@ -1595,7 +1601,7 @@ export class EnvironmentBridge extends BaseBridge {
                 <div class="cb-gobj-row">
                   <span class="cb-gobj-scale-label">Scale ${scaleLabel}</span>
                   <input type="range" class="cb-gobj-scale" data-slot="${i}"
-                         min="0.2" max="3.0" step="0.1" value="${scaleVal}">
+                         min="0.2" max="2.0" step="0.1" value="${scaleVal}">
                 </div>` : '';
 
             return `
@@ -1797,7 +1803,7 @@ export class EnvironmentBridge extends BaseBridge {
                     <div class="cb-gobj-row">
                       <span class="cb-gobj-scale-label">Scale ${scaleLabel}</span>
                       <input type="range" class="cb-sdress-scale" data-slot="${i}"
-                             min="0.2" max="3.0" step="0.1" value="${scaleVal}">
+                             min="0.2" max="2.0" step="0.1" value="${scaleVal}">
                     </div>`;
 
                 controlsHtml = modeRow + cellRow + densityRow + scaleRow;
@@ -2172,7 +2178,7 @@ export class EnvironmentBridge extends BaseBridge {
                 assetId:  objs[Math.floor(Math.random() * objs.length)].id,
                 mode:     modes[Math.floor(Math.random() * modes.length)],
                 density:  dens[Math.floor(Math.random() * dens.length)],
-                scale:    +(0.4 + Math.random() * 2.2).toFixed(1),  // 0.4–2.6
+                scale:    +(0.3 + Math.random() * 1.4).toFixed(1),  // 0.3–1.7
             }));
             this._rebuildGroundObjects();
             this._renderPanel();
@@ -2215,7 +2221,7 @@ export class EnvironmentBridge extends BaseBridge {
                     assetId: objs[Math.floor(Math.random() * objs.length)].id,
                     mode,
                     cell,
-                    scale: +(0.3 + Math.random() * 1.5).toFixed(1),
+                    scale: +(0.3 + Math.random() * 1.0).toFixed(1),  // 0.3–1.3
                     density: dens[Math.floor(Math.random() * dens.length)],
                 };
             });
