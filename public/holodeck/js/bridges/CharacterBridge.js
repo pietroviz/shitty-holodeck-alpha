@@ -1062,6 +1062,78 @@ export class CharacterBridge extends BaseBridge {
         this._state = { ...state };
         this._rebuild();
     }
+
+    /* ── Surprise — randomise the entire character ── */
+
+    async surpriseAll() {
+        const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        const pickKey = (obj) => pick(Object.keys(obj));
+
+        // Load palette for random colours
+        if (!this._palette) this._palette = await loadPalette();
+        const pal = this._palette || [];
+        const randHex = () => pal.length
+            ? pal[Math.floor(Math.random() * pal.length)].hex
+            : '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+
+        // Body shape + size
+        this._state.bodyShape      = pick(BODY_SHAPE_OPTIONS).key;
+        this._state.heightPreset   = pickKey(BODY_HEIGHT_PRESETS);
+        this._state.widthPreset    = pickKey(BODY_WIDTH_PRESETS);
+
+        // Head shape + size
+        this._state.headShape      = pick(HEAD_SHAPE_OPTIONS).key;
+        this._state.headHeightPreset = pickKey(HEAD_HEIGHT_PRESETS);
+        this._state.headWidthPreset  = pickKey(HEAD_WIDTH_PRESETS);
+
+        // Face placement
+        this._state.facePlacement  = pickKey(FACE_PLACEMENT_PRESETS);
+
+        // Colours (all from DB32 palette)
+        this._state.scalpColor     = randHex();
+        this._state.skinColor      = randHex();
+        this._state.torsoColor     = randHex();
+        this._state.bottomColor    = randHex();
+        this._state.eyeIrisColor   = randHex();
+        this._state.lipColor       = Math.random() < 0.5 ? randHex() : null;
+
+        // Eye shape
+        this._state.eyeShape       = pickKey(EYE_SHAPES);
+
+        // Eyelashes + eyebrows (50% chance of each)
+        this._state.eyelashStyle   = Math.random() < 0.5 ? pickKey(EYELASH_STYLES) : 'none';
+        this._state.eyelashColor   = randHex();
+        this._state.eyebrowStyle   = Math.random() < 0.6 ? pickKey(EYEBROW_STYLES) : 'none';
+        this._state.eyebrowColor   = randHex();
+
+        // Hair (60% chance)
+        this._state.hairStyle      = Math.random() < 0.6 ? pickKey(HAIR_STYLES) : 'none';
+        this._state.hairColor      = randHex();
+
+        // Hat (30% chance)
+        this._state.hatStyle       = Math.random() < 0.3 ? pickKey(HAT_STYLES) : 'none';
+        this._state.hatColor       = randHex();
+
+        // Glasses (25% chance)
+        this._state.glassesStyle   = Math.random() < 0.25 ? pickKey(GLASSES_STYLES) : 'none';
+        this._state.glassesColor   = randHex();
+
+        // Facial hair (20% chance)
+        this._state.facialHairStyle = Math.random() < 0.2 ? pickKey(FACIAL_HAIR_STYLES) : 'none';
+        this._state.facialHairColor = randHex();
+
+        // Voice preset
+        this._state.voicePreset    = pickKey(VOICE_PRESETS);
+
+        // Animation preset (pick from loaded names, or keep default)
+        if (this._animNames?.length) {
+            this._state.animPreset = pick(this._animNames);
+        }
+
+        // Full rebuild + re-render
+        await this._rebuild();
+        this._scheduleAutoSave();
+    }
 }
 
 /* ═══════════════════════════════════════════════════════
