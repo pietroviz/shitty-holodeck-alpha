@@ -1372,6 +1372,58 @@ svg    { display: block; flex-shrink: 0; }
     flex: 1;
 }
 
+/* ── Cast Placement cards ────────────────────────── */
+.cb-cast-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 2px;
+    min-height: 34px;
+}
+.cb-cast-chip {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+.cb-cast-label {
+    font-size: 0.8rem;
+}
+.cb-cast-pos {
+    display: flex;
+    gap: 3px;
+}
+.cb-cast-pos select {
+    font-size: 0.75rem;
+    padding: 1px 2px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+.cb-cast-facing-wrap {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.cb-cast-facing-wrap select {
+    font-size: 0.75rem;
+    padding: 1px 2px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: inherit;
+    max-width: 80px;
+}
+
 /* ══════════════════════════════════════════════════════
    Shared color picker modal (used by any bridge)
    Sized + positioned in JS to overlay only the target

@@ -52,8 +52,15 @@ const DEFAULT_SKY_TOP = '#222034';   // DB32 deep navy
 const DEFAULT_SKY_MID = '#394b5a';   // muted blue-grey
 const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 
-// Stage item cap
-const MAX_STAGE_ITEMS = 5;
+// Cast — always 5 fixed slots, each with an assigned colour
+const CAST_SLOT_COUNT  = 5;
+const CAST_COLORS = [
+    '#e04040',   // slot 1 — red
+    '#40a0e0',   // slot 2 — blue
+    '#50c878',   // slot 3 — green
+    '#e0a020',   // slot 4 — amber
+    '#b060d0',   // slot 5 — purple
+];
 
 // Wall height range (blocks, 1 block = 1 meter)
 const WALL_HEIGHT_MIN = 0;
@@ -232,14 +239,16 @@ export class EnvironmentBridge extends BaseBridge {
             skyTop:         d.skyTop || DEFAULT_SKY_TOP,
             skyMid:         d.skyMid || DEFAULT_SKY_MID,
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
-            // Stage items — array of { type, square }
-            stageItems:     d.stageItems || [
-                { type: 'greybox', cell: 'G2', facing: 'camera' },
-                { type: 'greybox', cell: 'G3', facing: 'camera' },
-                { type: 'greybox', cell: 'N2', facing: 'camera' },
-                { type: 'greybox', cell: 'I2', facing: 'camera' },
-                { type: 'greybox', cell: 'G4', facing: 'camera' },
+            // Cast — always 5 slots; cell=null means empty
+            cast: d.cast || [
+                { cell: 'G2', facing: 'camera' },
+                { cell: 'G3', facing: 'camera' },
+                { cell: 'N2', facing: 'camera' },
+                { cell: 'I2', facing: 'camera' },
+                { cell: 'G4', facing: 'camera' },
             ],
+            // Stage items — set dressing objects on the stage
+            stageItems: d.stageItems || [],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
                 { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
@@ -610,37 +619,36 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Build the 3D meshes for every item in state.stageItems.
-     * Currently only supports type 'greybox' (placeholder character).
+     * Build the 3D meshes for every cast slot that has a cell assigned.
+     * Each slot gets its assigned colour as a subtle tint on the mesh.
      */
     _buildStageItems() {
         this._clearStageItems();
-        // Default camera position for 'camera' facing
         const camX = 5.2, camZ = 5.2;
 
-        for (const item of this._state.stageItems) {
-            const pos = _cellToWorld(item.cell);
+        for (let i = 0; i < CAST_SLOT_COUNT; i++) {
+            const slot = this._state.cast[i];
+            if (!slot || !slot.cell) continue;
+            const pos = _cellToWorld(slot.cell);
             if (!pos) continue;
-            if (item.type === 'greybox') {
-                const group = this._makeGreyboxCharacter();
-                group.position.set(pos.x, 0, pos.z);
 
-                // Apply facing rotation
-                const facing = item.facing || 'camera';
-                if (facing === 'camera') {
-                    // Face toward the default camera position
-                    group.rotation.y = Math.atan2(camX - pos.x, camZ - pos.z);
-                } else {
-                    // Face toward a specific cell
-                    const target = _cellToWorld(facing);
-                    if (target) {
-                        group.rotation.y = Math.atan2(target.x - pos.x, target.z - pos.z);
-                    }
+            const color = CAST_COLORS[i] || '#888888';
+            const group = this._makeGreyboxCharacter(color);
+            group.position.set(pos.x, 0, pos.z);
+
+            // Apply facing rotation
+            const facing = slot.facing || 'camera';
+            if (facing === 'camera') {
+                group.rotation.y = Math.atan2(camX - pos.x, camZ - pos.z);
+            } else {
+                const target = _cellToWorld(facing);
+                if (target) {
+                    group.rotation.y = Math.atan2(target.x - pos.x, target.z - pos.z);
                 }
-
-                this._scene.add(group);
-                this._stageItemMeshes.push(group);
             }
+
+            this._scene.add(group);
+            this._stageItemMeshes.push(group);
         }
     }
 
@@ -660,12 +668,17 @@ export class EnvironmentBridge extends BaseBridge {
      * Create a greybox placeholder character: rounded-box body + head,
      * proportions loosely matching the character builder.
      */
-    _makeGreyboxCharacter() {
+    _makeGreyboxCharacter(slotColor) {
+        // Subtle tint: blend the slot colour with grey at ~30% strength
+        const baseGrey = new THREE.Color(0x888888);
+        const tint     = new THREE.Color(slotColor || '#888888');
+        const blended  = baseGrey.clone().lerp(tint, 0.3);
         const grey = new THREE.MeshStandardMaterial({
-            color: 0x888888, roughness: 0.85, metalness: 0,
+            color: blended, roughness: 0.85, metalness: 0,
         });
+        const noseTint = baseGrey.clone().lerp(tint, 0.5);
         const noseMat = new THREE.MeshStandardMaterial({
-            color: 0xaaaaaa, roughness: 0.7, metalness: 0,
+            color: noseTint, roughness: 0.7, metalness: 0,
         });
 
         // Body — roughly 0.4 wide × 0.65 tall × 0.25 deep
@@ -1053,9 +1066,20 @@ export class EnvironmentBridge extends BaseBridge {
                 this._applySkyColor(f, state[f]);
             }
         }
-        // Stage items
-        if (Array.isArray(state.stageItems)) {
-            this._state.stageItems = state.stageItems;
+        // Cast placement
+        if (Array.isArray(state.cast)) {
+            this._state.cast = state.cast;
+            this._buildStageItems();
+        }
+        // Legacy stageItems → cast migration
+        if (Array.isArray(state.stageItems) && !Array.isArray(state.cast)) {
+            // Convert old variable-length stageItems to fixed 5-slot cast
+            const cast = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
+                const old = state.stageItems[i];
+                return old ? { cell: old.cell || null, facing: old.facing || 'camera' }
+                           : { cell: null, facing: 'camera' };
+            });
+            this._state.cast = cast;
             this._buildStageItems();
         }
         // Ground objects
@@ -1291,29 +1315,88 @@ export class EnvironmentBridge extends BaseBridge {
 
     // ── Stage tab ────────────────────────────────────────────────
     _renderStageTab() {
-        const items = this._state.stageItems || [];
+        const cast = this._state.cast || [];
         const subtitle = renderSubtitle;
 
-        const itemCards = items.length === 0
-            ? `<p style="color:var(--text-dim); text-align:center; padding:16px 0;">
-                   No items placed yet.
-               </p>`
-            : items.map((item, i) => `
-                <div class="cb-card-tight">
-                    <div class="cb-card-tight-label">${_esc(item.cell || '?')}</div>
-                    <div class="cb-card-tight-control" style="font-size:0.8rem; color:var(--text-dim);">
-                        Facing: ${_esc(item.facing || 'camera')}
-                    </div>
-                    <div class="cb-card-tight-value">
-                        <button type="button" class="cb-stage-remove" data-idx="${i}"
-                                style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem;"
-                                aria-label="Remove">&times;</button>
-                    </div>
-                </div>`).join('');
+        // ── Facing options for the dropdown
+        const facingOpts = [
+            { value: 'camera', label: 'Camera' },
+            ...ALL_CELLS.map(c => ({ value: c, label: c })),
+        ];
+
+        // ── Cast Placement cards (always 5 slots)
+        const castCards = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
+            const slot  = cast[i] || {};
+            const color = CAST_COLORS[i];
+            const empty = !slot.cell;
+            const facing = slot.facing || 'camera';
+
+            if (empty) {
+                return `
+                <div class="cb-cast-card" data-slot="${i}">
+                    <span class="cb-cast-chip" style="background:${color};"></span>
+                    <span class="cb-cast-label" style="color:var(--text-dim);">Slot ${i + 1} — empty</span>
+                    <button type="button" class="cb-cast-add" data-slot="${i}"
+                            style="margin-left:auto; background:none; border:1px solid var(--text-dim);
+                            color:var(--text-dim); border-radius:4px; padding:2px 8px; cursor:pointer;
+                            font-size:0.75rem; font-family:inherit;">+ Add</button>
+                </div>`;
+            }
+
+            const facingSelect = `<select class="cb-cast-facing" data-slot="${i}"
+                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                font-family:inherit; max-width:80px;">
+                ${facingOpts.map(o =>
+                    `<option value="${o.value}"${facing === o.value ? ' selected' : ''}>${o.label}</option>`
+                ).join('')}
+            </select>`;
+
+            // Row letter + column number selectors
+            const curLetter = slot.cell ? slot.cell[0].toUpperCase() : 'N';
+            const curNum    = slot.cell ? slot.cell.slice(1) : '3';
+
+            const letterSelect = `<select class="cb-cast-letter" data-slot="${i}"
+                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                font-family:inherit; width:38px;">
+                ${'BINGO'.split('').map(l =>
+                    `<option value="${l}"${curLetter === l ? ' selected' : ''}>${l}</option>`
+                ).join('')}
+            </select>`;
+
+            const numSelect = `<select class="cb-cast-num" data-slot="${i}"
+                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                font-family:inherit; width:38px;">
+                ${[1,2,3,4,5].map(n =>
+                    `<option value="${n}"${curNum === String(n) ? ' selected' : ''}>${n}</option>`
+                ).join('')}
+            </select>`;
+
+            return `
+                <div class="cb-cast-card" data-slot="${i}">
+                    <span class="cb-cast-chip" style="background:${color};"></span>
+                    <span class="cb-cast-pos">${letterSelect}${numSelect}</span>
+                    <span class="cb-cast-facing-wrap">→ ${facingSelect}</span>
+                    <button type="button" class="cb-cast-remove" data-slot="${i}"
+                            style="margin-left:auto; background:none; border:none; color:var(--text-dim);
+                            cursor:pointer; font-size:1rem;" aria-label="Remove">&times;</button>
+                </div>`;
+        }).join('');
+
+        // ── Stage Items (set dressing) — coming soon stub for now
+        const stageItemsHtml = `
+            <p style="color:var(--text-dim); text-align:center; padding:12px 0; font-size:0.8rem;">
+                Set dressing controls coming soon.
+            </p>`;
 
         return `
+          ${subtitle('Cast Placement', 'cast')}
+          ${castCards}
+
           ${subtitle('Stage Items', 'stageItems')}
-          ${itemCards}
+          ${stageItemsHtml}
         `;
     }
 
@@ -1456,13 +1539,66 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // ── Stage tab: remove item buttons ─────────────────────
-        panel.querySelectorAll('.cb-stage-remove').forEach(btn => {
+        // ── Cast Placement controls ─────────────────────────────
+        // Position: letter (row) dropdown
+        panel.querySelectorAll('.cb-cast-letter').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                const slot = this._state.cast[i];
+                if (!slot || !slot.cell) return;
+                const num = slot.cell.slice(1);
+                slot.cell = sel.value + num;
+                this._buildStageItems();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        // Position: number (column) dropdown
+        panel.querySelectorAll('.cb-cast-num').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                const slot = this._state.cast[i];
+                if (!slot || !slot.cell) return;
+                const letter = slot.cell[0].toUpperCase();
+                slot.cell = letter + sel.value;
+                this._buildStageItems();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        // Facing dropdown
+        panel.querySelectorAll('.cb-cast-facing').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                const slot = this._state.cast[i];
+                if (!slot) return;
+                slot.facing = sel.value;
+                this._buildStageItems();
+                this._scheduleAutoSave();
+            });
+        });
+        // Remove button (empties the slot, keeps it visible)
+        panel.querySelectorAll('.cb-cast-remove').forEach(btn => {
             btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx, 10);
-                if (isNaN(idx)) return;
-                this._state.stageItems.splice(idx, 1);
-                this._buildStageItems();       // rebuild 3D meshes
+                const i = parseInt(btn.dataset.slot, 10);
+                this._state.cast[i] = { cell: null, facing: 'camera' };
+                this._buildStageItems();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        // Add button (fills an empty slot with centre cell)
+        panel.querySelectorAll('.cb-cast-add').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.slot, 10);
+                // Find a cell not already taken
+                const used = new Set(this._state.cast.filter(s => s?.cell).map(s => s.cell));
+                let cell = 'N3';
+                if (used.has(cell)) {
+                    cell = ALL_CELLS.find(c => !used.has(c)) || 'N3';
+                }
+                this._state.cast[i] = { cell, facing: 'camera' };
+                this._buildStageItems();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
@@ -1543,18 +1679,21 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
             return;
         }
-        if (key === 'stageItems') {
-            // Random 1–MAX_STAGE_ITEMS greybox characters on random cells
-            const count = 1 + Math.floor(Math.random() * MAX_STAGE_ITEMS);
+        if (key === 'cast') {
+            // Randomise 1–5 cast slots on random cells, rest empty
+            const count = 1 + Math.floor(Math.random() * CAST_SLOT_COUNT);
             const usedCells = new Set();
-            const items = [];
-            while (items.length < count && usedCells.size < 25) {
-                const cell = ALL_CELLS[Math.floor(Math.random() * 25)];
-                if (usedCells.has(cell)) continue;
+            const facingOpts = ['camera', ...ALL_CELLS];
+            const cast = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
+                if (i >= count) return { cell: null, facing: 'camera' };
+                let cell;
+                do { cell = ALL_CELLS[Math.floor(Math.random() * 25)]; }
+                while (usedCells.has(cell));
                 usedCells.add(cell);
-                items.push({ type: 'greybox', cell, facing: 'camera' });
-            }
-            this._state.stageItems = items;
+                const facing = facingOpts[Math.floor(Math.random() * facingOpts.length)];
+                return { cell, facing };
+            });
+            this._state.cast = cast;
             this._buildStageItems();
             this._renderPanel();
             this._scheduleAutoSave();
@@ -1571,7 +1710,7 @@ export class EnvironmentBridge extends BaseBridge {
      */
     surpriseAll() {
         // Hit every section-level randomiser in one go
-        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'stageItems']) {
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast']) {
             this._onSurpriseField(key);
         }
         // _onSurpriseField already calls _renderPanel + _scheduleAutoSave
