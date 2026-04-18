@@ -244,14 +244,17 @@ export class EnvironmentBridge extends BaseBridge {
         this._perimMat    = null;
         this._perimLine   = null;
         this._stageInner  = [];
-        this._wallBack    = null;     // back wall (along -z edge of stage)
-        this._wallLeft    = null;     // left wall (along -x edge of stage)
+        this._wallBack    = null;     // back wall  (−z edge of stage)
+        this._wallLeft    = null;     // left wall  (−x edge of stage)
+        this._wallRight   = null;     // right wall (+x edge of stage)
+        this._wallFront   = null;     // front wall (+z edge of stage)
         this._skyCanvas   = null;     // off-screen canvas for gradient
         this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
         this._gridNumbers = [];       // sprites for square number labels
         this._stageItemMeshes = [];   // greybox character groups
         this._groundObjMeshes = [];   // scattered/tiled ground objects
         this._objectList  = null;     // loaded object catalog
+        this._wallsEnabled = false;   // true when walls height > 0
         this._extraLights = [];
 
         // Viewport interaction (matches browse preview)
@@ -319,8 +322,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._buildStagePerimeter();
         this._buildStageInnerGrid();
 
-        // Two back-corner walls (only the back & left edges, away from
-        // default camera). Visible only when state.walls != 'off'.
+        // Four walls around the stage perimeter. Dynamic culling in
+        // _onTick hides walls that face the camera.
         this._buildWalls();
 
         // Stage grid number labels (1–25 in diamond order)
@@ -464,35 +467,48 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Build the two back-corner walls (back edge along -z, left edge
-     * along -x). Both walls are 0.25m thick. Their visible height is
-     * driven by state.walls ('off' | 'low' | 'med' | 'high').
+     * Build four walls around the stage perimeter.  Each wall is a thin
+     * BoxGeometry slab.  Dynamic camera-based culling in _onTick hides
+     * whichever walls face the viewer so the stage is always visible.
      */
     _buildWalls() {
         const half = STAGE_SIZE / 2;       // 2.5
         const t    = WALL_THICK;
-        const matBack = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(this._state.wallColor), roughness: 0.85,
-        });
-        const matLeft = new THREE.MeshStandardMaterial({
+        const makeMat = () => new THREE.MeshStandardMaterial({
             color: new THREE.Color(this._state.wallColor), roughness: 0.85,
         });
 
-        // Back wall: full 5m wide along x, sits just outside the stage's -z edge
+        // Back wall (−z edge): runs along x
         const backGeo = new THREE.BoxGeometry(STAGE_SIZE + t, 1, t);
-        this._wallBack = new THREE.Mesh(backGeo, matBack);
-        this._wallBack.position.set(-t / 2, 0.5, -half - t / 2);
+        this._wallBack = new THREE.Mesh(backGeo, makeMat());
+        this._wallBack.position.set(0, 0.5, -half - t / 2);
         this._wallBack.castShadow = true;
         this._wallBack.receiveShadow = true;
         this._scene.add(this._wallBack);
 
-        // Left wall: full 5m deep along z, sits just outside the stage's -x edge
+        // Front wall (+z edge): runs along x
+        const frontGeo = new THREE.BoxGeometry(STAGE_SIZE + t, 1, t);
+        this._wallFront = new THREE.Mesh(frontGeo, makeMat());
+        this._wallFront.position.set(0, 0.5, half + t / 2);
+        this._wallFront.castShadow = true;
+        this._wallFront.receiveShadow = true;
+        this._scene.add(this._wallFront);
+
+        // Left wall (−x edge): runs along z
         const leftGeo = new THREE.BoxGeometry(t, 1, STAGE_SIZE + t);
-        this._wallLeft = new THREE.Mesh(leftGeo, matLeft);
-        this._wallLeft.position.set(-half - t / 2, 0.5, -t / 2);
+        this._wallLeft = new THREE.Mesh(leftGeo, makeMat());
+        this._wallLeft.position.set(-half - t / 2, 0.5, 0);
         this._wallLeft.castShadow = true;
         this._wallLeft.receiveShadow = true;
         this._scene.add(this._wallLeft);
+
+        // Right wall (+x edge): runs along z
+        const rightGeo = new THREE.BoxGeometry(t, 1, STAGE_SIZE + t);
+        this._wallRight = new THREE.Mesh(rightGeo, makeMat());
+        this._wallRight.position.set(half + t / 2, 0.5, 0);
+        this._wallRight.castShadow = true;
+        this._wallRight.receiveShadow = true;
+        this._scene.add(this._wallRight);
 
         // Apply current state — sets visibility + height
         this._applyWalls(this._state.walls, /*skipState*/ true);
@@ -784,8 +800,9 @@ export class EnvironmentBridge extends BaseBridge {
 
     _applyWallColor(hex) {
         this._state.wallColor = hex;
-        this._wallBack?.material.color.set(hex);
-        this._wallLeft?.material.color.set(hex);
+        for (const w of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
+            w?.material.color.set(hex);
+        }
     }
 
     _applySkyColor(field, hex) {
@@ -820,17 +837,34 @@ export class EnvironmentBridge extends BaseBridge {
     _applyWalls(mode, skipState = false) {
         if (!skipState) this._state.walls = mode;
         const h = WALL_HEIGHTS[mode] ?? 0;
-        const visible = h > 0;
-        for (const wall of [this._wallBack, this._wallLeft]) {
+        this._wallsEnabled = h > 0;
+        for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
             if (!wall) continue;
-            wall.visible = visible;
-            if (visible) {
+            wall.visible = this._wallsEnabled;
+            if (this._wallsEnabled) {
                 wall.scale.y = h;
-                // Box geometry is unit-tall (height=1), so y position must
-                // shift to keep the wall sitting on the ground.
                 wall.position.y = h / 2;
             }
         }
+        // Run a single dynamic-cull pass so the camera-facing walls hide immediately
+        if (this._wallsEnabled) this._cullWallsByCamera();
+    }
+
+    /**
+     * Hide walls that face the camera so the stage is always visible.
+     * Called every frame from _onTick (cheap — just 4 bool checks).
+     * If the camera is in the +x half-space, the +x (right) wall faces
+     * toward the viewer and should be hidden.  Same logic for −x, ±z.
+     */
+    _cullWallsByCamera() {
+        if (!this._wallsEnabled) return;
+        const cx = this._camera.position.x;
+        const cz = this._camera.position.z;
+        // Hide the wall the camera is "behind" (i.e. the wall that faces the camera)
+        if (this._wallRight) this._wallRight.visible = cx <= 0;
+        if (this._wallLeft)  this._wallLeft.visible  = cx >= 0;
+        if (this._wallFront) this._wallFront.visible = cz <= 0;
+        if (this._wallBack)  this._wallBack.visible  = cz >= 0;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -1419,6 +1453,9 @@ export class EnvironmentBridge extends BaseBridge {
         }
 
         this._controls.update();
+
+        // Dynamic wall culling — hide walls facing the camera
+        this._cullWallsByCamera();
     }
 
     play() {
