@@ -8,11 +8,11 @@
  *   - 5×5 stage perimeter (thick light-grey Line2) + inner stage grid
  *   - Flat lighting (ambient + one directional), no placeholder cube
  *
- * Tabs: File · Ground · Sky · Stuff · FX.
+ * Tabs: File · Ground · Sky · Stage · FX.
  *   File   — name / description / tags (wired)
  *   Ground — ground size + ground/stage/wall color, walls (wired)
  *   Sky    — 3-stop vertical gradient (top/mid/bot color pickers, wired)
- *   Stuff  — stub (object placement)
+ *   Stage  — numbered 5×5 grid, greybox character placeholders (wired)
  *   FX     — stub (lighting + atmosphere effects)
  *
  * See docs/environment-builder-notes.md for a running design log.
@@ -22,7 +22,8 @@ import * as THREE from 'three';
 import { Line2 }        from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls }      from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 import { BaseBridge } from './BaseBridge.js?v=3';
 import { loadPalette }     from '../shared/paletteLoader.js';
@@ -76,12 +77,12 @@ async function _loadTextureOpts() {
     return _TEXTURE_OPTS;
 }
 
-// ── Tabs (File · Ground · Sky · Stuff · FX) ─────────────────────
+// ── Tabs (File · Ground · Sky · Stage · FX) ─────────────────────
 const TABS = [
     { id: 'file',   label: 'File'   },
     { id: 'ground', label: 'Ground' },
     { id: 'sky',    label: 'Sky'    },
-    { id: 'stuff',  label: 'Stuff'  },
+    { id: 'stage',  label: 'Stage'  },
     { id: 'fx',     label: 'FX'     },
 ];
 
@@ -99,6 +100,28 @@ const _snapOdd = (n) => {
     if (v % 2 === 0) v = (v + 1 <= GROUND_SIZE_MAX) ? v + 1 : v - 1;
     return v;
 };
+
+// ── Diamond-order numbering for the 5×5 stage grid ─────────────
+// Square 1 = far corner from default camera (−x, −z apex of the
+// diamond).  Numbered right-to-left along each diagonal toward the
+// camera, ending at square 25 (nearest corner, +x, +z).
+const _SQUARE_MAP = (() => {
+    const map = [null]; // 1-indexed (map[0] unused)
+    for (let diag = 0; diag <= 8; diag++) {
+        for (let col = Math.min(diag, 4); col >= Math.max(0, diag - 4); col--) {
+            map.push({ col, row: diag - col });
+        }
+    }
+    return map;
+})();
+
+/** Return the world-space {x, z} centre of a numbered stage square. */
+function _squareCenter(n) {
+    const cell = _SQUARE_MAP[n];
+    if (!cell) return null;
+    // Stage grid cells are 1×1, centred at origin.  col/row 0–4 → x/z −2..+2
+    return { x: cell.col - 2, z: cell.row - 2 };
+}
 
 // DICE_ICON / renderFieldHead / renderFileTab live in shared/builderUI.js
 
@@ -128,7 +151,13 @@ export class EnvironmentBridge extends BaseBridge {
             skyTop:         d.skyTop || DEFAULT_SKY_TOP,
             skyMid:         d.skyMid || DEFAULT_SKY_MID,
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
-            // Future: objects, fx, lighting
+            // Stage items — array of { type, square }
+            stageItems:     d.stageItems || [
+                { type: 'greybox', square: 7  },
+                { type: 'greybox', square: 9  },
+                { type: 'greybox', square: 17 },
+            ],
+            // Future: fx, lighting
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -147,6 +176,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._wallLeft    = null;     // left wall (along -x edge of stage)
         this._skyCanvas   = null;     // off-screen canvas for gradient
         this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
+        this._gridNumbers = [];       // sprites for square number labels
+        this._stageItemMeshes = [];   // greybox character groups
         this._extraLights = [];
 
         // Viewport interaction (matches browse preview)
@@ -186,7 +217,7 @@ export class EnvironmentBridge extends BaseBridge {
         this._controls.dampingFactor = 0.08;
         this._controls.minDistance   = 2;
         this._controls.maxDistance   = 20;
-        this._controls.maxPolarAngle = Math.PI * 0.49;
+        // No maxPolarAngle — free roam lets you orbit under the island
         this._controls.update();
 
         // Pointer interaction stops auto-rotate
@@ -216,6 +247,12 @@ export class EnvironmentBridge extends BaseBridge {
         // Two back-corner walls (only the back & left edges, away from
         // default camera). Visible only when state.walls != 'off'.
         this._buildWalls();
+
+        // Stage grid number labels (1–25 in diamond order)
+        this._buildGridNumbers();
+
+        // Stage items (greybox character placeholders etc.)
+        this._buildStageItems();
 
         // Flat lighting
         const amb = new THREE.AmbientLight(0xffffff, 0.6);
@@ -263,16 +300,17 @@ export class EnvironmentBridge extends BaseBridge {
 
     _buildGroundPlane() {
         const size = this._state.groundSize;
-        const geom = new THREE.PlaneGeometry(size, size);
+        const geom = new THREE.BoxGeometry(size, 1, size);
         const mat  = new THREE.MeshStandardMaterial({
             color: new THREE.Color(this._state.groundColor),
             roughness: 0.95,
             metalness: 0,
         });
         const mesh = new THREE.Mesh(geom, mat);
-        mesh.rotation.x = -Math.PI / 2;
-        mesh.position.y = 0;
+        // Top face sits at y=0, bottom at y=−1 (floating-island slab)
+        mesh.position.y = -0.5;
         mesh.receiveShadow = true;
+        mesh.castShadow    = true;
         this._scene.add(mesh);
         this._groundMesh = mesh;
     }
@@ -413,6 +451,94 @@ export class EnvironmentBridge extends BaseBridge {
         if (this._skyTexture) this._skyTexture.needsUpdate = true;
     }
 
+    /**
+     * Render number labels (1–25) on each stage grid cell as always-
+     * facing sprites. The numbers use the diamond-order scheme defined
+     * by _SQUARE_MAP so artists can reference positions by number.
+     */
+    _buildGridNumbers() {
+        for (let n = 1; n <= 25; n++) {
+            const pos = _squareCenter(n);
+            if (!pos) continue;
+
+            // Draw the number onto a small canvas
+            const canvas  = document.createElement('canvas');
+            canvas.width  = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle    = 'rgba(255, 255, 255, 0.35)';
+            ctx.font         = 'bold 38px sans-serif';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(String(n), 32, 32);
+
+            const tex    = new THREE.CanvasTexture(canvas);
+            const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+            const sprite = new THREE.Sprite(mat);
+            sprite.position.set(pos.x, 0.06, pos.z);
+            sprite.scale.set(0.45, 0.45, 1);
+            this._scene.add(sprite);
+            this._gridNumbers.push(sprite);
+        }
+    }
+
+    /**
+     * Build the 3D meshes for every item in state.stageItems.
+     * Currently only supports type 'greybox' (placeholder character).
+     */
+    _buildStageItems() {
+        this._clearStageItems();
+        for (const item of this._state.stageItems) {
+            const pos = _squareCenter(item.square);
+            if (!pos) continue;
+            if (item.type === 'greybox') {
+                const group = this._makeGreyboxCharacter();
+                group.position.set(pos.x, 0, pos.z);
+                this._scene.add(group);
+                this._stageItemMeshes.push(group);
+            }
+        }
+    }
+
+    /** Dispose and remove all current stage-item meshes. */
+    _clearStageItems() {
+        for (const g of this._stageItemMeshes) {
+            g.traverse(child => {
+                child.geometry?.dispose?.();
+                child.material?.dispose?.();
+            });
+            this._scene.remove(g);
+        }
+        this._stageItemMeshes = [];
+    }
+
+    /**
+     * Create a greybox placeholder character: rounded-box body + head,
+     * proportions loosely matching the character builder.
+     */
+    _makeGreyboxCharacter() {
+        const grey = new THREE.MeshStandardMaterial({
+            color: 0x888888, roughness: 0.85, metalness: 0,
+        });
+
+        // Body — roughly 0.4 wide × 0.65 tall × 0.25 deep
+        const bodyGeo  = new RoundedBoxGeometry(0.4, 0.65, 0.25, 2, 0.06);
+        const body     = new THREE.Mesh(bodyGeo, grey);
+        body.position.y = 0.325;            // bottom at y=0
+        body.castShadow = true;
+
+        // Head — roughly 0.3 × 0.32 × 0.26, with more rounding
+        const headGeo  = new RoundedBoxGeometry(0.3, 0.32, 0.26, 2, 0.08);
+        const head     = new THREE.Mesh(headGeo, grey);
+        head.position.y = 0.65 + 0.05 + 0.16;  // body top + neck gap + half head
+        head.castShadow = true;
+
+        const group = new THREE.Group();
+        group.add(body);
+        group.add(head);
+        return group;
+    }
+
     // ── Live scene updates from panel controls ──────────────────
 
     _applyGroundColor(hex) {
@@ -450,7 +576,7 @@ export class EnvironmentBridge extends BaseBridge {
         // Rebuild ground + grid with the new size
         if (this._groundMesh) {
             this._groundMesh.geometry.dispose();
-            this._groundMesh.geometry = new THREE.PlaneGeometry(clamped, clamped);
+            this._groundMesh.geometry = new THREE.BoxGeometry(clamped, 1, clamped);
         }
         if (this._worldGrid) {
             this._scene.remove(this._worldGrid);
@@ -520,6 +646,11 @@ export class EnvironmentBridge extends BaseBridge {
                 this._applySkyColor(f, state[f]);
             }
         }
+        // Stage items
+        if (Array.isArray(state.stageItems)) {
+            this._state.stageItems = state.stageItems;
+            this._buildStageItems();
+        }
         super._applyState(state);
     }
 
@@ -542,7 +673,7 @@ export class EnvironmentBridge extends BaseBridge {
         if (tab === 'file')   body = this._renderFileTab();
         if (tab === 'ground') body = this._renderGroundTab();
         if (tab === 'sky')    body = this._renderSkyTab();
-        if (tab === 'stuff')  body = this._renderStubTab('Stuff');
+        if (tab === 'stage')  body = this._renderStageTab();
         if (tab === 'fx')     body = this._renderStubTab('FX');
 
         return tabBar + `<div class="cb-tab-content">${body}</div>`;
@@ -698,6 +829,34 @@ export class EnvironmentBridge extends BaseBridge {
         `;
     }
 
+    // ── Stage tab ────────────────────────────────────────────────
+    _renderStageTab() {
+        const items = this._state.stageItems || [];
+        const subtitle = renderSubtitle;
+
+        const itemCards = items.length === 0
+            ? `<p style="color:var(--text-dim); text-align:center; padding:16px 0;">
+                   No items placed yet.
+               </p>`
+            : items.map((item, i) => `
+                <div class="cb-card-tight">
+                    <div class="cb-card-tight-label">Sq ${item.square}</div>
+                    <div class="cb-card-tight-control" style="font-size:0.8rem; color:var(--text-dim);">
+                        ${item.type === 'greybox' ? 'Character placeholder' : _esc(item.type)}
+                    </div>
+                    <div class="cb-card-tight-value">
+                        <button type="button" class="cb-stage-remove" data-idx="${i}"
+                                style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem;"
+                                aria-label="Remove">&times;</button>
+                    </div>
+                </div>`).join('');
+
+        return `
+          ${subtitle('Stage Items', 'stageItems')}
+          ${itemCards}
+        `;
+    }
+
     // ── Stub tab ────────────────────────────────────────────────
     _renderStubTab(label) {
         return `
@@ -790,6 +949,18 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
+        // ── Stage tab: remove item buttons ─────────────────────
+        panel.querySelectorAll('.cb-stage-remove').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx, 10);
+                if (isNaN(idx)) return;
+                this._state.stageItems.splice(idx, 1);
+                this._buildStageItems();       // rebuild 3D meshes
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+
         // ── Surprise buttons (env-specific subtitles) ──────────
         // File-tab dice (name/description/tags) are wired by
         // wireFileTabEvents above; these handle Ground tab subtitles.
@@ -850,9 +1021,38 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
             return;
         }
+        if (key === 'stageItems') {
+            // Random 1–5 greybox characters on random squares
+            const count = 1 + Math.floor(Math.random() * 5);
+            const usedSquares = new Set();
+            const items = [];
+            while (items.length < count && usedSquares.size < 25) {
+                const sq = 1 + Math.floor(Math.random() * 25);
+                if (usedSquares.has(sq)) continue;
+                usedSquares.add(sq);
+                items.push({ type: 'greybox', square: sq });
+            }
+            this._state.stageItems = items;
+            this._buildStageItems();
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
 
         // File-tab per-field stubs (intelligence layer pending)
         console.debug(`[EnvironmentBridge] surprise requested for "${key}" (stub — intelligence pending)`);
+    }
+
+    /**
+     * Global "Surprise me!" — randomise every section at once.
+     * Called by the title-row Surprise button in builder mode.
+     */
+    surpriseAll() {
+        // Hit every section-level randomiser in one go
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'stageItems']) {
+            this._onSurpriseField(key);
+        }
+        // _onSurpriseField already calls _renderPanel + _scheduleAutoSave
     }
 
     // ═══════════════════════════════════════════════════════════════

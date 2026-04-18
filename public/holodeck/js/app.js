@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js?v=2';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=13';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=14';
 import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
 import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
@@ -342,11 +342,12 @@ function render() {
         : (displayAsset ? displayAsset.name : 'Untitled');
     E.elCount.classList.toggle('hidden', isNew);
     // Edit button: only meaningful while actively previewing an asset
-    // in the browse panel. The index page is reserved for full
-    // simulations (not built yet), so don't show Edit there.
-    const canEditNow = !!S.previewAsset && S.panelOpen;
+    // in the browse panel. Hidden in builder mode (you're already editing)
+    // and on the index page (reserved for full simulations later).
+    const canEditNow = !S.builderMode && !!S.previewAsset && S.panelOpen;
     E.editBtn.classList.toggle('hidden', isNew || !canEditNow);
-    E.surpriseBtn.classList.toggle('hidden', !isNew);
+    // Surprise button: visible in "new" mode AND in builder/edit mode
+    E.surpriseBtn.classList.toggle('hidden', !isNew && !S.builderMode);
 
     // ── New toggle btn ─────────────────────
     E.newBtn.classList.toggle('active', isNew);
@@ -1828,7 +1829,14 @@ function init() {
     });
 
     E.surpriseBtn.addEventListener('click', async () => {
-        // Pick a random character template and show it
+        // Builder mode — surprise the active bridge (randomise everything)
+        if (S.builderMode) {
+            const entry = bridgeStack.top();
+            if (entry?.bridge?.surpriseAll) entry.bridge.surpriseAll();
+            return;
+        }
+
+        // "New" mode — pick a random character template and show it
         try {
             const chars = await loadGlobalAssets('Characters');
             if (chars.length === 0) return;
