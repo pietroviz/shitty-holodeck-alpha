@@ -55,6 +55,34 @@ const DEFAULT_SKY_TOP = '#222034';   // DB32 deep navy
 const DEFAULT_SKY_MID = '#394b5a';   // muted blue-grey
 const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 
+// FX lighting presets
+const FX_PRESETS = {
+    day: {
+        label: 'Day',
+        skyTop: '#1a3a5c',  skyMid: '#5b8cb8',  skyBot: '#b8d0e8',
+        sunColor: '#ffffcc', sunElevation: 65, sunVisible: true,
+        ambientColor: '#c8d8ff', ambientIntensity: 0.7,
+        dirColor: '#fff8e0',     dirIntensity: 1.0,
+        fogEnabled: false, fogColor: '#b8d0e8', fogDensity: 0.02,
+    },
+    dusk: {
+        label: 'Dusk',
+        skyTop: '#1a1030',  skyMid: '#6a3060',  skyBot: '#d07040',
+        sunColor: '#ff9944', sunElevation: 12, sunVisible: true,
+        ambientColor: '#6050a0', ambientIntensity: 0.4,
+        dirColor: '#ff8833',     dirIntensity: 0.6,
+        fogEnabled: true,  fogColor: '#5a3050', fogDensity: 0.03,
+    },
+    night: {
+        label: 'Night',
+        skyTop: '#060610',  skyMid: '#101830',  skyBot: '#1a2040',
+        sunColor: '#aaccff', sunElevation: 40, sunVisible: true,
+        ambientColor: '#202848', ambientIntensity: 0.25,
+        dirColor: '#6688bb',     dirIntensity: 0.3,
+        fogEnabled: true,  fogColor: '#0a0e1a', fogDensity: 0.05,
+    },
+};
+
 // Cast — always 5 fixed slots, each with an assigned colour
 const CAST_SLOT_COUNT  = 5;
 const CAST_COLORS = [
@@ -270,7 +298,18 @@ export class EnvironmentBridge extends BaseBridge {
                 { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
                 { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
             ],
-            // Future: fx, lighting
+            // FX — lighting, fog, sun/moon
+            fxPreset:       d.fxPreset      || 'day',
+            sunColor:       d.sunColor      || '#ffffcc',
+            sunElevation:   d.sunElevation  ?? 60,         // degrees, 0=horizon 90=overhead
+            sunVisible:     d.sunVisible    ?? true,
+            ambientColor:   d.ambientColor  || '#ffffff',
+            ambientIntensity: d.ambientIntensity ?? 0.6,
+            dirColor:       d.dirColor      || '#ffffff',
+            dirIntensity:   d.dirIntensity  ?? 0.8,
+            fogEnabled:     d.fogEnabled    ?? false,
+            fogColor:       d.fogColor      || '#8899aa',
+            fogDensity:     d.fogDensity    ?? 0.04,
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -289,8 +328,12 @@ export class EnvironmentBridge extends BaseBridge {
         this._wallLeft    = null;     // left wall  (−x edge of stage)
         this._wallRight   = null;     // right wall (+x edge of stage)
         this._wallFront   = null;     // front wall (+z edge of stage)
-        this._skyCanvas   = null;     // off-screen canvas for gradient
-        this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
+        this._skyCanvas   = null;     // off-screen canvas for gradient (legacy, replaced by sphere)
+        this._skyTexture  = null;     // THREE.CanvasTexture (legacy)
+        this._skySphere   = null;     // sky dome mesh
+        this._sunOrb      = null;     // visible sun/moon sphere
+        this._ambientLight = null;    // THREE.AmbientLight
+        this._dirLight     = null;    // THREE.DirectionalLight (follows sun)
         this._gridNumbers = [];       // sprites for square number labels
         this._stageItemMeshes = [];   // greybox character groups (cast)
         this._setDressingMeshes = []; // set dressing objects on stage
@@ -323,8 +366,8 @@ export class EnvironmentBridge extends BaseBridge {
         const texturesP = _loadTextureOpts();
         const objectsP  = _loadObjectList();
 
-        // Sky gradient background (replaces old solid grey)
-        this._buildSkyGradient();
+        // Sky dome (gradient sphere you can look around in)
+        this._buildSkySphere();
 
         // Camera pose — matches Scene3D
         this._camera.position.set(5.2, 3.9, 5.2);
@@ -375,15 +418,23 @@ export class EnvironmentBridge extends BaseBridge {
         this._buildStageItems();
         this._rebuildSetDressing();
 
-        // Flat lighting
-        const amb = new THREE.AmbientLight(0xffffff, 0.6);
-        this._scene.add(amb);
-        this._extraLights.push(amb);
+        // Lighting (ambient + directional that follows the sun orb)
+        this._ambientLight = new THREE.AmbientLight(
+            this._state.ambientColor, this._state.ambientIntensity);
+        this._scene.add(this._ambientLight);
+        this._extraLights.push(this._ambientLight);
 
-        const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-        dir.position.set(5, 10, 5);
-        this._scene.add(dir);
-        this._extraLights.push(dir);
+        this._dirLight = new THREE.DirectionalLight(
+            this._state.dirColor, this._state.dirIntensity);
+        this._scene.add(this._dirLight);
+        this._extraLights.push(this._dirLight);
+
+        // Sun/moon orb (unlit sphere, positioned by elevation)
+        this._buildSunOrb();
+        this._applySunPosition();
+
+        // Fog (off by default)
+        this._applyFog();
 
         // Resize observer keeps the perimeter line resolution fresh
         const c = this.container;
@@ -683,31 +734,173 @@ export class EnvironmentBridge extends BaseBridge {
      * as the Three.js scene background texture.  Updating a stop just
      * repaints the canvas and flips needsUpdate — no geometry re-creation.
      */
-    _buildSkyGradient() {
-        const canvas  = document.createElement('canvas');
-        canvas.width  = 2;          // 1-pixel-wide gradient is enough
-        canvas.height = 256;
-        this._skyCanvas = canvas;
-        this._updateSkyCanvas();
+    /**
+     * Build a large inverted sphere for the sky dome.
+     * Uses vertex colours for a 3-stop gradient (top/mid/bot) —
+     * no textures, no shaders, just free GPU-interpolated colour.
+     * MeshBasicMaterial = zero lighting cost.
+     */
+    _buildSkySphere() {
+        const radius = 50;
+        const geo = new THREE.SphereGeometry(radius, 32, 16);
+        // Flip normals inward so we see the inside
+        geo.scale(-1, 1, 1);
 
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.colorSpace = THREE.SRGBColorSpace;
-        this._skyTexture = tex;
-        this._scene.background = tex;
+        // Set vertex colours based on normalized Y (1=top, 0=mid, -1=bot)
+        this._skyGeo = geo;
+        this._updateSkyColors();
+
+        const mat = new THREE.MeshBasicMaterial({
+            vertexColors: true,
+            side: THREE.BackSide,
+            depthWrite: false,
+        });
+        this._skySphere = new THREE.Mesh(geo, mat);
+        this._skySphere.renderOrder = -1;   // render behind everything
+        this._scene.add(this._skySphere);
+        // Clear any old scene.background so the sphere is visible
+        this._scene.background = null;
     }
 
-    /** Repaint the sky canvas from the current state colours. */
-    _updateSkyCanvas() {
-        const canvas = this._skyCanvas;
-        if (!canvas) return;
-        const ctx  = canvas.getContext('2d');
-        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        grad.addColorStop(0,   this._state.skyTop);
-        grad.addColorStop(0.5, this._state.skyMid);
-        grad.addColorStop(1,   this._state.skyBot);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if (this._skyTexture) this._skyTexture.needsUpdate = true;
+    /** Update sky sphere vertex colours from state (top/mid/bot). */
+    _updateSkyColors() {
+        const geo = this._skyGeo;
+        if (!geo) return;
+
+        const top = new THREE.Color(this._state.skyTop);
+        const mid = new THREE.Color(this._state.skyMid);
+        const bot = new THREE.Color(this._state.skyBot);
+
+        const pos    = geo.attributes.position;
+        const count  = pos.count;
+        const colors = new Float32Array(count * 3);
+
+        for (let i = 0; i < count; i++) {
+            const y = pos.getY(i);
+            // Normalize: y ranges from -radius to +radius
+            const t = y / 50;  // -1 to +1
+            let color;
+            if (t >= 0) {
+                // Upper half: lerp mid → top
+                color = mid.clone().lerp(top, t);
+            } else {
+                // Lower half: lerp mid → bot
+                color = mid.clone().lerp(bot, -t);
+            }
+            colors[i * 3]     = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+        }
+
+        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geo.attributes.color.needsUpdate = true;
+    }
+
+    /** Build the sun/moon orb — a small unlit glowing sphere. */
+    _buildSunOrb() {
+        const geo = new THREE.SphereGeometry(1.5, 16, 12);
+        const mat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color(this._state.sunColor),
+        });
+        this._sunOrb = new THREE.Mesh(geo, mat);
+        this._sunOrb.visible = this._state.sunVisible ?? true;
+        this._scene.add(this._sunOrb);
+    }
+
+    /** Position the sun orb + directional light based on elevation angle. */
+    _applySunPosition() {
+        const elev = (this._state.sunElevation ?? 60) * Math.PI / 180;
+        const dist = 35;   // far enough to be in the sky dome
+        // Sun comes from the same general direction as the default camera
+        // but at the specified elevation
+        const x = dist * Math.cos(elev) * 0.7;
+        const y = dist * Math.sin(elev);
+        const z = dist * Math.cos(elev) * 0.7;
+
+        if (this._sunOrb) {
+            this._sunOrb.position.set(x, y, z);
+        }
+        if (this._dirLight) {
+            // Directional light points FROM the sun position toward origin
+            this._dirLight.position.set(x, y, z);
+        }
+    }
+
+    /** Apply fog state (FogExp2 for efficiency). */
+    _applyFog() {
+        if (this._state.fogEnabled) {
+            this._scene.fog = new THREE.FogExp2(
+                this._state.fogColor,
+                this._state.fogDensity
+            );
+        } else {
+            this._scene.fog = null;
+        }
+    }
+
+    /** Apply a named FX preset (day / dusk / night). */
+    _applyFXPreset(key) {
+        const p = FX_PRESETS[key];
+        if (!p) return;
+        this._state.fxPreset = key;
+
+        // Sky colours
+        this._state.skyTop = p.skyTop;
+        this._state.skyMid = p.skyMid;
+        this._state.skyBot = p.skyBot;
+        this._updateSkyColors();
+
+        // Sun / moon
+        this._state.sunColor     = p.sunColor;
+        this._state.sunElevation = p.sunElevation;
+        this._state.sunVisible   = p.sunVisible;
+        if (this._sunOrb) {
+            this._sunOrb.material.color.set(p.sunColor);
+            this._sunOrb.visible = p.sunVisible;
+        }
+        this._applySunPosition();
+
+        // Ambient light
+        this._state.ambientColor     = p.ambientColor;
+        this._state.ambientIntensity = p.ambientIntensity;
+        if (this._ambientLight) {
+            this._ambientLight.color.set(p.ambientColor);
+            this._ambientLight.intensity = p.ambientIntensity;
+        }
+
+        // Directional light
+        this._state.dirColor     = p.dirColor;
+        this._state.dirIntensity = p.dirIntensity;
+        if (this._dirLight) {
+            this._dirLight.color.set(p.dirColor);
+            this._dirLight.intensity = p.dirIntensity;
+        }
+
+        // Fog
+        this._state.fogEnabled = p.fogEnabled;
+        this._state.fogColor   = p.fogColor;
+        this._state.fogDensity = p.fogDensity;
+        this._applyFog();
+    }
+
+    _applySunColor(hex) {
+        this._state.sunColor = hex;
+        if (this._sunOrb) this._sunOrb.material.color.set(hex);
+    }
+
+    _applyAmbientColor(hex) {
+        this._state.ambientColor = hex;
+        if (this._ambientLight) this._ambientLight.color.set(hex);
+    }
+
+    _applyDirColor(hex) {
+        this._state.dirColor = hex;
+        if (this._dirLight) this._dirLight.color.set(hex);
+    }
+
+    _applyFogColor(hex) {
+        this._state.fogColor = hex;
+        this._applyFog();
     }
 
     /**
@@ -1168,7 +1361,7 @@ export class EnvironmentBridge extends BaseBridge {
 
     _applySkyColor(field, hex) {
         this._state[field] = hex;
-        this._updateSkyCanvas();
+        this._updateSkyColors();
     }
 
     _applyTexture(field, id) {
@@ -1405,6 +1598,39 @@ export class EnvironmentBridge extends BaseBridge {
             this._state.groundObjects = state.groundObjects;
             this._rebuildGroundObjects();
         }
+        // FX — apply preset or individual fields
+        if (state.fxPreset && FX_PRESETS[state.fxPreset]) {
+            this._applyFXPreset(state.fxPreset);
+        } else {
+            // Individual FX fields
+            if (state.sunColor)    this._applySunColor(state.sunColor);
+            if (state.sunElevation != null) {
+                this._state.sunElevation = state.sunElevation;
+                this._applySunPosition();
+            }
+            if (state.sunVisible != null) {
+                this._state.sunVisible = state.sunVisible;
+                if (this._sunOrb) this._sunOrb.visible = state.sunVisible;
+            }
+            if (state.ambientColor) this._applyAmbientColor(state.ambientColor);
+            if (state.ambientIntensity != null) {
+                this._state.ambientIntensity = state.ambientIntensity;
+                if (this._ambientLight) this._ambientLight.intensity = state.ambientIntensity;
+            }
+            if (state.dirColor)    this._applyDirColor(state.dirColor);
+            if (state.dirIntensity != null) {
+                this._state.dirIntensity = state.dirIntensity;
+                if (this._dirLight) this._dirLight.intensity = state.dirIntensity;
+            }
+            if (state.fogEnabled != null) {
+                this._state.fogEnabled = state.fogEnabled;
+            }
+            if (state.fogColor)  this._state.fogColor  = state.fogColor;
+            if (state.fogDensity != null) this._state.fogDensity = state.fogDensity;
+            if (state.fogEnabled != null || state.fogColor || state.fogDensity != null) {
+                this._applyFog();
+            }
+        }
         super._applyState(state);
     }
 
@@ -1428,7 +1654,7 @@ export class EnvironmentBridge extends BaseBridge {
         if (tab === 'ground') body = this._renderGroundTab();
         if (tab === 'sky')    body = this._renderSkyTab();
         if (tab === 'stage')  body = this._renderStageTab();
-        if (tab === 'fx')     body = this._renderStubTab('FX');
+        if (tab === 'fx')     body = this._renderFXTab();
 
         return tabBar + `<div class="cb-tab-content">${body}</div>`;
     }
@@ -1818,6 +2044,117 @@ export class EnvironmentBridge extends BaseBridge {
         }).join('');
     }
 
+    // ── FX tab ──────────────────────────────────────────────────
+    _renderFXTab() {
+        const s = this._state;
+        const subtitle = renderSubtitle;
+
+        const colorTrigger = (field, hex) => `
+            <button type="button" class="cb-color-trigger" data-color-field="${field}"
+                    style="background:${hex};" aria-label="Choose color"></button>`;
+
+        // Preset buttons
+        const presetBtns = Object.entries(FX_PRESETS).map(([key, p]) =>
+            `<button type="button" class="cb-fx-preset${s.fxPreset === key ? ' active' : ''}"
+                     data-preset="${key}">${p.label}</button>`
+        ).join('');
+
+        return `
+          ${subtitle('Presets', 'fx')}
+          <div class="cb-fx-preset-row">${presetBtns}</div>
+
+          ${subtitle('Sun / Moon')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('sunColor', s.sunColor)}
+            </div>
+            <div class="cb-card-tight-value" id="sun-color-val">${s.sunColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Elevation</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-sun-elev" min="0" max="90" step="1"
+                     value="${s.sunElevation}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-sun-elev-val">${s.sunElevation}°</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Visible</div>
+            <div class="cb-card-tight-control">
+              <input type="checkbox" id="fx-sun-visible" ${s.sunVisible ? 'checked' : ''}>
+            </div>
+          </div>
+
+          ${subtitle('Ambient Light')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('ambientColor', s.ambientColor)}
+            </div>
+            <div class="cb-card-tight-value" id="ambient-color-val">${s.ambientColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Intensity</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-ambient-int" min="0" max="1.5" step="0.05"
+                     value="${s.ambientIntensity}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-ambient-int-val">${s.ambientIntensity.toFixed(2)}</div>
+          </div>
+
+          ${subtitle('Directional Light')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('dirColor', s.dirColor)}
+            </div>
+            <div class="cb-card-tight-value" id="dir-color-val">${s.dirColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Intensity</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-dir-int" min="0" max="1.5" step="0.05"
+                     value="${s.dirIntensity}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-dir-int-val">${s.dirIntensity.toFixed(2)}</div>
+          </div>
+
+          ${subtitle('Fog')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Enabled</div>
+            <div class="cb-card-tight-control">
+              <input type="checkbox" id="fx-fog-enabled" ${s.fogEnabled ? 'checked' : ''}>
+            </div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('fogColor', s.fogColor)}
+            </div>
+            <div class="cb-card-tight-value" id="fog-color-val">${s.fogColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Density</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-fog-density" min="0.005" max="0.15" step="0.005"
+                     value="${s.fogDensity}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-fog-density-val">${s.fogDensity.toFixed(3)}</div>
+          </div>
+        `;
+    }
+
     // ── Stub tab ────────────────────────────────────────────────
     _renderStubTab(label) {
         return `
@@ -1873,6 +2210,14 @@ export class EnvironmentBridge extends BaseBridge {
                            apply: (h) => this._applySkyColor('skyBot', h) },
             windowColor: { title: 'Window Pane',   valId: '#window-color-val',
                            apply: (h) => this._applyWindowColor(h) },
+            sunColor:    { title: 'Sun / Moon',    valId: '#sun-color-val',
+                           apply: (h) => this._applySunColor(h) },
+            ambientColor:{ title: 'Ambient Light',  valId: '#ambient-color-val',
+                           apply: (h) => this._applyAmbientColor(h) },
+            dirColor:    { title: 'Directional Light', valId: '#dir-color-val',
+                           apply: (h) => this._applyDirColor(h) },
+            fogColor:    { title: 'Fog Color',      valId: '#fog-color-val',
+                           apply: (h) => this._applyFogColor(h) },
         };
         panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
@@ -2104,6 +2449,88 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
+        // ── FX tab ──────────────────────────────────────────────
+        // Preset buttons
+        panel.querySelectorAll('.cb-fx-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._applyFXPreset(btn.dataset.preset);
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+
+        // Sun elevation slider
+        const sunElev = panel.querySelector('#fx-sun-elev');
+        if (sunElev) {
+            sunElev.addEventListener('input', () => {
+                const v = parseInt(sunElev.value, 10);
+                this._state.sunElevation = v;
+                this._applySunPosition();
+                const lbl = panel.querySelector('#fx-sun-elev-val');
+                if (lbl) lbl.textContent = `${v}°`;
+            });
+            sunElev.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
+        // Sun visible checkbox
+        const sunVis = panel.querySelector('#fx-sun-visible');
+        if (sunVis) {
+            sunVis.addEventListener('change', () => {
+                this._state.sunVisible = sunVis.checked;
+                if (this._sunOrb) this._sunOrb.visible = sunVis.checked;
+                this._scheduleAutoSave();
+            });
+        }
+
+        // Ambient intensity slider
+        const ambInt = panel.querySelector('#fx-ambient-int');
+        if (ambInt) {
+            ambInt.addEventListener('input', () => {
+                const v = parseFloat(ambInt.value);
+                this._state.ambientIntensity = v;
+                if (this._ambientLight) this._ambientLight.intensity = v;
+                const lbl = panel.querySelector('#fx-ambient-int-val');
+                if (lbl) lbl.textContent = v.toFixed(2);
+            });
+            ambInt.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
+        // Directional intensity slider
+        const dirInt = panel.querySelector('#fx-dir-int');
+        if (dirInt) {
+            dirInt.addEventListener('input', () => {
+                const v = parseFloat(dirInt.value);
+                this._state.dirIntensity = v;
+                if (this._dirLight) this._dirLight.intensity = v;
+                const lbl = panel.querySelector('#fx-dir-int-val');
+                if (lbl) lbl.textContent = v.toFixed(2);
+            });
+            dirInt.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
+        // Fog enabled checkbox
+        const fogEn = panel.querySelector('#fx-fog-enabled');
+        if (fogEn) {
+            fogEn.addEventListener('change', () => {
+                this._state.fogEnabled = fogEn.checked;
+                this._applyFog();
+                this._scheduleAutoSave();
+            });
+        }
+
+        // Fog density slider
+        const fogDens = panel.querySelector('#fx-fog-density');
+        if (fogDens) {
+            fogDens.addEventListener('input', () => {
+                const v = parseFloat(fogDens.value);
+                this._state.fogDensity = v;
+                this._applyFog();
+                const lbl = panel.querySelector('#fx-fog-density-val');
+                if (lbl) lbl.textContent = v.toFixed(3);
+            });
+            fogDens.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
         // ── Surprise buttons (env-specific subtitles) ──────────
         // File-tab dice (name/description/tags) are wired by
         // wireFileTabEvents above; these handle Ground tab subtitles.
@@ -2229,6 +2656,26 @@ export class EnvironmentBridge extends BaseBridge {
             return;
         }
 
+        if (key === 'fx') {
+            // Pick a random preset, then randomise a few values on top
+            const presetKeys = Object.keys(FX_PRESETS);
+            const pk = presetKeys[Math.floor(Math.random() * presetKeys.length)];
+            this._applyFXPreset(pk);
+            // Jitter sun elevation ±15°
+            const elev = Math.max(0, Math.min(90,
+                this._state.sunElevation + Math.round((Math.random() - 0.5) * 30)));
+            this._state.sunElevation = elev;
+            this._applySunPosition();
+            // Optional fog density jitter
+            if (this._state.fogEnabled) {
+                this._state.fogDensity = +(0.01 + Math.random() * 0.08).toFixed(3);
+                this._applyFog();
+            }
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+
         // File-tab per-field stubs (intelligence layer pending)
         console.debug(`[EnvironmentBridge] surprise requested for "${key}" (stub — intelligence pending)`);
     }
@@ -2239,7 +2686,7 @@ export class EnvironmentBridge extends BaseBridge {
      */
     surpriseAll() {
         // Hit every section-level randomiser in one go
-        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast', 'setDressing']) {
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast', 'setDressing', 'fx']) {
             this._onSurpriseField(key);
         }
         // _onSurpriseField already calls _renderPanel + _scheduleAutoSave

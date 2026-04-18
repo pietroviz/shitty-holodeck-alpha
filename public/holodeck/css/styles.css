@@ -1277,6 +1277,34 @@ svg    { display: block; flex-shrink: 0; }
     transform: scale(1.08);
 }
 
+/* FX preset buttons */
+.cb-fx-preset-row {
+    display: flex;
+    gap: 6px;
+    padding: 4px 0 8px;
+}
+.cb-fx-preset {
+    flex: 1;
+    padding: 6px 0;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cb-fx-preset:hover {
+    background: rgba(255,255,255,0.10);
+    color: var(--text-primary);
+}
+.cb-fx-preset.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
 /* Texture / asset dropdown (used inside cb-card-tight) */
 .cb-tex-select {
     flex: 1;
