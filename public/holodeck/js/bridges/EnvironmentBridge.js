@@ -125,7 +125,7 @@ const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
 // Camera corridor: a wedge from origin outward in the +x/+z quadrant.
 // Any ground point inside this wedge would obstruct the view.
 const _CAM_DIR_X = 5.2, _CAM_DIR_Z = 5.2;                    // camera direction
-const _CAM_CORRIDOR_COS = Math.cos(Math.PI / 6);              // ±30° half-angle
+const _CAM_CORRIDOR_COS = Math.cos(Math.PI * 2 / 9);          // ±40° half-angle
 const _camDirLen = Math.sqrt(_CAM_DIR_X * _CAM_DIR_X + _CAM_DIR_Z * _CAM_DIR_Z);
 const _camNormX  = _CAM_DIR_X / _camDirLen;
 const _camNormZ  = _CAM_DIR_Z / _camDirLen;
@@ -135,7 +135,7 @@ function _inCameraCorridor(x, z, stageHalf) {
     const len = Math.sqrt(x * x + z * z);
     if (len < stageHalf + 0.5) return false;   // inside stage buffer — handled separately
     const dot = (x * _camNormX + z * _camNormZ) / (len || 1);
-    return dot > _CAM_CORRIDOR_COS;             // within ±30° of camera direction
+    return dot > _CAM_CORRIDOR_COS;             // within ±40° of camera direction
 }
 
 // ── Tabs (File · Ground · Sky · Stage · FX) ─────────────────────
@@ -876,30 +876,44 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Hide walls that face the camera so the stage is always visible.
-     * Called every frame from _onTick (cheap — just 4 bool checks).
-     * If the camera is in the +x half-space, the +x (right) wall faces
-     * toward the viewer and should be hidden.  Same logic for −x, ±z.
+     * Dynamic wall culling — mostly 2 walls hidden, with a sweet spot
+     * near the axes where only 1 wall hides (showing 3 walls).
+     *
+     * When the camera is at a corner angle (roughly equal |cx| and |cz|),
+     * both walls in that quadrant are hidden → 2-wall view.  When the
+     * camera is nearly axis-aligned (one axis dominates by >2.5×), only
+     * the single dominant wall hides → 3-wall view.
+     *
+     * Default camera (5.2, _, 5.2) has ratio ≈ 1 → 2-wall view (back+left).
      */
     _cullWallsByCamera() {
         if (!this._wallsEnabled) return;
         const cx = this._camera.position.x;
         const cz = this._camera.position.z;
+        const ax = Math.abs(cx);
+        const az = Math.abs(cz);
 
-        // 3-wall room: show all four, then hide only the single wall
-        // that most directly faces the camera.  We compare |cx| vs |cz|
-        // to find the dominant axis, then hide the wall on that side.
+        // Start with all visible
         this._wallBack.visible  = true;
         this._wallFront.visible = true;
         this._wallLeft.visible  = true;
         this._wallRight.visible = true;
 
-        if (Math.abs(cx) >= Math.abs(cz)) {
-            // Camera is more to the left/right — hide the x-axis wall it faces
+        const ratio = Math.max(ax, az) / (Math.min(ax, az) + 0.001);
+
+        if (ratio > 2.5) {
+            // Near-axis: only hide the single dominant wall → 3-wall room
+            if (ax > az) {
+                if (cx > 0) this._wallRight.visible = false;
+                else        this._wallLeft.visible  = false;
+            } else {
+                if (cz > 0) this._wallFront.visible = false;
+                else        this._wallBack.visible  = false;
+            }
+        } else {
+            // Corner angle: hide both walls in the camera's quadrant → 2-wall room
             if (cx > 0) this._wallRight.visible = false;
             else        this._wallLeft.visible  = false;
-        } else {
-            // Camera is more to the front/back — hide the z-axis wall it faces
             if (cz > 0) this._wallFront.visible = false;
             else        this._wallBack.visible  = false;
         }
@@ -929,7 +943,7 @@ export class EnvironmentBridge extends BaseBridge {
         const camLen = Math.sqrt(cx * cx + cz * cz) || 1;
         const cnx = cx / camLen;
         const cnz = cz / camLen;
-        const cosThr = Math.cos(Math.PI / 6);    // ±30° half-angle
+        const cosThr = Math.cos(Math.PI * 2 / 9);  // ±40° half-angle
         const stageHalf = STAGE_SIZE / 2 + 0.5;
         const heightThr = 0.8;                    // below this → always visible
 
