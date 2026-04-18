@@ -91,6 +91,17 @@ const FX_PRESETS = {
     },
 };
 
+// Weather particle system
+const WEATHER_TYPES = ['none', 'snow', 'rain', 'leaves'];
+const WEATHER_PARTICLE_COUNT = 600;
+const WEATHER_SPREAD  = 14;   // particles spread ±14m from centre (covers ground)
+const WEATHER_HEIGHT  = 12;   // particles span 0 → 12m high
+const WEATHER_CFG = {
+    snow:   { size: 0.12, color: 0xffffff, speed: 1.2, drift: 0.6, opacity: 0.85 },
+    rain:   { size: 0.06, color: 0xaaccee, speed: 8.0, drift: 0.3, opacity: 0.5  },
+    leaves: { size: 0.15, color: 0x88aa44, speed: 0.8, drift: 1.5, opacity: 0.9  },
+};
+
 // Cast — always 5 fixed slots, each with an assigned colour
 const CAST_SLOT_COUNT  = 5;
 const CAST_COLORS = [
@@ -318,6 +329,7 @@ export class EnvironmentBridge extends BaseBridge {
             fogEnabled:     d.fogEnabled    ?? false,
             fogColor:       d.fogColor      || '#888888',
             fogDensity:     d.fogDensity    ?? 0.02,
+            weather:        d.weather       || 'none',
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -349,6 +361,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._objectList  = null;     // loaded object catalog
         this._wallsEnabled = false;   // true when walls height > 0
         this._extraLights = [];
+        this._weatherPoints = null;  // THREE.Points for weather particles
+        this._weatherVels   = null;  // Float32Array of per-particle velocities
 
         // Viewport interaction (matches browse preview)
         this._controls      = null;
@@ -443,6 +457,9 @@ export class EnvironmentBridge extends BaseBridge {
 
         // Fog (off by default)
         this._applyFog();
+
+        // Weather particles (snow / rain / leaves)
+        this._buildWeather();
 
         // Resize observer keeps the perimeter line resolution fresh
         const c = this.container;
@@ -935,6 +952,153 @@ export class EnvironmentBridge extends BaseBridge {
     _applyFogColor(hex) {
         this._state.fogColor = hex;
         this._applyFog();
+    }
+
+    // ── Weather particle system ─────────────────────────────────
+
+    /** Build (or rebuild) the weather particle system.
+     *  A single THREE.Points with WEATHER_PARTICLE_COUNT vertices.
+     *  Particles are spread across the ground area, avoiding the
+     *  interior of walled stages. */
+    _buildWeather() {
+        // Dispose old
+        if (this._weatherPoints) {
+            this._scene.remove(this._weatherPoints);
+            this._weatherPoints.geometry.dispose();
+            this._weatherPoints.material.dispose();
+            this._weatherPoints = null;
+            this._weatherVels   = null;
+        }
+
+        const type = this._state.weather;
+        if (!type || type === 'none') return;
+
+        const cfg = WEATHER_CFG[type];
+        if (!cfg) return;
+
+        const count = WEATHER_PARTICLE_COUNT;
+        const positions = new Float32Array(count * 3);
+        const vels      = new Float32Array(count * 3); // vx, vy, vz per particle
+
+        const stageHalf = STAGE_SIZE / 2;
+        const hasWalls  = (this._state.walls || 0) > 0;
+
+        for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+            // Random position across the ground area
+            let x, z;
+            do {
+                x = (Math.random() - 0.5) * WEATHER_SPREAD * 2;
+                z = (Math.random() - 0.5) * WEATHER_SPREAD * 2;
+            } while (hasWalls && Math.abs(x) < stageHalf && Math.abs(z) < stageHalf);
+
+            positions[i3]     = x;
+            positions[i3 + 1] = Math.random() * WEATHER_HEIGHT;
+            positions[i3 + 2] = z;
+
+            // Per-particle velocity variation (±30%)
+            const vary = 0.7 + Math.random() * 0.6;
+            vels[i3]     = (Math.random() - 0.5) * cfg.drift;   // x drift
+            vels[i3 + 1] = -cfg.speed * vary;                   // y fall speed
+            vels[i3 + 2] = (Math.random() - 0.5) * cfg.drift;  // z drift
+        }
+
+        this._weatherVels = vels;
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        // Leaves get varied colours
+        if (type === 'leaves') {
+            const colors = new Float32Array(count * 3);
+            const leafPalette = [
+                new THREE.Color(0x88aa44), // green
+                new THREE.Color(0x669933), // dark green
+                new THREE.Color(0xbbaa33), // yellow-green
+                new THREE.Color(0xcc8833), // orange
+                new THREE.Color(0xaa5522), // brown
+            ];
+            for (let i = 0; i < count; i++) {
+                const c = leafPalette[Math.floor(Math.random() * leafPalette.length)];
+                colors[i * 3]     = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
+            }
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        }
+
+        const mat = new THREE.PointsMaterial({
+            size: cfg.size,
+            color: type === 'leaves' ? 0xffffff : cfg.color,
+            vertexColors: type === 'leaves',
+            transparent: true,
+            opacity: cfg.opacity,
+            depthWrite: false,
+            sizeAttenuation: true,
+            fog: true,
+        });
+
+        this._weatherPoints = new THREE.Points(geo, mat);
+        this._weatherPoints.frustumCulled = false; // always render
+        this._scene.add(this._weatherPoints);
+    }
+
+    /** Advance weather particles by delta seconds.
+     *  Called from _onTick only when playing. */
+    _tickWeather(delta) {
+        if (!this._weatherPoints || !this._weatherVels) return;
+
+        const pos      = this._weatherPoints.geometry.attributes.position;
+        const arr      = pos.array;
+        const vels     = this._weatherVels;
+        const count    = pos.count;
+        const stageH   = STAGE_SIZE / 2;
+        const hasWalls = (this._state.walls || 0) > 0;
+        const type     = this._state.weather;
+        const drift    = WEATHER_CFG[type]?.drift || 0;
+        const time     = performance.now() * 0.001;
+
+        for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+
+            // Advance position
+            arr[i3]     += vels[i3]     * delta;
+            arr[i3 + 1] += vels[i3 + 1] * delta;
+            arr[i3 + 2] += vels[i3 + 2] * delta;
+
+            // Leaves and snow get a gentle sine sway
+            if (type !== 'rain') {
+                arr[i3]     += Math.sin(time + i * 0.37) * drift * 0.3 * delta;
+                arr[i3 + 2] += Math.cos(time + i * 0.53) * drift * 0.3 * delta;
+            }
+
+            // Reset particle if it falls below ground or drifts too far
+            const y = arr[i3 + 1];
+            const x = arr[i3];
+            const z = arr[i3 + 2];
+
+            const outOfBounds = y < 0 ||
+                Math.abs(x) > WEATHER_SPREAD ||
+                Math.abs(z) > WEATHER_SPREAD;
+
+            // Push particles out of walled interior
+            const insideWalls = hasWalls &&
+                Math.abs(x) < stageH && Math.abs(z) < stageH;
+
+            if (outOfBounds || insideWalls) {
+                // Respawn at top with new random position
+                let nx, nz;
+                do {
+                    nx = (Math.random() - 0.5) * WEATHER_SPREAD * 2;
+                    nz = (Math.random() - 0.5) * WEATHER_SPREAD * 2;
+                } while (hasWalls && Math.abs(nx) < stageH && Math.abs(nz) < stageH);
+                arr[i3]     = nx;
+                arr[i3 + 1] = WEATHER_HEIGHT + Math.random() * 2;
+                arr[i3 + 2] = nz;
+            }
+        }
+
+        pos.needsUpdate = true;
     }
 
     /**
@@ -1436,6 +1600,11 @@ export class EnvironmentBridge extends BaseBridge {
         }
         // Run a single dynamic-cull pass so the camera-facing walls hide immediately
         if (this._wallsEnabled) this._cullWallsByCamera();
+
+        // Rebuild weather so particles avoid (or enter) the interior
+        if (this._state.weather && this._state.weather !== 'none') {
+            this._buildWeather();
+        }
     }
 
     /** Update window style and rebuild walls. */
@@ -1664,6 +1833,11 @@ export class EnvironmentBridge extends BaseBridge {
             if (state.fogEnabled != null || state.fogColor || state.fogDensity != null) {
                 this._applyFog();
             }
+        }
+        // Weather
+        if (state.weather && state.weather !== this._state.weather) {
+            this._state.weather = state.weather;
+            this._buildWeather();
         }
         super._applyState(state);
     }
@@ -2122,7 +2296,22 @@ export class EnvironmentBridge extends BaseBridge {
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
                     style="background:${hex};" aria-label="Choose color"></button>`;
 
+        const weatherLabel = { none: 'None', snow: 'Snow', rain: 'Rain', leaves: 'Leaves' };
+
         return `
+          ${subtitle('Weather')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Effect</div>
+            <div class="cb-card-tight-control">
+              <select id="fx-weather-select">
+                ${WEATHER_TYPES.map(w =>
+                    `<option value="${w}"${s.weather === w ? ' selected' : ''}>${weatherLabel[w]}</option>`
+                ).join('')}
+              </select>
+            </div>
+          </div>
+
           ${subtitle('Ambient Light')}
 
           <div class="cb-card-tight">
@@ -2516,6 +2705,16 @@ export class EnvironmentBridge extends BaseBridge {
             });
         }
 
+        // Weather select
+        const weatherSel = panel.querySelector('#fx-weather-select');
+        if (weatherSel) {
+            weatherSel.addEventListener('change', () => {
+                this._state.weather = weatherSel.value;
+                this._buildWeather();
+                this._scheduleAutoSave();
+            });
+        }
+
         // Ambient intensity slider
         const ambInt = panel.querySelector('#fx-ambient-int');
         if (ambInt) {
@@ -2726,6 +2925,10 @@ export class EnvironmentBridge extends BaseBridge {
                 this._state.fogDensity = +(0.01 + Math.random() * 0.04).toFixed(3);
             }
             this._applyFog();
+            // Random weather (biased toward none — 50% none, 50% some effect)
+            const weatherOpts = ['none', 'none', 'none', 'snow', 'rain', 'leaves'];
+            this._state.weather = weatherOpts[Math.floor(Math.random() * weatherOpts.length)];
+            this._buildWeather();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
@@ -2770,6 +2973,11 @@ export class EnvironmentBridge extends BaseBridge {
         // Dynamic culling — hide walls + tall ground objects facing the camera
         this._cullWallsByCamera();
         this._cullGroundObjectsByCamera();
+
+        // Weather particles — only animate when playing
+        if (this._isPlaying) {
+            this._tickWeather(delta);
+        }
     }
 
     play() {
