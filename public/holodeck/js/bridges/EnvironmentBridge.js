@@ -234,9 +234,11 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Stage items — array of { type, square }
             stageItems:     d.stageItems || [
-                { type: 'greybox', cell: 'O4' },
-                { type: 'greybox', cell: 'N2' },
-                { type: 'greybox', cell: 'N4' },
+                { type: 'greybox', cell: 'G2', facing: 'camera' },
+                { type: 'greybox', cell: 'G3', facing: 'camera' },
+                { type: 'greybox', cell: 'N2', facing: 'camera' },
+                { type: 'greybox', cell: 'I2', facing: 'camera' },
+                { type: 'greybox', cell: 'G4', facing: 'camera' },
             ],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
@@ -613,12 +615,29 @@ export class EnvironmentBridge extends BaseBridge {
      */
     _buildStageItems() {
         this._clearStageItems();
+        // Default camera position for 'camera' facing
+        const camX = 5.2, camZ = 5.2;
+
         for (const item of this._state.stageItems) {
             const pos = _cellToWorld(item.cell);
             if (!pos) continue;
             if (item.type === 'greybox') {
                 const group = this._makeGreyboxCharacter();
                 group.position.set(pos.x, 0, pos.z);
+
+                // Apply facing rotation
+                const facing = item.facing || 'camera';
+                if (facing === 'camera') {
+                    // Face toward the default camera position
+                    group.rotation.y = Math.atan2(camX - pos.x, camZ - pos.z);
+                } else {
+                    // Face toward a specific cell
+                    const target = _cellToWorld(facing);
+                    if (target) {
+                        group.rotation.y = Math.atan2(target.x - pos.x, target.z - pos.z);
+                    }
+                }
+
                 this._scene.add(group);
                 this._stageItemMeshes.push(group);
             }
@@ -645,6 +664,9 @@ export class EnvironmentBridge extends BaseBridge {
         const grey = new THREE.MeshStandardMaterial({
             color: 0x888888, roughness: 0.85, metalness: 0,
         });
+        const noseMat = new THREE.MeshStandardMaterial({
+            color: 0xaaaaaa, roughness: 0.7, metalness: 0,
+        });
 
         // Body — roughly 0.4 wide × 0.65 tall × 0.25 deep
         const bodyGeo  = new RoundedBoxGeometry(0.4, 0.65, 0.25, 2, 0.06);
@@ -658,9 +680,18 @@ export class EnvironmentBridge extends BaseBridge {
         head.position.y = 0.65 + 0.05 + 0.16;  // body top + neck gap + half head
         head.castShadow = true;
 
+        // Nose — small bump on the front face (+z) of the head so you
+        // can see which way the character is facing
+        const noseGeo = new THREE.ConeGeometry(0.04, 0.08, 6);
+        noseGeo.rotateX(Math.PI / 2);       // point forward along +z
+        const nose = new THREE.Mesh(noseGeo, noseMat);
+        nose.position.set(0, 0.65 + 0.05 + 0.14, 0.14);  // centred on head, front face
+        nose.castShadow = true;
+
         const group = new THREE.Group();
         group.add(body);
         group.add(head);
+        group.add(nose);
         return group;
     }
 
@@ -1271,7 +1302,7 @@ export class EnvironmentBridge extends BaseBridge {
                 <div class="cb-card-tight">
                     <div class="cb-card-tight-label">${_esc(item.cell || '?')}</div>
                     <div class="cb-card-tight-control" style="font-size:0.8rem; color:var(--text-dim);">
-                        ${item.type === 'greybox' ? 'Character placeholder' : _esc(item.type)}
+                        Facing: ${_esc(item.facing || 'camera')}
                     </div>
                     <div class="cb-card-tight-value">
                         <button type="button" class="cb-stage-remove" data-idx="${i}"
@@ -1521,7 +1552,7 @@ export class EnvironmentBridge extends BaseBridge {
                 const cell = ALL_CELLS[Math.floor(Math.random() * 25)];
                 if (usedCells.has(cell)) continue;
                 usedCells.add(cell);
-                items.push({ type: 'greybox', cell });
+                items.push({ type: 'greybox', cell, facing: 'camera' });
             }
             this._state.stageItems = items;
             this._buildStageItems();
