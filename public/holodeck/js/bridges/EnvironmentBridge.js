@@ -57,29 +57,37 @@ const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 
 // FX lighting presets
 const FX_PRESETS = {
+    flat: {
+        label: 'Flat',
+        skyTop: '#222034',  skyMid: '#394b5a',  skyBot: '#5a5a5a',
+        sunColor: '#ffffee', sunElevation: 60, sunVisible: false,
+        ambientColor: '#ffffff', ambientIntensity: 1.2,
+        dirColor: '#ffffff',     dirIntensity: 0.4,
+        fogEnabled: false, fogColor: '#888888', fogDensity: 0.02,
+    },
     day: {
         label: 'Day',
-        skyTop: '#1a3a5c',  skyMid: '#5b8cb8',  skyBot: '#b8d0e8',
-        sunColor: '#ffffcc', sunElevation: 65, sunVisible: true,
-        ambientColor: '#c8d8ff', ambientIntensity: 0.7,
-        dirColor: '#fff8e0',     dirIntensity: 1.0,
-        fogEnabled: false, fogColor: '#b8d0e8', fogDensity: 0.02,
+        skyTop: '#1a4a7a',  skyMid: '#70a8d8',  skyBot: '#c8e0f0',
+        sunColor: '#ffffaa', sunElevation: 65, sunVisible: true,
+        ambientColor: '#e8eeff', ambientIntensity: 1.0,
+        dirColor: '#fffae0',     dirIntensity: 1.2,
+        fogEnabled: false, fogColor: '#c0d8f0', fogDensity: 0.01,
     },
     dusk: {
         label: 'Dusk',
-        skyTop: '#1a1030',  skyMid: '#6a3060',  skyBot: '#d07040',
-        sunColor: '#ff9944', sunElevation: 12, sunVisible: true,
-        ambientColor: '#6050a0', ambientIntensity: 0.4,
-        dirColor: '#ff8833',     dirIntensity: 0.6,
-        fogEnabled: true,  fogColor: '#5a3050', fogDensity: 0.03,
+        skyTop: '#1a1040',  skyMid: '#8a4070',  skyBot: '#e08050',
+        sunColor: '#ff9944', sunElevation: 10, sunVisible: true,
+        ambientColor: '#9080b0', ambientIntensity: 0.7,
+        dirColor: '#ffaa55',     dirIntensity: 0.9,
+        fogEnabled: true,  fogColor: '#6a4060', fogDensity: 0.02,
     },
     night: {
         label: 'Night',
-        skyTop: '#060610',  skyMid: '#101830',  skyBot: '#1a2040',
-        sunColor: '#aaccff', sunElevation: 40, sunVisible: true,
-        ambientColor: '#202848', ambientIntensity: 0.25,
-        dirColor: '#6688bb',     dirIntensity: 0.3,
-        fogEnabled: true,  fogColor: '#0a0e1a', fogDensity: 0.05,
+        skyTop: '#080818',  skyMid: '#182040',  skyBot: '#283050',
+        sunColor: '#bbddff', sunElevation: 40, sunVisible: true,
+        ambientColor: '#405880', ambientIntensity: 0.5,
+        dirColor: '#88aacc',     dirIntensity: 0.5,
+        fogEnabled: true,  fogColor: '#101828', fogDensity: 0.03,
     },
 };
 
@@ -299,17 +307,17 @@ export class EnvironmentBridge extends BaseBridge {
                 { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
             ],
             // FX — lighting, fog, sun/moon
-            fxPreset:       d.fxPreset      || 'day',
-            sunColor:       d.sunColor      || '#ffffcc',
+            fxPreset:       d.fxPreset      || 'flat',
+            sunColor:       d.sunColor      || '#ffffee',
             sunElevation:   d.sunElevation  ?? 60,         // degrees, 0=horizon 90=overhead
-            sunVisible:     d.sunVisible    ?? true,
+            sunVisible:     d.sunVisible    ?? false,
             ambientColor:   d.ambientColor  || '#ffffff',
-            ambientIntensity: d.ambientIntensity ?? 0.6,
+            ambientIntensity: d.ambientIntensity ?? 1.2,
             dirColor:       d.dirColor      || '#ffffff',
-            dirIntensity:   d.dirIntensity  ?? 0.8,
+            dirIntensity:   d.dirIntensity  ?? 0.4,
             fogEnabled:     d.fogEnabled    ?? false,
-            fogColor:       d.fogColor      || '#8899aa',
-            fogDensity:     d.fogDensity    ?? 0.04,
+            fogColor:       d.fogColor      || '#888888',
+            fogDensity:     d.fogDensity    ?? 0.02,
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -603,15 +611,28 @@ export class EnvironmentBridge extends BaseBridge {
     _windowCells(cols, rows) {
         const style = this._state.windowStyle || 'none';
         const cells = new Set();
-        if (style === 'none' || rows < 1) return cells;
+        if (style === 'none' || rows < 2) return cells;
+
+        // Pattern: 1 solid sill row at bottom, then repeating bands of
+        // 2 window rows + 1 solid lintel row.  This looks like real
+        // architectural windows with proper framing.
+        // Row 0 = floor-level sill (always solid).
+        // Rows 1-2 = first window band, row 3 = solid lintel,
+        // rows 4-5 = second window band, etc.
+
+        const _isWindowRow = (r) => {
+            if (r < 1) return false;           // sill
+            const band = (r - 1) % 3;         // 0,1 = window, 2 = lintel
+            return band < 2;
+        };
 
         if (style === 'single') {
-            // 2-wide centred window starting from the bottom (row 0).
-            // Tiles every 2 rows so tall walls get lots of sky showing.
+            // 2-wide centred window
             const midC = Math.floor(cols / 2);
             const startC = cols >= 3 ? midC - 1 : midC;
             const endC   = cols >= 3 ? midC + 1 : midC + 1;
-            for (let r = 0; r < rows; r += 2) {
+            for (let r = 0; r < rows; r++) {
+                if (!_isWindowRow(r)) continue;
                 for (let c = startC; c < endC; c++) {
                     cells.add(`${c},${r}`);
                 }
@@ -620,9 +641,9 @@ export class EnvironmentBridge extends BaseBridge {
         }
 
         if (style === 'row') {
-            // Full horizontal band across inner columns, from row 0.
-            // Tiles every 2 rows — window, solid, window, solid…
-            for (let r = 0; r < rows; r += 2) {
+            // Full horizontal band across inner columns
+            for (let r = 0; r < rows; r++) {
+                if (!_isWindowRow(r)) continue;
                 for (let c = 1; c < cols - 1; c++) {
                     cells.add(`${c},${r}`);
                 }
@@ -631,10 +652,10 @@ export class EnvironmentBridge extends BaseBridge {
         }
 
         if (style === 'grid') {
-            // 2-wide window pairs on inner columns, from row 0.
-            // Tiles every 2 rows for maximum sky visibility.
+            // Window pairs with solid pillar columns between them
             const colStep = cols <= 4 ? 2 : 3;
-            for (let r = 0; r < rows; r += 2) {
+            for (let r = 0; r < rows; r++) {
+                if (!_isWindowRow(r)) continue;
                 for (let c = 1; c < cols - 1; c += colStep) {
                     cells.add(`${c},${r}`);
                     if (c + 1 < cols - 1) cells.add(`${c + 1},${r}`);
@@ -811,11 +832,10 @@ export class EnvironmentBridge extends BaseBridge {
     _applySunPosition() {
         const elev = (this._state.sunElevation ?? 60) * Math.PI / 180;
         const dist = 35;   // far enough to be in the sky dome
-        // Sun comes from the same general direction as the default camera
-        // but at the specified elevation
-        const x = dist * Math.cos(elev) * 0.7;
-        const y = dist * Math.sin(elev);
-        const z = dist * Math.cos(elev) * 0.7;
+        // Sun rises behind the stage (−x, −z quadrant), opposite camera
+        const x = -dist * Math.cos(elev) * 0.7;
+        const y =  dist * Math.sin(elev);
+        const z = -dist * Math.cos(elev) * 0.7;
 
         if (this._sunOrb) {
             this._sunOrb.position.set(x, y, z);
@@ -1848,7 +1868,16 @@ export class EnvironmentBridge extends BaseBridge {
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
                     style="background:${hex};" aria-label="Choose color"></button>`;
 
+        // Time-of-day preset buttons
+        const presetBtns = Object.entries(FX_PRESETS).map(([key, p]) =>
+            `<button type="button" class="cb-fx-preset${s.fxPreset === key ? ' active' : ''}"
+                     data-preset="${key}">${p.label}</button>`
+        ).join('');
+
         return `
+          ${subtitle('Time of Day', 'fx')}
+          <div class="cb-fx-preset-row">${presetBtns}</div>
+
           ${subtitle('Sky Gradient', 'sky')}
 
           <div class="cb-card-tight">
@@ -1873,6 +1902,32 @@ export class EnvironmentBridge extends BaseBridge {
               ${colorTrigger('skyBot', s.skyBot)}
             </div>
             <div class="cb-card-tight-value" id="sky-bot-val">${s.skyBot}</div>
+          </div>
+
+          ${subtitle('Sun / Moon')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Color</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('sunColor', s.sunColor)}
+            </div>
+            <div class="cb-card-tight-value" id="sun-color-val">${s.sunColor}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Elevation</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-sun-elev" min="0" max="90" step="1"
+                     value="${s.sunElevation}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-sun-elev-val">${s.sunElevation}°</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Visible</div>
+            <div class="cb-card-tight-control">
+              <input type="checkbox" id="fx-sun-visible" ${s.sunVisible ? 'checked' : ''}>
+            </div>
           </div>
         `;
     }
@@ -2053,42 +2108,7 @@ export class EnvironmentBridge extends BaseBridge {
             <button type="button" class="cb-color-trigger" data-color-field="${field}"
                     style="background:${hex};" aria-label="Choose color"></button>`;
 
-        // Preset buttons
-        const presetBtns = Object.entries(FX_PRESETS).map(([key, p]) =>
-            `<button type="button" class="cb-fx-preset${s.fxPreset === key ? ' active' : ''}"
-                     data-preset="${key}">${p.label}</button>`
-        ).join('');
-
         return `
-          ${subtitle('Presets', 'fx')}
-          <div class="cb-fx-preset-row">${presetBtns}</div>
-
-          ${subtitle('Sun / Moon')}
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Color</div>
-            <div class="cb-card-tight-control">
-              ${colorTrigger('sunColor', s.sunColor)}
-            </div>
-            <div class="cb-card-tight-value" id="sun-color-val">${s.sunColor}</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Elevation</div>
-            <div class="cb-card-tight-control" style="flex:1;">
-              <input type="range" id="fx-sun-elev" min="0" max="90" step="1"
-                     value="${s.sunElevation}" class="cb-range">
-            </div>
-            <div class="cb-card-tight-value" id="fx-sun-elev-val">${s.sunElevation}°</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Visible</div>
-            <div class="cb-card-tight-control">
-              <input type="checkbox" id="fx-sun-visible" ${s.sunVisible ? 'checked' : ''}>
-            </div>
-          </div>
-
           ${subtitle('Ambient Light')}
 
           <div class="cb-card-tight">
@@ -2102,7 +2122,7 @@ export class EnvironmentBridge extends BaseBridge {
           <div class="cb-card-tight">
             <div class="cb-card-tight-label">Intensity</div>
             <div class="cb-card-tight-control" style="flex:1;">
-              <input type="range" id="fx-ambient-int" min="0" max="1.5" step="0.05"
+              <input type="range" id="fx-ambient-int" min="0" max="2.0" step="0.05"
                      value="${s.ambientIntensity}" class="cb-range">
             </div>
             <div class="cb-card-tight-value" id="fx-ambient-int-val">${s.ambientIntensity.toFixed(2)}</div>
@@ -2121,7 +2141,7 @@ export class EnvironmentBridge extends BaseBridge {
           <div class="cb-card-tight">
             <div class="cb-card-tight-label">Intensity</div>
             <div class="cb-card-tight-control" style="flex:1;">
-              <input type="range" id="fx-dir-int" min="0" max="1.5" step="0.05"
+              <input type="range" id="fx-dir-int" min="0" max="2.0" step="0.05"
                      value="${s.dirIntensity}" class="cb-range">
             </div>
             <div class="cb-card-tight-value" id="fx-dir-int-val">${s.dirIntensity.toFixed(2)}</div>
