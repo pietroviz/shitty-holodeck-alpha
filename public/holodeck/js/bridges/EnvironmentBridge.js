@@ -614,16 +614,16 @@ export class EnvironmentBridge extends BaseBridge {
         if (style === 'none' || rows < 2) return cells;
 
         // Pattern: 1 solid sill row at bottom, then repeating bands of
-        // 2 window rows + 1 solid lintel row.  This looks like real
-        // architectural windows with proper framing.
+        // 3 window rows + 1 solid lintel row.  Gives ~75% glass coverage
+        // while keeping architectural framing.
         // Row 0 = floor-level sill (always solid).
-        // Rows 1-2 = first window band, row 3 = solid lintel,
-        // rows 4-5 = second window band, etc.
+        // Rows 1-3 = first window band, row 4 = solid lintel,
+        // rows 5-7 = second window band, row 8 = lintel, etc.
 
         const _isWindowRow = (r) => {
             if (r < 1) return false;           // sill
-            const band = (r - 1) % 3;         // 0,1 = window, 2 = lintel
-            return band < 2;
+            const band = (r - 1) % 4;         // 0,1,2 = window, 3 = lintel
+            return band < 3;
         };
 
         if (style === 'single') {
@@ -775,6 +775,7 @@ export class EnvironmentBridge extends BaseBridge {
             vertexColors: true,
             side: THREE.BackSide,
             depthWrite: false,
+            fog: false,         // sky dome should never be fogged
         });
         this._skySphere = new THREE.Mesh(geo, mat);
         this._skySphere.renderOrder = -1;   // render behind everything
@@ -822,37 +823,50 @@ export class EnvironmentBridge extends BaseBridge {
         const geo = new THREE.SphereGeometry(1.5, 16, 12);
         const mat = new THREE.MeshBasicMaterial({
             color: new THREE.Color(this._state.sunColor),
+            fog: false,         // orb shouldn't fade in fog
         });
         this._sunOrb = new THREE.Mesh(geo, mat);
         this._sunOrb.visible = this._state.sunVisible ?? true;
         this._scene.add(this._sunOrb);
     }
 
-    /** Position the sun orb + directional light based on elevation angle. */
+    /** Position the sun orb + directional light based on elevation angle.
+     *  The orb sits behind the stage (−x, −z) so it's visible in the sky.
+     *  The directional light is decoupled: it shines from the camera side
+     *  (+x, +z quadrant) so the stage is front-lit like a theatre. The
+     *  elevation slider still controls how steep the light angle is. */
     _applySunPosition() {
         const elev = (this._state.sunElevation ?? 60) * Math.PI / 180;
-        const dist = 35;   // far enough to be in the sky dome
-        // Sun rises behind the stage (−x, −z quadrant), opposite camera
-        const x = -dist * Math.cos(elev) * 0.7;
-        const y =  dist * Math.sin(elev);
-        const z = -dist * Math.cos(elev) * 0.7;
 
-        if (this._sunOrb) {
-            this._sunOrb.position.set(x, y, z);
-        }
-        if (this._dirLight) {
-            // Directional light points FROM the sun position toward origin
-            this._dirLight.position.set(x, y, z);
-        }
+        // Sun orb — behind the stage so it's visible in the sky backdrop
+        const orbDist = 35;
+        const ox = -orbDist * Math.cos(elev) * 0.7;
+        const oy =  orbDist * Math.sin(elev);
+        const oz = -orbDist * Math.cos(elev) * 0.7;
+        if (this._sunOrb) this._sunOrb.position.set(ox, oy, oz);
+
+        // Directional light — from the camera/audience side (+x, +z),
+        // offset slightly left so shadows have direction.  Height follows
+        // the elevation slider so low sun = long dramatic shadows.
+        const lightDist = 10;
+        const lx = lightDist * Math.cos(elev) * 0.9;
+        const ly = lightDist * Math.sin(elev) + 2;  // minimum 2m up
+        const lz = lightDist * Math.cos(elev) * 0.5;
+        if (this._dirLight) this._dirLight.position.set(lx, ly, lz);
     }
 
-    /** Apply fog state (FogExp2 for efficiency). */
+    /** Apply fog state.
+     *  Uses linear Fog (near/far) so it's clear near the camera and
+     *  thickens in the distance.  The density slider (0.005–0.15) is
+     *  mapped to a near/far range: higher density = fog starts closer. */
     _applyFog() {
         if (this._state.fogEnabled) {
-            this._scene.fog = new THREE.FogExp2(
-                this._state.fogColor,
-                this._state.fogDensity
-            );
+            const d = this._state.fogDensity;
+            // Map density to near/far.  At d=0.01 fog is far away (near 20, far 60).
+            // At d=0.15 fog is very close (near 2, far 12).
+            const near = Math.max(1, 22 - d * 140);
+            const far  = Math.max(near + 5, 65 - d * 360);
+            this._scene.fog = new THREE.Fog(this._state.fogColor, near, far);
         } else {
             this._scene.fog = null;
         }
@@ -2606,10 +2620,26 @@ export class EnvironmentBridge extends BaseBridge {
             return;
         }
         if (key === 'sky') {
+            // Pick a preset (biased bright) then tint the sky gradient
+            const weighted = ['flat','flat','day','day','day','dusk','night'];
+            const pk = weighted[Math.floor(Math.random() * weighted.length)];
+            this._applyFXPreset(pk);
+            // Tint each sky stop toward a random palette colour (30% blend
+            // keeps the preset's feel while adding variety)
             for (const f of ['skyTop', 'skyMid', 'skyBot']) {
                 const c = randHex();
-                if (c) this._applySkyColor(f, c);
+                if (c) {
+                    const base = new THREE.Color(this._state[f]);
+                    const tint = new THREE.Color(c);
+                    base.lerp(tint, 0.3);
+                    this._applySkyColor(f, '#' + base.getHexString());
+                }
             }
+            // Jitter sun elevation ±15°
+            const elev = Math.max(0, Math.min(90,
+                this._state.sunElevation + Math.round((Math.random() - 0.5) * 30)));
+            this._state.sunElevation = elev;
+            this._applySunPosition();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
@@ -2677,20 +2707,25 @@ export class EnvironmentBridge extends BaseBridge {
         }
 
         if (key === 'fx') {
-            // Pick a random preset, then randomise a few values on top
-            const presetKeys = Object.keys(FX_PRESETS);
-            const pk = presetKeys[Math.floor(Math.random() * presetKeys.length)];
-            this._applyFXPreset(pk);
-            // Jitter sun elevation ±15°
-            const elev = Math.max(0, Math.min(90,
-                this._state.sunElevation + Math.round((Math.random() - 0.5) * 30)));
-            this._state.sunElevation = elev;
-            this._applySunPosition();
-            // Optional fog density jitter
-            if (this._state.fogEnabled) {
-                this._state.fogDensity = +(0.01 + Math.random() * 0.08).toFixed(3);
-                this._applyFog();
+            // Jitter ambient + directional intensities around current values,
+            // with a brightness floor so scenes never go too dark.
+            const jitter = (base, min, max) =>
+                +Math.max(min, Math.min(max, base + (Math.random() - 0.4) * 0.5)).toFixed(2);
+            this._state.ambientIntensity = jitter(this._state.ambientIntensity, 0.5, 1.8);
+            if (this._ambientLight) this._ambientLight.intensity = this._state.ambientIntensity;
+            this._state.dirIntensity = jitter(this._state.dirIntensity, 0.3, 1.6);
+            if (this._dirLight) this._dirLight.intensity = this._state.dirIntensity;
+            // Random tint for ambient from palette
+            const ac = randHex();
+            if (ac) this._applyAmbientColor(ac);
+            // 40% chance toggle fog, light density
+            if (Math.random() < 0.4) {
+                this._state.fogEnabled = !this._state.fogEnabled;
             }
+            if (this._state.fogEnabled) {
+                this._state.fogDensity = +(0.01 + Math.random() * 0.04).toFixed(3);
+            }
+            this._applyFog();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
