@@ -581,19 +581,20 @@ export class EnvironmentBridge extends BaseBridge {
             return sprite;
         };
 
-        // Column numbers: 5, 4, 3, 2, 1 across the back edge (−z side)
-        for (let c = 0; c < 5; c++) {
-            const num = 5 - c;               // 5 on the left, 1 on the right
-            const sprite = makeSprite(String(num));
-            sprite.position.set(c - 2, 0.06, -half - offset);
+        // Row letters: B, I, N, G, O down the left edge (−x side)
+        // B at back (z=−2), O at front (z=+2)
+        for (let r = 0; r < 5; r++) {
+            const sprite = makeSprite(BINGO_ROWS[r]);
+            sprite.position.set(-half - offset, 0.06, r - 2);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
 
-        // Row letters: B, I, N, G, O down the left edge (−x side)
+        // Row numbers: 1, 2, 3, 4, 5 down the right edge (+x side)
+        // 1 at back (z=−2, = row B), 5 at front (z=+2, = row O)
         for (let r = 0; r < 5; r++) {
-            const sprite = makeSprite(BINGO_ROWS[r]);
-            sprite.position.set(-half - offset, 0.06, r - 2);
+            const sprite = makeSprite(String(r + 1));
+            sprite.position.set(half + offset, 0.06, r - 2);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
