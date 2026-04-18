@@ -547,35 +547,47 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Render number labels (1–25) on each stage grid cell as always-
-     * facing sprites. The numbers use the diamond-order scheme defined
-     * by _SQUARE_MAP so artists can reference positions by number.
+     * Render BINGO column headers across the back edge (−z) and row
+     * numbers 1–5 down the left edge (−x) of the stage grid.  Labels
+     * sit just outside the stage so they don't overlap characters.
      */
     _buildGridNumbers() {
+        const half = STAGE_SIZE / 2;       // 2.5
+        const offset = 0.65;              // distance outside stage edge
+
+        const makeSprite = (text) => {
+            const canvas  = document.createElement('canvas');
+            canvas.width  = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle    = 'rgba(255, 255, 255, 0.45)';
+            ctx.font         = 'bold 72px sans-serif';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 64, 64);
+
+            const tex    = new THREE.CanvasTexture(canvas);
+            const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(0.55, 0.55, 1);
+            return sprite;
+        };
+
+        // Column headers: B I N G O across the back edge (−z side)
+        for (let c = 0; c < 5; c++) {
+            const letter = BINGO_COLS[c];
+            const sprite = makeSprite(letter);
+            sprite.position.set(c - 2, 0.06, -half - offset);
+            this._scene.add(sprite);
+            this._gridNumbers.push(sprite);
+        }
+
+        // Row numbers: 1–5 down the left edge (−x side)
         for (let r = 0; r < 5; r++) {
-            for (let c = 0; c < 5; c++) {
-                const label = _cellLabel(c, r);
-                const pos   = _cellToWorld(label);
-                if (!pos) continue;
-
-                const canvas  = document.createElement('canvas');
-                canvas.width  = 64;
-                canvas.height = 64;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle    = 'rgba(255, 255, 255, 0.35)';
-                ctx.font         = 'bold 28px sans-serif';
-                ctx.textAlign    = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(label, 32, 32);
-
-                const tex    = new THREE.CanvasTexture(canvas);
-                const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
-                const sprite = new THREE.Sprite(mat);
-                sprite.position.set(pos.x, 0.06, pos.z);
-                sprite.scale.set(0.18, 0.18, 1);  // small reference labels
-                this._scene.add(sprite);
-                this._gridNumbers.push(sprite);
-            }
+            const sprite = makeSprite(String(r + 1));
+            sprite.position.set(-half - offset, 0.06, r - 2);
+            this._scene.add(sprite);
+            this._gridNumbers.push(sprite);
         }
     }
 
