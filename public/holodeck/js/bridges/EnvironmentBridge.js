@@ -191,24 +191,25 @@ const _snapOdd = (n) => {
 //   O1 = back-left   (apex, farthest from camera)
 //   B5 = front-right (bottom, nearest to camera)
 //   N3 = dead centre
-const BINGO_ROWS = 'BINGO';
+const BINGO_COLS = 'BINGO';
 
-/** Return a cell label like "N3" for a (col, row) pair.
- *  col 0 = leftmost (column 1), col 4 = rightmost (column 5).
- *  row 0 = back (O), row 4 = front (B). */
+/** Return a cell label like "B1" for a (col, row) pair.
+ *  Letter = column: B(0) left … O(4) right.
+ *  Number = row:    1 front … 5 back.
+ *  Equivalence: B=1, I=2, N=3, G=4, O=5. */
 function _cellLabel(col, row) {
-    return BINGO_ROWS[4 - row] + (col + 1);
+    return BINGO_COLS[col] + (5 - row);
 }
 
 /** Parse a BINGO cell label → world-space {x, z} centre, or null.
- *  Letter = row (B front … O back), Number = column (1 left … 5 right). */
+ *  Letter = column (B left … O right), Number = row (1 front … 5 back). */
 function _cellToWorld(cell) {
     if (!cell || cell.length < 2) return null;
-    const letterIdx = BINGO_ROWS.indexOf(cell[0].toUpperCase());
+    const letterIdx = BINGO_COLS.indexOf(cell[0].toUpperCase());
     const num       = parseInt(cell.slice(1), 10);
     if (letterIdx < 0 || num < 1 || num > 5) return null;
-    // B(0)→z=+2 (front), O(4)→z=−2 (back); 1→x=−2 (left), 5→x=+2 (right)
-    return { x: num - 3, z: 2 - letterIdx };
+    // B(0)→x=−2 (left), O(4)→x=+2 (right); 1→z=+2 (front), 5→z=−2 (back)
+    return { x: letterIdx - 2, z: 3 - num };
 }
 
 /** All 25 cell labels in row-major order. */
@@ -737,19 +738,17 @@ export class EnvironmentBridge extends BaseBridge {
             return sprite;
         };
 
-        // Left edge (−x): B at front (z=+2) up to O at back (z=−2)
-        // On the diamond this reads bottom→apex: B, I, N, G, O
+        // Left edge (−x): rows 1 (front, z=+2) to 5 (back, z=−2)
         for (let i = 0; i < 5; i++) {
-            const sprite = makeSprite(BINGO_ROWS[i]);
+            const sprite = makeSprite(String(i + 1));
             sprite.position.set(-half - offset, 0.06, 2 - i);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
 
-        // Back edge (−z): 1 at left (x=−2) to 5 at right (x=+2)
-        // On the diamond this reads apex→right: 1, 2, 3, 4, 5
+        // Back edge (−z): columns B (left, x=−2) to O (right, x=+2)
         for (let i = 0; i < 5; i++) {
-            const sprite = makeSprite(String(i + 1));
+            const sprite = makeSprite(BINGO_COLS[i]);
             sprite.position.set(i - 2, 0.06, -half - offset);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
@@ -1687,7 +1686,7 @@ export class EnvironmentBridge extends BaseBridge {
                 ).join('')}
             </select>`;
 
-            // Row letter + column number selectors
+            // Column letter + row number selectors
             const curLetter = slot.cell ? slot.cell[0].toUpperCase() : 'N';
             const curNum    = slot.cell ? slot.cell.slice(1) : '3';
 
