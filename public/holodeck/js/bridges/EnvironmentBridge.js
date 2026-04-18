@@ -44,7 +44,7 @@ const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
 const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
 const DEFAULT_GROUND_SIZE  = 19;
-const DEFAULT_WALLS        = 'off';
+const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–8 = blocks
 const DEFAULT_TEXTURE      = 'none';
 
 // Sky gradient defaults (top-to-bottom, subtle dusk)
@@ -55,9 +55,10 @@ const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 // Stage item cap
 const MAX_STAGE_ITEMS = 5;
 
-// Wall heights (meters)
-const WALL_HEIGHTS = { off: 0, low: 1, med: 3, high: 5 };
-const WALL_THICK   = 0.25;
+// Wall height range (blocks, 1 block = 1 meter)
+const WALL_HEIGHT_MIN = 0;
+const WALL_HEIGHT_MAX = 8;
+const WALL_THICK      = 0.25;
 
 // Cached texture asset list (id, name) loaded from images/textures/_index.json
 let _TEXTURE_OPTS = null;
@@ -162,25 +163,29 @@ const _snapOdd = (n) => {
 };
 
 // ── BINGO grid for the 5×5 stage ────────────────────────────────
-// Columns B-I-N-G-O (left to right, −x → +x).
-// Rows 1–5 (back to front, −z → +z toward the camera).
-//   B1 = back-left (wall corner)   O1 = back-right
-//   B5 = front-left                O5 = front-right (nearest camera)
+// Rows B-I-N-G-O (back to front, −z → +z).
+// Columns 5-4-3-2-1 (left to right, −x → +x).
+//   B5 = back-left (wall corner)   B1 = back-right
+//   O5 = front-left                O1 = front-right (nearest camera)
 //   N3 = dead centre
-const BINGO_COLS = 'BINGO';
+const BINGO_ROWS = 'BINGO';
 
-/** Return a cell label like "N3" for a (col, row) pair. */
+/** Return a cell label like "N3" for a (col, row) pair.
+ *  col 0 = leftmost (number 5), col 4 = rightmost (number 1).
+ *  row 0 = back (B), row 4 = front (O). */
 function _cellLabel(col, row) {
-    return BINGO_COLS[col] + (row + 1);
+    return BINGO_ROWS[row] + (5 - col);
 }
 
-/** Parse a BINGO cell label → world-space {x, z} centre, or null. */
+/** Parse a BINGO cell label → world-space {x, z} centre, or null.
+ *  Letter = row (B back … O front), Number = column (5 left … 1 right). */
 function _cellToWorld(cell) {
     if (!cell || cell.length < 2) return null;
-    const col = BINGO_COLS.indexOf(cell[0].toUpperCase());
-    const row = parseInt(cell.slice(1), 10) - 1;
-    if (col < 0 || row < 0 || row > 4) return null;
-    return { x: col - 2, z: row - 2 };
+    const rowIdx = BINGO_ROWS.indexOf(cell[0].toUpperCase());
+    const num    = parseInt(cell.slice(1), 10);
+    if (rowIdx < 0 || num < 1 || num > 5) return null;
+    const colIdx = 5 - num;           // 5→0 (left), 1→4 (right)
+    return { x: colIdx - 2, z: rowIdx - 2 };
 }
 
 /** All 25 cell labels in row-major order. */
@@ -207,7 +212,10 @@ export class EnvironmentBridge extends BaseBridge {
             // Ground size is odd-only (5, 7, 9, ... 25) so the ground
             // grows/shrinks one row around the perimeter at a time.
             groundSize:     _snapOdd(d.groundSize ?? DEFAULT_GROUND_SIZE),
-            walls:          d.walls || DEFAULT_WALLS,
+            walls:          typeof d.walls === 'number' ? d.walls
+                            : typeof d.walls === 'string'
+                            ? ({ off: 0, low: 1, med: 3, high: 5 }[d.walls] ?? 0)
+                            : DEFAULT_WALL_HEIGHT,
             // Texture choices (stub for now — we just store the id;
             // applying real textures comes later)
             groundTexture:  d.groundTexture || DEFAULT_TEXTURE,
@@ -219,9 +227,9 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Stage items — array of { type, square }
             stageItems:     d.stageItems || [
-                { type: 'greybox', cell: 'G1' },
-                { type: 'greybox', cell: 'I3' },
-                { type: 'greybox', cell: 'G3' },
+                { type: 'greybox', cell: 'B2' },
+                { type: 'greybox', cell: 'N4' },
+                { type: 'greybox', cell: 'N2' },
             ],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
@@ -573,18 +581,18 @@ export class EnvironmentBridge extends BaseBridge {
             return sprite;
         };
 
-        // Column headers: B I N G O across the back edge (−z side)
+        // Column numbers: 5, 4, 3, 2, 1 across the back edge (−z side)
         for (let c = 0; c < 5; c++) {
-            const letter = BINGO_COLS[c];
-            const sprite = makeSprite(letter);
+            const num = 5 - c;               // 5 on the left, 1 on the right
+            const sprite = makeSprite(String(num));
             sprite.position.set(c - 2, 0.06, -half - offset);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
 
-        // Row numbers: 1–5 down the left edge (−x side)
+        // Row letters: B, I, N, G, O down the left edge (−x side)
         for (let r = 0; r < 5; r++) {
-            const sprite = makeSprite(String(r + 1));
+            const sprite = makeSprite(BINGO_ROWS[r]);
             sprite.position.set(-half - offset, 0.06, r - 2);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
@@ -691,6 +699,9 @@ export class EnvironmentBridge extends BaseBridge {
                     : baseScale;
                 clone.scale.set(s, s, s);
 
+                // Store actual world height for dynamic camera culling
+                clone.userData._worldHeight = (template.userData._templateHeight || 1) * s;
+
                 this._scene.add(clone);
                 this._groundObjMeshes.push(clone);
             }
@@ -767,6 +778,8 @@ export class EnvironmentBridge extends BaseBridge {
         if (box3.min.y !== 0) {
             group.children.forEach(c => { c.position.y -= box3.min.y; });
         }
+        // Store unscaled height so dynamic culling knows how tall each clone is
+        group.userData._templateHeight = box3.max.y - box3.min.y;
         return group;
     }
 
@@ -846,16 +859,16 @@ export class EnvironmentBridge extends BaseBridge {
         }
     }
 
-    _applyWalls(mode, skipState = false) {
-        if (!skipState) this._state.walls = mode;
-        const h = WALL_HEIGHTS[mode] ?? 0;
-        this._wallsEnabled = h > 0;
+    _applyWalls(h, skipState = false) {
+        const height = Math.max(0, Math.min(WALL_HEIGHT_MAX, Math.round(h)));
+        if (!skipState) this._state.walls = height;
+        this._wallsEnabled = height > 0;
         for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
             if (!wall) continue;
             wall.visible = this._wallsEnabled;
             if (this._wallsEnabled) {
-                wall.scale.y = h;
-                wall.position.y = h / 2;
+                wall.scale.y = height;
+                wall.position.y = height / 2;
             }
         }
         // Run a single dynamic-cull pass so the camera-facing walls hide immediately
@@ -872,11 +885,71 @@ export class EnvironmentBridge extends BaseBridge {
         if (!this._wallsEnabled) return;
         const cx = this._camera.position.x;
         const cz = this._camera.position.z;
-        // Hide the wall the camera is "behind" (i.e. the wall that faces the camera)
-        if (this._wallRight) this._wallRight.visible = cx <= 0;
-        if (this._wallLeft)  this._wallLeft.visible  = cx >= 0;
-        if (this._wallFront) this._wallFront.visible = cz <= 0;
-        if (this._wallBack)  this._wallBack.visible  = cz >= 0;
+
+        // 3-wall room: show all four, then hide only the single wall
+        // that most directly faces the camera.  We compare |cx| vs |cz|
+        // to find the dominant axis, then hide the wall on that side.
+        this._wallBack.visible  = true;
+        this._wallFront.visible = true;
+        this._wallLeft.visible  = true;
+        this._wallRight.visible = true;
+
+        if (Math.abs(cx) >= Math.abs(cz)) {
+            // Camera is more to the left/right — hide the x-axis wall it faces
+            if (cx > 0) this._wallRight.visible = false;
+            else        this._wallLeft.visible  = false;
+        } else {
+            // Camera is more to the front/back — hide the z-axis wall it faces
+            if (cz > 0) this._wallFront.visible = false;
+            else        this._wallBack.visible  = false;
+        }
+    }
+
+    /**
+     * Dynamic ground-object culling: hide objects that are between the
+     * camera and the stage AND tall enough to obstruct the view.
+     *
+     * For each object we check two things:
+     *   1. Is it in the camera corridor? (within ±30° of the camera
+     *      direction from the origin, i.e. roughly "in front of" the
+     *      camera when looking at the stage)
+     *   2. Is it taller than a threshold? (short ground-cover like
+     *      grass and flowers should stay visible)
+     *
+     * Objects that fail both checks are shown; objects that pass both
+     * are hidden.  This runs every frame but is just arithmetic — no
+     * bounding-box recomputation.
+     */
+    _cullGroundObjectsByCamera() {
+        const meshes = this._groundObjMeshes;
+        if (!meshes.length) return;
+
+        const cx = this._camera.position.x;
+        const cz = this._camera.position.z;
+        const camLen = Math.sqrt(cx * cx + cz * cz) || 1;
+        const cnx = cx / camLen;
+        const cnz = cz / camLen;
+        const cosThr = Math.cos(Math.PI / 6);    // ±30° half-angle
+        const stageHalf = STAGE_SIZE / 2 + 0.5;
+        const heightThr = 0.8;                    // below this → always visible
+
+        for (let i = 0; i < meshes.length; i++) {
+            const m = meshes[i];
+            const ox = m.position.x;
+            const oz = m.position.z;
+            const oLen = Math.sqrt(ox * ox + oz * oz);
+
+            // Objects inside the stage buffer are always visible (shouldn't exist, but safe)
+            if (oLen < stageHalf) { m.visible = true; continue; }
+
+            const worldH = m.userData._worldHeight || 0;
+            // Short objects never obstruct — always show
+            if (worldH < heightThr) { m.visible = true; continue; }
+
+            // Dot product: is this object in the camera's direction from origin?
+            const dot = (ox * cnx + oz * cnz) / (oLen || 1);
+            m.visible = dot <= cosThr;    // outside the corridor → show
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -905,8 +978,12 @@ export class EnvironmentBridge extends BaseBridge {
         if (typeof state.groundSize === 'number' && state.groundSize !== this._state.groundSize) {
             this._applyGroundSize(state.groundSize);
         }
-        if (state.walls && state.walls !== this._state.walls) {
-            this._applyWalls(state.walls);
+        if (state.walls != null && state.walls !== this._state.walls) {
+            // Backwards-compat: convert old string modes to numeric heights
+            const wh = typeof state.walls === 'string'
+                ? ({ off: 0, low: 1, med: 3, high: 5 }[state.walls] ?? 0)
+                : state.walls;
+            this._applyWalls(wh);
         }
         if (state.groundTexture && state.groundTexture !== this._state.groundTexture) {
             this._applyTexture('groundTexture', state.groundTexture);
@@ -992,8 +1069,8 @@ export class EnvironmentBridge extends BaseBridge {
         const defPos = ((DEFAULT_GROUND_SIZE - GROUND_SIZE_MIN) /
                         (GROUND_SIZE_MAX - GROUND_SIZE_MIN)) * 100;
 
-        const wallOpts   = ['off', 'low', 'med', 'high'];
-        const wallLabels = { off: 'Off', low: 'Low', med: 'Med', high: 'High' };
+        const wallH = s.walls || 0;
+        const wallLabel = wallH === 0 ? 'Off' : `${wallH} block${wallH > 1 ? 's' : ''}`;
 
         return `
           ${subtitle('Ground Plane', 'groundPlane')}
@@ -1047,13 +1124,11 @@ export class EnvironmentBridge extends BaseBridge {
           <div class="cb-card-tight">
             <div class="cb-card-tight-label">Height</div>
             <div class="cb-card-tight-control">
-              <div class="cb-segmented" id="walls-seg">
-                ${wallOpts.map(o => `
-                  <button type="button" data-walls="${o}"
-                          class="${s.walls === o ? 'active' : ''}">${wallLabels[o]}</button>`).join('')}
-              </div>
+              <input type="range" id="wall-height-slider"
+                     min="${WALL_HEIGHT_MIN}" max="${WALL_HEIGHT_MAX}" step="1"
+                     value="${wallH}">
             </div>
-            <div class="cb-card-tight-value">${WALL_HEIGHTS[s.walls] ? `${WALL_HEIGHTS[s.walls]}m` : '—'}</div>
+            <div class="cb-card-tight-value" id="wall-height-val">${wallLabel}</div>
           </div>
 
           <div class="cb-card-tight">
@@ -1262,12 +1337,16 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // Walls segmented toggle
-        panel.querySelectorAll('#walls-seg button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const mode = btn.dataset.walls;
-                this._applyWalls(mode);
-                this._renderPanel();   // refresh active state + value column
+        // Walls height slider
+        const wallSlider = panel.querySelector('#wall-height-slider');
+        if (wallSlider) {
+            wallSlider.addEventListener('input', () => {
+                const h = parseInt(wallSlider.value, 10);
+                this._applyWalls(h);
+                const valEl = panel.querySelector('#wall-height-val');
+                if (valEl) valEl.textContent = h === 0 ? 'Off' : `${h} block${h > 1 ? 's' : ''}`;
+            });
+            wallSlider.addEventListener('change', () => {
                 this._scheduleAutoSave();
             });
         });
@@ -1379,8 +1458,7 @@ export class EnvironmentBridge extends BaseBridge {
             return;
         }
         if (key === 'walls') {
-            const opts = ['off', 'low', 'med', 'high'];
-            this._applyWalls(opts[Math.floor(Math.random() * opts.length)]);
+            this._applyWalls(Math.floor(Math.random() * (WALL_HEIGHT_MAX + 1)));
             const c = randHex(); if (c) this._applyWallColor(c);
             this._applyTexture('wallTexture', randTex());
             this._renderPanel();
@@ -1466,8 +1544,9 @@ export class EnvironmentBridge extends BaseBridge {
 
         this._controls.update();
 
-        // Dynamic wall culling — hide walls facing the camera
+        // Dynamic culling — hide walls + tall ground objects facing the camera
         this._cullWallsByCamera();
+        this._cullGroundObjectsByCamera();
     }
 
     play() {
