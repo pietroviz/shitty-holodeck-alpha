@@ -543,8 +543,11 @@ export class EnvironmentBridge extends BaseBridge {
 
     /**
      * Window layout definitions.
-     * Each function returns a Set of "col,row" keys where windows go.
+     * Returns a Set of "col,row" keys where windows go.
      * col: 0..cols-1 (along wall length), row: 0..rows-1 (bottom to top).
+     *
+     * All styles tile from the bottom up — as the wall gets taller,
+     * more window rows appear rather than one window floating high up.
      */
     _windowCells(cols, rows) {
         const style = this._state.windowStyle || 'none';
@@ -552,43 +555,44 @@ export class EnvironmentBridge extends BaseBridge {
         if (style === 'none' || rows < 2) return cells;
 
         if (style === 'single') {
-            // One window centred, in the upper-middle area
+            // One 2×2 window centred, starting at row 1 (just above floor).
+            // Taller walls get additional window pairs every 3 rows.
             const midC = Math.floor(cols / 2);
-            const midR = Math.floor(rows * 0.6);
-            cells.add(`${midC},${midR}`);
-            // Make it 2 wide if wall is wide enough
-            if (cols >= 3) cells.add(`${midC - 1},${midR}`);
-            if (cols >= 3 && rows >= 3) {
-                cells.add(`${midC},${midR - 1}`);
-                cells.add(`${midC - 1},${midR - 1}`);
+            const startC = cols >= 3 ? midC - 1 : midC;
+            const endC   = cols >= 3 ? midC + 1 : midC + 1;
+            for (let r = 1; r < rows; r += 3) {
+                for (let c = startC; c < endC; c++) {
+                    cells.add(`${c},${r}`);
+                    if (r + 1 < rows) cells.add(`${c},${r + 1}`);
+                }
             }
             return cells;
         }
 
         if (style === 'row') {
-            // Horizontal band of windows at ~60% height, skip edge columns
-            const bandR = Math.floor(rows * 0.6);
-            for (let c = 1; c < cols - 1; c++) {
-                cells.add(`${c},${bandR}`);
-            }
-            // Add a second row if wall is tall enough
-            if (rows >= 5 && bandR > 0) {
+            // Horizontal band of windows across inner columns.
+            // Starts at row 1, repeats every 3 rows as wall grows.
+            for (let r = 1; r < rows; r += 3) {
                 for (let c = 1; c < cols - 1; c++) {
-                    cells.add(`${c},${bandR - 1}`);
+                    cells.add(`${c},${r}`);
                 }
             }
             return cells;
         }
 
         if (style === 'grid') {
-            // Evenly spaced windows — skip bottom row and edge columns
+            // 2-wide window pairs on inner columns, tiling from row 1 up.
+            // Repeats every 2 rows with a 1-row solid gap between.
             const colStep = cols <= 4 ? 2 : 3;
-            const rowStep = rows <= 4 ? 2 : 3;
-            for (let c = 1; c < cols - 1; c += colStep) {
-                for (let r = 1; r < rows; r += rowStep) {
+            for (let r = 1; r < rows; r += 3) {
+                for (let c = 1; c < cols - 1; c += colStep) {
                     cells.add(`${c},${r}`);
-                    // Make each window 2-wide if space allows
                     if (c + 1 < cols - 1) cells.add(`${c + 1},${r}`);
+                    // Second row of the window if space
+                    if (r + 1 < rows) {
+                        cells.add(`${c},${r + 1}`);
+                        if (c + 1 < cols - 1) cells.add(`${c + 1},${r + 1}`);
+                    }
                 }
             }
             return cells;
