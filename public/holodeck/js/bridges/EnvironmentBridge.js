@@ -163,29 +163,36 @@ const _snapOdd = (n) => {
 };
 
 // ── BINGO grid for the 5×5 stage ────────────────────────────────
-// Rows B-I-N-G-O (back to front, −z → +z).
-// Columns 5-4-3-2-1 (left to right, −x → +x).
-//   B5 = back-left (wall corner)   B1 = back-right
-//   O5 = front-left                O1 = front-right (nearest camera)
+// Viewed from the camera the stage is a diamond.  Labels sit on the
+// two visible top edges:
+//   Left edge  (bottom→apex):  B  I  N  G  O   (rows, front→back)
+//   Back edge  (apex→right):   1  2  3  4  5   (columns, left→right)
+//
+// Rows B-I-N-G-O (front to back, +z → −z).
+// Columns 1-2-3-4-5 (left to right, −x → +x).
+//   B1 = front-left (left point of diamond)
+//   O5 = back-right  (right point of diamond)
+//   O1 = back-left   (apex, farthest from camera)
+//   B5 = front-right (bottom, nearest to camera)
 //   N3 = dead centre
 const BINGO_ROWS = 'BINGO';
 
 /** Return a cell label like "N3" for a (col, row) pair.
- *  col 0 = leftmost (number 5), col 4 = rightmost (number 1).
- *  row 0 = back (B), row 4 = front (O). */
+ *  col 0 = leftmost (column 1), col 4 = rightmost (column 5).
+ *  row 0 = back (O), row 4 = front (B). */
 function _cellLabel(col, row) {
-    return BINGO_ROWS[row] + (5 - col);
+    return BINGO_ROWS[4 - row] + (col + 1);
 }
 
 /** Parse a BINGO cell label → world-space {x, z} centre, or null.
- *  Letter = row (B back … O front), Number = column (5 left … 1 right). */
+ *  Letter = row (B front … O back), Number = column (1 left … 5 right). */
 function _cellToWorld(cell) {
     if (!cell || cell.length < 2) return null;
-    const rowIdx = BINGO_ROWS.indexOf(cell[0].toUpperCase());
-    const num    = parseInt(cell.slice(1), 10);
-    if (rowIdx < 0 || num < 1 || num > 5) return null;
-    const colIdx = 5 - num;           // 5→0 (left), 1→4 (right)
-    return { x: colIdx - 2, z: rowIdx - 2 };
+    const letterIdx = BINGO_ROWS.indexOf(cell[0].toUpperCase());
+    const num       = parseInt(cell.slice(1), 10);
+    if (letterIdx < 0 || num < 1 || num > 5) return null;
+    // B(0)→z=+2 (front), O(4)→z=−2 (back); 1→x=−2 (left), 5→x=+2 (right)
+    return { x: num - 3, z: 2 - letterIdx };
 }
 
 /** All 25 cell labels in row-major order. */
@@ -227,9 +234,9 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Stage items — array of { type, square }
             stageItems:     d.stageItems || [
-                { type: 'greybox', cell: 'B2' },
-                { type: 'greybox', cell: 'N4' },
+                { type: 'greybox', cell: 'O4' },
                 { type: 'greybox', cell: 'N2' },
+                { type: 'greybox', cell: 'N4' },
             ],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
@@ -581,20 +588,20 @@ export class EnvironmentBridge extends BaseBridge {
             return sprite;
         };
 
-        // Row letters: B, I, N, G, O down the left edge (−x side)
-        // B at back (z=−2), O at front (z=+2)
-        for (let r = 0; r < 5; r++) {
-            const sprite = makeSprite(BINGO_ROWS[r]);
-            sprite.position.set(-half - offset, 0.06, r - 2);
+        // Left edge (−x): B at front (z=+2) up to O at back (z=−2)
+        // On the diamond this reads bottom→apex: B, I, N, G, O
+        for (let i = 0; i < 5; i++) {
+            const sprite = makeSprite(BINGO_ROWS[i]);
+            sprite.position.set(-half - offset, 0.06, 2 - i);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
 
-        // Row numbers: 1, 2, 3, 4, 5 down the right edge (+x side)
-        // 1 at back (z=−2, = row B), 5 at front (z=+2, = row O)
-        for (let r = 0; r < 5; r++) {
-            const sprite = makeSprite(String(r + 1));
-            sprite.position.set(half + offset, 0.06, r - 2);
+        // Back edge (−z): 1 at left (x=−2) to 5 at right (x=+2)
+        // On the diamond this reads apex→right: 1, 2, 3, 4, 5
+        for (let i = 0; i < 5; i++) {
+            const sprite = makeSprite(String(i + 1));
+            sprite.position.set(i - 2, 0.06, -half - offset);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
