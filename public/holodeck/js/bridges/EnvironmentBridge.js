@@ -1349,7 +1349,7 @@ export class EnvironmentBridge extends BaseBridge {
             wallSlider.addEventListener('change', () => {
                 this._scheduleAutoSave();
             });
-        });
+        }
 
         // Texture dropdowns (stub for now — saves choice to state)
         panel.querySelectorAll('.cb-tex-select').forEach(sel => {
