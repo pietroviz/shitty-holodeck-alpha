@@ -194,23 +194,23 @@ const _snapOdd = (n) => {
 //   N3 = dead centre
 const BINGO_COLS = 'BINGO';
 
-/** Return a cell label like "B1" for a (col, row) pair.
+/** Return a cell label like "B5" for a (col, row) pair.
  *  Letter = column: B(0) left … O(4) right.
- *  Number = row:    1 front … 5 back.
+ *  Number = row:    5 front … 1 back.
  *  Equivalence: B=1, I=2, N=3, G=4, O=5. */
 function _cellLabel(col, row) {
-    return BINGO_COLS[col] + (5 - row);
+    return BINGO_COLS[col] + (row + 1);
 }
 
 /** Parse a BINGO cell label → world-space {x, z} centre, or null.
- *  Letter = column (B left … O right), Number = row (1 front … 5 back). */
+ *  Letter = column (B left … O right), Number = row (5 front … 1 back). */
 function _cellToWorld(cell) {
     if (!cell || cell.length < 2) return null;
     const letterIdx = BINGO_COLS.indexOf(cell[0].toUpperCase());
     const num       = parseInt(cell.slice(1), 10);
     if (letterIdx < 0 || num < 1 || num > 5) return null;
-    // B(0)→x=−2 (left), O(4)→x=+2 (right); 1→z=+2 (front), 5→z=−2 (back)
-    return { x: letterIdx - 2, z: 3 - num };
+    // B(0)→x=−2 (left), O(4)→x=+2 (right); 5→z=+2 (front), 1→z=−2 (back)
+    return { x: letterIdx - 2, z: num - 3 };
 }
 
 /** All 25 cell labels in row-major order. */
@@ -739,9 +739,9 @@ export class EnvironmentBridge extends BaseBridge {
             return sprite;
         };
 
-        // Left edge (−x): rows 1 (front, z=+2) to 5 (back, z=−2)
+        // Left edge (−x): rows 5 (front, z=+2) down to 1 (back, z=−2)
         for (let i = 0; i < 5; i++) {
-            const sprite = makeSprite(String(i + 1));
+            const sprite = makeSprite(String(5 - i));
             sprite.position.set(-half - offset, 0.06, 2 - i);
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
