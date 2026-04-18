@@ -8,11 +8,10 @@
  *   - 5×5 stage perimeter (thick light-grey Line2) + inner stage grid
  *   - Flat lighting (ambient + one directional), no placeholder cube
  *
- * Tabs: File · Land · Sky · Stuff · FX.
+ * Tabs: File · Ground · Sky · Stuff · FX.
  *   File   — name / description / tags (wired)
- *   Land   — ground size + ground color + stage color (wired)
- *            walls + stage-size controls coming next
- *   Sky    — stub
+ *   Ground — ground size + ground/stage/wall color, walls (wired)
+ *   Sky    — 3-stop vertical gradient (top/mid/bot color pickers, wired)
  *   Stuff  — stub (object placement)
  *   FX     — stub (lighting + atmosphere effects)
  *
@@ -46,6 +45,11 @@ const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
 const DEFAULT_GROUND_SIZE  = 19;
 const DEFAULT_WALLS        = 'off';
 const DEFAULT_TEXTURE      = 'none';
+
+// Sky gradient defaults (top-to-bottom, subtle dusk)
+const DEFAULT_SKY_TOP = '#222034';   // DB32 deep navy
+const DEFAULT_SKY_MID = '#394b5a';   // muted blue-grey
+const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
 
 // Wall heights (meters)
 const WALL_HEIGHTS = { off: 0, low: 1, med: 3, high: 5 };
@@ -120,7 +124,11 @@ export class EnvironmentBridge extends BaseBridge {
             groundTexture:  d.groundTexture || DEFAULT_TEXTURE,
             stageTexture:   d.stageTexture  || DEFAULT_TEXTURE,
             wallTexture:    d.wallTexture   || DEFAULT_TEXTURE,
-            // Future: skyTop/Mid/Bot, objects, fx, lighting
+            // Sky gradient (3-stop vertical)
+            skyTop:         d.skyTop || DEFAULT_SKY_TOP,
+            skyMid:         d.skyMid || DEFAULT_SKY_MID,
+            skyBot:         d.skyBot || DEFAULT_SKY_BOT,
+            // Future: objects, fx, lighting
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -137,6 +145,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._stageInner  = [];
         this._wallBack    = null;     // back wall (along -z edge of stage)
         this._wallLeft    = null;     // left wall (along -x edge of stage)
+        this._skyCanvas   = null;     // off-screen canvas for gradient
+        this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
         this._extraLights = [];
 
         // Viewport interaction (matches browse preview)
@@ -162,8 +172,8 @@ export class EnvironmentBridge extends BaseBridge {
         const paletteP = loadPalette();
         const texturesP = _loadTextureOpts();
 
-        // Scene background — mid grey
-        this._scene.background = new THREE.Color(0x5A5A5A);
+        // Sky gradient background (replaces old solid grey)
+        this._buildSkyGradient();
 
         // Camera pose — matches Scene3D
         this._camera.position.set(5.2, 3.9, 5.2);
@@ -371,6 +381,38 @@ export class EnvironmentBridge extends BaseBridge {
         this._applyWalls(this._state.walls, /*skipState*/ true);
     }
 
+    /**
+     * Build a 3-stop vertical gradient on an off-screen canvas and use it
+     * as the Three.js scene background texture.  Updating a stop just
+     * repaints the canvas and flips needsUpdate — no geometry re-creation.
+     */
+    _buildSkyGradient() {
+        const canvas  = document.createElement('canvas');
+        canvas.width  = 2;          // 1-pixel-wide gradient is enough
+        canvas.height = 256;
+        this._skyCanvas = canvas;
+        this._updateSkyCanvas();
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        this._skyTexture = tex;
+        this._scene.background = tex;
+    }
+
+    /** Repaint the sky canvas from the current state colours. */
+    _updateSkyCanvas() {
+        const canvas = this._skyCanvas;
+        if (!canvas) return;
+        const ctx  = canvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0,   this._state.skyTop);
+        grad.addColorStop(0.5, this._state.skyMid);
+        grad.addColorStop(1,   this._state.skyBot);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (this._skyTexture) this._skyTexture.needsUpdate = true;
+    }
+
     // ── Live scene updates from panel controls ──────────────────
 
     _applyGroundColor(hex) {
@@ -387,6 +429,11 @@ export class EnvironmentBridge extends BaseBridge {
         this._state.wallColor = hex;
         this._wallBack?.material.color.set(hex);
         this._wallLeft?.material.color.set(hex);
+    }
+
+    _applySkyColor(field, hex) {
+        this._state[field] = hex;
+        this._updateSkyCanvas();
     }
 
     _applyTexture(field, id) {
@@ -435,7 +482,7 @@ export class EnvironmentBridge extends BaseBridge {
 
     _getState() {
         return {
-            ...this._state,
+            ...this._state,   // includes skyTop, skyMid, skyBot
             description: this.asset?.payload?.description || '',
             tags:        this.asset?.tags || [],
         };
@@ -467,6 +514,12 @@ export class EnvironmentBridge extends BaseBridge {
         if (state.wallTexture && state.wallTexture !== this._state.wallTexture) {
             this._applyTexture('wallTexture', state.wallTexture);
         }
+        // Sky gradient
+        for (const f of ['skyTop', 'skyMid', 'skyBot']) {
+            if (state[f] && state[f] !== this._state[f]) {
+                this._applySkyColor(f, state[f]);
+            }
+        }
         super._applyState(state);
     }
 
@@ -488,7 +541,7 @@ export class EnvironmentBridge extends BaseBridge {
         let body = '';
         if (tab === 'file')   body = this._renderFileTab();
         if (tab === 'ground') body = this._renderGroundTab();
-        if (tab === 'sky')    body = this._renderStubTab('Sky');
+        if (tab === 'sky')    body = this._renderSkyTab();
         if (tab === 'stuff')  body = this._renderStubTab('Stuff');
         if (tab === 'fx')     body = this._renderStubTab('FX');
 
@@ -607,6 +660,44 @@ export class EnvironmentBridge extends BaseBridge {
         `;
     }
 
+    // ── Sky tab ──────────────────────────────────────────────────
+    _renderSkyTab() {
+        const s = this._state;
+        const subtitle = renderSubtitle;
+
+        const colorTrigger = (field, hex) => `
+            <button type="button" class="cb-color-trigger" data-color-field="${field}"
+                    style="background:${hex};" aria-label="Choose color"></button>`;
+
+        return `
+          ${subtitle('Sky Gradient', 'sky')}
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Top</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('skyTop', s.skyTop)}
+            </div>
+            <div class="cb-card-tight-value" id="sky-top-val">${s.skyTop}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Middle</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('skyMid', s.skyMid)}
+            </div>
+            <div class="cb-card-tight-value" id="sky-mid-val">${s.skyMid}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Bottom</div>
+            <div class="cb-card-tight-control">
+              ${colorTrigger('skyBot', s.skyBot)}
+            </div>
+            <div class="cb-card-tight-value" id="sky-bot-val">${s.skyBot}</div>
+          </div>
+        `;
+    }
+
     // ── Stub tab ────────────────────────────────────────────────
     _renderStubTab(label) {
         return `
@@ -645,32 +736,34 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
         });
 
-        // Color triggers — open the shared color picker modal
+        // Color triggers — open the shared color picker modal.
+        // Data-driven: maps data-color-field → apply function + value display id.
+        const COLOR_FIELDS = {
+            groundColor: { title: 'Ground Color', valId: '#ground-color-val',
+                           apply: (h) => this._applyGroundColor(h) },
+            stageColor:  { title: 'Stage Color',  valId: '#stage-color-val',
+                           apply: (h) => this._applyStageColor(h) },
+            wallColor:   { title: 'Wall Color',   valId: '#wall-color-val',
+                           apply: (h) => this._applyWallColor(h) },
+            skyTop:      { title: 'Sky — Top',     valId: '#sky-top-val',
+                           apply: (h) => this._applySkyColor('skyTop', h) },
+            skyMid:      { title: 'Sky — Middle',  valId: '#sky-mid-val',
+                           apply: (h) => this._applySkyColor('skyMid', h) },
+            skyBot:      { title: 'Sky — Bottom',  valId: '#sky-bot-val',
+                           apply: (h) => this._applySkyColor('skyBot', h) },
+        };
         panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
                 const field = trigger.dataset.colorField;
-                const current = field === 'groundColor' ? this._state.groundColor
-                              : field === 'stageColor'  ? this._state.stageColor
-                              : field === 'wallColor'   ? this._state.wallColor
-                              : '';
-                const titleMap = {
-                    groundColor: 'Ground Color',
-                    stageColor:  'Stage Color',
-                    wallColor:   'Wall Color',
-                };
-                const valueElId = field === 'groundColor' ? '#ground-color-val'
-                                : field === 'stageColor'  ? '#stage-color-val'
-                                : field === 'wallColor'   ? '#wall-color-val'
-                                : null;
+                const cfg   = COLOR_FIELDS[field];
+                if (!cfg) return;
                 showColorPicker({
-                    currentHex: current,
-                    title: titleMap[field] || 'Choose color',
+                    currentHex: this._state[field] || '',
+                    title: cfg.title,
                     onPick: (hex) => {
-                        if (field === 'groundColor') this._applyGroundColor(hex);
-                        if (field === 'stageColor')  this._applyStageColor(hex);
-                        if (field === 'wallColor')   this._applyWallColor(hex);
+                        cfg.apply(hex);
                         trigger.style.background = hex;
-                        const valEl = valueElId ? panel.querySelector(valueElId) : null;
+                        const valEl = cfg.valId ? panel.querySelector(cfg.valId) : null;
                         if (valEl) valEl.textContent = hex;
                         this._scheduleAutoSave();
                     },
@@ -744,6 +837,15 @@ export class EnvironmentBridge extends BaseBridge {
             this._applyWalls(opts[Math.floor(Math.random() * opts.length)]);
             const c = randHex(); if (c) this._applyWallColor(c);
             this._applyTexture('wallTexture', randTex());
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+        if (key === 'sky') {
+            for (const f of ['skyTop', 'skyMid', 'skyBot']) {
+                const c = randHex();
+                if (c) this._applySkyColor(f, c);
+            }
             this._renderPanel();
             this._scheduleAutoSave();
             return;
