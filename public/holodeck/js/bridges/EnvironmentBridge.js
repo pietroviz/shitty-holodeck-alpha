@@ -124,9 +124,15 @@ async function _fetchAsset(path) {
     return data;
 }
 
-// Scatter / tile density settings
+// Scatter / tile density settings (ground plane)
 const _SCATTER_COUNTS = { low: 6, med: 14, high: 28 };
 const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
+
+// Stage set-dressing constants
+const SET_DRESSING_SLOTS = 5;
+const SET_DRESSING_HEIGHT_CAP = 1.15;   // max height in world units (just below character eye level)
+const _STAGE_SCATTER_COUNTS = { low: 3, med: 6, high: 10 };
+const _STAGE_TILE_SPACING   = { low: 2.0, med: 1.4, high: 1.0 };
 
 // Default camera is at (5.2, 3.9, 5.2) looking at origin.
 // Camera corridor: a wedge from origin outward in the +x/+z quadrant.
@@ -247,8 +253,10 @@ export class EnvironmentBridge extends BaseBridge {
                 { cell: 'I2', facing: 'camera' },
                 { cell: 'G4', facing: 'camera' },
             ],
-            // Stage items — set dressing objects on the stage
-            stageItems: d.stageItems || [],
+            // Stage items — set dressing objects on the stage (5 slots)
+            stageItems: d.stageItems || Array.from({ length: SET_DRESSING_SLOTS }, () => ({
+                assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med',
+            })),
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
                 { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
@@ -277,7 +285,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._skyCanvas   = null;     // off-screen canvas for gradient
         this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
         this._gridNumbers = [];       // sprites for square number labels
-        this._stageItemMeshes = [];   // greybox character groups
+        this._stageItemMeshes = [];   // greybox character groups (cast)
+        this._setDressingMeshes = []; // set dressing objects on stage
         this._groundObjMeshes = [];   // scattered/tiled ground objects
         this._objectList  = null;     // loaded object catalog
         this._wallsEnabled = false;   // true when walls height > 0
@@ -357,6 +366,7 @@ export class EnvironmentBridge extends BaseBridge {
 
         // Stage items (greybox character placeholders etc.)
         this._buildStageItems();
+        this._rebuildSetDressing();
 
         // Flat lighting
         const amb = new THREE.AmbientLight(0xffffff, 0.6);
@@ -662,6 +672,143 @@ export class EnvironmentBridge extends BaseBridge {
             this._scene.remove(g);
         }
         this._stageItemMeshes = [];
+    }
+
+    // ── Set Dressing (stage items) ──────────────────────────────
+
+    /**
+     * Build 3D meshes for stage set-dressing items.
+     * Modes: 'place' puts a single item on a BINGO cell;
+     *        'scatter' / 'tile' distributes across unoccupied stage cells.
+     * All items are height-capped to avoid blocking cast character faces.
+     */
+    async _rebuildSetDressing() {
+        this._clearSetDressing();
+        const list = this._objectList || [];
+        const half = STAGE_SIZE / 2;
+
+        // Cells occupied by cast members — set dressing avoids these
+        const usedCells = new Set(
+            (this._state.cast || []).filter(s => s?.cell).map(s => s.cell)
+        );
+
+        for (const slot of this._state.stageItems) {
+            if (!slot.assetId || slot.assetId === 'none') continue;
+            const entry = list.find(o => o.id === slot.assetId);
+            if (!entry) continue;
+
+            let asset;
+            try { asset = await _fetchAsset(entry.path); } catch { continue; }
+
+            const template = this._buildMeshFromAsset(asset);
+            if (!template) continue;
+
+            const baseScale = slot.scale ?? 1.0;
+            const templateH = template.userData._templateHeight || 1;
+
+            if (slot.mode === 'place') {
+                // Single placement on a specific cell
+                if (!slot.cell) { this._disposeTemplate(template); continue; }
+                const pos = _cellToWorld(slot.cell);
+                if (!pos) { this._disposeTemplate(template); continue; }
+
+                const clone = template.clone();
+                clone.position.set(pos.x, 0, pos.z);
+                clone.rotation.y = Math.random() * Math.PI * 2;
+
+                // Height-cap: scale down if it would exceed the cap
+                let s = baseScale;
+                if (templateH * s > SET_DRESSING_HEIGHT_CAP) {
+                    s = SET_DRESSING_HEIGHT_CAP / templateH;
+                }
+                clone.scale.set(s, s, s);
+                this._scene.add(clone);
+                this._setDressingMeshes.push(clone);
+            } else {
+                // Scatter or tile across the stage area
+                const points = slot.mode === 'tile'
+                    ? this._stageTilePoints(_STAGE_TILE_SPACING[slot.density] ?? 1.4, usedCells)
+                    : this._stageScatterPoints(_STAGE_SCATTER_COUNTS[slot.density] ?? 6, usedCells);
+
+                const isScatter = slot.mode !== 'tile';
+                for (const pt of points) {
+                    const clone = template.clone();
+                    clone.position.set(pt.x, 0, pt.z);
+                    clone.rotation.y = pt.rotY;
+
+                    let s = isScatter
+                        ? baseScale * (0.7 + Math.random() * 0.6)
+                        : baseScale;
+                    // Height-cap
+                    if (templateH * s > SET_DRESSING_HEIGHT_CAP) {
+                        s = SET_DRESSING_HEIGHT_CAP / templateH;
+                    }
+                    clone.scale.set(s, s, s);
+                    this._scene.add(clone);
+                    this._setDressingMeshes.push(clone);
+                }
+            }
+
+            this._disposeTemplate(template);
+        }
+    }
+
+    _clearSetDressing() {
+        for (const g of this._setDressingMeshes) {
+            g.traverse(child => {
+                child.geometry?.dispose?.();
+                child.material?.dispose?.();
+            });
+            this._scene.remove(g);
+        }
+        this._setDressingMeshes = [];
+    }
+
+    _disposeTemplate(t) {
+        t.traverse(c => { c.geometry?.dispose?.(); c.material?.dispose?.(); });
+    }
+
+    /** Scatter random points within the stage area, avoiding occupied cells. */
+    _stageScatterPoints(count, usedCells) {
+        const half = STAGE_SIZE / 2;
+        const pts = [];
+        let tries = 0;
+        while (pts.length < count && tries < count * 20) {
+            const x = (Math.random() - 0.5) * STAGE_SIZE;
+            const z = (Math.random() - 0.5) * STAGE_SIZE;
+            tries++;
+            // Avoid occupied cast cells (±0.4 around cell centre)
+            let blocked = false;
+            for (const c of usedCells) {
+                const p = _cellToWorld(c);
+                if (p && Math.abs(x - p.x) < 0.4 && Math.abs(z - p.z) < 0.4) {
+                    blocked = true; break;
+                }
+            }
+            if (blocked) continue;
+            pts.push({ x, z, rotY: Math.random() * Math.PI * 2 });
+        }
+        return pts;
+    }
+
+    /** Regular grid within the stage area, skipping occupied cells. */
+    _stageTilePoints(spacing, usedCells) {
+        const half = STAGE_SIZE / 2;
+        const pts = [];
+        for (let x = -half + spacing / 2; x < half; x += spacing) {
+            for (let z = -half + spacing / 2; z < half; z += spacing) {
+                let blocked = false;
+                for (const c of usedCells) {
+                    const p = _cellToWorld(c);
+                    if (p && Math.abs(x - p.x) < 0.4 && Math.abs(z - p.z) < 0.4) {
+                        blocked = true; break;
+                    }
+                }
+                if (blocked) continue;
+                pts.push({ x, z, rotY: 0 });
+            }
+        }
+        return pts;
     }
 
     /**
@@ -1082,6 +1229,13 @@ export class EnvironmentBridge extends BaseBridge {
             this._state.cast = cast;
             this._buildStageItems();
         }
+        // Set dressing (stage items)
+        if (Array.isArray(state.stageItems) && state.stageItems.length &&
+            state.stageItems[0]?.assetId !== undefined) {
+            // New-format stageItems (set dressing with assetId)
+            this._state.stageItems = state.stageItems;
+            this._rebuildSetDressing();
+        }
         // Ground objects
         if (Array.isArray(state.groundObjects)) {
             this._state.groundObjects = state.groundObjects;
@@ -1385,19 +1539,99 @@ export class EnvironmentBridge extends BaseBridge {
                 </div>`;
         }).join('');
 
-        // ── Stage Items (set dressing) — coming soon stub for now
-        const stageItemsHtml = `
-            <p style="color:var(--text-dim); text-align:center; padding:12px 0; font-size:0.8rem;">
-                Set dressing controls coming soon.
-            </p>`;
+        // ── Stage Items (set dressing) — 5 slots ──────────────────
+        const stageItemsHtml = this._renderSetDressingSlots();
 
         return `
           ${subtitle('Cast Placement', 'cast')}
           ${castCards}
 
-          ${subtitle('Stage Items', 'stageItems')}
+          ${subtitle('Stage Items', 'setDressing')}
           ${stageItemsHtml}
         `;
+    }
+
+    /** Render 5 set-dressing slot cards for the Stage tab. */
+    _renderSetDressingSlots() {
+        const slots = this._state.stageItems;
+        const objs  = this._objectList || [];
+        const modeLabels    = { place: 'Place', scatter: 'Scatter', tile: 'Tile' };
+        const densityLabels = { low: 'Low', med: 'Med', high: 'High' };
+
+        return slots.map((slot, i) => {
+            const optionsHtml = `<option value="none"${slot.assetId === 'none' ? ' selected' : ''}>None</option>` +
+                objs.map(o =>
+                    `<option value="${o.id}"${slot.assetId === o.id ? ' selected' : ''}>${_esc(o.name)}</option>`
+                ).join('');
+
+            const hasObj = slot.assetId && slot.assetId !== 'none';
+            const scaleVal = slot.scale ?? 1.0;
+            const scaleLabel = scaleVal.toFixed(1) + '×';
+
+            let controlsHtml = '';
+            if (hasObj) {
+                // Mode toggle (Place / Scatter / Tile)
+                const modeRow = `
+                    <div class="cb-gobj-row">
+                      <div class="cb-segmented cb-sdress-mode" data-slot="${i}">
+                        ${Object.entries(modeLabels).map(([k, v]) =>
+                            `<button type="button" data-mode="${k}" class="${slot.mode === k ? 'active' : ''}">${v}</button>`
+                        ).join('')}
+                      </div>
+                    </div>`;
+
+                // Cell selector — only visible in Place mode
+                const cellRow = slot.mode === 'place' ? `
+                    <div class="cb-gobj-row">
+                      <span style="font-size:0.75rem; color:var(--text-dim); min-width:30px;">Cell</span>
+                      <select class="cb-sdress-letter" data-slot="${i}"
+                          style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                          border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                          font-family:inherit; width:38px;">
+                          ${'BINGO'.split('').map(l =>
+                              `<option value="${l}"${(slot.cell?.[0]?.toUpperCase() || 'N') === l ? ' selected' : ''}>${l}</option>`
+                          ).join('')}
+                      </select>
+                      <select class="cb-sdress-num" data-slot="${i}"
+                          style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                          border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                          font-family:inherit; width:38px;">
+                          ${[1,2,3,4,5].map(n =>
+                              `<option value="${n}"${(slot.cell?.slice(1) || '3') === String(n) ? ' selected' : ''}>${n}</option>`
+                          ).join('')}
+                      </select>
+                    </div>` : '';
+
+                // Density — only visible in Scatter / Tile modes
+                const densityRow = slot.mode !== 'place' ? `
+                    <div class="cb-gobj-row">
+                      <div class="cb-segmented cb-sdress-density" data-slot="${i}">
+                        ${Object.entries(densityLabels).map(([k, v]) =>
+                            `<button type="button" data-density="${k}" class="${slot.density === k ? 'active' : ''}">${v}</button>`
+                        ).join('')}
+                      </div>
+                    </div>` : '';
+
+                // Scale slider (always visible)
+                const scaleRow = `
+                    <div class="cb-gobj-row">
+                      <span class="cb-gobj-scale-label">Scale ${scaleLabel}</span>
+                      <input type="range" class="cb-sdress-scale" data-slot="${i}"
+                             min="0.2" max="3.0" step="0.1" value="${scaleVal}">
+                    </div>`;
+
+                controlsHtml = modeRow + cellRow + densityRow + scaleRow;
+            }
+
+            return `
+              <div class="cb-gobj-card" data-slot="${i}">
+                <div class="cb-gobj-card-header">
+                  <span class="cb-gobj-card-num">${i + 1}</span>
+                  <select class="cb-sdress-select" data-slot="${i}">${optionsHtml}</select>
+                </div>
+                ${controlsHtml}
+              </div>`;
+        }).join('');
     }
 
     // ── Stub tab ────────────────────────────────────────────────
@@ -1604,6 +1838,76 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
+        // ── Set Dressing controls ────────────────────────────────
+        panel.querySelectorAll('.cb-sdress-select').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                this._state.stageItems[i].assetId = sel.value;
+                // Default to 'place' + centre cell when first picking an object
+                if (sel.value !== 'none' && !this._state.stageItems[i].cell) {
+                    this._state.stageItems[i].cell = 'N3';
+                }
+                this._rebuildSetDressing();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-sdress-mode button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.closest('.cb-sdress-mode').dataset.slot, 10);
+                this._state.stageItems[i].mode = btn.dataset.mode;
+                // Ensure cell is set for Place mode
+                if (btn.dataset.mode === 'place' && !this._state.stageItems[i].cell) {
+                    this._state.stageItems[i].cell = 'N3';
+                }
+                this._rebuildSetDressing();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-sdress-density button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.closest('.cb-sdress-density').dataset.slot, 10);
+                this._state.stageItems[i].density = btn.dataset.density;
+                this._rebuildSetDressing();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-sdress-letter').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                const num = this._state.stageItems[i].cell?.slice(1) || '3';
+                this._state.stageItems[i].cell = sel.value + num;
+                this._rebuildSetDressing();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-sdress-num').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                const letter = this._state.stageItems[i].cell?.[0]?.toUpperCase() || 'N';
+                this._state.stageItems[i].cell = letter + sel.value;
+                this._rebuildSetDressing();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-sdress-scale').forEach(slider => {
+            slider.addEventListener('input', () => {
+                const i = parseInt(slider.dataset.slot, 10);
+                const val = parseFloat(slider.value);
+                this._state.stageItems[i].scale = val;
+                const label = slider.closest('.cb-gobj-row')?.querySelector('.cb-gobj-scale-label');
+                if (label) label.textContent = `Scale ${val.toFixed(1)}×`;
+            });
+            slider.addEventListener('change', () => {
+                this._rebuildSetDressing();
+                this._scheduleAutoSave();
+            });
+        });
+
         // ── Surprise buttons (env-specific subtitles) ──────────
         // File-tab dice (name/description/tags) are wired by
         // wireFileTabEvents above; these handle Ground tab subtitles.
@@ -1700,6 +2004,31 @@ export class EnvironmentBridge extends BaseBridge {
             return;
         }
 
+        if (key === 'setDressing') {
+            const objs = this._objectList || [];
+            if (!objs.length) return;
+            const modes = ['place', 'scatter', 'tile'];
+            const dens  = ['low', 'med', 'high'];
+            // Fill 2–4 random slots, leave the rest empty
+            const count = 2 + Math.floor(Math.random() * 3);
+            this._state.stageItems = Array.from({ length: SET_DRESSING_SLOTS }, (_, i) => {
+                if (i >= count) return { assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med' };
+                const mode = modes[Math.floor(Math.random() * modes.length)];
+                const cell = mode === 'place' ? ALL_CELLS[Math.floor(Math.random() * 25)] : null;
+                return {
+                    assetId: objs[Math.floor(Math.random() * objs.length)].id,
+                    mode,
+                    cell,
+                    scale: +(0.3 + Math.random() * 1.5).toFixed(1),
+                    density: dens[Math.floor(Math.random() * dens.length)],
+                };
+            });
+            this._rebuildSetDressing();
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
+
         // File-tab per-field stubs (intelligence layer pending)
         console.debug(`[EnvironmentBridge] surprise requested for "${key}" (stub — intelligence pending)`);
     }
@@ -1710,7 +2039,7 @@ export class EnvironmentBridge extends BaseBridge {
      */
     surpriseAll() {
         // Hit every section-level randomiser in one go
-        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast']) {
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast', 'setDressing']) {
             this._onSurpriseField(key);
         }
         // _onSurpriseField already calls _renderPanel + _scheduleAutoSave
