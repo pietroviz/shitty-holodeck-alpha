@@ -254,11 +254,11 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Cast — always 5 slots; cell=null means empty
             cast: d.cast || [
-                { cell: 'G2', facing: 'camera' },
-                { cell: 'G3', facing: 'camera' },
-                { cell: 'N2', facing: 'camera' },
                 { cell: 'I2', facing: 'camera' },
-                { cell: 'G4', facing: 'camera' },
+                { cell: 'N2', facing: 'camera' },
+                { cell: 'I3', facing: 'camera' },
+                { cell: 'I4', facing: 'camera' },
+                { cell: 'G2', facing: 'camera' },
             ],
             // Stage items — set dressing objects on the stage (5 slots)
             stageItems: d.stageItems || Array.from({ length: SET_DRESSING_SLOTS }, () => ({
@@ -552,27 +552,26 @@ export class EnvironmentBridge extends BaseBridge {
     _windowCells(cols, rows) {
         const style = this._state.windowStyle || 'none';
         const cells = new Set();
-        if (style === 'none' || rows < 2) return cells;
+        if (style === 'none' || rows < 1) return cells;
 
         if (style === 'single') {
-            // One 2×2 window centred, starting at row 1 (just above floor).
-            // Taller walls get additional window pairs every 3 rows.
+            // 2-wide centred window starting from the bottom (row 0).
+            // Tiles every 2 rows so tall walls get lots of sky showing.
             const midC = Math.floor(cols / 2);
             const startC = cols >= 3 ? midC - 1 : midC;
             const endC   = cols >= 3 ? midC + 1 : midC + 1;
-            for (let r = 1; r < rows; r += 3) {
+            for (let r = 0; r < rows; r += 2) {
                 for (let c = startC; c < endC; c++) {
                     cells.add(`${c},${r}`);
-                    if (r + 1 < rows) cells.add(`${c},${r + 1}`);
                 }
             }
             return cells;
         }
 
         if (style === 'row') {
-            // Horizontal band of windows across inner columns.
-            // Starts at row 1, repeats every 3 rows as wall grows.
-            for (let r = 1; r < rows; r += 3) {
+            // Full horizontal band across inner columns, from row 0.
+            // Tiles every 2 rows — window, solid, window, solid…
+            for (let r = 0; r < rows; r += 2) {
                 for (let c = 1; c < cols - 1; c++) {
                     cells.add(`${c},${r}`);
                 }
@@ -581,18 +580,13 @@ export class EnvironmentBridge extends BaseBridge {
         }
 
         if (style === 'grid') {
-            // 2-wide window pairs on inner columns, tiling from row 1 up.
-            // Repeats every 2 rows with a 1-row solid gap between.
+            // 2-wide window pairs on inner columns, from row 0.
+            // Tiles every 2 rows for maximum sky visibility.
             const colStep = cols <= 4 ? 2 : 3;
-            for (let r = 1; r < rows; r += 3) {
+            for (let r = 0; r < rows; r += 2) {
                 for (let c = 1; c < cols - 1; c += colStep) {
                     cells.add(`${c},${r}`);
                     if (c + 1 < cols - 1) cells.add(`${c + 1},${r}`);
-                    // Second row of the window if space
-                    if (r + 1 < rows) {
-                        cells.add(`${c},${r + 1}`);
-                        if (c + 1 < cols - 1) cells.add(`${c + 1},${r + 1}`);
-                    }
                 }
             }
             return cells;
