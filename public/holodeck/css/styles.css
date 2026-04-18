@@ -1331,6 +1331,47 @@ svg    { display: block; flex-shrink: 0; }
     font-weight: 600;
 }
 
+/* Ground-object compact slot cards */
+.cb-gobj-card {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.cb-gobj-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.cb-gobj-card-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 14px;
+    text-align: center;
+}
+.cb-gobj-card-header select {
+    flex: 1;
+}
+.cb-gobj-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.cb-gobj-scale-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-dim);
+    white-space: nowrap;
+    min-width: 56px;
+}
+.cb-gobj-card input[type="range"] {
+    flex: 1;
+}
+
 /* ══════════════════════════════════════════════════════
    Shared color picker modal (used by any bridge)
    Sized + positioned in JS to overlay only the target

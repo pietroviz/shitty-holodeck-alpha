@@ -120,6 +120,23 @@ async function _fetchAsset(path) {
 const _SCATTER_COUNTS = { low: 6, med: 14, high: 28 };
 const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
 
+// Default camera is at (5.2, 3.9, 5.2) looking at origin.
+// Camera corridor: a wedge from origin outward in the +x/+z quadrant.
+// Any ground point inside this wedge would obstruct the view.
+const _CAM_DIR_X = 5.2, _CAM_DIR_Z = 5.2;                    // camera direction
+const _CAM_CORRIDOR_COS = Math.cos(Math.PI / 6);              // ±30° half-angle
+const _camDirLen = Math.sqrt(_CAM_DIR_X * _CAM_DIR_X + _CAM_DIR_Z * _CAM_DIR_Z);
+const _camNormX  = _CAM_DIR_X / _camDirLen;
+const _camNormZ  = _CAM_DIR_Z / _camDirLen;
+
+/** True if (x,z) lies inside the camera corridor wedge (beyond the stage). */
+function _inCameraCorridor(x, z, stageHalf) {
+    const len = Math.sqrt(x * x + z * z);
+    if (len < stageHalf + 0.5) return false;   // inside stage buffer — handled separately
+    const dot = (x * _camNormX + z * _camNormZ) / (len || 1);
+    return dot > _CAM_CORRIDOR_COS;             // within ±30° of camera direction
+}
+
 // ── Tabs (File · Ground · Sky · Stage · FX) ─────────────────────
 const TABS = [
     { id: 'file',   label: 'File'   },
@@ -208,9 +225,9 @@ export class EnvironmentBridge extends BaseBridge {
             ],
             // Ground objects — 3 scatter/tile slots
             groundObjects:  d.groundObjects || [
-                { assetId: 'none', mode: 'scatter', density: 'med' },
-                { assetId: 'none', mode: 'scatter', density: 'med' },
-                { assetId: 'none', mode: 'scatter', density: 'med' },
+                { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
+                { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
+                { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 },
             ],
             // Future: fx, lighting
         };
@@ -630,10 +647,22 @@ export class EnvironmentBridge extends BaseBridge {
                 ? this._tilePoints(half, _TILE_SPACING[slot.density] ?? 2.5, stageHalf)
                 : this._scatterPoints(half, _SCATTER_COUNTS[slot.density] ?? 14, stageHalf);
 
+            const baseScale = slot.scale ?? 1.0;
+            const isScatter = slot.mode !== 'tile';
             for (const pt of points) {
+                // Auto-cull: skip points inside the camera corridor
+                if (_inCameraCorridor(pt.x, pt.z, stageHalf)) continue;
+
                 const clone = template.clone();
                 clone.position.set(pt.x, 0, pt.z);
                 clone.rotation.y = pt.rotY;
+
+                // Scale: scatter gets ±30% random variation, tile is uniform
+                const s = isScatter
+                    ? baseScale * (0.7 + Math.random() * 0.6)
+                    : baseScale;
+                clone.scale.set(s, s, s);
+
                 this._scene.add(clone);
                 this._groundObjMeshes.push(clone);
             }
@@ -713,7 +742,7 @@ export class EnvironmentBridge extends BaseBridge {
         return group;
     }
 
-    /** Random points on the ground plane, avoiding the stage area. */
+    /** Random points on the ground plane, avoiding the stage area and camera corridor. */
     _scatterPoints(halfGround, count, stageHalf) {
         const pts = [];
         let tries = 0;
@@ -722,17 +751,19 @@ export class EnvironmentBridge extends BaseBridge {
             const z = (Math.random() - 0.5) * halfGround * 2;
             tries++;
             if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+            if (_inCameraCorridor(x, z, stageHalf)) continue;
             pts.push({ x, z, rotY: Math.random() * Math.PI * 2 });
         }
         return pts;
     }
 
-    /** Regular grid on the ground plane, skipping the stage area. */
+    /** Regular grid on the ground plane, skipping the stage area and camera corridor. */
     _tilePoints(halfGround, spacing, stageHalf) {
         const pts = [];
         for (let x = -halfGround + spacing / 2; x < halfGround; x += spacing) {
             for (let z = -halfGround + spacing / 2; z < halfGround; z += spacing) {
                 if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+                if (_inCameraCorridor(x, z, stageHalf)) continue;
                 pts.push({ x, z, rotY: 0 });
             }
         }
@@ -1013,36 +1044,36 @@ export class EnvironmentBridge extends BaseBridge {
                 ).join('');
 
             const hasObj = slot.assetId && slot.assetId !== 'none';
-            const modeHtml = hasObj ? `
-              <div class="cb-card-tight">
-                <div class="cb-card-tight-label">Layout</div>
-                <div class="cb-card-tight-control">
+            const scaleVal = slot.scale ?? 1.0;
+            const scaleLabel = scaleVal.toFixed(1) + '×';
+
+            const controlsHtml = hasObj ? `
+                <div class="cb-gobj-row">
                   <div class="cb-segmented cb-gobj-mode" data-slot="${i}">
                     ${Object.entries(modeLabels).map(([k, v]) =>
                         `<button type="button" data-mode="${k}" class="${slot.mode === k ? 'active' : ''}">${v}</button>`
                     ).join('')}
                   </div>
-                </div>
-              </div>
-              <div class="cb-card-tight">
-                <div class="cb-card-tight-label">Density</div>
-                <div class="cb-card-tight-control">
                   <div class="cb-segmented cb-gobj-density" data-slot="${i}">
                     ${Object.entries(densityLabels).map(([k, v]) =>
                         `<button type="button" data-density="${k}" class="${slot.density === k ? 'active' : ''}">${v}</button>`
                     ).join('')}
                   </div>
                 </div>
-              </div>` : '';
+                <div class="cb-gobj-row">
+                  <span class="cb-gobj-scale-label">Scale ${scaleLabel}</span>
+                  <input type="range" class="cb-gobj-scale" data-slot="${i}"
+                         min="0.2" max="3.0" step="0.1" value="${scaleVal}">
+                </div>` : '';
 
             return `
-              <div class="cb-card-tight">
-                <div class="cb-card-tight-label">Slot ${i + 1}</div>
-                <div class="cb-card-tight-control">
+              <div class="cb-gobj-card" data-slot="${i}">
+                <div class="cb-gobj-card-header">
+                  <span class="cb-gobj-card-num">${i + 1}</span>
                   <select class="cb-gobj-select" data-slot="${i}">${optionsHtml}</select>
                 </div>
-              </div>
-              ${modeHtml}`;
+                ${controlsHtml}
+              </div>`;
         }).join('');
     }
 
@@ -1232,6 +1263,20 @@ export class EnvironmentBridge extends BaseBridge {
                 this._scheduleAutoSave();
             });
         });
+        panel.querySelectorAll('.cb-gobj-scale').forEach(slider => {
+            slider.addEventListener('input', () => {
+                const i = parseInt(slider.dataset.slot, 10);
+                const val = parseFloat(slider.value);
+                this._state.groundObjects[i].scale = val;
+                // Update the label live without a full re-render
+                const label = slider.closest('.cb-gobj-row')?.querySelector('.cb-gobj-scale-label');
+                if (label) label.textContent = `Scale ${val.toFixed(1)}×`;
+            });
+            slider.addEventListener('change', () => {
+                this._rebuildGroundObjects();
+                this._scheduleAutoSave();
+            });
+        });
 
         // ── Stage tab: remove item buttons ─────────────────────
         panel.querySelectorAll('.cb-stage-remove').forEach(btn => {
@@ -1314,6 +1359,7 @@ export class EnvironmentBridge extends BaseBridge {
                 assetId:  objs[Math.floor(Math.random() * objs.length)].id,
                 mode:     modes[Math.floor(Math.random() * modes.length)],
                 density:  dens[Math.floor(Math.random() * dens.length)],
+                scale:    +(0.4 + Math.random() * 2.2).toFixed(1),  // 0.4–2.6
             }));
             this._rebuildGroundObjects();
             this._renderPanel();
