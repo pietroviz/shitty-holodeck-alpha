@@ -77,6 +77,46 @@ async function _loadTextureOpts() {
     return _TEXTURE_OPTS;
 }
 
+// ── Ground-object asset helpers ─────────────────────────────────
+// Flat list of objects suitable for ground scatter (excludes headwear,
+// items and panels which don't make sense as scenery).
+let _OBJECT_LIST = null;
+async function _loadObjectList() {
+    if (_OBJECT_LIST) return _OBJECT_LIST;
+    try {
+        const res = await fetch('global_assets/objects/manifest.json');
+        const manifest = await res.json();
+        const list = [];
+        const skip = new Set(['headwear', 'items', 'panels', 'fashion']);
+        for (const [catKey, cat] of Object.entries(manifest.categories)) {
+            if (skip.has(catKey)) continue;
+            for (const file of cat.files) {
+                const id = file.replace('.json', '');
+                const name = id.replace(/^prop_/, '').replace(/_batch$/, '')
+                    .replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                list.push({ id, name, category: cat.name,
+                            path: `global_assets/objects/${catKey}/${file}` });
+            }
+        }
+        _OBJECT_LIST = list.sort((a, b) => a.name.localeCompare(b.name));
+    } catch { _OBJECT_LIST = []; }
+    return _OBJECT_LIST;
+}
+
+// Cache full asset JSON so we only fetch once per session
+const _assetCache = new Map();
+async function _fetchAsset(path) {
+    if (_assetCache.has(path)) return _assetCache.get(path);
+    const res  = await fetch(path);
+    const data = await res.json();
+    _assetCache.set(path, data);
+    return data;
+}
+
+// Scatter / tile density settings
+const _SCATTER_COUNTS = { low: 6, med: 14, high: 28 };
+const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
+
 // ── Tabs (File · Ground · Sky · Stage · FX) ─────────────────────
 const TABS = [
     { id: 'file',   label: 'File'   },
@@ -101,26 +141,16 @@ const _snapOdd = (n) => {
     return v;
 };
 
-// ── Diamond-order numbering for the 5×5 stage grid ─────────────
-// Square 1 = far corner from default camera (−x, −z apex of the
-// diamond).  Numbered right-to-left along each diagonal toward the
-// camera, ending at square 25 (nearest corner, +x, +z).
-const _SQUARE_MAP = (() => {
-    const map = [null]; // 1-indexed (map[0] unused)
-    for (let diag = 0; diag <= 8; diag++) {
-        for (let col = Math.min(diag, 4); col >= Math.max(0, diag - 4); col--) {
-            map.push({ col, row: diag - col });
-        }
-    }
-    return map;
-})();
-
-/** Return the world-space {x, z} centre of a numbered stage square. */
+// ── Row-major numbering for the 5×5 stage grid ─────────────────
+// Squares 1–5 = back row (−z, left to right), 6–10 = second row, …,
+// 21–25 = front row (+z, closest to default camera).
 function _squareCenter(n) {
-    const cell = _SQUARE_MAP[n];
-    if (!cell) return null;
-    // Stage grid cells are 1×1, centred at origin.  col/row 0–4 → x/z −2..+2
-    return { x: cell.col - 2, z: cell.row - 2 };
+    if (n < 1 || n > 25) return null;
+    const idx = n - 1;
+    const col = idx % 5;
+    const row = Math.floor(idx / 5);
+    // col/row 0–4 → world x/z −2..+2  (centre of each 1×1 cell)
+    return { x: col - 2, z: row - 2 };
 }
 
 // DICE_ICON / renderFieldHead / renderFileTab live in shared/builderUI.js
@@ -153,9 +183,15 @@ export class EnvironmentBridge extends BaseBridge {
             skyBot:         d.skyBot || DEFAULT_SKY_BOT,
             // Stage items — array of { type, square }
             stageItems:     d.stageItems || [
-                { type: 'greybox', square: 7  },
-                { type: 'greybox', square: 9  },
-                { type: 'greybox', square: 17 },
+                { type: 'greybox', square: 4  },
+                { type: 'greybox', square: 12 },
+                { type: 'greybox', square: 14 },
+            ],
+            // Ground objects — 3 scatter/tile slots
+            groundObjects:  d.groundObjects || [
+                { assetId: 'none', mode: 'scatter', density: 'med' },
+                { assetId: 'none', mode: 'scatter', density: 'med' },
+                { assetId: 'none', mode: 'scatter', density: 'med' },
             ],
             // Future: fx, lighting
         };
@@ -178,6 +214,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._skyTexture  = null;     // THREE.CanvasTexture on scene.background
         this._gridNumbers = [];       // sprites for square number labels
         this._stageItemMeshes = [];   // greybox character groups
+        this._groundObjMeshes = [];   // scattered/tiled ground objects
+        this._objectList  = null;     // loaded object catalog
         this._extraLights = [];
 
         // Viewport interaction (matches browse preview)
@@ -199,9 +237,10 @@ export class EnvironmentBridge extends BaseBridge {
         // Clear the ground/grid/lights BaseBridge added so we can own them
         this._stripBaseSceneDefaults();
 
-        // Load the DB32 palette + texture options in parallel with setup
-        const paletteP = loadPalette();
+        // Load the DB32 palette + texture/object options in parallel with setup
+        const paletteP  = loadPalette();
         const texturesP = _loadTextureOpts();
+        const objectsP  = _loadObjectList();
 
         // Sky gradient background (replaces old solid grey)
         this._buildSkyGradient();
@@ -275,9 +314,13 @@ export class EnvironmentBridge extends BaseBridge {
         });
         this._ro.observe(c);
 
-        // Wait for palette + texture list so the panel renders fully
+        // Wait for palette + texture + object list so the panel renders fully
         this._palette     = await paletteP;
         this._textureOpts = await texturesP;
+        this._objectList  = await objectsP;
+
+        // Ground-object scatter/tile (async — loads asset meshes)
+        this._rebuildGroundObjects();
     }
 
     _stripBaseSceneDefaults() {
@@ -476,7 +519,7 @@ export class EnvironmentBridge extends BaseBridge {
             const mat    = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
             const sprite = new THREE.Sprite(mat);
             sprite.position.set(pos.x, 0.06, pos.z);
-            sprite.scale.set(0.45, 0.45, 1);
+            sprite.scale.set(0.12, 0.12, 1);  // small reference labels
             this._scene.add(sprite);
             this._gridNumbers.push(sprite);
         }
@@ -537,6 +580,142 @@ export class EnvironmentBridge extends BaseBridge {
         group.add(body);
         group.add(head);
         return group;
+    }
+
+    // ── Ground-object scatter / tile ──────────────────────────
+
+    /** Tear down and rebuild all ground-object meshes from state. */
+    async _rebuildGroundObjects() {
+        this._clearGroundObjects();
+        const list = this._objectList || [];
+        const half = this._state.groundSize / 2;
+        const stageHalf = STAGE_SIZE / 2 + 0.5; // buffer so nothing clips the stage
+
+        for (const slot of this._state.groundObjects) {
+            if (!slot.assetId || slot.assetId === 'none') continue;
+            const entry = list.find(o => o.id === slot.assetId);
+            if (!entry) continue;
+
+            // Load the full asset JSON
+            let asset;
+            try { asset = await _fetchAsset(entry.path); } catch { continue; }
+
+            // Build a template mesh group from the asset's elements
+            const template = this._buildMeshFromAsset(asset);
+            if (!template) continue;
+
+            // Generate placement points
+            const points = slot.mode === 'tile'
+                ? this._tilePoints(half, _TILE_SPACING[slot.density] ?? 2.5, stageHalf)
+                : this._scatterPoints(half, _SCATTER_COUNTS[slot.density] ?? 14, stageHalf);
+
+            for (const pt of points) {
+                const clone = template.clone();
+                clone.position.set(pt.x, 0, pt.z);
+                clone.rotation.y = pt.rotY;
+                this._scene.add(clone);
+                this._groundObjMeshes.push(clone);
+            }
+
+            // Dispose the template (we only needed it for cloning)
+            template.traverse(c => { c.geometry?.dispose?.(); c.material?.dispose?.(); });
+        }
+    }
+
+    _clearGroundObjects() {
+        for (const g of this._groundObjMeshes) {
+            g.traverse(child => {
+                child.geometry?.dispose?.();
+                child.material?.dispose?.();
+            });
+            this._scene.remove(g);
+        }
+        this._groundObjMeshes = [];
+    }
+
+    /**
+     * Build a Three.js Group from an object asset's element list.
+     * Handles box, cylinder, cone, sphere, torus primitives.
+     * The group is shifted so its bounding-box bottom sits at y=0.
+     */
+    _buildMeshFromAsset(asset) {
+        const elements = asset?.payload?._editor?.elements;
+        if (!elements || !elements.length) return null;
+        const colors = asset.payload.color_assignments || {};
+
+        const group = new THREE.Group();
+        for (const el of elements) {
+            let geom;
+            switch (el.type) {
+                case 'box':
+                    geom = new THREE.BoxGeometry(el.width || 1, el.height || 1, el.depth || 1);
+                    break;
+                case 'cylinder':
+                    geom = new THREE.CylinderGeometry(
+                        el.radiusTop ?? 0.5, el.radiusBottom ?? 0.5, el.height || 1, 16);
+                    break;
+                case 'cone':
+                    geom = new THREE.ConeGeometry(el.radius ?? 0.5, el.height || 1, 16);
+                    break;
+                case 'sphere':
+                    geom = new THREE.SphereGeometry(el.radius ?? 0.5, 16, 12);
+                    break;
+                case 'torus':
+                    geom = new THREE.TorusGeometry(el.radius ?? 0.5, el.tube ?? 0.2, 12, 24);
+                    break;
+                default:
+                    geom = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+            }
+
+            const hex = (typeof el.fill === 'string' && colors[el.fill])
+                ? colors[el.fill] : (el.fill || '#888888');
+            const mat = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(hex),
+                roughness: el.roughness ?? 0.85,
+                metalness: el.metalness ?? 0,
+                transparent: (el.opacity ?? 1) < 1,
+                opacity: el.opacity ?? 1,
+            });
+
+            const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.set(el.px || 0, el.py || 0, el.pz || 0);
+            mesh.rotation.set(el.rx || 0, el.ry || 0, el.rz || 0);
+            mesh.castShadow = true;
+            group.add(mesh);
+        }
+
+        // Shift the group so its bottom sits at y = 0
+        const box3 = new THREE.Box3().setFromObject(group);
+        if (box3.min.y !== 0) {
+            group.children.forEach(c => { c.position.y -= box3.min.y; });
+        }
+        return group;
+    }
+
+    /** Random points on the ground plane, avoiding the stage area. */
+    _scatterPoints(halfGround, count, stageHalf) {
+        const pts = [];
+        let tries = 0;
+        while (pts.length < count && tries < count * 20) {
+            const x = (Math.random() - 0.5) * halfGround * 2;
+            const z = (Math.random() - 0.5) * halfGround * 2;
+            tries++;
+            if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+            pts.push({ x, z, rotY: Math.random() * Math.PI * 2 });
+        }
+        return pts;
+    }
+
+    /** Regular grid on the ground plane, skipping the stage area. */
+    _tilePoints(halfGround, spacing, stageHalf) {
+        const pts = [];
+        for (let x = -halfGround + spacing / 2; x < halfGround; x += spacing) {
+            for (let z = -halfGround + spacing / 2; z < halfGround; z += spacing) {
+                if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+                pts.push({ x, z, rotY: 0 });
+            }
+        }
+        return pts;
     }
 
     // ── Live scene updates from panel controls ──────────────────
@@ -650,6 +829,11 @@ export class EnvironmentBridge extends BaseBridge {
         if (Array.isArray(state.stageItems)) {
             this._state.stageItems = state.stageItems;
             this._buildStageItems();
+        }
+        // Ground objects
+        if (Array.isArray(state.groundObjects)) {
+            this._state.groundObjects = state.groundObjects;
+            this._rebuildGroundObjects();
         }
         super._applyState(state);
     }
@@ -788,7 +972,57 @@ export class EnvironmentBridge extends BaseBridge {
               ${textureSelect('wallTexture', s.wallTexture)}
             </div>
           </div>
+
+          ${subtitle('Ground Objects', 'groundObjects')}
+          ${this._renderGroundObjectSlots()}
         `;
+    }
+
+    /** Render the 3 ground-object slot cards (used by _renderGroundTab). */
+    _renderGroundObjectSlots() {
+        const slots = this._state.groundObjects;
+        const objs  = this._objectList || [];
+        const modeLabels    = { scatter: 'Scatter', tile: 'Tile' };
+        const densityLabels = { low: 'Low', med: 'Med', high: 'High' };
+
+        return slots.map((slot, i) => {
+            const optionsHtml = `<option value="none"${slot.assetId === 'none' ? ' selected' : ''}>None</option>` +
+                objs.map(o =>
+                    `<option value="${o.id}"${slot.assetId === o.id ? ' selected' : ''}>${_esc(o.name)}</option>`
+                ).join('');
+
+            const hasObj = slot.assetId && slot.assetId !== 'none';
+            const modeHtml = hasObj ? `
+              <div class="cb-card-tight">
+                <div class="cb-card-tight-label">Layout</div>
+                <div class="cb-card-tight-control">
+                  <div class="cb-segmented cb-gobj-mode" data-slot="${i}">
+                    ${Object.entries(modeLabels).map(([k, v]) =>
+                        `<button type="button" data-mode="${k}" class="${slot.mode === k ? 'active' : ''}">${v}</button>`
+                    ).join('')}
+                  </div>
+                </div>
+              </div>
+              <div class="cb-card-tight">
+                <div class="cb-card-tight-label">Density</div>
+                <div class="cb-card-tight-control">
+                  <div class="cb-segmented cb-gobj-density" data-slot="${i}">
+                    ${Object.entries(densityLabels).map(([k, v]) =>
+                        `<button type="button" data-density="${k}" class="${slot.density === k ? 'active' : ''}">${v}</button>`
+                    ).join('')}
+                  </div>
+                </div>
+              </div>` : '';
+
+            return `
+              <div class="cb-card-tight">
+                <div class="cb-card-tight-label">Slot ${i + 1}</div>
+                <div class="cb-card-tight-control">
+                  <select class="cb-gobj-select" data-slot="${i}">${optionsHtml}</select>
+                </div>
+              </div>
+              ${modeHtml}`;
+        }).join('');
     }
 
     // ── Sky tab ──────────────────────────────────────────────────
@@ -949,6 +1183,35 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
+        // ── Ground objects (slot select + mode/density toggles) ─
+        panel.querySelectorAll('.cb-gobj-select').forEach(sel => {
+            sel.addEventListener('change', () => {
+                const i = parseInt(sel.dataset.slot, 10);
+                this._state.groundObjects[i].assetId = sel.value;
+                this._rebuildGroundObjects();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-gobj-mode button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.closest('.cb-gobj-mode').dataset.slot, 10);
+                this._state.groundObjects[i].mode = btn.dataset.mode;
+                this._rebuildGroundObjects();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+        panel.querySelectorAll('.cb-gobj-density button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.closest('.cb-gobj-density').dataset.slot, 10);
+                this._state.groundObjects[i].density = btn.dataset.density;
+                this._rebuildGroundObjects();
+                this._renderPanel();
+                this._scheduleAutoSave();
+            });
+        });
+
         // ── Stage tab: remove item buttons ─────────────────────
         panel.querySelectorAll('.cb-stage-remove').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1021,6 +1284,21 @@ export class EnvironmentBridge extends BaseBridge {
             this._scheduleAutoSave();
             return;
         }
+        if (key === 'groundObjects') {
+            const objs = this._objectList || [];
+            if (!objs.length) return;
+            const modes = ['scatter', 'tile'];
+            const dens  = ['low', 'med', 'high'];
+            this._state.groundObjects = this._state.groundObjects.map(() => ({
+                assetId:  objs[Math.floor(Math.random() * objs.length)].id,
+                mode:     modes[Math.floor(Math.random() * modes.length)],
+                density:  dens[Math.floor(Math.random() * dens.length)],
+            }));
+            this._rebuildGroundObjects();
+            this._renderPanel();
+            this._scheduleAutoSave();
+            return;
+        }
         if (key === 'stageItems') {
             // Random 1–5 greybox characters on random squares
             const count = 1 + Math.floor(Math.random() * 5);
@@ -1049,7 +1327,7 @@ export class EnvironmentBridge extends BaseBridge {
      */
     surpriseAll() {
         // Hit every section-level randomiser in one go
-        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'stageItems']) {
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'stageItems']) {
             this._onSurpriseField(key);
         }
         // _onSurpriseField already calls _renderPanel + _scheduleAutoSave
