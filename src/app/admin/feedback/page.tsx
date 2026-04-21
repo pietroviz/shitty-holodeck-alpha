@@ -7,6 +7,10 @@ const ADMIN_EMAIL = "pbgagliano@gmail.com";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "FEEDBACK — Shitty Holodeck (Alpha)",
+};
+
 export default async function AdminFeedbackPage() {
   const supabase = await createClient();
 
