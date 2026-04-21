@@ -88,8 +88,10 @@ svg    { display: block; flex-shrink: 0; }
     /* Content fades in after panel slides open */
     animation: panelIn 0.25s ease both;
 }
-/* Mobile: hamburger stays in place, so add top clearance */
-@media (max-width: 768px) {
+/* Mobile / narrow-aspect: hamburger stays in place, so add top clearance.
+   Using max-aspect-ratio: 1/1 gives a single breakpoint that fires for
+   phones AND for desktop browsers shrunk below a square. */
+@media (max-aspect-ratio: 1/1) {
     #panel-inner { padding-top: 56px; }
 }
 
@@ -2427,30 +2429,101 @@ svg    { display: block; flex-shrink: 0; }
     border-color: var(--accent);
 }
 
+/* Drag handle — hidden on desktop, shown on narrow-aspect (see block below) */
+#panel-drag-handle { display: none; }
+
 /* ══════════════════════════════════════════════════════
-   MOBILE  — panel slides up from the bottom
+   MOBILE / NARROW-ASPECT  — panel becomes a bottom sheet
+   that the user can drag to resize. Single breakpoint at
+   a square aspect ratio so it triggers on phones AND when
+   a desktop browser is shrunk below 1:1.
    ══════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
+@media (max-aspect-ratio: 1/1) {
     #root {
         flex-direction: column;
+    }
+    #viewport {
+        order: 1;
+        flex: 1;
+        width: 100%;
+        min-height: 0;
     }
     #left-panel {
         order: 2;              /* panel below viewport */
         width: 100%;
         height: 0;
         transition: height 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    /* When the drag is live, kill the transition so the sheet tracks
+       the pointer 1:1 instead of lagging behind. */
+    #left-panel.dragging {
+        transition: none;
     }
     #left-panel.open {
-        height: 50vh;
+        height: var(--mobile-panel-height, 50vh);
         box-shadow: 0 -4px 32px rgba(0,0,0,0.4);
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        overflow: hidden;
     }
-    #viewport {
-        order: 1;
-        flex: 1;
+
+    /* Drag handle pill — Google-Maps / iOS sheet style */
+    #panel-drag-handle {
+        display: block;
+        flex: 0 0 auto;
+        height: 18px;
+        padding: 7px 0;
+        cursor: ns-resize;
+        touch-action: none;         /* we handle the gesture ourselves */
+        -webkit-user-select: none;
+        user-select: none;
+        position: relative;
+        z-index: 1;
+    }
+    #panel-drag-handle::before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 4px;
+        margin: 0 auto;
+        border-radius: 2px;
+        background: rgba(255,255,255,0.28);
+        transition: width 0.15s ease, background 0.15s ease;
+    }
+    #panel-drag-handle:hover::before,
+    #left-panel.dragging #panel-drag-handle::before {
+        width: 56px;
+        background: rgba(255,255,255,0.5);
+    }
+
+    /* Panel inner: fill remaining height below the handle and
+       scroll internally instead of growing the sheet. */
+    #panel-inner {
         width: 100%;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 12px 16px 16px;   /* condensed vs desktop 20px all-around */
+        padding-top: 8px;           /* handle already provides top space */
     }
-    #panel-inner { width: 100%; }
+
+    /* Condense field/tab padding so the short sheet holds more content */
+    .cb-body { padding: 0; }
+    .cb-body > * + * { margin-top: 10px; }
+
+    .ph-row,
+    .ph-row.bridge-header {
+        margin-bottom: 10px;
+    }
+    .bridge-autosave-label {
+        margin-top: 0;
+    }
 }
+
 
 /* ══════════════════════════════════════════════════════
    ABOUT MODAL

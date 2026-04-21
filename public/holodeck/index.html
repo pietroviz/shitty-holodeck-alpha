@@ -16,6 +16,8 @@
 
         <!-- ── Left sliding panel ──────────────────────── -->
         <div id="left-panel" aria-hidden="true">
+            <!-- Drag handle — only shown on mobile / narrow-aspect viewports -->
+            <div id="panel-drag-handle" aria-hidden="true"></div>
             <div id="panel-inner"></div>
         </div>
 
@@ -119,5 +121,67 @@
     }
     </script>
     <script type="module" src="js/app.js?v=43"></script>
+
+    <!-- Mobile / narrow-aspect: drag the handle to resize the bottom sheet.
+         The gesture only fires when the browser is below a 1:1 aspect ratio;
+         on desktop the handle is `display:none` and the listeners are no-ops. -->
+    <script>
+    (function () {
+        const panel  = document.getElementById('left-panel');
+        const handle = document.getElementById('panel-drag-handle');
+        if (!panel || !handle) return;
+
+        const KEY = 'holodeck.mobilePanelHeight';
+        const MIN_PX = 120;  // keep at least the handle + a couple of rows visible
+        const MAX_VH = 92;   // leave a strip of viewport for context
+
+        // Restore last height (clamped on read so stale values can't escape bounds).
+        try {
+            const saved = parseFloat(localStorage.getItem(KEY));
+            if (Number.isFinite(saved)) {
+                const vh = Math.min(MAX_VH, Math.max(15, saved));
+                panel.style.setProperty('--mobile-panel-height', vh + 'vh');
+            }
+        } catch {}
+
+        function isMobileLayout() {
+            return window.matchMedia('(max-aspect-ratio: 1/1)').matches;
+        }
+
+        let dragging = false;
+
+        function onPointerDown(e) {
+            if (!isMobileLayout()) return;
+            dragging = true;
+            panel.classList.add('dragging');
+            handle.setPointerCapture?.(e.pointerId);
+            e.preventDefault();
+        }
+        function onPointerMove(e) {
+            if (!dragging) return;
+            // Panel sits at the bottom — height is distance from pointer to viewport bottom.
+            const vh = window.innerHeight;
+            const px = Math.min(vh - 40, Math.max(MIN_PX, vh - e.clientY));
+            const vhPct = (px / vh) * 100;
+            panel.style.setProperty('--mobile-panel-height', vhPct + 'vh');
+        }
+        function onPointerUp(e) {
+            if (!dragging) return;
+            dragging = false;
+            panel.classList.remove('dragging');
+            handle.releasePointerCapture?.(e.pointerId);
+            // Persist whatever CSS var currently resolves to.
+            const cs = getComputedStyle(panel).getPropertyValue('--mobile-panel-height').trim();
+            if (cs.endsWith('vh')) {
+                try { localStorage.setItem(KEY, parseFloat(cs)); } catch {}
+            }
+        }
+
+        handle.addEventListener('pointerdown', onPointerDown);
+        handle.addEventListener('pointermove', onPointerMove);
+        handle.addEventListener('pointerup', onPointerUp);
+        handle.addEventListener('pointercancel', onPointerUp);
+    })();
+    </script>
 </body>
 </html>
