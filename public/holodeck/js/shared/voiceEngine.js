@@ -230,7 +230,17 @@ class VisemeEngine {
 // ── Audio Effect Chain ───────────────────────────────
 
 class AudioEffectChain {
-    constructor() { this.ctx = null; this.nodes = {}; this.ready = false; this.values = { ...VOICE_DEFAULTS.effects }; }
+    constructor() {
+        this.ctx = null;
+        this.nodes = {};
+        this.ready = false;
+        this.values = { ...VOICE_DEFAULTS.effects };
+        // Target gain for the breath-noise bus. Stored separately so
+        // setBreathiness() can remember the user's setting without
+        // pushing noise through to output while no voice is speaking.
+        this._breathTarget = 0;
+        this._speaking = false;
+    }
 
     init(ctx) {
         this.ctx = ctx;
@@ -287,7 +297,34 @@ class AudioEffectChain {
     setReverb(val) { if (!this.ready) return; this.values.reverb = val; const wet = val / 100; this.nodes.reverbDry.gain.value = 1 - wet * 0.5; this.nodes.reverbWet.gain.value = wet; }
     setWobble(val) { if (!this.ready) return; this.values.wobble = val; this.nodes.wobbleTremoloDepth.gain.value = (val / 100) * 0.6; }
     setWobbleSpeed(hz) { if (!this.ready) return; this.values.wobbleSpeed = hz; this.nodes.wobbleLfo.frequency.value = hz; }
-    setBreathiness(val) { if (!this.ready) return; this.values.breathiness = val; this.nodes.breathGain.gain.value = (val / 100) * 0.35; }
+    setBreathiness(val) {
+        if (!this.ready) return;
+        this.values.breathiness = val;
+        this._breathTarget = (val / 100) * 0.35;
+        // Only push gain out live if we're actively speaking. Otherwise the
+        // pink-noise loop bleeds to the output as constant "fuzz" whenever
+        // a voice preset is loaded with breathiness > 0.
+        this.nodes.breathGain.gain.value = this._speaking ? this._breathTarget : 0;
+    }
+    // Fade the breath noise in at the start of a sentence.
+    startBreath() {
+        this._speaking = true;
+        if (!this.ready || this._breathTarget <= 0) return;
+        const g = this.nodes.breathGain.gain;
+        const t = this.ctx.currentTime;
+        g.cancelScheduledValues(t);
+        g.setValueAtTime(0, t);
+        g.linearRampToValueAtTime(this._breathTarget, t + 0.03);
+    }
+    // Fade the breath noise out when speech ends / is stopped.
+    stopBreath() {
+        this._speaking = false;
+        if (!this.ready) return;
+        const g = this.nodes.breathGain.gain;
+        const t = this.ctx.currentTime;
+        g.cancelScheduledValues(t);
+        g.linearRampToValueAtTime(0, t + 0.05);
+    }
     setVocalFry(val) { if (!this.ready) return; this.values.vocalFry = val; this.nodes.fryDepth.gain.value = (val / 100) * 0.7; this.nodes.fryLfo.frequency.value = 30 + (val / 100) * 50; }
     setChorus(val) { if (!this.ready) return; this.values.chorus = val; const wet = val / 100; this.nodes.chorusDry.gain.value = 1; this.nodes.chorusWet.gain.value = wet * 0.7; this.nodes.chorusLfoDepth.gain.value = 0.002 + wet * 0.005; }
     applyPresetEffects(preset) { this.setReverb(preset.reverb); this.setWobble(preset.wobble); this.setWobbleSpeed(preset.wobbleSpeed); this.setBrightness(preset.brightness); this.setBreathiness(preset.breathiness); this.setVocalFry(preset.vocalFry); this.setChorus(preset.chorus); }
@@ -450,11 +487,12 @@ export class VoiceEngine {
             if (this.currentSource) { try { this.currentSource.stop(); } catch(e){} }
             this.currentSource = source;
             source.onended = () => { this.currentSource = null; this._finishSpeaking(); };
+            this.effectChain.startBreath();
             source.start(0);
         } catch (err) { console.error('[VoiceEngine] Speak error:', err); this._finishSpeaking(); }
     }
 
-    _finishSpeaking() { this.isSpeaking = false; this.visemeEngine.stop(); if (this.onSpeakEnd) this.onSpeakEnd(); }
+    _finishSpeaking() { this.isSpeaking = false; this.effectChain.stopBreath(); this.visemeEngine.stop(); if (this.onSpeakEnd) this.onSpeakEnd(); }
     stop() { if (this.currentSource) { try { this.currentSource.stop(); } catch(e){} this.currentSource = null; } this._finishSpeaking(); }
     update(dtMs) { this.visemeEngine.update(dtMs); }
     getVisemeParams() { return this.visemeEngine.getParams(); }
