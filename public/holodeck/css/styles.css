@@ -2462,6 +2462,10 @@ svg    { display: block; flex-shrink: 0; }
         transition: none;
     }
     #left-panel.open {
+        /* Explicit width: the desktop rule `#left-panel.open { width: var(--panel-width) }`
+           has higher specificity than the plain `#left-panel { width: 100% }` above, so
+           without this the sheet would stay at 400px even on narrow viewports. */
+        width: 100%;
         height: var(--mobile-panel-height, 50vh);
         border-top-left-radius: 14px;
         border-top-right-radius: 14px;
@@ -2499,42 +2503,26 @@ svg    { display: block; flex-shrink: 0; }
 
     /* Panel inner: fill remaining height below the handle and
        scroll internally instead of growing the sheet. Horizontal
-       padding is zeroed so cards, tab rails, buttons, and section
-       backgrounds all stretch edge-to-edge across the sheet. Only
-       the small header row re-adds a gutter below, so the × and
-       title don't hit the viewport edge. */
+       padding matches the desktop side panel (20px) so the nice
+       gutter around cards/fields is preserved; top padding is
+       minimal since the drag handle already provides space. */
     #panel-inner {
         width: 100%;
         flex: 1 1 auto;
         min-height: 0;
         overflow-y: auto;
+        overflow-x: hidden;
         overscroll-behavior: contain;
-        padding: 2px 0 12px;
+        padding: 4px 20px 16px;
     }
 
-    /* Condense field/tab padding so the short sheet holds more content */
-    .cb-body { padding: 0; }
-    .cb-body > * + * { margin-top: 10px; }
-
+    /* Slightly tighter vertical rhythm for the shorter sheet */
     .ph-row,
     .ph-row.bridge-header {
         margin-bottom: 10px;
-        padding: 0 12px;          /* keep tiny header icons off the sheet edges */
     }
     .bridge-autosave-label {
         margin-top: 0;
-    }
-
-    /* Inputs inside fields were inset by 4px on desktop — drop that on
-       mobile so text fields also reach the sheet edges. */
-    #panel-inner .cb-field { padding: 0; }
-
-    /* Soften the square corners of full-bleed cards/tabs a touch so they
-       don't feel harsh against the rounded sheet top. */
-    .cb-section,
-    .cb-card-tight,
-    .cb-tabs-list {
-        border-radius: 10px;
     }
 }
 
