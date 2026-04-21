@@ -44,5 +44,6 @@ export type Feedback = {
   page_url: string | null;
   message: string;
   status: FeedbackStatus;
+  is_priority: boolean;
   created_at: string;
 };
