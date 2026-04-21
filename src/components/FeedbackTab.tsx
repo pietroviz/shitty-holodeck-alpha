@@ -105,9 +105,13 @@ export default function FeedbackTab() {
     }
   }
 
-  // Hide on the password gate and auth screens — the feedback tab shouldn't
-  // appear before the user is past the sign-in flow.
-  if (pathname === "/gate" || pathname?.startsWith("/auth")) {
+  // Hide on the password gate, auth screens, and admin pages — the feedback
+  // tab shouldn't appear before sign-in or on the triage UI itself.
+  if (
+    pathname === "/gate" ||
+    pathname?.startsWith("/auth") ||
+    pathname?.startsWith("/admin")
+  ) {
     return null;
   }
 
