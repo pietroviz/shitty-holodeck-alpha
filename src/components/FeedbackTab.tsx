@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 function getHolodeckContext(): string {
@@ -31,6 +32,7 @@ function getBrowserInfo(): string {
 }
 
 export default function FeedbackTab() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -103,13 +105,19 @@ export default function FeedbackTab() {
     }
   }
 
+  // Hide on the password gate and auth screens — the feedback tab shouldn't
+  // appear before the user is past the sign-in flow.
+  if (pathname === "/gate" || pathname?.startsWith("/auth")) {
+    return null;
+  }
+
   return (
     <>
       {/* The vertical tab on the right edge */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className={`fixed right-0 top-1/2 -translate-y-1/2 z-50
+          className={`fixed right-0 top-20 z-50
             bg-[#00D9D9] hover:bg-[#00B8B8] text-[#1A2332] text-sm font-medium
             px-2 py-3 rounded-l-lg shadow-lg
             transition-opacity duration-200
@@ -129,8 +137,8 @@ export default function FeedbackTab() {
       {/* The expanded panel */}
       {isOpen && (
         <div
-          className="fixed right-0 top-1/2 -translate-y-1/2 z-50
-            w-72 bg-[#1E2530] border border-[#2A3240] rounded-l-xl shadow-2xl
+          className="fixed top-20 right-0 left-0 sm:left-auto z-50
+            w-auto sm:w-80 bg-[#1E2530] border border-[#2A3240] sm:rounded-l-xl shadow-2xl
             p-4 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
