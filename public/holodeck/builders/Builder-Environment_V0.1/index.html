@@ -821,13 +821,90 @@ body.state-search #viewport::after {
   border-top: 1px solid var(--app-border);
   margin: 14px 0;
 }
+
+/* ───────────────────────────────────────────────
+   DRAG HANDLE (hidden on desktop, shown on mobile)
+─────────────────────────────────────────────── */
+#panel-drag-handle { display: none; }
+
+/* ───────────────────────────────────────────────
+   MOBILE LAYOUT — aspect ratio narrower than square
+   (covers phones in portrait + short/wide phones landscape
+   when the width is less than the height)
+─────────────────────────────────────────────── */
+@media (max-aspect-ratio: 1/1) {
+  #app { flex-direction: column; }
+
+  #panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    min-width: 0;
+    height: var(--mobile-panel-height, 45vh);
+    min-height: 48px;
+    max-height: 90vh;
+    border-right: none;
+    border-top: 1px solid var(--app-border);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.45);
+    z-index: 100;
+  }
+
+  #stage {
+    width: 100%;
+    height: 100%;
+  }
+
+  #panel-drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0 4px;
+    cursor: ns-resize;
+    touch-action: none;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  #panel-drag-handle::before {
+    content: '';
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.28);
+    transition: background 0.15s, width 0.15s;
+  }
+  #panel-drag-handle:hover::before,
+  #panel-drag-handle:active::before {
+    background: rgba(255, 255, 255, 0.5);
+    width: 56px;
+  }
+
+  /* Condensed chrome on mobile — roughly half the desktop padding */
+  #panel-header { padding: 4px 12px 6px; }
+  .header-btn { padding: 5px 12px; min-width: 60px; font-size: 11px; }
+  #panel-title { font-size: 14px; }
+  .tab-btn { padding: 8px 0; font-size: 11px; }
+  .tab-content { padding: 10px 12px 20px; }
+  .field-group { margin-bottom: 10px; }
+
+  /* Keep the panel body scrollable regardless of panel height */
+  #panel-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
 </style>
 </head>
 <body class="state-closed">
 
 <div id="app">
-  <!-- LEFT PANEL -->
+  <!-- LEFT PANEL (on desktop) / BOTTOM SHEET (on mobile) -->
   <div id="panel">
+    <div id="panel-drag-handle" aria-hidden="true" title="Drag to resize"></div>
     <div id="panel-header">
       <button id="btn-cancel" class="header-btn">Cancel</button>
       <span id="panel-title">Browse</span>
@@ -3202,6 +3279,58 @@ async function init() {
 }
 
 init();
+</script>
+
+<!-- Mobile bottom-sheet drag-to-resize handle.
+     Adjusts --mobile-panel-height; the CSS variable only has effect
+     under the mobile @media block, so this is a no-op on desktop. -->
+<script>
+(function () {
+  const panel = document.getElementById('panel');
+  const handle = document.getElementById('panel-drag-handle');
+  if (!panel || !handle) return;
+
+  const STORAGE_KEY = 'envBuilder.mobilePanelHeight';
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) panel.style.setProperty('--mobile-panel-height', saved);
+  } catch (_) { /* ignore */ }
+
+  let startY = 0;
+  let startHeight = 0;
+
+  function onPointerMove(ev) {
+    const dy = startY - ev.clientY;
+    const vh = window.innerHeight;
+    const min = 48;
+    const max = vh * 0.9;
+    const h = Math.min(max, Math.max(min, startHeight + dy));
+    panel.style.setProperty('--mobile-panel-height', h + 'px');
+  }
+
+  function onPointerUp(ev) {
+    try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
+    handle.removeEventListener('pointermove', onPointerMove);
+    handle.removeEventListener('pointerup', onPointerUp);
+    handle.removeEventListener('pointercancel', onPointerUp);
+    try {
+      const h = panel.style.getPropertyValue('--mobile-panel-height');
+      if (h) localStorage.setItem(STORAGE_KEY, h);
+    } catch (_) { /* ignore */ }
+  }
+
+  function onPointerDown(ev) {
+    ev.preventDefault();
+    startY = ev.clientY;
+    startHeight = panel.getBoundingClientRect().height;
+    try { handle.setPointerCapture(ev.pointerId); } catch (_) {}
+    handle.addEventListener('pointermove', onPointerMove);
+    handle.addEventListener('pointerup', onPointerUp);
+    handle.addEventListener('pointercancel', onPointerUp);
+  }
+
+  handle.addEventListener('pointerdown', onPointerDown);
+})();
 </script>
 </body>
 </html>
