@@ -2498,15 +2498,18 @@ svg    { display: block; flex-shrink: 0; }
     }
 
     /* Panel inner: fill remaining height below the handle and
-       scroll internally instead of growing the sheet. */
+       scroll internally instead of growing the sheet. Horizontal
+       padding is zeroed so cards, tab rails, buttons, and section
+       backgrounds all stretch edge-to-edge across the sheet. Only
+       the small header row re-adds a gutter below, so the × and
+       title don't hit the viewport edge. */
     #panel-inner {
         width: 100%;
         flex: 1 1 auto;
         min-height: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding: 12px 16px 16px;   /* condensed vs desktop 20px all-around */
-        padding-top: 2px;           /* handle already provides top space */
+        padding: 2px 0 12px;
     }
 
     /* Condense field/tab padding so the short sheet holds more content */
@@ -2516,9 +2519,22 @@ svg    { display: block; flex-shrink: 0; }
     .ph-row,
     .ph-row.bridge-header {
         margin-bottom: 10px;
+        padding: 0 12px;          /* keep tiny header icons off the sheet edges */
     }
     .bridge-autosave-label {
         margin-top: 0;
+    }
+
+    /* Inputs inside fields were inset by 4px on desktop — drop that on
+       mobile so text fields also reach the sheet edges. */
+    #panel-inner .cb-field { padding: 0; }
+
+    /* Soften the square corners of full-bleed cards/tabs a touch so they
+       don't feel harsh against the rounded sheet top. */
+    .cb-section,
+    .cb-card-tight,
+    .cb-tabs-list {
+        border-radius: 10px;
     }
 }
 
