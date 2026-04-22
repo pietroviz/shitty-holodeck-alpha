@@ -322,10 +322,70 @@ def draw_environment(asset):
     return img
 
 
-# ── Fallback Thumbnail (voice, music) ────────────────────────
+# ── Voice Thumbnail ──────────────────────────────────────────
+
+def draw_voice(asset):
+    """Draw a stylised face thumbnail using the voice's face/scalp/lip
+    colors — mirrors the in-app mouth preview so each voice reads as
+    itself at a glance."""
+    state = asset.get("payload", {}).get("state", {})
+
+    face_hex  = state.get("faceColor")  or "#e0c8b0"
+    scalp_hex = state.get("scalpColor") or "#4a3a2a"
+    lip_hex   = state.get("lipColor")   or "#b05060"
+    show_lips = state.get("showLips", True)
+
+    img = Image.new("RGB", (THUMB_SIZE, THUMB_SIZE), hex_to_rgb(BG_COLOR))
+    draw = ImageDraw.Draw(img)
+
+    cx = THUMB_SIZE // 2
+    cy = THUMB_SIZE // 2
+    head_w = 72
+    head_h = 92
+    left   = cx - head_w // 2
+    right  = cx + head_w // 2
+    top    = cy - head_h // 2
+    bottom = cy + head_h // 2
+
+    # Face
+    draw.ellipse([left, top, right, bottom], fill=hex_to_rgb(face_hex))
+
+    # Scalp cap (top ~45% of head)
+    scalp_bottom = top + int(head_h * 0.45)
+    scalp_layer = Image.new("RGBA", (THUMB_SIZE, THUMB_SIZE), (0, 0, 0, 0))
+    scalp_draw = ImageDraw.Draw(scalp_layer)
+    scalp_draw.ellipse([left, top, right, bottom], fill=hex_to_rgb(scalp_hex) + (255,))
+    scalp_draw.rectangle([0, scalp_bottom, THUMB_SIZE, THUMB_SIZE], fill=(0, 0, 0, 0))
+    img.paste(scalp_layer, mask=scalp_layer)
+
+    # Eyes — small dark ovals on either side
+    eye_y = cy - head_h * 0.05
+    eye_dx = head_w * 0.22
+    eye_rx, eye_ry = 4, 5
+    eye_color = darken(face_hex, 0.7)
+    for sign in (-1, 1):
+        ex = cx + sign * eye_dx
+        draw.ellipse([ex - eye_rx, eye_y - eye_ry, ex + eye_rx, eye_y + eye_ry],
+                     fill=eye_color)
+
+    # Lips — horizontal bar positioned in lower third
+    if show_lips:
+        lip_y = cy + head_h * 0.28
+        lip_w = head_w * 0.48
+        lip_h = 6
+        draw.rounded_rectangle(
+            [cx - lip_w / 2, lip_y - lip_h / 2,
+             cx + lip_w / 2, lip_y + lip_h / 2],
+            radius=3, fill=hex_to_rgb(lip_hex),
+        )
+
+    return img
+
+
+# ── Fallback Thumbnail (music, other) ────────────────────────
 
 def draw_fallback(asset):
-    """Draw a simple colored circle for voice/music assets."""
+    """Draw a simple colored circle for music/other assets."""
     type_colors = {"voice": "#7eb8c9", "music": "#c97eb8", "image": "#b8c97e"}
     color = type_colors.get(asset.get("type", ""), "#888888")
 
@@ -346,7 +406,7 @@ RENDERERS = {
     "prop": draw_prop,
     "object": draw_prop,
     "environment": draw_environment,
-    "voice": draw_fallback,
+    "voice": draw_voice,
     "music": draw_fallback,
 }
 

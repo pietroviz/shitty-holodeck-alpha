@@ -276,8 +276,22 @@ export class EnvironmentBridge extends BaseBridge {
         this.displayName = 'Environment';
         this.storeName   = 'environments';
 
-        // Carry forward any previously-saved state
-        const d = this.asset?.payload?.state || this.asset?.state || {};
+        // Carry forward any previously-saved state.
+        // Shallow-copy so legacy-schema translation below doesn't mutate the asset.
+        const d = { ...(this.asset?.payload?.state || this.asset?.state || {}) };
+
+        // Legacy sky schema: stock env JSONs use skyTopColor / skyHorizonColor
+        // (and payload.skybox.{top,bottom}Color). Translate to the new
+        // 3-stop gradient so those environments actually show a sky.
+        const _legacyTop = d.skyTopColor     || this.asset?.payload?.skybox?.topColor;
+        const _legacyBot = d.skyHorizonColor || this.asset?.payload?.skybox?.bottomColor;
+        if (_legacyTop && !d.skyTop) d.skyTop = _legacyTop;
+        if (_legacyBot && !d.skyBot) d.skyBot = _legacyBot;
+        if (!d.skyMid && (_legacyTop || _legacyBot)) {
+            const a = new THREE.Color(d.skyTop || DEFAULT_SKY_TOP);
+            const b = new THREE.Color(d.skyBot || DEFAULT_SKY_BOT);
+            d.skyMid = '#' + a.clone().lerp(b, 0.5).getHexString();
+        }
 
         this._state = {
             groundColor:    d.groundColor || DEFAULT_GROUND_COLOR,
@@ -850,17 +864,14 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /** Apply fog state.
-     *  Uses linear Fog (near/far) so it's clear near the camera and
-     *  thickens in the distance.  The density slider (0.005–0.15) is
-     *  mapped to a near/far range: higher density = fog starts closer. */
+     *  Uses exponential-squared fog so the scene stays clear up close and
+     *  fades smoothly into the distance — matching how atmospheric haze
+     *  actually reads. The slider directly controls density: low = subtle
+     *  distant haze, high = close fog. */
     _applyFog() {
         if (this._state.fogEnabled) {
             const d = this._state.fogDensity;
-            // Map density to near/far.  At d=0.01 fog is far away (near 20, far 60).
-            // At d=0.15 fog is very close (near 2, far 12).
-            const near = Math.max(1, 22 - d * 140);
-            const far  = Math.max(near + 5, 65 - d * 360);
-            this._scene.fog = new THREE.Fog(this._state.fogColor, near, far);
+            this._scene.fog = new THREE.FogExp2(this._state.fogColor, d);
         } else {
             this._scene.fog = null;
         }
