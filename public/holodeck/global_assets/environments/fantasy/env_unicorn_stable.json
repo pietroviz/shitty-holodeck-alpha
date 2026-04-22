@@ -1,0 +1,101 @@
+{
+  "id": "env_unicorn_stable",
+  "type": "environment",
+  "name": "Unicorn Stable",
+  "tags": [
+    "fantasy",
+    "pastel",
+    "rainbow",
+    "stable"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A sunlit stable of bleached oak with ribbons, flowers, and a slightly smug rainbow arch.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#d8c8a8",
+      "stageColor": "#e8d8b8",
+      "wallColor": "#f4e4c8",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#fff0d8",
+      "windowOpacity": 0.5,
+      "skyTop": "#a8d0e8",
+      "skyMid": "#d8e8f0",
+      "skyBot": "#fff0f8",
+      "fxPreset": "dawn",
+      "sunColor": "#fff8e0",
+      "sunElevation": 45,
+      "sunVisible": true,
+      "ambientColor": "#fce4d0",
+      "ambientIntensity": 1.2,
+      "dirColor": "#ffffff",
+      "dirIntensity": 1,
+      "fogEnabled": false,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_rainbow_arch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_planter",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_planter",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

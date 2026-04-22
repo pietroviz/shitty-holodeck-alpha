@@ -1,0 +1,102 @@
+{
+  "id": "env_birthday_aftermath",
+  "type": "environment",
+  "name": "Birthday Party Aftermath",
+  "tags": [
+    "playful",
+    "birthday",
+    "aftermath",
+    "chaotic"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Streamers drooping, cake smashed on the floor, balloons still bobbing — nobody left to clean up.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#f0c8d8",
+      "stageColor": "#fadde8",
+      "wallColor": "#c08098",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#fff0a0",
+      "windowOpacity": 0.5,
+      "skyTop": "#ea8ca0",
+      "skyMid": "#ffc0c8",
+      "skyBot": "#fff0d8",
+      "fxPreset": "dusk",
+      "ambientColor": "#ffb8c8",
+      "ambientIntensity": 1.2,
+      "dirColor": "#fff0a0",
+      "dirIntensity": 0.9,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb060",
+      "orbIntensity": 1.5,
+      "orbHeight": 2.3,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_trash_can",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Env Thumb Farm — dev only</title>
+    <style>
+        body { margin:0; background:#14161c; color:#d8dcec; font-family:-apple-system,system-ui,sans-serif; }
+        #wrap { display:grid; grid-template-columns:360px 1fr; min-height:100vh; }
+        #side { padding:20px 22px; border-right:1px solid #262a36; }
+        h1 { font-size:16px; margin:0 0 12px; letter-spacing:0.02em; }
+        .muted { color:#8494a7; font-size:13px; line-height:1.5; }
+        button { background:#5b6cff; color:white; border:0; padding:10px 16px; border-radius:8px; cursor:pointer; font-size:14px; margin-top:14px; }
+        button:disabled { opacity:0.5; cursor:not-allowed; }
+        #stage { position:relative; }
+        #scene-container { width:512px; height:512px; margin:20px; background:#000; border-radius:8px; overflow:hidden; }
+        #progress { margin-top:18px; font-size:13px; }
+        #log { margin-top:14px; max-height:60vh; overflow:auto; font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.6; color:#a0acc0; }
+        #log .ok { color:#6ad68a; }
+        #log .err { color:#ff6a7a; }
+        .row { display:flex; justify-content:space-between; gap:8px; padding:2px 0; }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="side">
+            <h1>Env Thumb Farm</h1>
+            <p class="muted">
+                Dev-only batch tool. Walks every stock environment, renders it
+                in 3D via <code>previewRenderer</code>, and writes a real JPEG
+                thumbnail to <code>public/holodeck/thumbnails/</code>.
+            </p>
+            <p class="muted">
+                <strong>Delay per env:</strong>
+                <input id="delay" type="number" min="500" max="10000" step="100" value="3500" style="width:80px;background:#1e222e;color:#fff;border:1px solid #2e3446;border-radius:4px;padding:4px 6px;"> ms
+            </p>
+            <button id="start">Start batch</button>
+            <button id="stop" disabled>Stop</button>
+            <div id="progress"></div>
+            <div id="log"></div>
+        </div>
+        <div id="stage">
+            <div id="scene-container"></div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import { showPreview, destroyPreview } from './js/previewRenderer.js';
+
+        const container = document.getElementById('scene-container');
+        const startBtn  = document.getElementById('start');
+        const stopBtn   = document.getElementById('stop');
+        const delayIn   = document.getElementById('delay');
+        const progEl    = document.getElementById('progress');
+        const logEl     = document.getElementById('log');
+
+        let stopRequested = false;
+
+        function line(text, cls = '') {
+            const div = document.createElement('div');
+            div.className = 'row ' + cls;
+            div.innerHTML = `<span>${text}</span>`;
+            logEl.prepend(div);
+        }
+
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function listEnvs() {
+            const res  = await fetch('global_assets/environments/manifest.json');
+            const data = await res.json();
+            const out  = [];
+            for (const [folder, cat] of Object.entries(data.categories)) {
+                if (folder === 'templates') continue;  // skip blank env_default
+                for (const f of cat.files || []) {
+                    out.push(`global_assets/environments/${folder}/${f}`);
+                }
+            }
+            return out;
+        }
+
+        async function captureOne(assetPath, delayMs) {
+            const res   = await fetch(assetPath);
+            const asset = await res.json();
+            const envId = asset.id;
+
+            showPreview(container, asset);
+            await wait(delayMs);  // let async props + ground + weather settle
+
+            const canvas = container.querySelector('canvas');
+            if (!canvas) throw new Error('no canvas for ' + envId);
+            // Downsize to 512x512 via an offscreen canvas so file size stays small
+            const tmp = document.createElement('canvas');
+            tmp.width = tmp.height = 512;
+            const ctx = tmp.getContext('2d');
+            // Source canvas may be square already, but cover-crop just in case
+            const sw = canvas.width, sh = canvas.height;
+            const side = Math.min(sw, sh);
+            ctx.drawImage(canvas, (sw - side) / 2, (sh - side) / 2, side, side, 0, 0, 512, 512);
+            const dataURL = tmp.toDataURL('image/jpeg', 0.82);
+
+            const post = await fetch('/api/admin/save-env-thumb', {
+                method:  'POST',
+                headers: { 'content-type': 'application/json' },
+                body:    JSON.stringify({ envId, dataURL }),
+            });
+            if (!post.ok) {
+                const err = await post.text();
+                throw new Error(`save ${envId}: ${post.status} ${err}`);
+            }
+            return envId;
+        }
+
+        async function run() {
+            stopRequested = false;
+            startBtn.disabled = true;
+            stopBtn.disabled  = false;
+            logEl.innerHTML   = '';
+
+            const delayMs = Math.max(500, Math.min(10000, parseInt(delayIn.value || '3500', 10)));
+            const envs    = await listEnvs();
+            line(`Found ${envs.length} envs. Delay ${delayMs}ms each. ≈ ${Math.round(envs.length * delayMs / 1000)}s total.`);
+
+            let done = 0, failed = 0;
+            for (const p of envs) {
+                if (stopRequested) { line('Stopped.'); break; }
+                progEl.textContent = `${done + failed + 1} / ${envs.length} — ${p.split('/').pop()}`;
+                try {
+                    const id = await captureOne(p, delayMs);
+                    done++;
+                    line(`✔ ${id}`, 'ok');
+                } catch (e) {
+                    failed++;
+                    line(`✘ ${p.split('/').pop()}: ${e.message}`, 'err');
+                }
+            }
+
+            progEl.textContent = `Done. ${done} saved, ${failed} failed.`;
+            destroyPreview();
+            startBtn.disabled = false;
+            stopBtn.disabled  = true;
+        }
+
+        startBtn.addEventListener('click', () => { run().catch(e => line('fatal: ' + e.message, 'err')); });
+        stopBtn.addEventListener('click',  () => { stopRequested = true; });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "id": "env_liminal_hallway",
+  "type": "environment",
+  "name": "Liminal Hotel Hallway",
+  "tags": [
+    "dreamscape",
+    "liminal",
+    "corridor",
+    "yellow"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An endless hotel corridor lit by humming fluorescents, the carpet always the same ugly paisley.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#a84848",
+      "stageColor": "#c45858",
+      "wallColor": "#e0c888",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#806830",
+      "skyMid": "#a88840",
+      "skyBot": "#d0a858",
+      "fxPreset": "night",
+      "ambientColor": "#d8b068",
+      "ambientIntensity": 1.1,
+      "dirColor": "#ffd890",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#a08048",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#ffe4a0",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.8,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

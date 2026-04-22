@@ -1,0 +1,100 @@
+{
+  "id": "env_escher_staircase",
+  "type": "environment",
+  "name": "Escher Staircase",
+  "tags": [
+    "dreamscape",
+    "geometry",
+    "mc-escher",
+    "surreal"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An impossible atrium of stone steps that meet in directions that stop making sense if you stare.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#a09888",
+      "stageColor": "#c0b8a4",
+      "wallColor": "#847c70",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#e0d8c8",
+      "windowOpacity": 0.4,
+      "skyTop": "#807a70",
+      "skyMid": "#a89c88",
+      "skyBot": "#c8bca8",
+      "fxPreset": "dusk",
+      "ambientColor": "#c0b0a0",
+      "ambientIntensity": 1,
+      "dirColor": "#e0d0b0",
+      "dirIntensity": 0.8,
+      "fogEnabled": true,
+      "fogColor": "#9c9488",
+      "fogDensity": 0.04,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_obelisk",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stone_statue",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bridge",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_column",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_boulder",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

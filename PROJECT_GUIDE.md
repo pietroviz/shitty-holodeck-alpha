@@ -416,6 +416,10 @@ These conventions are now baked into the env state and the bridge/preview. Keep 
 - **BINGO grid** — Spatial placement for cast + placed props. Columns `B/I/N/G/O` (left→right), rows `5/4/3/2/1` (front→back). Cell string e.g. `N3` is centre. `_cellToWorld(cell)` → `{x: col-2, z: row-3}` in EnvironmentBridge (and the mirror `_envCellToWorld` in previewRenderer).
 - **Field names on env state**: `cast[]`, `props[]`, `groundObjects[]`, `weather`, `walls`, `windowStyle`. Legacy `stageItems` is read-only backwards compat.
 
+### Batch-3 Environments + Thumbnail Farm (same session, later in day)
+- **40 new envs** (`scripts/generate-env-batch-3.js`) — Pushing toward the 200-env goal. Spread across all 9 active categories with a bias toward variety and bizarre comedy (Goblin Market, Fairy Dentist's Office, Cryo-DMV, Jelly Planet Surface, Haunted Karaoke Bar, Liminal Hotel Hallway, Dragon HR Department, Ball Pit Lounge, Therapy Goat Pen, Middle-Management Purgatory, and 30 more). Total stock env count is now **89** (48 batch-1/2 + 40 batch-3 + 1 blank `env_default`).
+- **3D thumbnail farm** (`public/holodeck/env-thumb-farm.html` + `src/app/api/admin/save-env-thumb/route.ts`) — Dev-only page that iterates every stock env, renders each via the existing `previewRenderer` pipeline, captures a 512×512 JPEG from the canvas, and POSTs it to an API route that writes the file into `public/holodeck/thumbnails/`. Replaces the old flat Python/Pillow thumbnails with real 3D captures that include stage props, ground dressing, and weather. Run it locally at `http://localhost:3000/holodeck/env-thumb-farm.html`, then commit the refreshed thumbnails. The API route returns 403 in production so there's no public write endpoint.
+
 ---
 
 ## Integrating Environments + Characters + Music into a "Simulation"

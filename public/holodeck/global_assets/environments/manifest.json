@@ -2,91 +2,126 @@
     "categories": {
         "dreamscapes": {
             "name": "Dreamscapes",
-            "count": 6,
+            "count": 10,
             "files": [
                 "env_cloud_palace.json",
                 "env_corridor_of_clocks.json",
+                "env_escher_staircase.json",
                 "env_gravity_well.json",
                 "env_infinite_library.json",
+                "env_liminal_hallway.json",
                 "env_mirror_lake.json",
-                "env_pool_of_mirrors.json"
+                "env_pool_of_mirrors.json",
+                "env_sea_of_balloons.json",
+                "env_upside_down_diner.json"
             ]
         },
         "fantasy": {
             "name": "Fantasy Realms",
-            "count": 6,
+            "count": 11,
             "files": [
+                "env_dragon_hr_department.json",
                 "env_dragon_lair.json",
                 "env_dragons_anvil.json",
                 "env_elven_canopy.json",
                 "env_enchanted_grove.json",
+                "env_fairy_dentist_office.json",
                 "env_floating_islands.json",
-                "env_rift_of_whispers.json"
+                "env_goblin_market.json",
+                "env_rift_of_whispers.json",
+                "env_unicorn_stable.json",
+                "env_witches_book_club.json"
             ]
         },
         "holy-places": {
             "name": "Sacred Places",
-            "count": 4,
+            "count": 7,
             "files": [
                 "env_ancient_temple.json",
+                "env_cat_shrine.json",
                 "env_moon_altar.json",
+                "env_roadside_saint.json",
                 "env_sandstone_labyrinth.json",
+                "env_suburban_cult_basement.json",
                 "env_zen_garden.json"
             ]
         },
         "home-interiors": {
             "name": "Home Interiors",
-            "count": 5,
+            "count": 10,
             "files": [
+                "env_art_studio_loft.json",
                 "env_attic_of_forgotten_toys.json",
                 "env_bathtub_jungle.json",
+                "env_catio_sunporch.json",
                 "env_cozy_living_room.json",
+                "env_goth_teen_bedroom.json",
                 "env_grandmas_gilded_den.json",
-                "env_modern_kitchen.json"
+                "env_hoarder_living_room.json",
+                "env_modern_kitchen.json",
+                "env_prepper_pantry.json"
             ]
         },
         "nature": {
             "name": "Nature & Wild",
-            "count": 7,
+            "count": 12,
             "files": [
+                "env_apple_orchard.json",
+                "env_bioluminescent_swamp.json",
                 "env_desert_dunes.json",
                 "env_forest_clearing.json",
                 "env_frost_basin.json",
+                "env_giant_mushroom_forest.json",
                 "env_kelp_cathedral.json",
                 "env_lava_cliffs.json",
+                "env_lightning_meadow.json",
                 "env_mountain_peak.json",
-                "env_ocean_shore.json"
+                "env_ocean_shore.json",
+                "env_waterlily_dell.json"
             ]
         },
         "office-interiors": {
             "name": "Work Spaces",
-            "count": 4,
+            "count": 8,
             "files": [
                 "env_corner_office.json",
+                "env_dystopian_call_centre.json",
                 "env_ink_basement.json",
+                "env_mailroom_basement.json",
+                "env_mgmt_purgatory.json",
+                "env_nap_pod_farm.json",
                 "env_potters_clay_hut.json",
                 "env_startup_loft.json"
             ]
         },
         "playful": {
             "name": "Playful Spaces",
-            "count": 4,
+            "count": 8,
             "files": [
+                "env_ball_pit_lounge.json",
+                "env_birthday_aftermath.json",
                 "env_bowling_arcade.json",
                 "env_carnival_twilight.json",
+                "env_haunted_playground.json",
                 "env_pillow_fort_nebula.json",
-                "env_roller_rink_cosmos.json"
+                "env_roller_rink_cosmos.json",
+                "env_therapy_goat_pen.json"
             ]
         },
         "sci-fi": {
             "name": "Sci-Fi Frontiers",
-            "count": 6,
+            "count": 11,
             "files": [
+                "env_ai_therapist_pod.json",
                 "env_alien_landscape.json",
+                "env_cryo_dmv.json",
                 "env_deadstar_terminus.json",
                 "env_hydroponic_dome.json",
+                "env_jelly_planet_surface.json",
                 "env_neon_district.json",
                 "env_neon_docking_bay.json",
+                "env_robot_repair_shop.json",
+                "env_space_laundromat.json",
                 "env_space_station.json"
             ]
         },
@@ -99,14 +134,19 @@
         },
         "urban": {
             "name": "Urban Life",
-            "count": 6,
+            "count": 11,
             "files": [
+                "env_24hr_bodega.json",
                 "env_city_plaza.json",
+                "env_graffiti_skate_park.json",
+                "env_haunted_karaoke_bar.json",
                 "env_night_noodle_lane.json",
                 "env_rainy_alley.json",
                 "env_rooftop_bar.json",
+                "env_rooftop_pigeon_coop.json",
                 "env_subway_platform.json",
-                "env_sunbleached_plaza.json"
+                "env_sunbleached_plaza.json",
+                "env_taco_truck_lot.json"
             ]
         }
     }

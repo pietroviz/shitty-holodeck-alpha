@@ -1,0 +1,104 @@
+{
+  "id": "env_suburban_cult_basement",
+  "type": "environment",
+  "name": "Suburban Cult Basement",
+  "tags": [
+    "holy",
+    "cult",
+    "basement",
+    "candles"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A carpeted basement cleared for ritual — folding chairs in a circle, a ring of candles, suspiciously fresh flowers.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#7a5a48",
+      "stageColor": "#9a7a60",
+      "wallColor": "#a08058",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#ffa040",
+      "windowOpacity": 0.35,
+      "skyTop": "#0c0810",
+      "skyMid": "#1a1220",
+      "skyBot": "#2a1c28",
+      "fxPreset": "night",
+      "ambientColor": "#a06040",
+      "ambientIntensity": 0.7,
+      "dirColor": "#ffa060",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#1a1018",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#ffa040",
+      "orbIntensity": 1.7,
+      "orbHeight": 2.2,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 0.9,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

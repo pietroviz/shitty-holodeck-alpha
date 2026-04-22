@@ -1,0 +1,102 @@
+{
+  "id": "env_mgmt_purgatory",
+  "type": "environment",
+  "name": "Middle-Management Purgatory",
+  "tags": [
+    "office",
+    "purgatory",
+    "beige",
+    "grid"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An endless beige grid of cubicle walls under humming fluorescents, not a single window in sight.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#706860",
+      "stageColor": "#908478",
+      "wallColor": "#c4b898",
+      "groundSize": 23,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#2a2820",
+      "skyMid": "#484038",
+      "skyBot": "#706858",
+      "fxPreset": "night",
+      "ambientColor": "#b8a888",
+      "ambientIntensity": 1,
+      "dirColor": "#d8c490",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#604f38",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#e4d098",
+      "orbIntensity": 1.3,
+      "orbHeight": 2.8,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "I3",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_fence_post",
+          "mode": "tile",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

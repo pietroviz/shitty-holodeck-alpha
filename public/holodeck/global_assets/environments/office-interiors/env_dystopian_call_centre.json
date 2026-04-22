@@ -1,0 +1,102 @@
+{
+  "id": "env_dystopian_call_centre",
+  "type": "environment",
+  "name": "Dystopian Call Centre",
+  "tags": [
+    "office",
+    "call-centre",
+    "grey",
+    "fluorescent"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Endless rows of identical desks under cold strip lighting, headsets waiting for the next shift.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#98928a",
+      "stageColor": "#b8b0a8",
+      "wallColor": "#a09888",
+      "groundSize": 23,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#e0e8ec",
+      "windowOpacity": 0.4,
+      "skyTop": "#50545a",
+      "skyMid": "#787c80",
+      "skyBot": "#a0a4a8",
+      "fxPreset": "dawn",
+      "ambientColor": "#d0d4d8",
+      "ambientIntensity": 1.2,
+      "dirColor": "#e0e4e8",
+      "dirIntensity": 0.7,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#e8ecee",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.8,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "tile",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}
