@@ -347,9 +347,23 @@ class AudioEffectChain {
     _buildImpulseResponse(duration) {
         const sr = this.ctx.sampleRate, len = sr * duration;
         const impulse = this.ctx.createBuffer(2, len, sr);
+        // The original IR was raw white noise × exponential decay, which
+        // produces a grainy, hissy reverb tail — any voice with reverb > 0
+        // (demon, giant, dragon, serpent, treant, villain, cheerful…) got
+        // smeared through that noise and sounded "fuzzy". Smooth the noise
+        // with a 1-pole IIR low-pass before applying the decay so the tail
+        // reads as a real small room rather than a noise burst.
         for (let ch = 0; ch < 2; ch++) {
             const d = impulse.getChannelData(ch);
-            for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/len, 2.5);
+            let prev = 0;
+            const smoothing = 0.96;  // higher → smoother, less high-freq hash
+            for (let i = 0; i < len; i++) {
+                const w = Math.random() * 2 - 1;
+                prev = smoothing * prev + (1 - smoothing) * w;
+                // Gain compensation: the LPF cuts ~20× so multiply back up
+                // to roughly match the original IR energy.
+                d[i] = prev * 20 * Math.pow(1 - i / len, 2.5);
+            }
         }
         this.nodes.convolver.buffer = impulse;
     }
