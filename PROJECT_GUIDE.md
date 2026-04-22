@@ -389,6 +389,105 @@ The following items from the feedback table were NOT addressed in this session a
 
 ---
 
+## Recent Changes (April 22, 2026 session — Cowork)
+
+Extended the 25-environment batch with stage props + ground-object dressing, renamed the cast/prop model to prepare for an upcoming camera + script system, and brought the browse-panel preview up to parity with the edit view.
+
+### Stage Props + Ground Dressing
+- **25 envs dressed** (`scripts/generate-env-batch-1.js`) — Each environment now ships with stage props and ground-object scatter/tile slots populated, not just colors + sky. Regenerates all 25 JSON files under `public/holodeck/global_assets/environments/`.
+- **Ground-object + prop builds** (`bridges/EnvironmentBridge.js`) — Scatter/tile point generators for both the ground plane (avoids stage + camera corridor) and the stage area (avoids occupied cast cells). Height-capping prevents oversized meshes from blocking the view.
+
+### Cast + Prop Rename (camera/script prep)
+- **Cast dropped from 5 → 3 slots** — Scripts (coming) only support 3 characters. Slot A is the main character by convention; camera/framing logic will default to `CHAR_A`. See [env_script_naming.md](.claude/projects/-Users-skipper-Documents-Vibes-ShittyHolodeck-V0-9/memory/env_script_naming.md) for the full convention.
+- **"Stage items" → "props"** (`bridges/EnvironmentBridge.js`, `scripts/generate-env-batch-1.js`, all 25 env JSON files) — Field renamed throughout state, bridge, and generator. Legacy `stageItems` field is still accepted on load so pre-existing envs don't break. UI labels updated: cards now render `CHAR_A/B/C` and `PROP_A..E` badges.
+- **CSS fix** (`css/styles.css`) — `.cb-gobj-card-num` widened to `46px` to fit the new `PROP_A` label (was sized for single digits).
+
+### Browse Preview Parity
+- **Full env rendering in browse panel** (`js/previewRenderer.js`) — Previously the browse preview only rendered sky + ground + walls + sun. It now also loads and places stage props, ground objects (scatter/tile with height-capping), and weather particles — matching what the edit view shows.
+- **Camera culling ported** — Wall sub-groups are tagged (back/front/left/right) so the preview can dynamically hide the walls between the camera and the stage. Ground objects taller than `0.8` get hidden when they're inside the ±40° camera corridor. Runs every frame from the preview's tick loop.
+- **Weather particles ported** — Snow, rain, and leaves particle systems (500 particles each) with per-particle velocity + drift, respawn logic, and leaf-palette colour variation. Tick-advanced from the same loop.
+
+### Naming + Placement Conventions (for the upcoming script system)
+
+These conventions are now baked into the env state and the bridge/preview. Keep using them when touching cast/prop code:
+
+- **CHAR_A, CHAR_B, CHAR_C** — 3 cast slots. `CHAR_A` is the top slot and generally the main character.
+- **PROP_A through PROP_E** — 5 prop slots on the stage. Each slot has `{ assetId, mode: 'place'|'scatter'|'tile', cell, density, scale }`.
+- **BINGO grid** — Spatial placement for cast + placed props. Columns `B/I/N/G/O` (left→right), rows `5/4/3/2/1` (front→back). Cell string e.g. `N3` is centre. `_cellToWorld(cell)` → `{x: col-2, z: row-3}` in EnvironmentBridge (and the mirror `_envCellToWorld` in previewRenderer).
+- **Field names on env state**: `cast[]`, `props[]`, `groundObjects[]`, `weather`, `walls`, `windowStyle`. Legacy `stageItems` is read-only backwards compat.
+
+---
+
+## Integrating Environments + Characters + Music into a "Simulation"
+
+This is guidance for the **upcoming simulation-builder work**. Nothing below is built yet — it captures the design intent so a future session can pick it up cleanly.
+
+### The building blocks (what already exists)
+
+| Asset type    | What it owns                                                      | Where it lives                                      |
+|--------------|--------------------------------------------------------------------|-----------------------------------------------------|
+| Environment  | Sky, ground, stage, walls, lighting, fog, props, ground dressing, weather, assigned music | `global_assets/environments/{category}/env_*.json` |
+| Character    | Body, head, skin/scalp colours, gear (hair/hat/glasses/facial hair), optionally a voice | `global_assets/characters/char_*.json`             |
+| Music        | BPM, layers (pattern strings), mood colour                        | `global_assets/music/music_*.json`                 |
+| Voice        | Voice profile + visemes (used by `voiceEngine.js` → mouth rig)    | `global_assets/voices/voice_*.json`                |
+
+A "simulation" binds these together: pick an environment, assign up to 3 characters into its cast slots, let the env's music auto-play, and (eventually) run a script that drives speech + camera.
+
+### Data shape for a simulation (proposal)
+
+Keep it flat and JSON-serializable so it can live in the `simulators.config` JSONB column or a new `simulations` table. Rough shape:
+
+```json
+{
+  "id": "sim_...",
+  "envId": "env_dragon_lair",
+  "cast": [
+    { "slot": "CHAR_A", "charId": "char_asterion", "cell": "N3" },
+    { "slot": "CHAR_B", "charId": "char_blobsworth", "cell": "I2" },
+    { "slot": "CHAR_C", "charId": "char_nyra", "cell": "G4" }
+  ],
+  "musicId": "music_...",    // optional override; env supplies a default
+  "script": [ /* coming — turn/line format TBD */ ]
+}
+```
+
+The env already carries the scene (props, ground, walls, weather, lighting, sun). The simulation layer just overlays cast + script on top.
+
+### Order of operations at runtime (how to compose)
+
+When loading a simulation, **build the env first**, then overlay cast, then start music/script:
+
+1. **Env:** reuse `EnvironmentBridge` (edit view) or the new preview pipeline. Either way, the env sets the scene — ground, stage, walls, props, ground dressing, weather, lighting.
+2. **Cast:** for each `cast[]` entry, build the character mesh (see `CharacterBridge.js` for the asset→mesh logic) and place it at `cellToWorld(cell)`. `CHAR_A` usually centre-stage or slightly forward — let camera framing key off slot A.
+3. **Music:** if `musicId` is set, `previewPlayMusic(musicId)`. Otherwise fall back to the env's `state.musicId`.
+4. **Script (coming):** a turn-based format referencing `<CHAR_A>`, `<PROP_B>`, etc. by slot name — not by asset id. That way a script can be re-cast with different characters without a rewrite.
+
+### Things to be careful about
+
+- **Don't re-invent placement helpers.** `_cellToWorld` / BINGO logic already lives in `EnvironmentBridge` and `previewRenderer`. Share one source of truth — pull it into a `shared/envGeometry.js` or similar when the simulation builder lands, so it isn't forked a third time.
+- **Camera corridor.** The default camera is at `(5.2, 3.9, 5.2)`. Walls and tall ground objects inside the ±40° wedge from origin→camera get dynamically hidden. Any cast placement logic should assume this corridor exists — don't put `CHAR_A` at a cell that falls inside it (roughly `G4`, `G5`, `O4`, `O5`).
+- **Props avoid cast cells.** Scatter/tile prop modes skip cells occupied by cast. When placing cast for a simulation, rebuild props after the cast is set so the avoidance runs.
+- **Voices are per-character.** Stock characters don't have voices assigned yet (that's in the open-feedback list). The simulation layer should gracefully handle a character with no voice — silent mouth, or fall back to a default voice.
+- **Music is per-env by default.** Each env ships with a `musicId`. The simulation can override, but the common case is "let the env's music play." Don't require the simulation to specify music explicitly.
+
+### Open questions for the next session
+
+- **Script format.** Turn-based line-per-character? Timeline with timestamps? Branching? Not decided yet — ask Pietro first.
+- **Camera moves.** Does the script drive the camera (cut to `CHAR_A`, wide on stage) or is the camera static? Likely per-line camera directives keyed off slot names.
+- **Simulation storage.** New `simulations` table vs. reusing `simulators.config` JSONB? The schema in PROJECT_GUIDE.md already has `simulators` + `simulation_runs`.
+- **Play control.** Browse preview auto-plays music and loops weather. A real simulation probably wants pause/resume, scrub, restart — that's UI work on top.
+
+### Key files to read before building the simulation layer
+
+- `public/holodeck/js/bridges/EnvironmentBridge.js` — env rendering, BINGO placement, camera culling, prop/ground logic.
+- `public/holodeck/js/bridges/CharacterBridge.js` — character asset → mesh.
+- `public/holodeck/js/previewRenderer.js` — headless/browse rendering path (now matches bridge for envs).
+- `public/holodeck/js/voiceEngine.js` + `mouthRig.js` — lip-sync + viseme → mesh.
+- `public/holodeck/js/musicEngine.js` — layer/pattern playback.
+- `.claude/projects/-Users-skipper-Documents-Vibes-ShittyHolodeck-V0-9/memory/env_script_naming.md` — canonical naming convention.
+
+---
+
 ## Working With Pietro
 
 Pietro is non-technical (not a developer) but very engaged with the product. He prefers clear, step-by-step communication. When explaining technical decisions, keep it simple and concrete. He uses Cowork/Claude sessions to build and iterate on the project, so this guide and `AGENTS.md` are the primary ways context is preserved between sessions. Pietro prefers working with the Claude desktop app over the terminal/CLI.
