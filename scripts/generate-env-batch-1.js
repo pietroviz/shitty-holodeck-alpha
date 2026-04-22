@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Batch-1: 25 over-the-top stock environments across 9 category folders.
- * Each env has full state + stageItems + groundObjects (thematic prop
+ * Each env has full state + props (PROP_A..PROP_E) + groundObjects (thematic prop
  * choices drawn from the existing object library).
  *
  * Run: node scripts/generate-env-batch-1.js
@@ -27,12 +27,12 @@ const CATEGORY_LABELS = {
 };
 
 // Shape helpers — keep the specs terse. Fill missing slots with 'none'.
-const STAGE_SLOTS = 5;
+const PROP_SLOTS = 5;   // PROP_A..PROP_E
 const GROUND_SLOTS = 3;
 
-function stageArr(items = []) {
+function propArr(items = []) {
   const out = [];
-  for (let i = 0; i < STAGE_SLOTS; i++) {
+  for (let i = 0; i < PROP_SLOTS; i++) {
     const it = items[i];
     out.push(it
       ? { assetId: it.id, mode: 'place', cell: it.cell, scale: it.scale ?? 1.0, density: 'med' }
@@ -70,7 +70,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#0a4858', fogDensity:0.06,
       orbVisible:true, orbColor:'#7cffe8', orbIntensity:1.8, orbHeight:2.6, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_crystal_cluster_batch', cell:'N3', scale:1.3 },
       { id:'prop_magic_mushroom_batch', cell:'B1', scale:1.1 },
       { id:'prop_magic_mushroom_batch', cell:'O5', scale:1.1 },
@@ -95,7 +95,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#3a1a12', fogDensity:0.05,
       orbVisible:true, orbColor:'#ff6020', orbIntensity:2.2, orbHeight:2.4, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_fire_pit', cell:'N3', scale:1.2 },
       { id:'prop_boulder', cell:'B1', scale:1.3 },
       { id:'prop_dead_tree', cell:'O1', scale:1.1 },
@@ -122,7 +122,7 @@ const BATCH = [
       weather:'snow',
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_pine_tree_batch', cell:'B1', scale:1.2 },
       { id:'prop_pine_tree_batch', cell:'O1', scale:1.1 },
       { id:'prop_rock_small_batch', cell:'N3', scale:0.9 },
@@ -146,7 +146,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#3a1060', fogDensity:0.04,
       orbVisible:true, orbColor:'#8cffc8', orbIntensity:2.0, orbHeight:2.8, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_magic_portal_batch', cell:'N3', scale:1.4 },
       { id:'prop_magic_orb_batch', cell:'B1', scale:1.0 },
       { id:'prop_magic_orb_batch', cell:'O5', scale:1.0 },
@@ -170,7 +170,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#9080a0', fogDensity:0.04,
       orbVisible:true, orbColor:'#e8d8f4', orbIntensity:1.2, orbHeight:2.2, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_pond_batch', cell:'N3', scale:1.5 },
       { id:'prop_column', cell:'B1', scale:1.0 },
       { id:'prop_column', cell:'O5', scale:1.0 },
@@ -193,7 +193,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#2a1a08', fogDensity:0.05,
       orbVisible:true, orbColor:'#44eaf0', orbIntensity:1.8, orbHeight:2.4, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_pictureframe_batch', cell:'B3', scale:1.2 },
       { id:'prop_pictureframe_batch', cell:'O3', scale:1.2 },
       { id:'prop_chestdrawers_batch', cell:'N1', scale:1.0 },
@@ -217,7 +217,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#1a0a06', fogDensity:0.07,
       orbVisible:true, orbColor:'#ff4820', orbIntensity:2.6, orbHeight:2.2, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_fire_pit', cell:'N3', scale:1.4 },
       { id:'prop_treasure_chest_batch', cell:'B1', scale:1.0 },
       { id:'prop_torch_batch', cell:'B5', scale:1.0 },
@@ -244,7 +244,7 @@ const BATCH = [
       weather:'leaves',
       orbVisible:true, orbColor:'#ffd868', orbIntensity:1.0, orbHeight:2.6, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_oak_tree_batch', cell:'B1', scale:1.3 },
       { id:'prop_oak_tree_batch', cell:'O1', scale:1.3 },
       { id:'prop_magic_mushroom_batch', cell:'N3', scale:1.1 },
@@ -270,7 +270,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#180828', fogDensity:0.06,
       orbVisible:true, orbColor:'#20f0c8', orbIntensity:2.4, orbHeight:2.8, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_crystal_cluster_batch', cell:'N3', scale:1.4 },
       { id:'prop_magic_mushroom_batch', cell:'B1', scale:1.2 },
       { id:'prop_magic_mushroom_batch', cell:'O5', scale:1.2 },
@@ -295,7 +295,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#0a0c18', fogDensity:0.03,
       orbVisible:true, orbColor:'#ff2a88', orbIntensity:2.4, orbHeight:2.8, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_crate', cell:'B1', scale:1.1 },
       { id:'prop_crate', cell:'O1', scale:1.1 },
       { id:'prop_barrel', cell:'B5', scale:1.0 },
@@ -319,7 +319,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#080608', fogDensity:0.08,
       orbVisible:true, orbColor:'#ff6020', orbIntensity:1.6, orbHeight:2.4, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_barrel', cell:'B1', scale:1.0 },
       { id:'prop_crate', cell:'O5', scale:1.0 },
       { id:'prop_fire_pit', cell:'N3', scale:1.1 },
@@ -344,7 +344,7 @@ const BATCH = [
       fogEnabled:false,
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_pottedplant_batch', cell:'B1', scale:1.2 },
       { id:'prop_pottedplant_batch', cell:'O1', scale:1.2 },
       { id:'prop_pottedplant_batch', cell:'B5', scale:1.2 },
@@ -371,7 +371,7 @@ const BATCH = [
       weather:'rain',
       orbVisible:true, orbColor:'#ff4050', orbIntensity:2.0, orbHeight:2.6, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_lamppost_batch', cell:'B1', scale:1.1 },
       { id:'prop_lamppost_batch', cell:'O1', scale:1.1 },
       { id:'prop_crate', cell:'B5', scale:0.9 },
@@ -397,7 +397,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#e0b890', fogDensity:0.015,
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_fountain', cell:'N3', scale:1.2 },
       { id:'prop_column', cell:'B1', scale:1.1 },
       { id:'prop_column', cell:'O1', scale:1.1 },
@@ -423,7 +423,7 @@ const BATCH = [
       fogEnabled:false,
       orbVisible:true, orbColor:'#ffb458', orbIntensity:1.4, orbHeight:2.2, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_sofa_batch', cell:'N1', scale:1.1 },
       { id:'prop_chair_batch', cell:'B3', scale:1.0 },
       { id:'prop_chair_batch', cell:'O3', scale:1.0 },
@@ -447,7 +447,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#e8f0e0', fogDensity:0.03,
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_palm_tree', cell:'B1', scale:1.2 },
       { id:'prop_palm_tree', cell:'O1', scale:1.2 },
       { id:'prop_pottedplant_batch', cell:'B5', scale:1.0 },
@@ -472,7 +472,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#4a2810', fogDensity:0.03,
       orbVisible:true, orbColor:'#ffc060', orbIntensity:1.3, orbHeight:2.0, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_chestdrawers_batch', cell:'B1', scale:1.1 },
       { id:'prop_chestdrawers_batch', cell:'O1', scale:1.1 },
       { id:'prop_crate', cell:'N3', scale:1.0 },
@@ -498,7 +498,7 @@ const BATCH = [
       fogEnabled:false,
       orbVisible:true, orbColor:'#68e46c', orbIntensity:1.8, orbHeight:1.6, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_table_batch', cell:'N3', scale:1.1 },
       { id:'prop_desklamp_batch', cell:'N3', scale:0.9 },
       { id:'prop_chair_batch', cell:'N5', scale:1.0 },
@@ -523,7 +523,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#a86840', fogDensity:0.02,
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_table_batch', cell:'N3', scale:1.0 },
       { id:'prop_pottedplant_batch', cell:'N3', scale:0.9 },
       { id:'prop_mug_batch', cell:'B5', scale:1.0 },
@@ -549,7 +549,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#30184c', fogDensity:0.03,
       orbVisible:true, orbColor:'#d8c4ec', orbIntensity:1.8, orbHeight:2.6, orbFlicker:false,
     },
-    stage:[
+    props:[
       { id:'prop_shrine', cell:'N3', scale:1.2 },
       { id:'prop_obelisk', cell:'B1', scale:1.0 },
       { id:'prop_obelisk', cell:'O1', scale:1.0 },
@@ -575,7 +575,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#783018', fogDensity:0.025,
       orbVisible:false,
     },
-    stage:[
+    props:[
       { id:'prop_ruins', cell:'N3', scale:1.3 },
       { id:'prop_column', cell:'B1', scale:1.1 },
       { id:'prop_column', cell:'O1', scale:1.1 },
@@ -600,7 +600,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#180838', fogDensity:0.04,
       orbVisible:true, orbColor:'#ffe020', orbIntensity:2.2, orbHeight:2.8, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_lamppost_batch', cell:'B1', scale:1.0 },
       { id:'prop_lamppost_batch', cell:'O1', scale:1.0 },
       { id:'prop_barrel', cell:'B5', scale:0.9 },
@@ -624,7 +624,7 @@ const BATCH = [
       fogEnabled:false,
       orbVisible:true, orbColor:'#ffd890', orbIntensity:1.6, orbHeight:2.2, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_bed_batch', cell:'N1', scale:1.1 },
       { id:'prop_sofa_batch', cell:'N5', scale:1.0 },
       { id:'prop_rug_batch', cell:'N3', scale:1.2 },
@@ -648,7 +648,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#0a0a28', fogDensity:0.03,
       orbVisible:true, orbColor:'#28e4ff', orbIntensity:2.4, orbHeight:2.8, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_magic_orb_batch', cell:'N3', scale:1.3 },
       { id:'prop_lamppost_batch', cell:'B1', scale:1.1 },
       { id:'prop_lamppost_batch', cell:'O1', scale:1.1 },
@@ -673,7 +673,7 @@ const BATCH = [
       fogEnabled:true, fogColor:'#281848', fogDensity:0.02,
       orbVisible:true, orbColor:'#ffc058', orbIntensity:2.0, orbHeight:2.6, orbFlicker:true,
     },
-    stage:[
+    props:[
       { id:'prop_tent', cell:'N1', scale:1.2 },
       { id:'prop_lamppost_batch', cell:'B1', scale:1.0 },
       { id:'prop_lamppost_batch', cell:'O1', scale:1.0 },
@@ -690,7 +690,7 @@ const BATCH = [
 function buildAsset(spec) {
   const state = {
     ...spec.state,
-    stageItems:    stageArr(spec.stage),
+    props:         propArr(spec.props),
     groundObjects: groundArr(spec.ground),
   };
   return {

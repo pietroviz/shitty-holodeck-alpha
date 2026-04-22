@@ -9,8 +9,8 @@
     "clean"
   ],
   "meta": {
-    "created": "2026-04-22T04:57:30.599Z",
-    "modified": "2026-04-22T04:57:30.599Z",
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
     "origin": "template",
     "version": 1
   },
@@ -39,7 +39,7 @@
       "dirIntensity": 1.2,
       "fogEnabled": false,
       "orbVisible": false,
-      "stageItems": [
+      "props": [
         {
           "assetId": "prop_pottedplant_batch",
           "mode": "place",

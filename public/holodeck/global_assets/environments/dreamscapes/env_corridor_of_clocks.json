@@ -9,8 +9,8 @@
     "cyan"
   ],
   "meta": {
-    "created": "2026-04-22T04:57:30.599Z",
-    "modified": "2026-04-22T04:57:30.599Z",
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
     "origin": "template",
     "version": 1
   },
@@ -42,7 +42,7 @@
       "orbIntensity": 1.8,
       "orbHeight": 2.4,
       "orbFlicker": true,
-      "stageItems": [
+      "props": [
         {
           "assetId": "prop_pictureframe_batch",
           "mode": "place",

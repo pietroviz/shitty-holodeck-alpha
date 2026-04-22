@@ -1376,11 +1376,13 @@ svg    { display: block; flex-shrink: 0; }
     gap: 8px;
 }
 .cb-gobj-card-num {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--text-dim);
-    min-width: 14px;
-    text-align: center;
+    min-width: 46px;
+    text-align: left;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 .cb-gobj-card-header select {
     flex: 1;

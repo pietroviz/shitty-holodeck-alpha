@@ -120,14 +120,13 @@ const WEATHER_CFG = {
     leaves: { size: 0.15, color: 0x88aa44, speed: 0.8, drift: 1.5, opacity: 0.9  },
 };
 
-// Cast — always 5 fixed slots, each with an assigned colour
-const CAST_SLOT_COUNT  = 5;
+// Cast — 3 fixed slots (CHAR_A/B/C). Scripts only support 3 characters;
+// CHAR_A is the top slot and is generally the main character of the story.
+const CAST_SLOT_COUNT  = 3;
 const CAST_COLORS = [
-    '#e04040',   // slot 1 — red
-    '#40a0e0',   // slot 2 — blue
-    '#50c878',   // slot 3 — green
-    '#e0a020',   // slot 4 — amber
-    '#b060d0',   // slot 5 — purple
+    '#e04040',   // CHAR_A — red   (main character)
+    '#40a0e0',   // CHAR_B — blue
+    '#50c878',   // CHAR_C — green
 ];
 
 // Wall height range (blocks, 1 block = 1 meter).
@@ -199,8 +198,8 @@ const _SCATTER_COUNTS = { low: 6, med: 14, high: 28 };
 const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
 
 // Stage set-dressing constants
-const SET_DRESSING_SLOTS = 5;
-const SET_DRESSING_HEIGHT_CAP = 0.6;    // max height in world units (~waist height, won't block cast faces)
+const PROP_SLOT_COUNT = 5;             // 5 prop slots per env — PROP_A..PROP_E in the upcoming script/camera format
+const PROP_HEIGHT_CAP = 0.6;            // max height in world units (~waist height, won't block cast faces)
 const GROUND_OBJ_HEIGHT_CAP  = 1.5;    // max height for ground plane objects
 const _STAGE_SCATTER_COUNTS = { low: 3, med: 6, high: 10 };
 const _STAGE_TILE_SPACING   = { low: 2.0, med: 1.4, high: 1.0 };
@@ -353,8 +352,8 @@ export class EnvironmentBridge extends BaseBridge {
                 { cell: 'I4', facing: 'camera' },
                 { cell: 'G2', facing: 'camera' },
             ],
-            // Stage items — set dressing objects on the stage (5 slots)
-            stageItems: d.stageItems || Array.from({ length: SET_DRESSING_SLOTS }, () => ({
+            // Props — set dressing objects on the stage (5 slots, PROP_A..PROP_E)
+            props: d.props || d.stageItems || Array.from({ length: PROP_SLOT_COUNT }, () => ({
                 assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med',
             })),
             // Ground objects — 3 scatter/tile slots
@@ -411,8 +410,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._ambientLight = null;    // THREE.AmbientLight
         this._dirLight     = null;    // THREE.DirectionalLight (follows sun)
         this._gridNumbers = [];       // sprites for square number labels
-        this._stageItemMeshes = [];   // greybox character groups (cast)
-        this._setDressingMeshes = []; // set dressing objects on stage
+        this._castMeshes = [];        // greybox character groups (cast, CHAR_A/B/C)
+        this._propMeshes = [];        // props on stage (PROP_A..PROP_E)
         this._groundObjMeshes = [];   // scattered/tiled ground objects
         this._objectList  = null;     // loaded object catalog
         this._wallsEnabled = false;   // true when walls height > 0
@@ -493,8 +492,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._buildGridNumbers();
 
         // Stage items (greybox character placeholders etc.)
-        this._buildStageItems();
-        this._rebuildSetDressing();
+        this._buildCast();
+        this._rebuildProps();
 
         // Lighting (ambient + directional that follows the sun orb).
         // Colours go through _tintedColor so they read as tints rather
@@ -1219,11 +1218,11 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Build the 3D meshes for every cast slot that has a cell assigned.
-     * Each slot gets its assigned colour as a subtle tint on the mesh.
+     * Build the 3D meshes for every cast slot (CHAR_A/B/C) that has a cell
+     * assigned. Each slot gets its assigned colour as a subtle tint.
      */
-    _buildStageItems() {
-        this._clearStageItems();
+    _buildCast() {
+        this._clearCast();
         const camX = 5.2, camZ = 5.2;
 
         for (let i = 0; i < CAST_SLOT_COUNT; i++) {
@@ -1248,41 +1247,41 @@ export class EnvironmentBridge extends BaseBridge {
             }
 
             this._scene.add(group);
-            this._stageItemMeshes.push(group);
+            this._castMeshes.push(group);
         }
     }
 
-    /** Dispose and remove all current stage-item meshes. */
-    _clearStageItems() {
-        for (const g of this._stageItemMeshes) {
+    /** Dispose and remove all current cast meshes. */
+    _clearCast() {
+        for (const g of this._castMeshes) {
             g.traverse(child => {
                 child.geometry?.dispose?.();
                 child.material?.dispose?.();
             });
             this._scene.remove(g);
         }
-        this._stageItemMeshes = [];
+        this._castMeshes = [];
     }
 
-    // ── Set Dressing (stage items) ──────────────────────────────
+    // ── Props (PROP_A..PROP_E) ──────────────────────────────────
 
     /**
-     * Build 3D meshes for stage set-dressing items.
-     * Modes: 'place' puts a single item on a BINGO cell;
+     * Build 3D meshes for stage props.
+     * Modes: 'place' puts a single prop on a BINGO cell;
      *        'scatter' / 'tile' distributes across unoccupied stage cells.
-     * All items are height-capped to avoid blocking cast character faces.
+     * All props are height-capped to avoid blocking cast character faces.
      */
-    async _rebuildSetDressing() {
-        this._clearSetDressing();
+    async _rebuildProps() {
+        this._clearProps();
         const list = this._objectList || [];
         const half = STAGE_SIZE / 2;
 
-        // Cells occupied by cast members — set dressing avoids these
+        // Cells occupied by cast members — props avoid these
         const usedCells = new Set(
             (this._state.cast || []).filter(s => s?.cell).map(s => s.cell)
         );
 
-        for (const slot of this._state.stageItems) {
+        for (const slot of this._state.props) {
             if (!slot.assetId || slot.assetId === 'none') continue;
             const entry = list.find(o => o.id === slot.assetId);
             if (!entry) continue;
@@ -1308,12 +1307,12 @@ export class EnvironmentBridge extends BaseBridge {
 
                 // Height-cap: scale down if it would exceed the cap
                 let s = baseScale;
-                if (templateH * s > SET_DRESSING_HEIGHT_CAP) {
-                    s = SET_DRESSING_HEIGHT_CAP / templateH;
+                if (templateH * s > PROP_HEIGHT_CAP) {
+                    s = PROP_HEIGHT_CAP / templateH;
                 }
                 clone.scale.set(s, s, s);
                 this._scene.add(clone);
-                this._setDressingMeshes.push(clone);
+                this._propMeshes.push(clone);
             } else {
                 // Scatter or tile across the stage area
                 const points = slot.mode === 'tile'
@@ -1330,12 +1329,12 @@ export class EnvironmentBridge extends BaseBridge {
                         ? baseScale * (0.7 + Math.random() * 0.6)
                         : baseScale;
                     // Height-cap
-                    if (templateH * s > SET_DRESSING_HEIGHT_CAP) {
-                        s = SET_DRESSING_HEIGHT_CAP / templateH;
+                    if (templateH * s > PROP_HEIGHT_CAP) {
+                        s = PROP_HEIGHT_CAP / templateH;
                     }
                     clone.scale.set(s, s, s);
                     this._scene.add(clone);
-                    this._setDressingMeshes.push(clone);
+                    this._propMeshes.push(clone);
                 }
             }
 
@@ -1343,15 +1342,15 @@ export class EnvironmentBridge extends BaseBridge {
         }
     }
 
-    _clearSetDressing() {
-        for (const g of this._setDressingMeshes) {
+    _clearProps() {
+        for (const g of this._propMeshes) {
             g.traverse(child => {
                 child.geometry?.dispose?.();
                 child.material?.dispose?.();
             });
             this._scene.remove(g);
         }
-        this._setDressingMeshes = [];
+        this._propMeshes = [];
     }
 
     _disposeTemplate(t) {
@@ -1867,25 +1866,28 @@ export class EnvironmentBridge extends BaseBridge {
         // Cast placement
         if (Array.isArray(state.cast)) {
             this._state.cast = state.cast;
-            this._buildStageItems();
+            this._buildCast();
         }
-        // Legacy stageItems → cast migration
-        if (Array.isArray(state.stageItems) && !Array.isArray(state.cast)) {
-            // Convert old variable-length stageItems to fixed 5-slot cast
+        // Legacy stageItems (pre-schema) → cast migration
+        if (Array.isArray(state.stageItems) && !Array.isArray(state.cast) &&
+            state.stageItems[0]?.assetId === undefined) {
+            // Very old format: variable-length character list, no assetId
             const cast = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
                 const old = state.stageItems[i];
                 return old ? { cell: old.cell || null, facing: old.facing || 'camera' }
                            : { cell: null, facing: 'camera' };
             });
             this._state.cast = cast;
-            this._buildStageItems();
+            this._buildCast();
         }
-        // Set dressing (stage items)
-        if (Array.isArray(state.stageItems) && state.stageItems.length &&
-            state.stageItems[0]?.assetId !== undefined) {
-            // New-format stageItems (set dressing with assetId)
-            this._state.stageItems = state.stageItems;
-            this._rebuildSetDressing();
+        // Props on stage (current field: `props`; legacy field: `stageItems`)
+        const propsField = Array.isArray(state.props) ? state.props
+            : (Array.isArray(state.stageItems) && state.stageItems[0]?.assetId !== undefined)
+                ? state.stageItems
+                : null;
+        if (propsField) {
+            this._state.props = propsField;
+            this._rebuildProps();
         }
         // Ground objects
         if (Array.isArray(state.groundObjects)) {
@@ -2225,18 +2227,19 @@ export class EnvironmentBridge extends BaseBridge {
             ...ALL_CELLS.map(c => ({ value: c, label: c })),
         ];
 
-        // ── Cast Placement cards (always 5 slots)
+        // ── Cast Placement cards — 3 slots: CHAR_A, CHAR_B, CHAR_C
         const castCards = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
             const slot  = cast[i] || {};
             const color = CAST_COLORS[i];
             const empty = !slot.cell;
             const facing = slot.facing || 'camera';
+            const charLabel = `CHAR_${String.fromCharCode(65 + i)}`;
 
             if (empty) {
                 return `
                 <div class="cb-cast-card" data-slot="${i}">
                     <span class="cb-cast-chip" style="background:${color};"></span>
-                    <span class="cb-cast-label" style="color:var(--text-dim);">Slot ${i + 1} — empty</span>
+                    <span class="cb-cast-label" style="color:var(--text-dim);">${charLabel} — empty</span>
                     <button type="button" class="cb-cast-add" data-slot="${i}"
                             style="margin-left:auto; background:none; border:1px solid var(--text-dim);
                             color:var(--text-dim); border-radius:4px; padding:2px 8px; cursor:pointer;
@@ -2286,21 +2289,21 @@ export class EnvironmentBridge extends BaseBridge {
                 </div>`;
         }).join('');
 
-        // ── Stage Items (set dressing) — 5 slots ──────────────────
-        const stageItemsHtml = this._renderSetDressingSlots();
+        // ── Props — 5 slots (PROP_A..PROP_E) ──────────────────────
+        const propsHtml = this._renderPropSlots();
 
         return `
           ${subtitle('Cast Placement', 'cast')}
           ${castCards}
 
-          ${subtitle('Stage Items', 'setDressing')}
-          ${stageItemsHtml}
+          ${subtitle('Props', 'props')}
+          ${propsHtml}
         `;
     }
 
-    /** Render 5 set-dressing slot cards for the Stage tab. */
-    _renderSetDressingSlots() {
-        const slots = this._state.stageItems;
+    /** Render 5 prop slot cards for the Stage tab (PROP_A..PROP_E). */
+    _renderPropSlots() {
+        const slots = this._state.props;
         const objs  = this._objectList || [];
         const modeLabels    = { place: 'Place', scatter: 'Scatter', tile: 'Tile' };
         const densityLabels = { low: 'Low', med: 'Med', high: 'High' };
@@ -2320,7 +2323,7 @@ export class EnvironmentBridge extends BaseBridge {
                 // Mode toggle (Place / Scatter / Tile)
                 const modeRow = `
                     <div class="cb-gobj-row">
-                      <div class="cb-segmented cb-sdress-mode" data-slot="${i}">
+                      <div class="cb-segmented cb-prop-mode" data-slot="${i}">
                         ${Object.entries(modeLabels).map(([k, v]) =>
                             `<button type="button" data-mode="${k}" class="${slot.mode === k ? 'active' : ''}">${v}</button>`
                         ).join('')}
@@ -2331,7 +2334,7 @@ export class EnvironmentBridge extends BaseBridge {
                 const cellRow = slot.mode === 'place' ? `
                     <div class="cb-gobj-row">
                       <span style="font-size:0.75rem; color:var(--text-dim); min-width:30px;">Cell</span>
-                      <select class="cb-sdress-letter" data-slot="${i}"
+                      <select class="cb-prop-letter" data-slot="${i}"
                           style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
                           border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
                           font-family:inherit; width:38px;">
@@ -2339,7 +2342,7 @@ export class EnvironmentBridge extends BaseBridge {
                               `<option value="${l}"${(slot.cell?.[0]?.toUpperCase() || 'N') === l ? ' selected' : ''}>${l}</option>`
                           ).join('')}
                       </select>
-                      <select class="cb-sdress-num" data-slot="${i}"
+                      <select class="cb-prop-num" data-slot="${i}"
                           style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
                           border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
                           font-family:inherit; width:38px;">
@@ -2352,7 +2355,7 @@ export class EnvironmentBridge extends BaseBridge {
                 // Density — only visible in Scatter / Tile modes
                 const densityRow = slot.mode !== 'place' ? `
                     <div class="cb-gobj-row">
-                      <div class="cb-segmented cb-sdress-density" data-slot="${i}">
+                      <div class="cb-segmented cb-prop-density" data-slot="${i}">
                         ${Object.entries(densityLabels).map(([k, v]) =>
                             `<button type="button" data-density="${k}" class="${slot.density === k ? 'active' : ''}">${v}</button>`
                         ).join('')}
@@ -2363,18 +2366,19 @@ export class EnvironmentBridge extends BaseBridge {
                 const scaleRow = `
                     <div class="cb-gobj-row">
                       <span class="cb-gobj-scale-label">Scale ${scaleLabel}</span>
-                      <input type="range" class="cb-sdress-scale" data-slot="${i}"
+                      <input type="range" class="cb-prop-scale" data-slot="${i}"
                              min="0.2" max="2.0" step="0.1" value="${scaleVal}">
                     </div>`;
 
                 controlsHtml = modeRow + cellRow + densityRow + scaleRow;
             }
 
+            const propLabel = `PROP_${String.fromCharCode(65 + i)}`;
             return `
               <div class="cb-gobj-card" data-slot="${i}">
                 <div class="cb-gobj-card-header">
-                  <span class="cb-gobj-card-num">${i + 1}</span>
-                  <select class="cb-sdress-select" data-slot="${i}">${optionsHtml}</select>
+                  <span class="cb-gobj-card-num">${propLabel}</span>
+                  <select class="cb-prop-select" data-slot="${i}">${optionsHtml}</select>
                 </div>
                 ${controlsHtml}
               </div>`;
@@ -2651,7 +2655,7 @@ export class EnvironmentBridge extends BaseBridge {
                 if (!slot || !slot.cell) return;
                 const num = slot.cell.slice(1);
                 slot.cell = sel.value + num;
-                this._buildStageItems();
+                this._buildCast();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
@@ -2664,7 +2668,7 @@ export class EnvironmentBridge extends BaseBridge {
                 if (!slot || !slot.cell) return;
                 const letter = slot.cell[0].toUpperCase();
                 slot.cell = letter + sel.value;
-                this._buildStageItems();
+                this._buildCast();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
@@ -2676,7 +2680,7 @@ export class EnvironmentBridge extends BaseBridge {
                 const slot = this._state.cast[i];
                 if (!slot) return;
                 slot.facing = sel.value;
-                this._buildStageItems();
+                this._buildCast();
                 this._scheduleAutoSave();
             });
         });
@@ -2685,7 +2689,7 @@ export class EnvironmentBridge extends BaseBridge {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.slot, 10);
                 this._state.cast[i] = { cell: null, facing: 'camera' };
-                this._buildStageItems();
+                this._buildCast();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
@@ -2701,78 +2705,78 @@ export class EnvironmentBridge extends BaseBridge {
                     cell = ALL_CELLS.find(c => !used.has(c)) || 'N3';
                 }
                 this._state.cast[i] = { cell, facing: 'camera' };
-                this._buildStageItems();
+                this._buildCast();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
 
-        // ── Set Dressing controls ────────────────────────────────
-        panel.querySelectorAll('.cb-sdress-select').forEach(sel => {
+        // ── Prop controls ────────────────────────────────────────
+        panel.querySelectorAll('.cb-prop-select').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
-                this._state.stageItems[i].assetId = sel.value;
+                this._state.props[i].assetId = sel.value;
                 // Default to 'place' + centre cell when first picking an object
-                if (sel.value !== 'none' && !this._state.stageItems[i].cell) {
-                    this._state.stageItems[i].cell = 'N3';
+                if (sel.value !== 'none' && !this._state.props[i].cell) {
+                    this._state.props[i].cell = 'N3';
                 }
-                this._rebuildSetDressing();
+                this._rebuildProps();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-sdress-mode button').forEach(btn => {
+        panel.querySelectorAll('.cb-prop-mode button').forEach(btn => {
             btn.addEventListener('click', () => {
-                const i = parseInt(btn.closest('.cb-sdress-mode').dataset.slot, 10);
-                this._state.stageItems[i].mode = btn.dataset.mode;
+                const i = parseInt(btn.closest('.cb-prop-mode').dataset.slot, 10);
+                this._state.props[i].mode = btn.dataset.mode;
                 // Ensure cell is set for Place mode
-                if (btn.dataset.mode === 'place' && !this._state.stageItems[i].cell) {
-                    this._state.stageItems[i].cell = 'N3';
+                if (btn.dataset.mode === 'place' && !this._state.props[i].cell) {
+                    this._state.props[i].cell = 'N3';
                 }
-                this._rebuildSetDressing();
+                this._rebuildProps();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-sdress-density button').forEach(btn => {
+        panel.querySelectorAll('.cb-prop-density button').forEach(btn => {
             btn.addEventListener('click', () => {
-                const i = parseInt(btn.closest('.cb-sdress-density').dataset.slot, 10);
-                this._state.stageItems[i].density = btn.dataset.density;
-                this._rebuildSetDressing();
+                const i = parseInt(btn.closest('.cb-prop-density').dataset.slot, 10);
+                this._state.props[i].density = btn.dataset.density;
+                this._rebuildProps();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-sdress-letter').forEach(sel => {
+        panel.querySelectorAll('.cb-prop-letter').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
-                const num = this._state.stageItems[i].cell?.slice(1) || '3';
-                this._state.stageItems[i].cell = sel.value + num;
-                this._rebuildSetDressing();
+                const num = this._state.props[i].cell?.slice(1) || '3';
+                this._state.props[i].cell = sel.value + num;
+                this._rebuildProps();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-sdress-num').forEach(sel => {
+        panel.querySelectorAll('.cb-prop-num').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
-                const letter = this._state.stageItems[i].cell?.[0]?.toUpperCase() || 'N';
-                this._state.stageItems[i].cell = letter + sel.value;
-                this._rebuildSetDressing();
+                const letter = this._state.props[i].cell?.[0]?.toUpperCase() || 'N';
+                this._state.props[i].cell = letter + sel.value;
+                this._rebuildProps();
                 this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-sdress-scale').forEach(slider => {
+        panel.querySelectorAll('.cb-prop-scale').forEach(slider => {
             slider.addEventListener('input', () => {
                 const i = parseInt(slider.dataset.slot, 10);
                 const val = parseFloat(slider.value);
-                this._state.stageItems[i].scale = val;
+                this._state.props[i].scale = val;
                 const label = slider.closest('.cb-gobj-row')?.querySelector('.cb-gobj-scale-label');
                 if (label) label.textContent = `Scale ${val.toFixed(1)}×`;
             });
             slider.addEventListener('change', () => {
-                this._rebuildSetDressing();
+                this._rebuildProps();
                 this._scheduleAutoSave();
             });
         });
@@ -3025,20 +3029,20 @@ export class EnvironmentBridge extends BaseBridge {
                 return { cell, facing };
             });
             this._state.cast = cast;
-            this._buildStageItems();
+            this._buildCast();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
         }
 
-        if (key === 'setDressing') {
+        if (key === 'props') {
             const objs = this._objectList || [];
             if (!objs.length) return;
             const modes = ['place', 'scatter', 'tile'];
             const dens  = ['low', 'med', 'high'];
             // Fill 2–4 random slots, leave the rest empty
             const count = 2 + Math.floor(Math.random() * 3);
-            this._state.stageItems = Array.from({ length: SET_DRESSING_SLOTS }, (_, i) => {
+            this._state.props = Array.from({ length: PROP_SLOT_COUNT }, (_, i) => {
                 if (i >= count) return { assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med' };
                 const mode = modes[Math.floor(Math.random() * modes.length)];
                 const cell = mode === 'place' ? ALL_CELLS[Math.floor(Math.random() * 25)] : null;
@@ -3050,7 +3054,7 @@ export class EnvironmentBridge extends BaseBridge {
                     density: dens[Math.floor(Math.random() * dens.length)],
                 };
             });
-            this._rebuildSetDressing();
+            this._rebuildProps();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
@@ -3105,7 +3109,7 @@ export class EnvironmentBridge extends BaseBridge {
      */
     surpriseAll() {
         // Hit every section-level randomiser in one go
-        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast', 'setDressing', 'fx']) {
+        for (const key of ['groundPlane', 'stage', 'walls', 'sky', 'groundObjects', 'cast', 'props', 'fx']) {
             this._onSurpriseField(key);
         }
         // _onSurpriseField already calls _renderPanel + _scheduleAutoSave

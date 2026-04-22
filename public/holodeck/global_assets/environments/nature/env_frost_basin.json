@@ -9,8 +9,8 @@
     "pastel"
   ],
   "meta": {
-    "created": "2026-04-22T04:57:30.599Z",
-    "modified": "2026-04-22T04:57:30.599Z",
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
     "origin": "template",
     "version": 1
   },
@@ -40,7 +40,7 @@
       "fogDensity": 0.03,
       "weather": "snow",
       "orbVisible": false,
-      "stageItems": [
+      "props": [
         {
           "assetId": "prop_pine_tree_batch",
           "mode": "place",

@@ -9,8 +9,8 @@
     "dusty"
   ],
   "meta": {
-    "created": "2026-04-22T04:57:30.599Z",
-    "modified": "2026-04-22T04:57:30.599Z",
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
     "origin": "template",
     "version": 1
   },
@@ -41,7 +41,7 @@
       "fogColor": "#e0b890",
       "fogDensity": 0.015,
       "orbVisible": false,
-      "stageItems": [
+      "props": [
         {
           "assetId": "prop_fountain",
           "mode": "place",

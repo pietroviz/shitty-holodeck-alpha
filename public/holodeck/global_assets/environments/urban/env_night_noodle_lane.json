@@ -9,8 +9,8 @@
     "crimson"
   ],
   "meta": {
-    "created": "2026-04-22T04:57:30.599Z",
-    "modified": "2026-04-22T04:57:30.599Z",
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
     "origin": "template",
     "version": 1
   },
@@ -43,7 +43,7 @@
       "orbIntensity": 2,
       "orbHeight": 2.6,
       "orbFlicker": true,
-      "stageItems": [
+      "props": [
         {
           "assetId": "prop_lamppost_batch",
           "mode": "place",
