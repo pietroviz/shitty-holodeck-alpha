@@ -44,7 +44,7 @@ const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
 const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
 const DEFAULT_GROUND_SIZE  = 19;
-const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–8 = blocks
+const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–3 = blocks
 const DEFAULT_WINDOW_STYLE = 'none'; // none | single | row | grid
 const DEFAULT_WINDOW_COLOR = '#8ec8f0'; // translucent pane tint (pale sky blue)
 const WINDOW_PANE_OPACITY  = 0.25;
@@ -112,9 +112,11 @@ const CAST_COLORS = [
     '#b060d0',   // slot 5 — purple
 ];
 
-// Wall height range (blocks, 1 block = 1 meter)
+// Wall height range (blocks, 1 block = 1 meter).
+// Capped at 3 so walls don't tower over the stage — tall walls made
+// windows sit above eye level and looked window-less from the ground.
 const WALL_HEIGHT_MIN = 0;
-const WALL_HEIGHT_MAX = 8;
+const WALL_HEIGHT_MAX = 3;
 const WALL_THICK      = 0.25;
 
 // Cached texture asset list (id, name) loaded from images/textures/_index.json
@@ -620,69 +622,42 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Window layout definitions.
+     * Window layout definitions — Minecraft-style.
      * Returns a Set of "col,row" keys where windows go.
      * col: 0..cols-1 (along wall length), row: 0..rows-1 (bottom to top).
      *
-     * All styles tile from the bottom up — as the wall gets taller,
-     * more window rows appear rather than one window floating high up.
+     * Walls read like a house: a solid sill at the bottom, one horizontal
+     * band of windows, and a solid lintel at the top when the wall is
+     * tall enough to support one.
      */
     _windowCells(cols, rows) {
         const style = this._state.windowStyle || 'none';
         const cells = new Set();
         if (style === 'none' || rows < 2) return cells;
 
-        // Pattern: 1 solid sill row at bottom, then repeating bands of
-        // 3 window rows + 1 solid lintel row.  Gives ~75% glass coverage
-        // while keeping architectural framing.
-        // Row 0 = floor-level sill (always solid).
-        // Rows 1-3 = first window band, row 4 = solid lintel,
-        // rows 5-7 = second window band, row 8 = lintel, etc.
+        // Put the window band just above the sill. With the cap at 3
+        // that lands at r=1 — eye level from the stage floor — with a
+        // solid lintel at r=2.
+        const windowRow = 1;
+        if (windowRow >= rows) return cells;
 
-        const _isWindowRow = (r) => {
-            if (r < 1) return false;           // sill
-            const band = (r - 1) % 4;         // 0,1,2 = window, 3 = lintel
-            return band < 3;
+        const add = (c) => {
+            if (c > 0 && c < cols - 1) cells.add(`${c},${windowRow}`);
         };
 
         if (style === 'single') {
-            // 2-wide centred window
-            const midC = Math.floor(cols / 2);
-            const startC = cols >= 3 ? midC - 1 : midC;
-            const endC   = cols >= 3 ? midC + 1 : midC + 1;
-            for (let r = 0; r < rows; r++) {
-                if (!_isWindowRow(r)) continue;
-                for (let c = startC; c < endC; c++) {
-                    cells.add(`${c},${r}`);
-                }
-            }
+            add(Math.floor(cols / 2));
             return cells;
         }
-
         if (style === 'row') {
-            // Full horizontal band across inner columns
-            for (let r = 0; r < rows; r++) {
-                if (!_isWindowRow(r)) continue;
-                for (let c = 1; c < cols - 1; c++) {
-                    cells.add(`${c},${r}`);
-                }
-            }
+            for (let c = 1; c < cols - 1; c++) add(c);
             return cells;
         }
-
         if (style === 'grid') {
-            // Window pairs with solid pillar columns between them
-            const colStep = cols <= 4 ? 2 : 3;
-            for (let r = 0; r < rows; r++) {
-                if (!_isWindowRow(r)) continue;
-                for (let c = 1; c < cols - 1; c += colStep) {
-                    cells.add(`${c},${r}`);
-                    if (c + 1 < cols - 1) cells.add(`${c + 1},${r}`);
-                }
-            }
+            // Every-other-column — solid pillars between windows.
+            for (let c = 1; c < cols - 1; c += 2) add(c);
             return cells;
         }
-
         return cells;
     }
 
