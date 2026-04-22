@@ -928,9 +928,124 @@ function _applyScene3DLook() {
     _scene.add(dir);
 }
 
+// ─── Environment preview shared helpers (mirror EnvironmentBridge) ──
+
+const _ENV_STAGE_SIZE   = 5;
+const _ENV_WALL_THICK   = 0.25;
+const _ENV_ORB_RANGE    = 9;
+const _ENV_SKY_RADIUS   = 50;
+
+function _envTinted(hex) {
+    const c = new THREE.Color(hex);
+    c.lerp(new THREE.Color(0xffffff), 0.5);
+    return c;
+}
+
+function _buildEnvSkySphere(skyTop, skyMid, skyBot) {
+    const geo = new THREE.SphereGeometry(_ENV_SKY_RADIUS, 32, 16);
+    const top = new THREE.Color(skyTop);
+    const mid = new THREE.Color(skyMid);
+    const bot = new THREE.Color(skyBot);
+    const pos = geo.attributes.position;
+    const colors = new Float32Array(pos.count * 3);
+    for (let i = 0; i < pos.count; i++) {
+        const y = pos.getY(i);
+        const t = y / _ENV_SKY_RADIUS;
+        const k = Math.pow(Math.abs(t), 1.7);
+        const color = t >= 0 ? mid.clone().lerp(top, k) : mid.clone().lerp(bot, k);
+        colors[i * 3]     = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const mat = new THREE.MeshBasicMaterial({
+        vertexColors: true, side: THREE.BackSide, depthWrite: false, fog: false,
+    });
+    const sphere = new THREE.Mesh(geo, mat);
+    sphere.renderOrder = -1;
+    return sphere;
+}
+
+function _buildEnvWalls(state) {
+    const h = state.walls || 0;
+    if (h === 0) return null;
+
+    const group = new THREE.Group();
+    const t     = _ENV_WALL_THICK;
+    const W     = _ENV_STAGE_SIZE;
+    const halfW = W / 2;
+    const SILL = 0.5, LINT = 0.5, SIDE = 0.5, GUT = 0.25;
+
+    const style = state.windowStyle || 'none';
+    const count = style === 'single' ? 1 : style === 'double' ? 2 : style === 'triple' ? 3 : 0;
+    const hasWindows = count > 0 && h >= 2;
+    const winH = Math.max(0, h - SILL - LINT);
+
+    const wallMat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(state.wallColor || '#696a6a'),
+        roughness: 0.85,
+    });
+    const paneMat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(state.windowColor || '#8ec8f0'),
+        roughness: 0.3, metalness: 0.1,
+        transparent: true,
+        opacity: state.windowOpacity ?? 0.25,
+        side: THREE.DoubleSide,
+    });
+
+    let winW = 0;
+    const winCentres = [];
+    if (hasWindows) {
+        const interiorW = W - SIDE * 2;
+        winW = (interiorW - (count - 1) * GUT) / count;
+        let x = -halfW + SIDE + winW / 2;
+        for (let i = 0; i < count; i++) { winCentres.push(x); x += winW + GUT; }
+    }
+
+    const buildWall = (wallOrigin, isVertical) => {
+        const sub = new THREE.Group();
+        sub.position.copy(wallOrigin);
+        const addSlab = (along, y, width, height, isPane = false) => {
+            const depth = isPane ? t * 0.3 : t;
+            const geom = isVertical
+                ? new THREE.BoxGeometry(depth, height, width)
+                : new THREE.BoxGeometry(width, height, depth);
+            const m = new THREE.Mesh(geom, isPane ? paneMat : wallMat);
+            if (isVertical) m.position.set(0, y, along);
+            else            m.position.set(along, y, 0);
+            if (!isPane) { m.castShadow = true; m.receiveShadow = true; }
+            sub.add(m);
+        };
+
+        if (!hasWindows) {
+            addSlab(0, h / 2, W, h);
+        } else {
+            addSlab(0, SILL / 2,     W, SILL);
+            addSlab(0, h - LINT / 2, W, LINT);
+            const pillarY = SILL + winH / 2;
+            addSlab(-halfW + SIDE / 2, pillarY, SIDE, winH);
+            addSlab( halfW - SIDE / 2, pillarY, SIDE, winH);
+            for (let i = 0; i < winCentres.length - 1; i++) {
+                const mid = (winCentres[i] + winCentres[i + 1]) / 2;
+                addSlab(mid, pillarY, GUT, winH);
+            }
+            for (const cx of winCentres) {
+                addSlab(cx, pillarY, winW * 0.98, winH * 0.98, true);
+            }
+        }
+        group.add(sub);
+    };
+
+    buildWall(new THREE.Vector3(0, 0, -halfW - t / 2), false);  // back
+    buildWall(new THREE.Vector3(0, 0,  halfW + t / 2), false);  // front
+    buildWall(new THREE.Vector3(-halfW - t / 2, 0, 0), true);   // left
+    buildWall(new THREE.Vector3( halfW + t / 2, 0, 0), true);   // right
+    return group;
+}
+
 async function _buildEnvironmentPreview(asset) {
-    _camera.position.set(4, 3, 5);
-    _camera.lookAt(0, 0.3, 0);
+    _camera.position.set(5.2, 3.9, 5.2);
+    _camera.lookAt(0, 0.5, 0);
     _camera.fov = 55;
     _camera.updateProjectionMatrix();
 
@@ -939,19 +1054,15 @@ async function _buildEnvironmentPreview(asset) {
 
     // Auto-play assigned music track
     const musicId = s.musicId || p.musicId;
-    if (musicId) {
-        _autoPlayEnvironmentMusic(musicId);
-    }
+    if (musicId) _autoPlayEnvironmentMusic(musicId);
 
-    // Blank-template detection: no sky, no ground, no walls/objects/images.
-    // Render the canonical Scene3D look (mid-grey backdrop, 21×21 grid,
-    // 5×5 stage perimeter, flat lighting) to match the edit-view template.
-    const skyTop    = p.skybox?.topColor    || s.skyTopColor;
-    const skyBottom = p.skybox?.bottomColor || s.skyHorizonColor;
-    const groundColor = p.ground?.color || s.groundColor;
+    // Blank-template detection: render canonical Scene3D look.
+    const skyTop = s.skyTop || s.skyTopColor || p.skybox?.topColor;
+    const skyMid = s.skyMid || s.skyHorizonColor || p.skybox?.bottomColor;
+    const groundColor = s.groundColor || p.ground?.color;
     const isBlankTemplate =
         asset.id === 'env_default' ||
-        (!skyTop && !skyBottom && !groundColor &&
+        (!skyTop && !skyMid && !groundColor &&
          !(p.walls?.length) && !(p.objects?.length) && !(p.images?.length));
 
     if (isBlankTemplate) {
@@ -959,48 +1070,128 @@ async function _buildEnvironmentPreview(asset) {
         return;
     }
 
-    if (skyTop && skyBottom) {
-        const canvas = document.createElement('canvas');
-        canvas.width = 2; canvas.height = 256;
-        const ctx = canvas.getContext('2d');
-        const grad = ctx.createLinearGradient(0, 0, 0, 256);
-        grad.addColorStop(0, skyTop);
-        grad.addColorStop(1, skyBottom);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 2, 256);
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.minFilter = THREE.LinearFilter;
-        _scene.background = tex;
-    }
-
-    // Ground color override — support both payload.ground and state-based ground color
-    if (groundColor) {
-        const ground = _scene.children.find(c => c.geometry?.type === 'PlaneGeometry');
-        if (ground) ground.material.color.set(groundColor);
-    }
-
-    // Place objects as simple placeholder boxes (actual props would need to be loaded)
-    if (p.objects?.length) {
-        for (const obj of p.objects.slice(0, 20)) {
-            const box = new THREE.Mesh(
-                new THREE.BoxGeometry(0.4, 0.6, 0.4),
-                standard(0x6F6F6F, { roughness: 0.8 }),
-            );
-            const pos = obj.position || [0, 0, 0];
-            box.position.set(pos[0], pos[1] + 0.3, pos[2]);
-            box.castShadow = true;
-            _previewGroup.add(box);
+    // Remove the default ground/grid/lights added by showPreview — the
+    // environment owns its own look.
+    const toRemove = [];
+    _scene.traverse(obj => {
+        if (obj === _scene || obj === _previewGroup) return;
+        if (obj.parent === _scene && (obj.isMesh || obj.isGridHelper || obj.isLight)) {
+            toRemove.push(obj);
         }
+    });
+    for (const obj of toRemove) {
+        obj.geometry?.dispose?.();
+        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose?.());
+        else obj.material?.dispose?.();
+        _scene.remove(obj);
+    }
+    _scene.background = null;
+
+    // Resolve sky stops — legacy envs supply top+horizon only, synthesize a bot.
+    const topHex = skyTop || '#4a5870';
+    const midHex = skyMid || skyTop || '#8497ac';
+    let botHex = s.skyBot;
+    if (!botHex) {
+        const m = new THREE.Color(midHex);
+        botHex = '#' + m.clone().lerp(new THREE.Color(0xffffff), 0.25).getHexString();
     }
 
-    // If no objects, show a placeholder scene
-    if (!p.objects?.length) {
-        const placeholder = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.3, 0.3, 0.05, 32),
-            standard(0x888888),
+    _previewGroup.add(_buildEnvSkySphere(topHex, midHex, botHex));
+
+    // Ground slab (floating-island look)
+    const groundSize = s.groundSize ?? 19;
+    const groundMat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(groundColor || '#4b692f'),
+        roughness: 0.95, metalness: 0,
+    });
+    const ground = new THREE.Mesh(
+        new THREE.BoxGeometry(groundSize, 1, groundSize), groundMat,
+    );
+    ground.position.y = -0.5;
+    ground.receiveShadow = true;
+    _previewGroup.add(ground);
+
+    // Stage plane
+    const stageMat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(s.stageColor || '#595652'),
+        roughness: 0.85,
+    });
+    const stage = new THREE.Mesh(new THREE.PlaneGeometry(_ENV_STAGE_SIZE, _ENV_STAGE_SIZE), stageMat);
+    stage.rotation.x = -Math.PI / 2;
+    stage.position.y = 0.002;
+    stage.receiveShadow = true;
+    _previewGroup.add(stage);
+
+    // World grid
+    const worldGrid = new THREE.GridHelper(groundSize, groundSize, 0x2F2F2F, 0x2F2F2F);
+    worldGrid.material.opacity = 0.3;
+    worldGrid.material.transparent = true;
+    worldGrid.position.y = 0.004;
+    _previewGroup.add(worldGrid);
+
+    // Walls
+    const walls = _buildEnvWalls(s);
+    if (walls) _previewGroup.add(walls);
+
+    // Fog
+    if (s.fogEnabled) {
+        _scene.fog = new THREE.FogExp2(s.fogColor || '#888888', s.fogDensity ?? 0.02);
+    } else {
+        _scene.fog = null;
+    }
+
+    // Ambient + directional
+    const ambient = new THREE.AmbientLight(
+        _envTinted(s.ambientColor || '#ffffff'),
+        s.ambientIntensity ?? 1.2,
+    );
+    _scene.add(ambient);
+
+    const dir = new THREE.DirectionalLight(
+        _envTinted(s.dirColor || '#ffffff'),
+        s.dirIntensity ?? 0.4,
+    );
+    const elev = (s.sunElevation ?? 60) * Math.PI / 180;
+    const lightDist = 10;
+    dir.position.set(
+        lightDist * Math.cos(elev) * 0.9,
+        lightDist * Math.sin(elev) + 2,
+        lightDist * Math.cos(elev) * 0.5,
+    );
+    dir.castShadow = true;
+    _scene.add(dir);
+
+    // Sun/moon orb behind the stage
+    if (s.sunVisible) {
+        const sunGeo = new THREE.SphereGeometry(1.5, 16, 12);
+        const sunMat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color(s.sunColor || '#ffffee'),
+            fog: false,
+        });
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        const orbDist = 35;
+        sun.position.set(
+            -orbDist * Math.cos(elev) * 0.7,
+             orbDist * Math.sin(elev),
+            -orbDist * Math.cos(elev) * 0.7,
         );
-        placeholder.position.y = 0.025;
-        _previewGroup.add(placeholder);
+        _previewGroup.add(sun);
+    }
+
+    // Floating orb light
+    if (s.orbVisible) {
+        const color = new THREE.Color(s.orbColor || '#ffddaa');
+        const pt = new THREE.PointLight(color, s.orbIntensity ?? 1.4, _ENV_ORB_RANGE, 2);
+        const h = Math.min(3.0, Math.max(1.0, s.orbHeight ?? 2.0));
+        pt.position.set(0, h, 0);
+        _scene.add(pt);
+
+        const orbMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(0.18, 16, 12),
+            new THREE.MeshBasicMaterial({ color: color.clone(), fog: false }),
+        );
+        orbMesh.position.set(0, h, 0);
+        _previewGroup.add(orbMesh);
     }
 }
 
