@@ -3,36 +3,100 @@
   "type": "environment",
   "name": "Cozy Living Room",
   "tags": [
-    "interior",
     "home",
-    "cozy"
+    "cozy",
+    "warm",
+    "living-room"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A warm living room with soft lighting and comfortable furniture",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#5d4037",
-      "bottomColor": "#8d6e63"
-    },
-    "ground": {
-      "color": "#6d4c41",
-      "material": "default"
-    },
+    "description": "A warm-wood living room with a deep sofa, amber lamps, and scattered cushions.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#6d4c41",
-      "skyTopColor": "#5d4037",
-      "skyHorizonColor": "#8d6e63",
-      "wallCount": 2,
-      "musicId": "mus_vinyl_memories"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#5a3a24",
+      "stageColor": "#a47858",
+      "wallColor": "#c8a078",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffd890",
+      "windowOpacity": 0.5,
+      "skyTop": "#2a1810",
+      "skyMid": "#5a3a24",
+      "skyBot": "#a06848",
+      "fxPreset": "dusk",
+      "ambientColor": "#d4a878",
+      "ambientIntensity": 1.1,
+      "dirColor": "#ffc888",
+      "dirIntensity": 0.8,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb060",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.2,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": "N2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N4",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rug_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

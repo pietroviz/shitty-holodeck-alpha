@@ -4,35 +4,99 @@
   "name": "Dragon's Lair",
   "tags": [
     "fantasy",
-    "dragon",
-    "cave"
+    "cave",
+    "dark",
+    "treasure"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A vast cavern filled with treasure and the glow of molten rock",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#1a0a00",
-      "bottomColor": "#bf360c"
-    },
-    "ground": {
-      "color": "#3e2723",
-      "material": "default"
-    },
+    "description": "A smouldering black cavern piled with gold, bones, and guttering torches.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#3e2723",
-      "skyTopColor": "#1a0a00",
-      "skyHorizonColor": "#bf360c",
-      "wallCount": 2,
-      "musicId": "mus_epic_dawn"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#1a0c0c",
+      "stageColor": "#3a1a12",
+      "wallColor": "#2a1410",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#0a0404",
+      "skyMid": "#1a0a06",
+      "skyBot": "#5a2010",
+      "fxPreset": "night",
+      "ambientColor": "#5a1a08",
+      "ambientIntensity": 0.5,
+      "dirColor": "#ff6020",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#1a0806",
+      "fogDensity": 0.07,
+      "orbVisible": true,
+      "orbColor": "#ff8030",
+      "orbIntensity": 2.2,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_treasure_chest_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_gravestone_batch",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1.1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_rock_large_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

@@ -4,35 +4,99 @@
   "name": "Enchanted Grove",
   "tags": [
     "fantasy",
+    "forest",
     "magical",
-    "forest"
+    "green"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A mystical grove with glowing mushrooms and floating fireflies",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#1a237e",
-      "bottomColor": "#7c4dff"
-    },
-    "ground": {
-      "color": "#1b5e20",
-      "material": "default"
-    },
+    "description": "A moonlit grove where glowing mushrooms and spirit orbs hover between ancient oaks.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#1b5e20",
-      "skyTopColor": "#1a237e",
-      "skyHorizonColor": "#7c4dff",
-      "wallCount": 0,
-      "musicId": "mus_celtic_meadow"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#1a3a22",
+      "stageColor": "#2a5030",
+      "wallColor": "#1a2a1e",
+      "groundSize": 23,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#0a1a28",
+      "skyMid": "#1a3a4a",
+      "skyBot": "#3a6a5a",
+      "fxPreset": "night",
+      "ambientColor": "#4a8a7a",
+      "ambientIntensity": 0.9,
+      "dirColor": "#a0f8c0",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#1a3a2e",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#a0ffd0",
+      "orbIntensity": 1.9,
+      "orbHeight": 2.5,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_magic_portal_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_totem_pole_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_oak_tree_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mushroom_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

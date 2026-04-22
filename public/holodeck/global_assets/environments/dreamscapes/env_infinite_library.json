@@ -3,36 +3,100 @@
   "type": "environment",
   "name": "Infinite Library",
   "tags": [
-    "dream",
-    "books",
-    "surreal"
+    "dreamscape",
+    "library",
+    "warm",
+    "wood"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "Endless shelves of books stretching into a warm amber infinity",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#4e342e",
-      "bottomColor": "#ffcc80"
-    },
-    "ground": {
-      "color": "#5d4037",
-      "material": "default"
-    },
+    "description": "Endless bookshelves of dark wood lit by pools of amber lamplight.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#5d4037",
-      "skyTopColor": "#4e342e",
-      "skyHorizonColor": "#ffcc80",
-      "wallCount": 2,
-      "musicId": "mus_vinyl_memories"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#3a2a1e",
+      "stageColor": "#5a3e24",
+      "wallColor": "#4a3222",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#120a06",
+      "skyMid": "#2a1a0e",
+      "skyBot": "#6a4a26",
+      "fxPreset": "dusk",
+      "ambientColor": "#8a6030",
+      "ambientIntensity": 0.7,
+      "dirColor": "#ffb858",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#3a2010",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#ffb060",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "I3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

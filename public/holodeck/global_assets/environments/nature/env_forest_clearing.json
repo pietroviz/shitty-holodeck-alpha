@@ -5,34 +5,97 @@
   "tags": [
     "nature",
     "forest",
+    "green",
     "peaceful"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A sunlit clearing in an ancient forest with moss-covered ground",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#87ceeb",
-      "bottomColor": "#c8e6c9"
-    },
-    "ground": {
-      "color": "#3a5c2e",
-      "material": "default"
-    },
+    "description": "A sun-dappled clearing ringed by pine and oak, with moss-covered stumps and wildflowers.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#3a5c2e",
-      "skyTopColor": "#87ceeb",
-      "skyHorizonColor": "#c8e6c9",
-      "wallCount": 0,
-      "musicId": "mus_forest_canopy"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#3a6a2e",
+      "stageColor": "#5a8a3e",
+      "wallColor": "#2a4a22",
+      "groundSize": 23,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#6ab4f0",
+      "skyMid": "#a8d0f0",
+      "skyBot": "#c8e4d8",
+      "fxPreset": "day",
+      "sunColor": "#fff8d0",
+      "sunElevation": 60,
+      "sunVisible": true,
+      "ambientColor": "#b8d8a0",
+      "ambientIntensity": 1.1,
+      "dirColor": "#fff4c8",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#a8c890",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_mushroom_batch",
+          "mode": "place",
+          "cell": "I4",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "place",
+          "cell": "G4",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_oak_tree_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

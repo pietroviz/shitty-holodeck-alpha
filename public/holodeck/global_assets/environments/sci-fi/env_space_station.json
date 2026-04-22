@@ -4,35 +4,99 @@
   "name": "Space Station",
   "tags": [
     "sci-fi",
-    "space",
-    "station"
+    "station",
+    "metal",
+    "cold"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A gleaming orbital station with panoramic views of Earth below",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#000011",
-      "bottomColor": "#0d47a1"
-    },
-    "ground": {
-      "color": "#37474f",
-      "material": "default"
-    },
+    "description": "A sterile chrome-and-grey docking bay with warning lights and stacked cargo crates.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#37474f",
-      "skyTopColor": "#000011",
-      "skyHorizonColor": "#0d47a1",
-      "wallCount": 2,
-      "musicId": "mus_deep_space_drift"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#2a3038",
+      "stageColor": "#484e58",
+      "wallColor": "#5a6068",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#40a0e0",
+      "windowOpacity": 0.45,
+      "skyTop": "#08080c",
+      "skyMid": "#14182a",
+      "skyBot": "#2a384c",
+      "fxPreset": "night",
+      "ambientColor": "#8098b8",
+      "ambientIntensity": 0.9,
+      "dirColor": "#d0e4ff",
+      "dirIntensity": 0.7,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#60b0ff",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.6,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1.1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crate",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
   }
 }

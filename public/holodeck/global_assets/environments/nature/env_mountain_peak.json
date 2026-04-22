@@ -4,35 +4,99 @@
   "name": "Mountain Peak",
   "tags": [
     "nature",
-    "mountain",
-    "epic"
+    "alpine",
+    "snow",
+    "cold"
   ],
   "meta": {
-    "created": "2026-04-14T13:36:48.887Z",
-    "modified": "2026-04-14T13:36:48.887Z",
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
     "origin": "template",
     "version": 1
   },
   "payload": {
-    "description": "A windswept mountain summit above the clouds",
-    "format": "environment_scene",
-    "skybox": {
-      "type": "gradient",
-      "topColor": "#1565c0",
-      "bottomColor": "#e3f2fd"
-    },
-    "ground": {
-      "color": "#78909c",
-      "material": "default"
-    },
+    "description": "Wind-scoured granite peaks under a steel-blue sky, snow drifting across bare rock.",
+    "format": "environment_state",
     "state": {
-      "groundColor": "#78909c",
-      "skyTopColor": "#1565c0",
-      "skyHorizonColor": "#e3f2fd",
-      "wallCount": 0,
-      "musicId": "mus_mountain_wind"
-    },
-    "walls": [],
-    "objects": []
+      "groundColor": "#c4cad2",
+      "stageColor": "#e4e8ec",
+      "wallColor": "#9ca4ac",
+      "groundSize": 23,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#4a6a8c",
+      "skyMid": "#88a4c0",
+      "skyBot": "#d0dce4",
+      "fxPreset": "day",
+      "sunColor": "#fff4e8",
+      "sunElevation": 40,
+      "sunVisible": true,
+      "ambientColor": "#c8d4e0",
+      "ambientIntensity": 1,
+      "dirColor": "#ffffff",
+      "dirIntensity": 1.2,
+      "fogEnabled": true,
+      "fogColor": "#c0cad4",
+      "fogDensity": 0.03,
+      "orbVisible": false,
+      "weather": "snow",
+      "props": [
+        {
+          "assetId": "prop_mountain",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.3,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_boulder",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_boulder",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_nest",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 0.9,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_rock_large_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
   }
 }
