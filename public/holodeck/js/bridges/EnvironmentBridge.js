@@ -45,7 +45,7 @@ const DEFAULT_STAGE_COLOR  = '#595652'; // DB32 dark grey
 const DEFAULT_WALL_COLOR   = '#696a6a'; // DB32 mid grey (slightly lighter)
 const DEFAULT_GROUND_SIZE  = 19;
 const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–3 = blocks
-const DEFAULT_WINDOW_STYLE = 'none'; // none | single | row | grid
+const DEFAULT_WINDOW_STYLE = 'none'; // none | single | double | triple
 const DEFAULT_WINDOW_COLOR = '#8ec8f0'; // translucent pane tint (pale sky blue)
 const WINDOW_PANE_OPACITY  = 0.25;
 const DEFAULT_TEXTURE      = 'none';
@@ -228,6 +228,13 @@ const _snapOdd = (n) => {
     return v;
 };
 
+// Legacy windowStyle names → current names.
+const _migrateWindowStyle = (s) => {
+    if (s === 'row')  return 'double';
+    if (s === 'grid') return 'triple';
+    return s;
+};
+
 // ── BINGO grid for the 5×5 stage ────────────────────────────────
 // Viewed from the camera the stage is a diamond.  Labels sit on the
 // two visible top edges:
@@ -304,7 +311,7 @@ export class EnvironmentBridge extends BaseBridge {
                             : typeof d.walls === 'string'
                             ? ({ off: 0, low: 1, med: 3, high: 5 }[d.walls] ?? 0)
                             : DEFAULT_WALL_HEIGHT,
-            windowStyle:    d.windowStyle || DEFAULT_WINDOW_STYLE,
+            windowStyle:    _migrateWindowStyle(d.windowStyle) || DEFAULT_WINDOW_STYLE,
             windowColor:    d.windowColor || DEFAULT_WINDOW_COLOR,
             // Texture choices (stub for now — we just store the id;
             // applying real textures comes later)
@@ -636,125 +643,118 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Window layout definitions — Minecraft-style.
-     * Returns a Set of "col,row" keys where windows go.
-     * col: 0..cols-1 (along wall length), row: 0..rows-1 (bottom to top).
-     *
-     * Walls read like a house: a solid sill at the bottom, one horizontal
-     * band of windows, and a solid lintel at the top when the wall is
-     * tall enough to support one.
-     */
-    _windowCells(cols, rows) {
-        const style = this._state.windowStyle || 'none';
-        const cells = new Set();
-        if (style === 'none' || rows < 2) return cells;
-
-        // Put the window band just above the sill. With the cap at 3
-        // that lands at r=1 — eye level from the stage floor — with a
-        // solid lintel at r=2.
-        const windowRow = 1;
-        if (windowRow >= rows) return cells;
-
-        const add = (c) => {
-            if (c > 0 && c < cols - 1) cells.add(`${c},${windowRow}`);
-        };
-
-        if (style === 'single') {
-            add(Math.floor(cols / 2));
-            return cells;
-        }
-        if (style === 'row') {
-            for (let c = 1; c < cols - 1; c++) add(c);
-            return cells;
-        }
-        if (style === 'grid') {
-            // Every-other-column — solid pillars between windows.
-            for (let c = 1; c < cols - 1; c += 2) add(c);
-            return cells;
-        }
-        return cells;
-    }
-
-    /**
-     * Rebuild the block meshes inside each wall group.
-     * Called when window style, wall height, or wall colour changes.
+     * Rebuild the slab meshes inside each wall group.
+     * Walls read like a house: a 0.5-unit sill at the bottom, a single
+     * band of window(s) in the middle, a 0.5-unit lintel on top, and
+     * 0.5-unit side padding on left/right. Window count (1/2/3) is set
+     * by windowStyle (single/double/triple); gutters between windows
+     * are 0.25 unit. 1-unit walls have no visible window.
      */
     _rebuildWallBlocks() {
-        const h     = this._state.walls || 0;
-        const rows  = h;          // 1 block = 1 row
-        const cols  = STAGE_SIZE; // 5 blocks wide (each 1m)
+        const h = this._state.walls || 0;
+
+        const clearGroup = (g) => {
+            while (g.children.length) {
+                const c = g.children[0];
+                c.geometry?.dispose?.();
+                g.remove(c);
+            }
+        };
+
+        if (h === 0) {
+            clearGroup(this._wallBack);
+            clearGroup(this._wallFront);
+            clearGroup(this._wallLeft);
+            clearGroup(this._wallRight);
+            return;
+        }
+
         const t     = WALL_THICK;
-        const wallColor   = new THREE.Color(this._state.wallColor);
-        const windowColor = new THREE.Color(this._state.windowColor || DEFAULT_WINDOW_COLOR);
+        const W     = STAGE_SIZE;      // wall length (5)
+        const halfW = W / 2;           // 2.5
+        const SILL  = 0.5;
+        const LINT  = 0.5;
+        const SIDE  = 0.5;
+        const GUT   = 0.25;
 
-        // Shared geometries (reused across all blocks)
-        const solidGeoH = new THREE.BoxGeometry(1, 1, t);      // horizontal wall (back/front)
-        const solidGeoV = new THREE.BoxGeometry(t, 1, 1);      // vertical wall (left/right)
-        const paneGeoH  = new THREE.BoxGeometry(0.85, 0.85, t * 0.3);
-        const paneGeoV  = new THREE.BoxGeometry(t * 0.3, 0.85, 0.85);
-        // Thin frame around window (same as wall colour)
-        const frameGeoH = new THREE.BoxGeometry(1, 1, t);
-        const frameGeoV = new THREE.BoxGeometry(t, 1, 1);
+        const style      = this._state.windowStyle || 'none';
+        const count      = style === 'single' ? 1 : style === 'double' ? 2 : style === 'triple' ? 3 : 0;
+        const hasWindows = count > 0 && h >= 2;
+        const winH       = Math.max(0, h - SILL - LINT);
 
-        const wallMat = new THREE.MeshStandardMaterial({ color: wallColor, roughness: 0.85 });
+        const wallMat = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(this._state.wallColor),
+            roughness: 0.85,
+        });
         const paneMat = new THREE.MeshStandardMaterial({
-            color: windowColor, roughness: 0.3, metalness: 0.1,
+            color: new THREE.Color(this._state.windowColor || DEFAULT_WINDOW_COLOR),
+            roughness: 0.3, metalness: 0.1,
             transparent: true, opacity: WINDOW_PANE_OPACITY,
             side: THREE.DoubleSide,
         });
 
-        const buildWall = (group, isVertical) => {
-            // Clear old children
-            while (group.children.length) {
-                const c = group.children[0];
-                c.geometry?.dispose?.();
-                // Materials are shared, don't dispose per-child
-                group.remove(c);
+        // Window centre-x's along the wall, plus the shared window width.
+        let winW = 0;
+        const winCentres = [];
+        if (hasWindows) {
+            const interiorW = W - SIDE * 2;
+            winW = (interiorW - (count - 1) * GUT) / count;
+            let x = -halfW + SIDE + winW / 2;
+            for (let i = 0; i < count; i++) {
+                winCentres.push(x);
+                x += winW + GUT;
             }
-            if (rows === 0) return;
+        }
 
-            const winCells = this._windowCells(cols, rows);
+        const buildWall = (group, isVertical) => {
+            clearGroup(group);
 
-            for (let c = 0; c < cols; c++) {
-                for (let r = 0; r < rows; r++) {
-                    const isWindow = winCells.has(`${c},${r}`);
-                    const posAlongWall = c - (cols - 1) / 2;  // centre the blocks
-                    const posY = r + 0.5;                      // bottom of first block at y=0
-
-                    if (isWindow) {
-                        // Translucent pane (slightly smaller than the block)
-                        const pane = new THREE.Mesh(
-                            isVertical ? paneGeoV.clone() : paneGeoH.clone(),
-                            paneMat
-                        );
-                        if (isVertical) {
-                            pane.position.set(0, posY, posAlongWall);
-                        } else {
-                            pane.position.set(posAlongWall, posY, 0);
-                        }
-                        group.add(pane);
-                    } else {
-                        // Solid wall block
-                        const block = new THREE.Mesh(
-                            isVertical ? solidGeoV.clone() : solidGeoH.clone(),
-                            wallMat
-                        );
-                        if (isVertical) {
-                            block.position.set(0, posY, posAlongWall);
-                        } else {
-                            block.position.set(posAlongWall, posY, 0);
-                        }
-                        block.castShadow = true;
-                        block.receiveShadow = true;
-                        group.add(block);
-                    }
+            // addSlab(offset along wall, centre-y, width along wall, height, isPane?)
+            const addSlab = (along, y, width, height, isPane = false) => {
+                const depth = isPane ? t * 0.3 : t;
+                const geom = isVertical
+                    ? new THREE.BoxGeometry(depth, height, width)
+                    : new THREE.BoxGeometry(width, height, depth);
+                const mesh = new THREE.Mesh(geom, isPane ? paneMat : wallMat);
+                if (isVertical) mesh.position.set(0, y, along);
+                else            mesh.position.set(along, y, 0);
+                if (!isPane) {
+                    mesh.castShadow    = true;
+                    mesh.receiveShadow = true;
                 }
+                group.add(mesh);
+            };
+
+            if (!hasWindows) {
+                // Solid wall slab
+                addSlab(0, h / 2, W, h);
+                return;
+            }
+
+            // Sill + lintel (full wall width)
+            addSlab(0, SILL / 2,           W, SILL);
+            addSlab(0, h - LINT / 2,       W, LINT);
+
+            // Left / right side padding pillars
+            const pillarY = SILL + winH / 2;
+            addSlab(-halfW + SIDE / 2, pillarY, SIDE, winH);
+            addSlab( halfW - SIDE / 2, pillarY, SIDE, winH);
+
+            // Inter-window gutter pillars
+            for (let i = 0; i < winCentres.length - 1; i++) {
+                const mid = (winCentres[i] + winCentres[i + 1]) / 2;
+                addSlab(mid, pillarY, GUT, winH);
+            }
+
+            // Panes — slightly inset from the frame so edges don't z-fight
+            for (const cx of winCentres) {
+                addSlab(cx, pillarY, winW * 0.98, winH * 0.98, /*isPane*/ true);
             }
         };
 
-        buildWall(this._wallBack, false);
+        buildWall(this._wallBack,  false);
         buildWall(this._wallFront, false);
-        buildWall(this._wallLeft, true);
+        buildWall(this._wallLeft,  true);
         buildWall(this._wallRight, true);
     }
 
@@ -1588,7 +1588,7 @@ export class EnvironmentBridge extends BaseBridge {
 
     /** Update window style and rebuild walls. */
     _applyWindowStyle(style) {
-        this._state.windowStyle = style;
+        this._state.windowStyle = _migrateWindowStyle(style) || 'none';
         this._rebuildWallBlocks();
     }
 
@@ -1958,7 +1958,7 @@ export class EnvironmentBridge extends BaseBridge {
             <div class="cb-card-tight-label">Windows</div>
             <div class="cb-card-tight-control">
               <select id="window-style-select">
-                ${['none', 'single', 'row', 'grid'].map(v =>
+                ${['none', 'single', 'double', 'triple'].map(v =>
                     `<option value="${v}"${s.windowStyle === v ? ' selected' : ''}>${v[0].toUpperCase() + v.slice(1)}</option>`
                 ).join('')}
               </select>
@@ -2748,7 +2748,7 @@ export class EnvironmentBridge extends BaseBridge {
             const c = randHex(); if (c) this._applyWallColor(c);
             this._applyTexture('wallTexture', randTex());
             // Randomise window style + pane colour
-            const winStyles = ['none', 'none', 'single', 'row', 'grid']; // bias toward none
+            const winStyles = ['none', 'none', 'single', 'double', 'triple']; // bias toward none
             this._applyWindowStyle(winStyles[Math.floor(Math.random() * winStyles.length)]);
             const wc = randHex(); if (wc) this._applyWindowColor(wc);
             this._renderPanel();
