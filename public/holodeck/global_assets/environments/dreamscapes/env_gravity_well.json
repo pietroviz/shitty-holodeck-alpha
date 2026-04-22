@@ -9,8 +9,8 @@
     "purple"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -39,7 +39,64 @@
       "orbColor": "#8cffc8",
       "orbIntensity": 2,
       "orbHeight": 2.8,
-      "orbFlicker": false
+      "orbFlicker": false,
+      "stageItems": [
+        {
+          "assetId": "prop_magic_portal_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.4,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

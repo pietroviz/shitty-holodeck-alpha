@@ -9,8 +9,8 @@
     "cotton-candy"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -44,7 +44,64 @@
       "orbColor": "#ffc058",
       "orbIntensity": 2,
       "orbHeight": 2.6,
-      "orbFlicker": true
+      "orbFlicker": true,
+      "stageItems": [
+        {
+          "assetId": "prop_tent",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rainbow_arch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_tent",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

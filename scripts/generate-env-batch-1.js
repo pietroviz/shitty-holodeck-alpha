@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Batch-1: 25 over-the-top stock environments across 9 category folders.
- * Rewrites manifest.json to include these + any existing env files already
- * on disk (so orphan legacy envs get re-registered).
+ * Each env has full state + stageItems + groundObjects (thematic prop
+ * choices drawn from the existing object library).
  *
  * Run: node scripts/generate-env-batch-1.js
  */
@@ -13,7 +13,6 @@ const path = require('path');
 const BASE = path.join(__dirname, '..', 'public', 'holodeck', 'global_assets', 'environments');
 const NOW  = new Date().toISOString();
 
-// Category folder → user-facing display name
 const CATEGORY_LABELS = {
   templates:          'Templates',
   nature:             'Nature & Wild',
@@ -27,15 +26,33 @@ const CATEGORY_LABELS = {
   playful:            'Playful Spaces',
 };
 
-// Compact spec → full env JSON. Every field is a knob we actually render.
-// State keys: groundColor, stageColor, wallColor, groundSize, walls (height 0..3),
-// windowStyle (none|single|double|triple), windowColor, windowOpacity,
-// skyTop/Mid/Bot, fxPreset (flat|day|dusk|night),
-// sunColor, sunElevation, sunVisible,
-// ambientColor, ambientIntensity, dirColor, dirIntensity,
-// fogEnabled, fogColor, fogDensity,
-// weather (none|snow|rain|leaves),
-// orbVisible, orbColor, orbIntensity, orbHeight, orbFlicker.
+// Shape helpers — keep the specs terse. Fill missing slots with 'none'.
+const STAGE_SLOTS = 5;
+const GROUND_SLOTS = 3;
+
+function stageArr(items = []) {
+  const out = [];
+  for (let i = 0; i < STAGE_SLOTS; i++) {
+    const it = items[i];
+    out.push(it
+      ? { assetId: it.id, mode: 'place', cell: it.cell, scale: it.scale ?? 1.0, density: 'med' }
+      : { assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med' });
+  }
+  return out;
+}
+function groundArr(items = []) {
+  const out = [];
+  for (let i = 0; i < GROUND_SLOTS; i++) {
+    const it = items[i];
+    out.push(it
+      ? { assetId: it.id, mode: it.mode ?? 'scatter', density: it.density ?? 'med', scale: it.scale ?? 1.0 }
+      : { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 });
+  }
+  return out;
+}
+
+// Cells on the 5×5 stage — B=left, O=right columns; row 5=front 1=back.
+// Common dressing patterns: centre cluster + corners, or flanking pair.
 
 const BATCH = [
 
@@ -52,7 +69,18 @@ const BATCH = [
       dirColor:'#88fff0', dirIntensity:0.6,
       fogEnabled:true, fogColor:'#0a4858', fogDensity:0.06,
       orbVisible:true, orbColor:'#7cffe8', orbIntensity:1.8, orbHeight:2.6, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_crystal_cluster_batch', cell:'N3', scale:1.3 },
+      { id:'prop_magic_mushroom_batch', cell:'B1', scale:1.1 },
+      { id:'prop_magic_mushroom_batch', cell:'O5', scale:1.1 },
+      { id:'prop_rock_large_batch', cell:'O1', scale:1.2 },
+    ],
+    ground:[
+      { id:'prop_rock_small_batch', mode:'scatter', density:'high' },
+      { id:'prop_magic_mushroom_batch', mode:'scatter', density:'med' },
+    ]},
+
   { folder:'nature', id:'env_lava_cliffs', name:'Lava Cliffs',
     tags:['nature','volcanic','epic','molten'],
     description:'Black obsidian cliffs bleeding veins of molten orange into a choking ash sky.',
@@ -66,7 +94,19 @@ const BATCH = [
       dirColor:'#ff7a30', dirIntensity:1.3,
       fogEnabled:true, fogColor:'#3a1a12', fogDensity:0.05,
       orbVisible:true, orbColor:'#ff6020', orbIntensity:2.2, orbHeight:2.4, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_fire_pit', cell:'N3', scale:1.2 },
+      { id:'prop_boulder', cell:'B1', scale:1.3 },
+      { id:'prop_dead_tree', cell:'O1', scale:1.1 },
+      { id:'prop_skull_batch', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_boulder_stack', mode:'scatter', density:'med' },
+      { id:'prop_rock_large_batch', mode:'scatter', density:'high' },
+      { id:'prop_dead_tree', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'nature', id:'env_frost_basin', name:'Frost Basin',
     tags:['nature','ice','winter','pastel'],
     description:'A powder-blue snowbowl under a cotton-candy sunrise with drifting flurries.',
@@ -81,7 +121,16 @@ const BATCH = [
       fogEnabled:true, fogColor:'#e0ecff', fogDensity:0.03,
       weather:'snow',
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_pine_tree_batch', cell:'B1', scale:1.2 },
+      { id:'prop_pine_tree_batch', cell:'O1', scale:1.1 },
+      { id:'prop_rock_small_batch', cell:'N3', scale:0.9 },
+    ],
+    ground:[
+      { id:'prop_pine_tree_batch', mode:'scatter', density:'med' },
+      { id:'prop_rock_small_batch', mode:'scatter', density:'high' },
+    ]},
 
   // ═══ DREAMSCAPES (3) ═══
   { folder:'dreamscapes', id:'env_gravity_well', name:'Gravity Well',
@@ -96,7 +145,17 @@ const BATCH = [
       dirColor:'#c0ffe8', dirIntensity:0.6,
       fogEnabled:true, fogColor:'#3a1060', fogDensity:0.04,
       orbVisible:true, orbColor:'#8cffc8', orbIntensity:2.0, orbHeight:2.8, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_magic_portal_batch', cell:'N3', scale:1.4 },
+      { id:'prop_magic_orb_batch', cell:'B1', scale:1.0 },
+      { id:'prop_magic_orb_batch', cell:'O5', scale:1.0 },
+      { id:'prop_crystal_cluster_batch', cell:'O1', scale:1.2 },
+    ],
+    ground:[
+      { id:'prop_crystal_cluster_batch', mode:'scatter', density:'med' },
+    ]},
+
   { folder:'dreamscapes', id:'env_pool_of_mirrors', name:'Pool of Mirrors',
     tags:['dream','reflection','silver','mauve'],
     description:'A still silver lagoon reflecting a mauve twilight — no horizon, just echoes.',
@@ -110,7 +169,17 @@ const BATCH = [
       dirColor:'#d8c4e8', dirIntensity:0.7,
       fogEnabled:true, fogColor:'#9080a0', fogDensity:0.04,
       orbVisible:true, orbColor:'#e8d8f4', orbIntensity:1.2, orbHeight:2.2, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_pond_batch', cell:'N3', scale:1.5 },
+      { id:'prop_column', cell:'B1', scale:1.0 },
+      { id:'prop_column', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_pond_batch', mode:'scatter', density:'low' },
+      { id:'prop_obelisk', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'dreamscapes', id:'env_corridor_of_clocks', name:'Corridor of Clocks',
     tags:['dream','surreal','sepia','cyan'],
     description:'An endless sepia hallway ticking under cyan-bulb lamps; time pools on the floor.',
@@ -123,7 +192,16 @@ const BATCH = [
       dirColor:'#44eaf0', dirIntensity:0.7,
       fogEnabled:true, fogColor:'#2a1a08', fogDensity:0.05,
       orbVisible:true, orbColor:'#44eaf0', orbIntensity:1.8, orbHeight:2.4, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_pictureframe_batch', cell:'B3', scale:1.2 },
+      { id:'prop_pictureframe_batch', cell:'O3', scale:1.2 },
+      { id:'prop_chestdrawers_batch', cell:'N1', scale:1.0 },
+      { id:'prop_candle_batch', cell:'N3', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_bookshelf_batch', mode:'scatter', density:'low' },
+    ]},
 
   // ═══ FANTASY REALMS (3) ═══
   { folder:'fantasy', id:'env_dragons_anvil', name:"Dragon's Anvil",
@@ -138,7 +216,19 @@ const BATCH = [
       dirColor:'#ff5020', dirIntensity:0.9,
       fogEnabled:true, fogColor:'#1a0a06', fogDensity:0.07,
       orbVisible:true, orbColor:'#ff4820', orbIntensity:2.6, orbHeight:2.2, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_fire_pit', cell:'N3', scale:1.4 },
+      { id:'prop_treasure_chest_batch', cell:'B1', scale:1.0 },
+      { id:'prop_torch_batch', cell:'B5', scale:1.0 },
+      { id:'prop_torch_batch', cell:'O5', scale:1.0 },
+      { id:'prop_skull_batch', cell:'O1', scale:1.1 },
+    ],
+    ground:[
+      { id:'prop_boulder', mode:'scatter', density:'med' },
+      { id:'prop_skull_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'fantasy', id:'env_elven_canopy', name:'Elven Canopy',
     tags:['fantasy','elven','forest','gold'],
     description:'An emerald cathedral of trees spangled with golden leaves and dust-shafted light.',
@@ -153,7 +243,20 @@ const BATCH = [
       fogEnabled:false,
       weather:'leaves',
       orbVisible:true, orbColor:'#ffd868', orbIntensity:1.0, orbHeight:2.6, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_oak_tree_batch', cell:'B1', scale:1.3 },
+      { id:'prop_oak_tree_batch', cell:'O1', scale:1.3 },
+      { id:'prop_magic_mushroom_batch', cell:'N3', scale:1.1 },
+      { id:'prop_flower_batch', cell:'B5', scale:1.0 },
+      { id:'prop_flower_batch', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_oak_tree_batch', mode:'scatter', density:'high' },
+      { id:'prop_mushroom_batch', mode:'scatter', density:'med' },
+      { id:'prop_flower_batch', mode:'scatter', density:'high' },
+    ]},
+
   { folder:'fantasy', id:'env_rift_of_whispers', name:'Rift of Whispers',
     tags:['fantasy','bioluminescent','violet','teal'],
     description:'A mossy chasm floor glowing bioluminescent violet and teal — every rock sings quietly.',
@@ -166,7 +269,17 @@ const BATCH = [
       dirColor:'#20f0c8', dirIntensity:0.8,
       fogEnabled:true, fogColor:'#180828', fogDensity:0.06,
       orbVisible:true, orbColor:'#20f0c8', orbIntensity:2.4, orbHeight:2.8, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_crystal_cluster_batch', cell:'N3', scale:1.4 },
+      { id:'prop_magic_mushroom_batch', cell:'B1', scale:1.2 },
+      { id:'prop_magic_mushroom_batch', cell:'O5', scale:1.2 },
+      { id:'prop_magic_orb_batch', cell:'O1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_magic_mushroom_batch', mode:'scatter', density:'high' },
+      { id:'prop_crystal_cluster_batch', mode:'scatter', density:'med' },
+    ]},
 
   // ═══ SCI-FI FRONTIERS (3) ═══
   { folder:'sci-fi', id:'env_neon_docking_bay', name:'Neon Docking Bay',
@@ -181,7 +294,18 @@ const BATCH = [
       dirColor:'#ff2a88', dirIntensity:1.2,
       fogEnabled:true, fogColor:'#0a0c18', fogDensity:0.03,
       orbVisible:true, orbColor:'#ff2a88', orbIntensity:2.4, orbHeight:2.8, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_crate', cell:'B1', scale:1.1 },
+      { id:'prop_crate', cell:'O1', scale:1.1 },
+      { id:'prop_barrel', cell:'B5', scale:1.0 },
+      { id:'prop_scaffold', cell:'N3', scale:1.2 },
+    ],
+    ground:[
+      { id:'prop_crate', mode:'scatter', density:'med' },
+      { id:'prop_lamppost_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'sci-fi', id:'env_deadstar_terminus', name:'Deadstar Terminus',
     tags:['sci-fi','dystopia','rust','void'],
     description:'A rusted-iron platform ringed by a starless black void — the last stop on a decaying line.',
@@ -194,7 +318,18 @@ const BATCH = [
       dirColor:'#ff8040', dirIntensity:0.6,
       fogEnabled:true, fogColor:'#080608', fogDensity:0.08,
       orbVisible:true, orbColor:'#ff6020', orbIntensity:1.6, orbHeight:2.4, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_barrel', cell:'B1', scale:1.0 },
+      { id:'prop_crate', cell:'O5', scale:1.0 },
+      { id:'prop_fire_pit', cell:'N3', scale:1.1 },
+      { id:'prop_dumpster', cell:'O1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_barrel', mode:'scatter', density:'med' },
+      { id:'prop_scaffold', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'sci-fi', id:'env_hydroponic_dome', name:'Hydroponic Dome',
     tags:['sci-fi','biopod','green','clean'],
     description:'Racks of chlorophyll-bright plantings under arc-white grow lamps — the farm ship lives.',
@@ -208,7 +343,18 @@ const BATCH = [
       dirColor:'#e8ffe0', dirIntensity:1.2,
       fogEnabled:false,
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_pottedplant_batch', cell:'B1', scale:1.2 },
+      { id:'prop_pottedplant_batch', cell:'O1', scale:1.2 },
+      { id:'prop_pottedplant_batch', cell:'B5', scale:1.2 },
+      { id:'prop_pottedplant_batch', cell:'O5', scale:1.2 },
+      { id:'prop_sunflower', cell:'N3', scale:1.3 },
+    ],
+    ground:[
+      { id:'prop_pottedplant_batch', mode:'tile', density:'high' },
+      { id:'prop_wheat', mode:'scatter', density:'high' },
+    ]},
 
   // ═══ URBAN LIFE (2) ═══
   { folder:'urban', id:'env_night_noodle_lane', name:'Night Noodle Lane',
@@ -224,7 +370,19 @@ const BATCH = [
       fogEnabled:true, fogColor:'#2a1014', fogDensity:0.05,
       weather:'rain',
       orbVisible:true, orbColor:'#ff4050', orbIntensity:2.0, orbHeight:2.6, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_lamppost_batch', cell:'B1', scale:1.1 },
+      { id:'prop_lamppost_batch', cell:'O1', scale:1.1 },
+      { id:'prop_crate', cell:'B5', scale:0.9 },
+      { id:'prop_trash_can', cell:'O5', scale:1.0 },
+      { id:'prop_street_sign', cell:'N3', scale:1.1 },
+    ],
+    ground:[
+      { id:'prop_trash_can', mode:'scatter', density:'low' },
+      { id:'prop_lamppost_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'urban', id:'env_sunbleached_plaza', name:'Sunbleached Plaza',
     tags:['urban','plaza','terracotta','dusty'],
     description:'A terracotta square baking under a peach sun, dust motes drifting between arches.',
@@ -238,7 +396,18 @@ const BATCH = [
       dirColor:'#ffd4a0', dirIntensity:1.3,
       fogEnabled:true, fogColor:'#e0b890', fogDensity:0.015,
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_fountain', cell:'N3', scale:1.2 },
+      { id:'prop_column', cell:'B1', scale:1.1 },
+      { id:'prop_column', cell:'O1', scale:1.1 },
+      { id:'prop_planter', cell:'B5', scale:1.0 },
+      { id:'prop_planter', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_planter', mode:'scatter', density:'med' },
+      { id:'prop_column', mode:'scatter', density:'low' },
+    ]},
 
   // ═══ HOME INTERIORS (3) ═══
   { folder:'home-interiors', id:'env_grandmas_gilded_den', name:"Grandma's Gilded Den",
@@ -253,7 +422,18 @@ const BATCH = [
       dirColor:'#ffb860', dirIntensity:0.7,
       fogEnabled:false,
       orbVisible:true, orbColor:'#ffb458', orbIntensity:1.4, orbHeight:2.2, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_sofa_batch', cell:'N1', scale:1.1 },
+      { id:'prop_chair_batch', cell:'B3', scale:1.0 },
+      { id:'prop_chair_batch', cell:'O3', scale:1.0 },
+      { id:'prop_table_batch', cell:'N3', scale:0.9 },
+      { id:'prop_floorlamp_batch', cell:'O1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_pictureframe_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'home-interiors', id:'env_bathtub_jungle', name:'Bathtub Jungle',
     tags:['home','bathroom','steam','green'],
     description:'A cream-tile bathroom overrun by palm leaves, warm steam fogging the mirror.',
@@ -266,7 +446,18 @@ const BATCH = [
       dirColor:'#ffffff', dirIntensity:0.5,
       fogEnabled:true, fogColor:'#e8f0e0', fogDensity:0.03,
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_palm_tree', cell:'B1', scale:1.2 },
+      { id:'prop_palm_tree', cell:'O1', scale:1.2 },
+      { id:'prop_pottedplant_batch', cell:'B5', scale:1.0 },
+      { id:'prop_pottedplant_batch', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_pottedplant_batch', mode:'scatter', density:'med' },
+      { id:'prop_flower_batch', mode:'scatter', density:'high' },
+    ]},
+
   { folder:'home-interiors', id:'env_attic_of_forgotten_toys', name:'Attic of Forgotten Toys',
     tags:['home','attic','warm','dusty'],
     description:'A honey-lit attic crowded with boxes and stuffed bears, dust suspended in beams.',
@@ -280,7 +471,18 @@ const BATCH = [
       dirColor:'#ffc860', dirIntensity:1.1,
       fogEnabled:true, fogColor:'#4a2810', fogDensity:0.03,
       orbVisible:true, orbColor:'#ffc060', orbIntensity:1.3, orbHeight:2.0, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_chestdrawers_batch', cell:'B1', scale:1.1 },
+      { id:'prop_chestdrawers_batch', cell:'O1', scale:1.1 },
+      { id:'prop_crate', cell:'N3', scale:1.0 },
+      { id:'prop_pictureframe_batch', cell:'B5', scale:1.0 },
+      { id:'prop_desklamp_batch', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_crate', mode:'scatter', density:'high' },
+      { id:'prop_pictureframe_batch', mode:'scatter', density:'med' },
+    ]},
 
   // ═══ WORK SPACES (2) ═══
   { folder:'office-interiors', id:'env_ink_basement', name:'Ink Basement',
@@ -295,7 +497,18 @@ const BATCH = [
       dirColor:'#68c46c', dirIntensity:0.5,
       fogEnabled:false,
       orbVisible:true, orbColor:'#68e46c', orbIntensity:1.8, orbHeight:1.6, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_table_batch', cell:'N3', scale:1.1 },
+      { id:'prop_desklamp_batch', cell:'N3', scale:0.9 },
+      { id:'prop_chair_batch', cell:'N5', scale:1.0 },
+      { id:'prop_bookshelf_batch', cell:'B1', scale:1.2 },
+      { id:'prop_bookshelf_batch', cell:'O1', scale:1.2 },
+    ],
+    ground:[
+      { id:'prop_bookshelf_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'office-interiors', id:'env_potters_clay_hut', name:"Potter's Clay Hut",
     tags:['work','studio','terracotta','dust'],
     description:'A sun-warmed clay studio: wheel and shelves of pots in every shade of red earth.',
@@ -309,7 +522,17 @@ const BATCH = [
       dirColor:'#ffc488', dirIntensity:1.1,
       fogEnabled:true, fogColor:'#a86840', fogDensity:0.02,
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_table_batch', cell:'N3', scale:1.0 },
+      { id:'prop_pottedplant_batch', cell:'N3', scale:0.9 },
+      { id:'prop_mug_batch', cell:'B5', scale:1.0 },
+      { id:'prop_pottedplant_batch', cell:'B1', scale:1.0 },
+      { id:'prop_pottedplant_batch', cell:'O1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_pottedplant_batch', mode:'tile', density:'med' },
+    ]},
 
   // ═══ SACRED PLACES (2) ═══
   { folder:'holy-places', id:'env_moon_altar', name:'Moon Altar',
@@ -325,7 +548,19 @@ const BATCH = [
       dirColor:'#b898e8', dirIntensity:0.6,
       fogEnabled:true, fogColor:'#30184c', fogDensity:0.03,
       orbVisible:true, orbColor:'#d8c4ec', orbIntensity:1.8, orbHeight:2.6, orbFlicker:false,
-    }},
+    },
+    stage:[
+      { id:'prop_shrine', cell:'N3', scale:1.2 },
+      { id:'prop_obelisk', cell:'B1', scale:1.0 },
+      { id:'prop_obelisk', cell:'O1', scale:1.0 },
+      { id:'prop_candle_batch', cell:'B5', scale:1.0 },
+      { id:'prop_candle_batch', cell:'O5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_stone_statue', mode:'scatter', density:'low' },
+      { id:'prop_obelisk', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'holy-places', id:'env_sandstone_labyrinth', name:'Sandstone Labyrinth',
     tags:['sacred','labyrinth','ochre','sun'],
     description:'An ochre maze carved under a blood-red sun — stone corridors hum with heat.',
@@ -339,7 +574,17 @@ const BATCH = [
       dirColor:'#ff7040', dirIntensity:1.2,
       fogEnabled:true, fogColor:'#783018', fogDensity:0.025,
       orbVisible:false,
-    }},
+    },
+    stage:[
+      { id:'prop_ruins', cell:'N3', scale:1.3 },
+      { id:'prop_column', cell:'B1', scale:1.1 },
+      { id:'prop_column', cell:'O1', scale:1.1 },
+      { id:'prop_stone_head', cell:'N1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_column', mode:'scatter', density:'med' },
+      { id:'prop_boulder', mode:'scatter', density:'low' },
+    ]},
 
   // ═══ PLAYFUL SPACES (4) ═══
   { folder:'playful', id:'env_bowling_arcade', name:'Bowling Arcade',
@@ -354,7 +599,18 @@ const BATCH = [
       dirColor:'#ffe020', dirIntensity:0.8,
       fogEnabled:true, fogColor:'#180838', fogDensity:0.04,
       orbVisible:true, orbColor:'#ffe020', orbIntensity:2.2, orbHeight:2.8, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_lamppost_batch', cell:'B1', scale:1.0 },
+      { id:'prop_lamppost_batch', cell:'O1', scale:1.0 },
+      { id:'prop_barrel', cell:'B5', scale:0.9 },
+      { id:'prop_barrel', cell:'O5', scale:0.9 },
+      { id:'prop_sofa_batch', cell:'N1', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_lamppost_batch', mode:'scatter', density:'med' },
+    ]},
+
   { folder:'playful', id:'env_pillow_fort_nebula', name:'Pillow Fort Nebula',
     tags:['playful','cozy','pastel','fairy-lights'],
     description:'A marshmallow-pastel blanket fort glimmering with warm fairy lights — forever snug.',
@@ -367,7 +623,18 @@ const BATCH = [
       dirColor:'#ffd8a0', dirIntensity:0.8,
       fogEnabled:false,
       orbVisible:true, orbColor:'#ffd890', orbIntensity:1.6, orbHeight:2.2, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_bed_batch', cell:'N1', scale:1.1 },
+      { id:'prop_sofa_batch', cell:'N5', scale:1.0 },
+      { id:'prop_rug_batch', cell:'N3', scale:1.2 },
+      { id:'prop_candle_batch', cell:'B3', scale:0.9 },
+      { id:'prop_candle_batch', cell:'O3', scale:0.9 },
+    ],
+    ground:[
+      { id:'prop_pottedplant_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'playful', id:'env_roller_rink_cosmos', name:'Roller Rink Cosmos',
     tags:['playful','disco','rink','cyan-pink'],
     description:'A mirror-ball roller rink: hot-pink and cyan shafts carve a starfield floor.',
@@ -380,7 +647,18 @@ const BATCH = [
       dirColor:'#ff2890', dirIntensity:1.0,
       fogEnabled:true, fogColor:'#0a0a28', fogDensity:0.03,
       orbVisible:true, orbColor:'#28e4ff', orbIntensity:2.4, orbHeight:2.8, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_magic_orb_batch', cell:'N3', scale:1.3 },
+      { id:'prop_lamppost_batch', cell:'B1', scale:1.1 },
+      { id:'prop_lamppost_batch', cell:'O1', scale:1.1 },
+      { id:'prop_lamppost_batch', cell:'B5', scale:1.1 },
+      { id:'prop_lamppost_batch', cell:'O5', scale:1.1 },
+    ],
+    ground:[
+      { id:'prop_magic_orb_batch', mode:'scatter', density:'low' },
+    ]},
+
   { folder:'playful', id:'env_carnival_twilight', name:'Carnival Twilight',
     tags:['playful','carnival','amber','cotton-candy'],
     description:'A royal-blue fairground at twilight, gold lamps and candy-pink bunting everywhere.',
@@ -394,11 +672,27 @@ const BATCH = [
       dirColor:'#ffbc58', dirIntensity:1.1,
       fogEnabled:true, fogColor:'#281848', fogDensity:0.02,
       orbVisible:true, orbColor:'#ffc058', orbIntensity:2.0, orbHeight:2.6, orbFlicker:true,
-    }},
+    },
+    stage:[
+      { id:'prop_tent', cell:'N1', scale:1.2 },
+      { id:'prop_lamppost_batch', cell:'B1', scale:1.0 },
+      { id:'prop_lamppost_batch', cell:'O1', scale:1.0 },
+      { id:'prop_rainbow_arch', cell:'N3', scale:1.2 },
+      { id:'prop_park_bench', cell:'B5', scale:1.0 },
+    ],
+    ground:[
+      { id:'prop_tent', mode:'scatter', density:'med' },
+      { id:'prop_lamppost_batch', mode:'scatter', density:'med' },
+    ]},
 ];
 
 // ── Build file JSON ─────────────────────────────────────────────
 function buildAsset(spec) {
+  const state = {
+    ...spec.state,
+    stageItems:    stageArr(spec.stage),
+    groundObjects: groundArr(spec.ground),
+  };
   return {
     id: spec.id,
     type: 'environment',
@@ -413,20 +707,21 @@ function buildAsset(spec) {
     payload: {
       description: spec.description,
       format: 'environment_state',
-      state: spec.state,
+      state,
     },
   };
 }
 
-// ── Write files ────────────────────────────────────────────────
 for (const spec of BATCH) {
   const catDir = path.join(BASE, spec.folder);
   if (!fs.existsSync(catDir)) fs.mkdirSync(catDir, { recursive: true });
-  const filePath = path.join(catDir, `${spec.id}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(buildAsset(spec), null, 2) + '\n');
+  fs.writeFileSync(
+    path.join(catDir, `${spec.id}.json`),
+    JSON.stringify(buildAsset(spec), null, 2) + '\n',
+  );
 }
 
-// ── Rebuild manifest by scanning every category folder ─────────
+// Rebuild manifest by scanning folders
 const categories = {};
 const folders = fs.readdirSync(BASE, { withFileTypes: true })
   .filter(e => e.isDirectory())
@@ -446,12 +741,9 @@ for (const folder of folders) {
 
 fs.writeFileSync(
   path.join(BASE, 'manifest.json'),
-  JSON.stringify({ categories }, null, 4) + '\n'
+  JSON.stringify({ categories }, null, 4) + '\n',
 );
 
 const total = Object.values(categories).reduce((s, c) => s + c.count, 0);
-console.log(`Wrote ${BATCH.length} new batch-1 envs.`);
-console.log(`Manifest now lists ${total} envs across ${Object.keys(categories).length} categories:`);
-for (const [key, cat] of Object.entries(categories)) {
-  console.log(`  ${key.padEnd(20)} ${String(cat.count).padStart(2)}  (${cat.name})`);
-}
+console.log(`Wrote ${BATCH.length} batch-1 envs with stage + ground dressing.`);
+console.log(`Manifest: ${total} envs across ${Object.keys(categories).length} categories.`);

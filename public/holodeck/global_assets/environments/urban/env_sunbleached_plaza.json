@@ -9,8 +9,8 @@
     "dusty"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -40,7 +40,64 @@
       "fogEnabled": true,
       "fogColor": "#e0b890",
       "fogDensity": 0.015,
-      "orbVisible": false
+      "orbVisible": false,
+      "stageItems": [
+        {
+          "assetId": "prop_fountain",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_planter",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_planter",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_planter",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

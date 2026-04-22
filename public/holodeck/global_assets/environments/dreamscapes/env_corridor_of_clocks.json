@@ -9,8 +9,8 @@
     "cyan"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -41,7 +41,64 @@
       "orbColor": "#44eaf0",
       "orbIntensity": 1.8,
       "orbHeight": 2.4,
-      "orbFlicker": true
+      "orbFlicker": true,
+      "stageItems": [
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

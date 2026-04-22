@@ -9,8 +9,8 @@
     "mauve"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -42,7 +42,64 @@
       "orbColor": "#e8d8f4",
       "orbIntensity": 1.2,
       "orbHeight": 2.2,
-      "orbFlicker": false
+      "orbFlicker": false,
+      "stageItems": [
+        {
+          "assetId": "prop_pond_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.5,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pond_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_obelisk",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

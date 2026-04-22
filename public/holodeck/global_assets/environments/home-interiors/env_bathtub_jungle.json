@@ -9,8 +9,8 @@
     "green"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -37,7 +37,64 @@
       "fogEnabled": true,
       "fogColor": "#e8f0e0",
       "fogDensity": 0.03,
-      "orbVisible": false
+      "orbVisible": false,
+      "stageItems": [
+        {
+          "assetId": "prop_palm_tree",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_palm_tree",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }

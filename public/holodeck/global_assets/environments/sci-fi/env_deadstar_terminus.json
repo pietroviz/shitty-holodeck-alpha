@@ -9,8 +9,8 @@
     "void"
   ],
   "meta": {
-    "created": "2026-04-22T04:29:22.372Z",
-    "modified": "2026-04-22T04:29:22.372Z",
+    "created": "2026-04-22T04:57:30.599Z",
+    "modified": "2026-04-22T04:57:30.599Z",
     "origin": "template",
     "version": 1
   },
@@ -41,7 +41,64 @@
       "orbColor": "#ff6020",
       "orbIntensity": 1.6,
       "orbHeight": 2.4,
-      "orbFlicker": true
+      "orbFlicker": true,
+      "stageItems": [
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fire_pit",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dumpster",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_scaffold",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
     }
   }
 }
