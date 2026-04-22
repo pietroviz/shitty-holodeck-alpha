@@ -1,0 +1,49 @@
+{
+  "id": "voice_russian_female",
+  "type": "voice",
+  "name": "Russian (Female)",
+  "tags": [
+    "accented",
+    "russian",
+    "eastern-european"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — greetings. i speak with deep eastern accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "pl",
+      "variant": "f2",
+      "speed": 140,
+      "pitch": 60,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#b55e64",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#d8c09e",
+      "scalpColor": "#5a4030",
+      "captionSize": 18,
+      "presetKey": "russian_female",
+      "previewText": "Greetings. I speak with deep Eastern accent."
+    }
+  }
+}

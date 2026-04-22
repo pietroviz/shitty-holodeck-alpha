@@ -1,0 +1,49 @@
+{
+  "id": "voice_french_female",
+  "type": "voice",
+  "name": "French (Female)",
+  "tags": [
+    "accented",
+    "french",
+    "romance"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — bonjour! i speak with a french accent, of course.",
+    "format": "voice_state",
+    "state": {
+      "language": "fr",
+      "variant": "f3",
+      "speed": 158,
+      "pitch": 70,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#c45e6e",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#ead0b4",
+      "scalpColor": "#3a2a20",
+      "captionSize": 18,
+      "presetKey": "french_female",
+      "previewText": "Bonjour! I speak with a French accent, of course."
+    }
+  }
+}

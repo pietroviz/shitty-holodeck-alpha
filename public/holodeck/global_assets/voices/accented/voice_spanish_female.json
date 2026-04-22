@@ -1,0 +1,49 @@
+{
+  "id": "voice_spanish_female",
+  "type": "voice",
+  "name": "Spanish (Female)",
+  "tags": [
+    "accented",
+    "spanish",
+    "romance"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — hola! i speak with a warm spanish accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "es",
+      "variant": "f3",
+      "speed": 170,
+      "pitch": 70,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#c25c62",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#dcbd9a",
+      "scalpColor": "#2a2018",
+      "captionSize": 18,
+      "presetKey": "spanish_female",
+      "previewText": "Hola! I speak with a warm Spanish accent."
+    }
+  }
+}

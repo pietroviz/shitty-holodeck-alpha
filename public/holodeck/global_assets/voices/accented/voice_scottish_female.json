@@ -1,0 +1,50 @@
+{
+  "id": "voice_scottish_female",
+  "type": "voice",
+  "name": "Scottish (Female)",
+  "tags": [
+    "accented",
+    "scottish",
+    "english",
+    "celtic"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — och aye! i speak with a fine scottish lilt.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-sc",
+      "variant": "f3",
+      "speed": 155,
+      "pitch": 65,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#bb6f77",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e8d0b4",
+      "scalpColor": "#8a4a28",
+      "captionSize": 18,
+      "presetKey": "scottish_female",
+      "previewText": "Och aye! I speak with a fine Scottish lilt."
+    }
+  }
+}

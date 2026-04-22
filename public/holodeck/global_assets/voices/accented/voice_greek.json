@@ -1,0 +1,49 @@
+{
+  "id": "voice_greek",
+  "type": "voice",
+  "name": "Greek",
+  "tags": [
+    "accented",
+    "greek",
+    "mediterranean"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Greek voice — yassas! i speak with a greek accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "el",
+      "variant": "m3",
+      "speed": 160,
+      "pitch": 48,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#a8585e",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#d8b088",
+      "scalpColor": "#201810",
+      "captionSize": 18,
+      "presetKey": "greek",
+      "previewText": "Yassas! I speak with a Greek accent."
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "voice_turkish",
+  "type": "voice",
+  "name": "Turkish",
+  "tags": [
+    "accented",
+    "turkish",
+    "anatolian"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Turkish voice — merhaba. i speak with a turkish accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "tr",
+      "variant": "m3",
+      "speed": 155,
+      "pitch": 48,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#a8545a",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#d0a878",
+      "scalpColor": "#1a1210",
+      "captionSize": 18,
+      "presetKey": "turkish",
+      "previewText": "Merhaba. I speak with a Turkish accent."
+    }
+  }
+}

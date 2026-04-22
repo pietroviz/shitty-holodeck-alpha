@@ -1,0 +1,50 @@
+{
+  "id": "voice_cantonese",
+  "type": "voice",
+  "name": "Cantonese",
+  "tags": [
+    "accented",
+    "chinese",
+    "cantonese",
+    "east-asian"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Cantonese voice — nei hou. i speak with a cantonese accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "zh-yue",
+      "variant": "m3",
+      "speed": 155,
+      "pitch": 50,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#a8585e",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e5c798",
+      "scalpColor": "#1a1612",
+      "captionSize": 18,
+      "presetKey": "cantonese",
+      "previewText": "Nei hou. I speak with a Cantonese accent."
+    }
+  }
+}

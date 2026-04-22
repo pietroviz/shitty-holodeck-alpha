@@ -1,0 +1,50 @@
+{
+  "id": "voice_italian_female",
+  "type": "voice",
+  "name": "Italian (Female)",
+  "tags": [
+    "accented",
+    "italian",
+    "romance",
+    "expressive"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — ciao! i speak with a passionate italian accent.",
+    "format": "voice_state",
+    "state": {
+      "language": "it",
+      "variant": "f3",
+      "speed": 165,
+      "pitch": 72,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#c35c66",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e5ccae",
+      "scalpColor": "#2e241c",
+      "captionSize": 18,
+      "presetKey": "italian_female",
+      "previewText": "Ciao! I speak with a passionate Italian accent."
+    }
+  }
+}

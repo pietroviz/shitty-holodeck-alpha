@@ -22,18 +22,23 @@ import { generateHeadGeometry } from '../shared/headShapes.js';
 import { makeEyeTexture } from '../shared/eyeTexture.js';
 import { createTwoZoneMaterial } from '../shared/materials.js';
 
-/* ── Language options ─────────────────────────────── */
+/* ── Native-tongue options (limited to what meSpeak actually ships) ── */
 const LANGUAGES = [
     ['en/en-us', 'English (US)'],    ['en/en',    'English (UK)'],
     ['en/en-rp', 'English (RP)'],    ['en/en-sc', 'English (Scottish)'],
+    ['en/en-n',  'English (Northern)'], ['en/en-wm', 'English (W. Midlands)'],
     ['fr',       'French'],          ['de',       'German'],
     ['es',       'Spanish'],         ['es-la',    'Spanish (Latin Am.)'],
     ['it',       'Italian'],         ['pt',       'Portuguese'],
-    ['nl',       'Dutch'],           ['sv',       'Swedish'],
+    ['pt-pt',    'Portuguese (PT)'], ['nl',       'Dutch'],
+    ['sv',       'Swedish'],         ['fi',       'Finnish'],
     ['pl',       'Polish'],          ['ro',       'Romanian'],
     ['hu',       'Hungarian'],       ['cs',       'Czech'],
-    ['fi',       'Finnish'],         ['tr',       'Turkish'],
-    ['el',       'Greek'],           ['eo',       'Esperanto'],
+    ['sk',       'Slovak'],          ['tr',       'Turkish'],
+    ['el',       'Greek'],           ['ca',       'Catalan'],
+    ['lv',       'Latvian'],         ['la',       'Latin'],
+    ['eo',       'Esperanto'],       ['zh',       'Mandarin Chinese'],
+    ['zh-yue',   'Cantonese'],       ['kn',       'Kannada (S. Indian)'],
 ];
 
 const TABS = [
@@ -291,7 +296,7 @@ export class VoiceBridge extends BaseBridge {
 
         return `
             <div class="cb-section">
-                <div class="cb-section-title">Language</div>
+                <div class="cb-section-title">Native Tongue</div>
                 <select class="vb-select" data-prop="language">${langOpts}</select>
             </div>
             <div class="cb-section">

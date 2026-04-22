@@ -1,0 +1,50 @@
+{
+  "id": "voice_british_female",
+  "type": "voice",
+  "name": "British (Female)",
+  "tags": [
+    "accented",
+    "british",
+    "english",
+    "refined"
+  ],
+  "meta": {
+    "created": "2026-04-21",
+    "modified": "2026-04-21",
+    "origin": "preset",
+    "creator": "system",
+    "version": 1,
+    "thumbnail": null
+  },
+  "payload": {
+    "description": "Female version — good day! i speak with proper british received pronunciation.",
+    "format": "voice_state",
+    "state": {
+      "language": "en/en-rp",
+      "variant": "f3",
+      "speed": 160,
+      "pitch": 68,
+      "volume": 100,
+      "amplitude": 100,
+      "wordgap": 1,
+      "reverb": 0,
+      "wobble": 0,
+      "wobbleSpeed": 5,
+      "brightness": 0,
+      "vocalFry": 0,
+      "chorus": 0,
+      "mouthSnappiness": 80,
+      "audioLead": 25,
+      "lipColor": "#c57a85",
+      "lipThickness": 3,
+      "showLips": true,
+      "showTeeth": true,
+      "showTongue": true,
+      "faceColor": "#e6cfb8",
+      "scalpColor": "#6a4a30",
+      "captionSize": 18,
+      "presetKey": "british_female",
+      "previewText": "Good day! I speak with proper British received pronunciation."
+    }
+  }
+}
