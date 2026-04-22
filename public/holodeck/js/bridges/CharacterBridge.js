@@ -620,7 +620,6 @@ export class CharacterBridge extends BaseBridge {
                     wobble: preset?.wobble ?? 0,
                     wobbleSpeed: preset?.wobbleSpeed ?? 5,
                     brightness: preset?.brightness ?? 0,
-                    breathiness: preset?.breathiness ?? 0,
                     vocalFry: preset?.vocalFry ?? 0,
                     chorus: preset?.chorus ?? 0,
                     mouthSnappiness: 85,

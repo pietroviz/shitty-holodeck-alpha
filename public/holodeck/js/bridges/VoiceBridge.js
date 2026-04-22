@@ -70,7 +70,6 @@ export class VoiceBridge extends BaseBridge {
             wobble:      d.wobble      ?? VOICE_DEFAULTS.effects.wobble,
             wobbleSpeed: d.wobbleSpeed ?? VOICE_DEFAULTS.effects.wobbleSpeed,
             brightness:  d.brightness  ?? VOICE_DEFAULTS.effects.brightness,
-            breathiness: d.breathiness ?? VOICE_DEFAULTS.effects.breathiness,
             vocalFry:    d.vocalFry    ?? VOICE_DEFAULTS.effects.vocalFry,
             chorus:      d.chorus      ?? VOICE_DEFAULTS.effects.chorus,
             // Mouth
@@ -330,7 +329,6 @@ export class VoiceBridge extends BaseBridge {
                 ${_slider('Wobble', 'wobble', s.wobble, 0, 100, 1, '')}
                 ${_slider('Wobble Speed', 'wobbleSpeed', s.wobbleSpeed, 1, 20, 0.5, ' Hz')}
                 ${_slider('Brightness', 'brightness', s.brightness, -100, 100, 1, '')}
-                ${_slider('Breathiness', 'breathiness', s.breathiness, 0, 100, 1, '')}
                 ${_slider('Vocal Fry', 'vocalFry', s.vocalFry, 0, 100, 1, '')}
                 ${_slider('Chorus', 'chorus', s.chorus, 0, 100, 1, '')}
                 <p class="vb-hint">Post-processing effects applied after synthesis. Set all to 0 for clean output.</p>
@@ -417,7 +415,6 @@ export class VoiceBridge extends BaseBridge {
                 this._state.wobble = preset.wobble;
                 this._state.wobbleSpeed = preset.wobbleSpeed;
                 this._state.brightness = preset.brightness;
-                this._state.breathiness = preset.breathiness;
                 this._state.vocalFry = preset.vocalFry;
                 this._state.chorus = preset.chorus;
                 // Apply to engine
@@ -528,7 +525,6 @@ export class VoiceBridge extends BaseBridge {
             case 'wobble':      eng.setWobble(val); break;
             case 'wobbleSpeed': eng.setWobbleSpeed(val); break;
             case 'brightness':  eng.setBrightness(val); break;
-            case 'breathiness': eng.setBreathiness(val); break;
             case 'vocalFry':    eng.setVocalFry(val); break;
             case 'chorus':      eng.setChorus(val); break;
             case 'lipThickness':

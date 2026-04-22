@@ -235,11 +235,6 @@ class AudioEffectChain {
         this.nodes = {};
         this.ready = false;
         this.values = { ...VOICE_DEFAULTS.effects };
-        // Target gain for the breath-noise bus. Stored separately so
-        // setBreathiness() can remember the user's setting without
-        // pushing noise through to output while no voice is speaking.
-        this._breathTarget = 0;
-        this._speaking = false;
     }
 
     init(ctx) {
@@ -255,11 +250,6 @@ class AudioEffectChain {
         this.nodes.wobbleLfo.connect(this.nodes.wobbleTremoloDepth);
         this.nodes.wobbleTremoloDepth.connect(this.nodes.wobbleGain.gain);
         this.nodes.wobbleLfo.start();
-        this.nodes.breathGain = ctx.createGain(); this.nodes.breathGain.gain.value = 0;
-        this.nodes.breathFilter = ctx.createBiquadFilter(); this.nodes.breathFilter.type = 'bandpass'; this.nodes.breathFilter.frequency.value = 2500; this.nodes.breathFilter.Q.value = 0.8;
-        this._createNoiseSource();
-        this.nodes.noiseSource.connect(this.nodes.breathFilter);
-        this.nodes.breathFilter.connect(this.nodes.breathGain);
         this.nodes.fryGain = ctx.createGain(); this.nodes.fryGain.gain.value = 1;
         this.nodes.fryLfo = ctx.createOscillator(); this.nodes.fryLfo.type = 'sine'; this.nodes.fryLfo.frequency.value = 50;
         this.nodes.fryDepth = ctx.createGain(); this.nodes.fryDepth.gain.value = 0;
@@ -279,7 +269,7 @@ class AudioEffectChain {
         this.nodes.reverbMerge.connect(this.nodes.fryGain); this.nodes.fryGain.connect(this.nodes.wobbleGain);
         this.nodes.wobbleGain.connect(this.nodes.chorusDry); this.nodes.wobbleGain.connect(this.nodes.chorusWet);
         this.nodes.chorusWet.connect(this.nodes.chorusDelay); this.nodes.chorusDry.connect(this.nodes.chorusMerge); this.nodes.chorusDelay.connect(this.nodes.chorusMerge);
-        this.nodes.breathGain.connect(this.nodes.chorusMerge); this.nodes.chorusMerge.connect(this.nodes.volume); this.nodes.volume.connect(ctx.destination);
+        this.nodes.chorusMerge.connect(this.nodes.volume); this.nodes.volume.connect(ctx.destination);
         this.ready = true;
     }
 
@@ -297,52 +287,9 @@ class AudioEffectChain {
     setReverb(val) { if (!this.ready) return; this.values.reverb = val; const wet = val / 100; this.nodes.reverbDry.gain.value = 1 - wet * 0.5; this.nodes.reverbWet.gain.value = wet; }
     setWobble(val) { if (!this.ready) return; this.values.wobble = val; this.nodes.wobbleTremoloDepth.gain.value = (val / 100) * 0.6; }
     setWobbleSpeed(hz) { if (!this.ready) return; this.values.wobbleSpeed = hz; this.nodes.wobbleLfo.frequency.value = hz; }
-    setBreathiness(val) {
-        if (!this.ready) return;
-        this.values.breathiness = val;
-        this._breathTarget = (val / 100) * 0.35;
-        // Only push gain out live if we're actively speaking. Otherwise the
-        // pink-noise loop bleeds to the output as constant "fuzz" whenever
-        // a voice preset is loaded with breathiness > 0.
-        this.nodes.breathGain.gain.value = this._speaking ? this._breathTarget : 0;
-    }
-    // Fade the breath noise in at the start of a sentence.
-    startBreath() {
-        this._speaking = true;
-        if (!this.ready || this._breathTarget <= 0) return;
-        const g = this.nodes.breathGain.gain;
-        const t = this.ctx.currentTime;
-        g.cancelScheduledValues(t);
-        g.setValueAtTime(0, t);
-        g.linearRampToValueAtTime(this._breathTarget, t + 0.03);
-    }
-    // Fade the breath noise out when speech ends / is stopped.
-    stopBreath() {
-        this._speaking = false;
-        if (!this.ready) return;
-        const g = this.nodes.breathGain.gain;
-        const t = this.ctx.currentTime;
-        g.cancelScheduledValues(t);
-        g.linearRampToValueAtTime(0, t + 0.05);
-    }
     setVocalFry(val) { if (!this.ready) return; this.values.vocalFry = val; this.nodes.fryDepth.gain.value = (val / 100) * 0.7; this.nodes.fryLfo.frequency.value = 30 + (val / 100) * 50; }
     setChorus(val) { if (!this.ready) return; this.values.chorus = val; const wet = val / 100; this.nodes.chorusDry.gain.value = 1; this.nodes.chorusWet.gain.value = wet * 0.7; this.nodes.chorusLfoDepth.gain.value = 0.002 + wet * 0.005; }
-    applyPresetEffects(preset) { this.setReverb(preset.reverb); this.setWobble(preset.wobble); this.setWobbleSpeed(preset.wobbleSpeed); this.setBrightness(preset.brightness); this.setBreathiness(preset.breathiness); this.setVocalFry(preset.vocalFry); this.setChorus(preset.chorus); }
-
-    _createNoiseSource() {
-        const sr = this.ctx.sampleRate, len = sr * 2;
-        const buf = this.ctx.createBuffer(1, len, sr);
-        const d = buf.getChannelData(0);
-        let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-        for (let i = 0; i < len; i++) {
-            const w = Math.random()*2-1;
-            b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759; b2=0.96900*b2+w*0.1538520;
-            b3=0.86650*b3+w*0.3104856; b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
-            d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11; b6=w*0.115926;
-        }
-        const src = this.ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.start();
-        this.nodes.noiseSource = src;
-    }
+    applyPresetEffects(preset) { this.setReverb(preset.reverb); this.setWobble(preset.wobble); this.setWobbleSpeed(preset.wobbleSpeed); this.setBrightness(preset.brightness); this.setVocalFry(preset.vocalFry); this.setChorus(preset.chorus); }
 
     _buildImpulseResponse(duration) {
         const sr = this.ctx.sampleRate, len = sr * duration;
@@ -501,12 +448,11 @@ export class VoiceEngine {
             if (this.currentSource) { try { this.currentSource.stop(); } catch(e){} }
             this.currentSource = source;
             source.onended = () => { this.currentSource = null; this._finishSpeaking(); };
-            this.effectChain.startBreath();
             source.start(0);
         } catch (err) { console.error('[VoiceEngine] Speak error:', err); this._finishSpeaking(); }
     }
 
-    _finishSpeaking() { this.isSpeaking = false; this.effectChain.stopBreath(); this.visemeEngine.stop(); if (this.onSpeakEnd) this.onSpeakEnd(); }
+    _finishSpeaking() { this.isSpeaking = false; this.visemeEngine.stop(); if (this.onSpeakEnd) this.onSpeakEnd(); }
     stop() { if (this.currentSource) { try { this.currentSource.stop(); } catch(e){} this.currentSource = null; } this._finishSpeaking(); }
     update(dtMs) { this.visemeEngine.update(dtMs); }
     getVisemeParams() { return this.visemeEngine.getParams(); }
@@ -528,7 +474,6 @@ export class VoiceEngine {
     setWobble(v)      { this._getAudioCtx(); this.effectChain.setWobble(v); }
     setWobbleSpeed(v) { this._getAudioCtx(); this.effectChain.setWobbleSpeed(v); }
     setBrightness(v)  { this._getAudioCtx(); this.effectChain.setBrightness(v); }
-    setBreathiness(v) { this._getAudioCtx(); this.effectChain.setBreathiness(v); }
     setVocalFry(v)    { this._getAudioCtx(); this.effectChain.setVocalFry(v); }
     setChorus(v)      { this._getAudioCtx(); this.effectChain.setChorus(v); }
 
@@ -557,7 +502,6 @@ export class VoiceEngine {
         if (s.wobble != null)      this.effectChain.setWobble(s.wobble);
         if (s.wobbleSpeed != null)  this.effectChain.setWobbleSpeed(s.wobbleSpeed);
         if (s.brightness != null)   this.effectChain.setBrightness(s.brightness);
-        if (s.breathiness != null)  this.effectChain.setBreathiness(s.breathiness);
         if (s.vocalFry != null)     this.effectChain.setVocalFry(s.vocalFry);
         if (s.chorus != null)       this.effectChain.setChorus(s.chorus);
     }

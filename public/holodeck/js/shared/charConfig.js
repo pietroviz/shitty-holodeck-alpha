@@ -299,20 +299,20 @@ export const LETTER_MAP = {
 
 // ── Voice Presets ────────────────────────────────────
 export const VOICE_PRESETS = {
-    'narrator':  { label: 'Narrator',  variant: 'm3',       pitch: 40, speed: 155, amplitude: 100, wordgap: 1,  reverb: 0, wobble: 0,  wobbleSpeed: 5,  brightness: 0,   breathiness: 0,  vocalFry: 0,  chorus: 0 },
-    'male':      { label: 'Male',      variant: 'm2',       pitch: 35, speed: 170, amplitude: 110, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,   breathiness: 0,  vocalFry: 0,  chorus: 0 },
-    'female':    { label: 'Female',    variant: 'f2',       pitch: 60, speed: 170, amplitude: 100, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,   breathiness: 0, vocalFry: 0,  chorus: 0 },
-    'child':     { label: 'Child',     variant: 'f1',       pitch: 85, speed: 200, amplitude: 100, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,  breathiness: 0,  vocalFry: 0,  chorus: 0 },
-    'robot':     { label: 'Robot',     variant: 'klatt3',   pitch: 50, speed: 140, amplitude: 100, wordgap: 2,  reverb: 0, wobble: 0,  wobbleSpeed: 5,  brightness: 0,  breathiness: 0,  vocalFry: 0,  chorus: 0 },
-    'alien':     { label: 'Alien',     variant: 'klatt2',   pitch: 90, speed: 200, amplitude: 80,  wordgap: 0,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0,  breathiness: 0,  vocalFry: 0,  chorus: 0 },
-    'demon':     { label: 'Demon',     variant: 'm7',       pitch: 5,  speed: 90,  amplitude: 140, wordgap: 4,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0, breathiness: 0,  vocalFry: 0, chorus: 0 },
-    'ghost':     { label: 'Ghost',     variant: 'whisperf', pitch: 60, speed: 130, amplitude: 40,  wordgap: 6,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0, breathiness: 0, vocalFry: 0,  chorus: 0 },
-    'fairy':     { label: 'Fairy',     variant: 'f5',       pitch: 95, speed: 210, amplitude: 60,  wordgap: 0,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0,  breathiness: 0, vocalFry: 0,  chorus: 0 },
+    'narrator':  { label: 'Narrator',  variant: 'm3',       pitch: 40, speed: 155, amplitude: 100, wordgap: 1,  reverb: 0, wobble: 0,  wobbleSpeed: 5,  brightness: 0,   vocalFry: 0,  chorus: 0 },
+    'male':      { label: 'Male',      variant: 'm2',       pitch: 35, speed: 170, amplitude: 110, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,   vocalFry: 0,  chorus: 0 },
+    'female':    { label: 'Female',    variant: 'f2',       pitch: 60, speed: 170, amplitude: 100, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,   vocalFry: 0,  chorus: 0 },
+    'child':     { label: 'Child',     variant: 'f1',       pitch: 85, speed: 200, amplitude: 100, wordgap: 0,  reverb: 0,  wobble: 0,  wobbleSpeed: 5,  brightness: 0,  vocalFry: 0,  chorus: 0 },
+    'robot':     { label: 'Robot',     variant: 'klatt3',   pitch: 50, speed: 140, amplitude: 100, wordgap: 2,  reverb: 0, wobble: 0,  wobbleSpeed: 5,  brightness: 0,  vocalFry: 0,  chorus: 0 },
+    'alien':     { label: 'Alien',     variant: 'klatt2',   pitch: 90, speed: 200, amplitude: 80,  wordgap: 0,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0,  vocalFry: 0,  chorus: 0 },
+    'demon':     { label: 'Demon',     variant: 'm7',       pitch: 5,  speed: 90,  amplitude: 140, wordgap: 4,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0, vocalFry: 0, chorus: 0 },
+    'ghost':     { label: 'Ghost',     variant: 'whisperf', pitch: 60, speed: 130, amplitude: 40,  wordgap: 6,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0, vocalFry: 0,  chorus: 0 },
+    'fairy':     { label: 'Fairy',     variant: 'f5',       pitch: 95, speed: 210, amplitude: 60,  wordgap: 0,  reverb: 0, wobble: 0, wobbleSpeed: 5,  brightness: 0,  vocalFry: 0,  chorus: 0 },
 };
 
 export const VOICE_DEFAULTS = {
     params: { speed: 175, pitch: 50, volume: 100, amplitude: 100, wordgap: 0 },
-    effects: { reverb: 0, wobble: 0, wobbleSpeed: 5, brightness: 0, breathiness: 0, vocalFry: 0, chorus: 0 },
+    effects: { reverb: 0, wobble: 0, wobbleSpeed: 5, brightness: 0, vocalFry: 0, chorus: 0 },
 };
 
 // ── Prop scale references ──────────────────────────────
