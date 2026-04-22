@@ -1,0 +1,50 @@
+{
+  "id": "env_carnival_twilight",
+  "type": "environment",
+  "name": "Carnival Twilight",
+  "tags": [
+    "playful",
+    "carnival",
+    "amber",
+    "cotton-candy"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A royal-blue fairground at twilight, gold lamps and candy-pink bunting everywhere.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a2458",
+      "stageColor": "#ffb430",
+      "wallColor": "#ff6898",
+      "groundSize": 23,
+      "walls": 2,
+      "windowStyle": "double",
+      "windowColor": "#ffd860",
+      "windowOpacity": 0.7,
+      "skyTop": "#0a0838",
+      "skyMid": "#4028a0",
+      "skyBot": "#ffac48",
+      "fxPreset": "dusk",
+      "sunColor": "#ffa030",
+      "sunElevation": 10,
+      "sunVisible": true,
+      "ambientColor": "#604090",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffbc58",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#281848",
+      "fogDensity": 0.02,
+      "orbVisible": true,
+      "orbColor": "#ffc058",
+      "orbIntensity": 2,
+      "orbHeight": 2.6,
+      "orbFlicker": true
+    }
+  }
+}

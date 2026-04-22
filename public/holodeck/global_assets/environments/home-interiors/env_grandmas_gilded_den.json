@@ -1,0 +1,45 @@
+{
+  "id": "env_grandmas_gilded_den",
+  "type": "environment",
+  "name": "Grandma's Gilded Den",
+  "tags": [
+    "home",
+    "vintage",
+    "rust",
+    "gold"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A rust-velvet sitting room dripping with gold trim, doilies, and the smell of butter.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#7a3828",
+      "stageColor": "#c88040",
+      "wallColor": "#a04028",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffd880",
+      "windowOpacity": 0.45,
+      "skyTop": "#2a1008",
+      "skyMid": "#5a2818",
+      "skyBot": "#a85024",
+      "fxPreset": "night",
+      "ambientColor": "#c06030",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffb860",
+      "dirIntensity": 0.7,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb458",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.2,
+      "orbFlicker": false
+    }
+  }
+}

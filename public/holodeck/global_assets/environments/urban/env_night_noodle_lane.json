@@ -1,0 +1,48 @@
+{
+  "id": "env_night_noodle_lane",
+  "type": "environment",
+  "name": "Night Noodle Lane",
+  "tags": [
+    "urban",
+    "lanterns",
+    "rain",
+    "crimson"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A narrow crimson-lantern alley, rain sizzling off steam carts — chopsticks click.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#181010",
+      "stageColor": "#3a1a1a",
+      "wallColor": "#2a1214",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ff3040",
+      "windowOpacity": 0.6,
+      "skyTop": "#080404",
+      "skyMid": "#301014",
+      "skyBot": "#601820",
+      "fxPreset": "night",
+      "ambientColor": "#441820",
+      "ambientIntensity": 0.8,
+      "dirColor": "#ff4050",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#2a1014",
+      "fogDensity": 0.05,
+      "weather": "rain",
+      "orbVisible": true,
+      "orbColor": "#ff4050",
+      "orbIntensity": 2,
+      "orbHeight": 2.6,
+      "orbFlicker": true
+    }
+  }
+}

@@ -1,10 +1,112 @@
 {
     "categories": {
+        "dreamscapes": {
+            "name": "Dreamscapes",
+            "count": 6,
+            "files": [
+                "env_cloud_palace.json",
+                "env_corridor_of_clocks.json",
+                "env_gravity_well.json",
+                "env_infinite_library.json",
+                "env_mirror_lake.json",
+                "env_pool_of_mirrors.json"
+            ]
+        },
+        "fantasy": {
+            "name": "Fantasy Realms",
+            "count": 6,
+            "files": [
+                "env_dragon_lair.json",
+                "env_dragons_anvil.json",
+                "env_elven_canopy.json",
+                "env_enchanted_grove.json",
+                "env_floating_islands.json",
+                "env_rift_of_whispers.json"
+            ]
+        },
+        "holy-places": {
+            "name": "Sacred Places",
+            "count": 4,
+            "files": [
+                "env_ancient_temple.json",
+                "env_moon_altar.json",
+                "env_sandstone_labyrinth.json",
+                "env_zen_garden.json"
+            ]
+        },
+        "home-interiors": {
+            "name": "Home Interiors",
+            "count": 5,
+            "files": [
+                "env_attic_of_forgotten_toys.json",
+                "env_bathtub_jungle.json",
+                "env_cozy_living_room.json",
+                "env_grandmas_gilded_den.json",
+                "env_modern_kitchen.json"
+            ]
+        },
+        "nature": {
+            "name": "Nature & Wild",
+            "count": 7,
+            "files": [
+                "env_desert_dunes.json",
+                "env_forest_clearing.json",
+                "env_frost_basin.json",
+                "env_kelp_cathedral.json",
+                "env_lava_cliffs.json",
+                "env_mountain_peak.json",
+                "env_ocean_shore.json"
+            ]
+        },
+        "office-interiors": {
+            "name": "Work Spaces",
+            "count": 4,
+            "files": [
+                "env_corner_office.json",
+                "env_ink_basement.json",
+                "env_potters_clay_hut.json",
+                "env_startup_loft.json"
+            ]
+        },
+        "playful": {
+            "name": "Playful Spaces",
+            "count": 4,
+            "files": [
+                "env_bowling_arcade.json",
+                "env_carnival_twilight.json",
+                "env_pillow_fort_nebula.json",
+                "env_roller_rink_cosmos.json"
+            ]
+        },
+        "sci-fi": {
+            "name": "Sci-Fi Frontiers",
+            "count": 6,
+            "files": [
+                "env_alien_landscape.json",
+                "env_deadstar_terminus.json",
+                "env_hydroponic_dome.json",
+                "env_neon_district.json",
+                "env_neon_docking_bay.json",
+                "env_space_station.json"
+            ]
+        },
         "templates": {
             "name": "Templates",
             "count": 1,
             "files": [
                 "env_default.json"
+            ]
+        },
+        "urban": {
+            "name": "Urban Life",
+            "count": 6,
+            "files": [
+                "env_city_plaza.json",
+                "env_night_noodle_lane.json",
+                "env_rainy_alley.json",
+                "env_rooftop_bar.json",
+                "env_subway_platform.json",
+                "env_sunbleached_plaza.json"
             ]
         }
     }

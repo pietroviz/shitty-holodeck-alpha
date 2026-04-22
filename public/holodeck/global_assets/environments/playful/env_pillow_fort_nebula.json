@@ -1,0 +1,45 @@
+{
+  "id": "env_pillow_fort_nebula",
+  "type": "environment",
+  "name": "Pillow Fort Nebula",
+  "tags": [
+    "playful",
+    "cozy",
+    "pastel",
+    "fairy-lights"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A marshmallow-pastel blanket fort glimmering with warm fairy lights — forever snug.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#ffd4e0",
+      "stageColor": "#d88cb0",
+      "wallColor": "#f8b8d0",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#ffe4b0",
+      "windowOpacity": 0.55,
+      "skyTop": "#603868",
+      "skyMid": "#d080a8",
+      "skyBot": "#ffd0dc",
+      "fxPreset": "dusk",
+      "ambientColor": "#f4a8c8",
+      "ambientIntensity": 1.2,
+      "dirColor": "#ffd8a0",
+      "dirIntensity": 0.8,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffd890",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.2,
+      "orbFlicker": true
+    }
+  }
+}

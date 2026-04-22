@@ -1,0 +1,44 @@
+{
+  "id": "env_hydroponic_dome",
+  "type": "environment",
+  "name": "Hydroponic Dome",
+  "tags": [
+    "sci-fi",
+    "biopod",
+    "green",
+    "clean"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Racks of chlorophyll-bright plantings under arc-white grow lamps — the farm ship lives.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#f0fff0",
+      "stageColor": "#30c848",
+      "wallColor": "#e4f4e8",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#a8ffb0",
+      "windowOpacity": 0.55,
+      "skyTop": "#d8f4dc",
+      "skyMid": "#a0e4a8",
+      "skyBot": "#f4fff4",
+      "fxPreset": "day",
+      "sunColor": "#ffffff",
+      "sunElevation": 80,
+      "sunVisible": false,
+      "ambientColor": "#ffffff",
+      "ambientIntensity": 1.4,
+      "dirColor": "#e8ffe0",
+      "dirIntensity": 1.2,
+      "fogEnabled": false,
+      "orbVisible": false
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "env_elven_canopy",
+  "type": "environment",
+  "name": "Elven Canopy",
+  "tags": [
+    "fantasy",
+    "elven",
+    "forest",
+    "gold"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An emerald cathedral of trees spangled with golden leaves and dust-shafted light.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#204018",
+      "stageColor": "#c89040",
+      "wallColor": "#3a6028",
+      "groundSize": 23,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#102818",
+      "skyMid": "#3c7040",
+      "skyBot": "#a8d878",
+      "fxPreset": "day",
+      "sunColor": "#fff0a0",
+      "sunElevation": 55,
+      "sunVisible": true,
+      "ambientColor": "#88b060",
+      "ambientIntensity": 1.1,
+      "dirColor": "#fff0a0",
+      "dirIntensity": 1.4,
+      "fogEnabled": false,
+      "weather": "leaves",
+      "orbVisible": true,
+      "orbColor": "#ffd868",
+      "orbIntensity": 1,
+      "orbHeight": 2.6,
+      "orbFlicker": false
+    }
+  }
+}

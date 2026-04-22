@@ -1,0 +1,47 @@
+{
+  "id": "env_deadstar_terminus",
+  "type": "environment",
+  "name": "Deadstar Terminus",
+  "tags": [
+    "sci-fi",
+    "dystopia",
+    "rust",
+    "void"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A rusted-iron platform ringed by a starless black void — the last stop on a decaying line.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#4a2818",
+      "stageColor": "#8c4020",
+      "wallColor": "#2a1810",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#ff8040",
+      "windowOpacity": 0.35,
+      "skyTop": "#020204",
+      "skyMid": "#0a0608",
+      "skyBot": "#1a1008",
+      "fxPreset": "night",
+      "ambientColor": "#5a2c14",
+      "ambientIntensity": 0.5,
+      "dirColor": "#ff8040",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#080608",
+      "fogDensity": 0.08,
+      "orbVisible": true,
+      "orbColor": "#ff6020",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.4,
+      "orbFlicker": true
+    }
+  }
+}

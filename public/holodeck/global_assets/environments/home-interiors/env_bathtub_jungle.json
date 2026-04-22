@@ -1,0 +1,43 @@
+{
+  "id": "env_bathtub_jungle",
+  "type": "environment",
+  "name": "Bathtub Jungle",
+  "tags": [
+    "home",
+    "bathroom",
+    "steam",
+    "green"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A cream-tile bathroom overrun by palm leaves, warm steam fogging the mirror.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#f4ece0",
+      "stageColor": "#e0d4c0",
+      "wallColor": "#88b460",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#a8d4c8",
+      "windowOpacity": 0.55,
+      "skyTop": "#c8dcc0",
+      "skyMid": "#e4f0d8",
+      "skyBot": "#f4faec",
+      "fxPreset": "flat",
+      "ambientColor": "#f4ece0",
+      "ambientIntensity": 1.3,
+      "dirColor": "#ffffff",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#e8f0e0",
+      "fogDensity": 0.03,
+      "orbVisible": false
+    }
+  }
+}

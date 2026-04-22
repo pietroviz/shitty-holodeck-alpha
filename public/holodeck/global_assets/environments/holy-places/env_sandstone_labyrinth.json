@@ -1,0 +1,44 @@
+{
+  "id": "env_sandstone_labyrinth",
+  "type": "environment",
+  "name": "Sandstone Labyrinth",
+  "tags": [
+    "sacred",
+    "labyrinth",
+    "ochre",
+    "sun"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An ochre maze carved under a blood-red sun — stone corridors hum with heat.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#c87c38",
+      "stageColor": "#a85820",
+      "wallColor": "#e0a060",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#501810",
+      "skyMid": "#b04420",
+      "skyBot": "#f08838",
+      "fxPreset": "dusk",
+      "sunColor": "#ff4828",
+      "sunElevation": 15,
+      "sunVisible": true,
+      "ambientColor": "#c06038",
+      "ambientIntensity": 1,
+      "dirColor": "#ff7040",
+      "dirIntensity": 1.2,
+      "fogEnabled": true,
+      "fogColor": "#783018",
+      "fogDensity": 0.025,
+      "orbVisible": false
+    }
+  }
+}

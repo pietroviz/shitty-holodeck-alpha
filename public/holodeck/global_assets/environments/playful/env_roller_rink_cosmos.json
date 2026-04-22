@@ -1,0 +1,47 @@
+{
+  "id": "env_roller_rink_cosmos",
+  "type": "environment",
+  "name": "Roller Rink Cosmos",
+  "tags": [
+    "playful",
+    "disco",
+    "rink",
+    "cyan-pink"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A mirror-ball roller rink: hot-pink and cyan shafts carve a starfield floor.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#080828",
+      "stageColor": "#ff2890",
+      "wallColor": "#18184c",
+      "groundSize": 23,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#28e4ff",
+      "windowOpacity": 0.7,
+      "skyTop": "#040418",
+      "skyMid": "#181848",
+      "skyBot": "#ff2890",
+      "fxPreset": "night",
+      "ambientColor": "#28e4ff",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ff2890",
+      "dirIntensity": 1,
+      "fogEnabled": true,
+      "fogColor": "#0a0a28",
+      "fogDensity": 0.03,
+      "orbVisible": true,
+      "orbColor": "#28e4ff",
+      "orbIntensity": 2.4,
+      "orbHeight": 2.8,
+      "orbFlicker": true
+    }
+  }
+}

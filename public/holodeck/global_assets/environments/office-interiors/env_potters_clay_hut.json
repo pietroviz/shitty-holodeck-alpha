@@ -1,0 +1,46 @@
+{
+  "id": "env_potters_clay_hut",
+  "type": "environment",
+  "name": "Potter's Clay Hut",
+  "tags": [
+    "work",
+    "studio",
+    "terracotta",
+    "dust"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A sun-warmed clay studio: wheel and shelves of pots in every shade of red earth.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#a85830",
+      "stageColor": "#884020",
+      "wallColor": "#d4906c",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffd8a0",
+      "windowOpacity": 0.5,
+      "skyTop": "#6a2010",
+      "skyMid": "#c05828",
+      "skyBot": "#f0a868",
+      "fxPreset": "dusk",
+      "sunColor": "#ffb470",
+      "sunElevation": 25,
+      "sunVisible": true,
+      "ambientColor": "#c48058",
+      "ambientIntensity": 1,
+      "dirColor": "#ffc488",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#a86840",
+      "fogDensity": 0.02,
+      "orbVisible": false
+    }
+  }
+}

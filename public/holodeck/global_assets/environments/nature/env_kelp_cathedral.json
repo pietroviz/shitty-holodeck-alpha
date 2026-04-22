@@ -1,0 +1,45 @@
+{
+  "id": "env_kelp_cathedral",
+  "type": "environment",
+  "name": "Kelp Cathedral",
+  "tags": [
+    "nature",
+    "underwater",
+    "magical",
+    "teal"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "An impossible emerald-teal cavern of kelp fronds swaying in filtered abyssal light.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#0a3a46",
+      "stageColor": "#14576c",
+      "wallColor": "#1d7a8c",
+      "groundSize": 21,
+      "walls": 2,
+      "windowStyle": "none",
+      "skyTop": "#02232a",
+      "skyMid": "#0b5566",
+      "skyBot": "#1ea98f",
+      "fxPreset": "night",
+      "ambientColor": "#2fd6c8",
+      "ambientIntensity": 0.9,
+      "dirColor": "#88fff0",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#0a4858",
+      "fogDensity": 0.06,
+      "orbVisible": true,
+      "orbColor": "#7cffe8",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.6,
+      "orbFlicker": true
+    }
+  }
+}

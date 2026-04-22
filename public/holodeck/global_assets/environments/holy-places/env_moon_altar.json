@@ -1,0 +1,48 @@
+{
+  "id": "env_moon_altar",
+  "type": "environment",
+  "name": "Moon Altar",
+  "tags": [
+    "sacred",
+    "ritual",
+    "violet",
+    "milky"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A circle of milky stones under a violet moon, silver pools glimmering in the ground.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#d8d0e8",
+      "stageColor": "#b0a4c8",
+      "wallColor": "#8870a0",
+      "groundSize": 21,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#200840",
+      "skyMid": "#503888",
+      "skyBot": "#b898d8",
+      "fxPreset": "night",
+      "sunColor": "#d8c4ec",
+      "sunElevation": 60,
+      "sunVisible": true,
+      "ambientColor": "#6848a0",
+      "ambientIntensity": 0.8,
+      "dirColor": "#b898e8",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#30184c",
+      "fogDensity": 0.03,
+      "orbVisible": true,
+      "orbColor": "#d8c4ec",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.6,
+      "orbFlicker": false
+    }
+  }
+}

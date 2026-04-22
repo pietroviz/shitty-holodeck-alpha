@@ -1,0 +1,47 @@
+{
+  "id": "env_neon_docking_bay",
+  "type": "environment",
+  "name": "Neon Docking Bay",
+  "tags": [
+    "sci-fi",
+    "neon",
+    "pink",
+    "teal"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A chrome hangar slathered in hot-pink and arctic-teal holos — boarding in T-minus.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#18202a",
+      "stageColor": "#ff2a88",
+      "wallColor": "#283240",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#2affe8",
+      "windowOpacity": 0.8,
+      "skyTop": "#060812",
+      "skyMid": "#281830",
+      "skyBot": "#ff2a88",
+      "fxPreset": "night",
+      "ambientColor": "#2affe8",
+      "ambientIntensity": 1,
+      "dirColor": "#ff2a88",
+      "dirIntensity": 1.2,
+      "fogEnabled": true,
+      "fogColor": "#0a0c18",
+      "fogDensity": 0.03,
+      "orbVisible": true,
+      "orbColor": "#ff2a88",
+      "orbIntensity": 2.4,
+      "orbHeight": 2.8,
+      "orbFlicker": false
+    }
+  }
+}

@@ -305,14 +305,30 @@ def draw_environment(asset):
     if is_blank_template:
         return _draw_blank_template()
 
-    sky_color = state.get("skyColor", payload.get("skyColor", "#87CEEB"))
+    # New 3-stop schema (skyTop → skyMid → skyBot), falls back to legacy
+    # 2-stop (skyTopColor → skyHorizonColor), then single skyColor.
+    sky_top = state.get("skyTop") or state.get("skyTopColor") \
+        or payload.get("skybox", {}).get("topColor") \
+        or state.get("skyColor") or payload.get("skyColor") or "#87CEEB"
+    sky_mid = state.get("skyMid") or state.get("skyHorizonColor") \
+        or payload.get("skybox", {}).get("bottomColor") or sky_top
     ground_color = state.get("groundColor", payload.get("groundColor", "#4a7a4a"))
 
-    img = Image.new("RGB", (THUMB_SIZE, THUMB_SIZE), hex_to_rgb(sky_color))
+    img = Image.new("RGB", (THUMB_SIZE, THUMB_SIZE))
     draw = ImageDraw.Draw(img)
 
-    # Ground (bottom 40%)
+    # Sky gradient: skyTop at y=0 → skyMid at horizon.
     horizon = int(THUMB_SIZE * 0.6)
+    top_rgb = hex_to_rgb(sky_top)
+    mid_rgb = hex_to_rgb(sky_mid)
+    for y in range(horizon):
+        t = y / max(1, horizon - 1)
+        r = int(top_rgb[0] + (mid_rgb[0] - top_rgb[0]) * t)
+        g = int(top_rgb[1] + (mid_rgb[1] - top_rgb[1]) * t)
+        b = int(top_rgb[2] + (mid_rgb[2] - top_rgb[2]) * t)
+        draw.line([(0, y), (THUMB_SIZE, y)], fill=(r, g, b))
+
+    # Ground (bottom 40%)
     draw.rectangle([0, horizon, THUMB_SIZE, THUMB_SIZE], fill=hex_to_rgb(ground_color))
 
     # Horizon line (subtle blend)

@@ -1,0 +1,46 @@
+{
+  "id": "env_sunbleached_plaza",
+  "type": "environment",
+  "name": "Sunbleached Plaza",
+  "tags": [
+    "urban",
+    "plaza",
+    "terracotta",
+    "dusty"
+  ],
+  "meta": {
+    "created": "2026-04-22T04:29:22.372Z",
+    "modified": "2026-04-22T04:29:22.372Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A terracotta square baking under a peach sun, dust motes drifting between arches.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#d88860",
+      "stageColor": "#b46840",
+      "wallColor": "#f0c090",
+      "groundSize": 23,
+      "walls": 2,
+      "windowStyle": "triple",
+      "windowColor": "#fff0c8",
+      "windowOpacity": 0.5,
+      "skyTop": "#c86040",
+      "skyMid": "#f0a060",
+      "skyBot": "#ffe8b8",
+      "fxPreset": "day",
+      "sunColor": "#ffd890",
+      "sunElevation": 35,
+      "sunVisible": true,
+      "ambientColor": "#f4c090",
+      "ambientIntensity": 1.1,
+      "dirColor": "#ffd4a0",
+      "dirIntensity": 1.3,
+      "fogEnabled": true,
+      "fogColor": "#e0b890",
+      "fogDensity": 0.015,
+      "orbVisible": false
+    }
+  }
+}
