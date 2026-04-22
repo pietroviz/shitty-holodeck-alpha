@@ -440,14 +440,16 @@ export class EnvironmentBridge extends BaseBridge {
         this._buildStageItems();
         this._rebuildSetDressing();
 
-        // Lighting (ambient + directional that follows the sun orb)
-        this._ambientLight = new THREE.AmbientLight(
-            this._state.ambientColor, this._state.ambientIntensity);
+        // Lighting (ambient + directional that follows the sun orb).
+        // Colours go through _tintedColor so they read as tints rather
+        // than darkening replacements.
+        this._ambientLight = new THREE.AmbientLight(0xffffff, this._state.ambientIntensity);
+        this._ambientLight.color.copy(this._tintedColor(this._state.ambientColor));
         this._scene.add(this._ambientLight);
         this._extraLights.push(this._ambientLight);
 
-        this._dirLight = new THREE.DirectionalLight(
-            this._state.dirColor, this._state.dirIntensity);
+        this._dirLight = new THREE.DirectionalLight(0xffffff, this._state.dirIntensity);
+        this._dirLight.color.copy(this._tintedColor(this._state.dirColor));
         this._scene.add(this._dirLight);
         this._extraLights.push(this._dirLight);
 
@@ -889,7 +891,9 @@ export class EnvironmentBridge extends BaseBridge {
         }
     }
 
-    /** Apply a named FX preset (day / dusk / night). */
+    /** Apply a named sky preset — affects sky gradient + sun only.
+     *  Lights and fog are left alone so the FX tab stays authoritative
+     *  for scene lighting. */
     _applyFXPreset(key) {
         const p = FX_PRESETS[key];
         if (!p) return;
@@ -910,28 +914,6 @@ export class EnvironmentBridge extends BaseBridge {
             this._sunOrb.visible = p.sunVisible;
         }
         this._applySunPosition();
-
-        // Ambient light
-        this._state.ambientColor     = p.ambientColor;
-        this._state.ambientIntensity = p.ambientIntensity;
-        if (this._ambientLight) {
-            this._ambientLight.color.set(p.ambientColor);
-            this._ambientLight.intensity = p.ambientIntensity;
-        }
-
-        // Directional light
-        this._state.dirColor     = p.dirColor;
-        this._state.dirIntensity = p.dirIntensity;
-        if (this._dirLight) {
-            this._dirLight.color.set(p.dirColor);
-            this._dirLight.intensity = p.dirIntensity;
-        }
-
-        // Fog
-        this._state.fogEnabled = p.fogEnabled;
-        this._state.fogColor   = p.fogColor;
-        this._state.fogDensity = p.fogDensity;
-        this._applyFog();
     }
 
     _applySunColor(hex) {
@@ -939,14 +921,25 @@ export class EnvironmentBridge extends BaseBridge {
         if (this._sunOrb) this._sunOrb.material.color.set(hex);
     }
 
+    // Treat the stored hex as a *tint* rather than a full replacement —
+    // we blend it halfway toward white before handing it to Three.js, so
+    // that picking (say) a blue gives a blue-tinted scene instead of
+    // collapsing the red/green channels to near-zero. The stored state
+    // keeps the user's original hex so the swatch shows what they chose.
+    _tintedColor(hex) {
+        const c = new THREE.Color(hex);
+        c.lerp(new THREE.Color(0xffffff), 0.5);
+        return c;
+    }
+
     _applyAmbientColor(hex) {
         this._state.ambientColor = hex;
-        if (this._ambientLight) this._ambientLight.color.set(hex);
+        if (this._ambientLight) this._ambientLight.color.copy(this._tintedColor(hex));
     }
 
     _applyDirColor(hex) {
         this._state.dirColor = hex;
-        if (this._dirLight) this._dirLight.color.set(hex);
+        if (this._dirLight) this._dirLight.color.copy(this._tintedColor(hex));
     }
 
     _applyFogColor(hex) {
@@ -1802,37 +1795,37 @@ export class EnvironmentBridge extends BaseBridge {
             this._rebuildGroundObjects();
         }
         // FX — apply preset or individual fields
+        // Sky preset covers sky gradient + sun fields. Individual sky/sun
+        // fields below can still override the preset, and lights/fog are
+        // always loaded from their own state (the preset no longer owns
+        // them).
         if (state.fxPreset && FX_PRESETS[state.fxPreset]) {
             this._applyFXPreset(state.fxPreset);
-        } else {
-            // Individual FX fields
-            if (state.sunColor)    this._applySunColor(state.sunColor);
-            if (state.sunElevation != null) {
-                this._state.sunElevation = state.sunElevation;
-                this._applySunPosition();
-            }
-            if (state.sunVisible != null) {
-                this._state.sunVisible = state.sunVisible;
-                if (this._sunOrb) this._sunOrb.visible = state.sunVisible;
-            }
-            if (state.ambientColor) this._applyAmbientColor(state.ambientColor);
-            if (state.ambientIntensity != null) {
-                this._state.ambientIntensity = state.ambientIntensity;
-                if (this._ambientLight) this._ambientLight.intensity = state.ambientIntensity;
-            }
-            if (state.dirColor)    this._applyDirColor(state.dirColor);
-            if (state.dirIntensity != null) {
-                this._state.dirIntensity = state.dirIntensity;
-                if (this._dirLight) this._dirLight.intensity = state.dirIntensity;
-            }
-            if (state.fogEnabled != null) {
-                this._state.fogEnabled = state.fogEnabled;
-            }
-            if (state.fogColor)  this._state.fogColor  = state.fogColor;
-            if (state.fogDensity != null) this._state.fogDensity = state.fogDensity;
-            if (state.fogEnabled != null || state.fogColor || state.fogDensity != null) {
-                this._applyFog();
-            }
+        }
+        if (state.sunColor)    this._applySunColor(state.sunColor);
+        if (state.sunElevation != null) {
+            this._state.sunElevation = state.sunElevation;
+            this._applySunPosition();
+        }
+        if (state.sunVisible != null) {
+            this._state.sunVisible = state.sunVisible;
+            if (this._sunOrb) this._sunOrb.visible = state.sunVisible;
+        }
+        if (state.ambientColor) this._applyAmbientColor(state.ambientColor);
+        if (state.ambientIntensity != null) {
+            this._state.ambientIntensity = state.ambientIntensity;
+            if (this._ambientLight) this._ambientLight.intensity = state.ambientIntensity;
+        }
+        if (state.dirColor)    this._applyDirColor(state.dirColor);
+        if (state.dirIntensity != null) {
+            this._state.dirIntensity = state.dirIntensity;
+            if (this._dirLight) this._dirLight.intensity = state.dirIntensity;
+        }
+        if (state.fogEnabled != null) this._state.fogEnabled = state.fogEnabled;
+        if (state.fogColor)  this._state.fogColor  = state.fogColor;
+        if (state.fogDensity != null) this._state.fogDensity = state.fogDensity;
+        if (state.fogEnabled != null || state.fogColor || state.fogDensity != null) {
+            this._applyFog();
         }
         // Weather
         if (state.weather && state.weather !== this._state.weather) {
@@ -2095,27 +2088,14 @@ export class EnvironmentBridge extends BaseBridge {
           ${subtitle('Sun / Moon')}
 
           <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Color</div>
-            <div class="cb-card-tight-control">
-              ${colorTrigger('sunColor', s.sunColor)}
-            </div>
-            <div class="cb-card-tight-value" id="sun-color-val">${s.sunColor}</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Elevation</div>
+            <input type="checkbox" id="fx-sun-visible" ${s.sunVisible ? 'checked' : ''}>
+            ${colorTrigger('sunColor', s.sunColor)}
+            <div class="cb-card-tight-label" style="min-width:48px;">Sun</div>
             <div class="cb-card-tight-control" style="flex:1;">
               <input type="range" id="fx-sun-elev" min="0" max="90" step="1"
                      value="${s.sunElevation}" class="cb-range">
             </div>
             <div class="cb-card-tight-value" id="fx-sun-elev-val">${s.sunElevation}°</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Visible</div>
-            <div class="cb-card-tight-control">
-              <input type="checkbox" id="fx-sun-visible" ${s.sunVisible ? 'checked' : ''}>
-            </div>
           </div>
         `;
     }
@@ -2312,18 +2292,11 @@ export class EnvironmentBridge extends BaseBridge {
             </div>
           </div>
 
-          ${subtitle('Ambient Light')}
+          ${subtitle('Lighting')}
 
           <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Color</div>
-            <div class="cb-card-tight-control">
-              ${colorTrigger('ambientColor', s.ambientColor)}
-            </div>
-            <div class="cb-card-tight-value" id="ambient-color-val">${s.ambientColor}</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Intensity</div>
+            ${colorTrigger('ambientColor', s.ambientColor)}
+            <div class="cb-card-tight-label" style="min-width:68px;">Ambient</div>
             <div class="cb-card-tight-control" style="flex:1;">
               <input type="range" id="fx-ambient-int" min="0" max="2.0" step="0.05"
                      value="${s.ambientIntensity}" class="cb-range">
@@ -2331,18 +2304,9 @@ export class EnvironmentBridge extends BaseBridge {
             <div class="cb-card-tight-value" id="fx-ambient-int-val">${s.ambientIntensity.toFixed(2)}</div>
           </div>
 
-          ${subtitle('Directional Light')}
-
           <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Color</div>
-            <div class="cb-card-tight-control">
-              ${colorTrigger('dirColor', s.dirColor)}
-            </div>
-            <div class="cb-card-tight-value" id="dir-color-val">${s.dirColor}</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Intensity</div>
+            ${colorTrigger('dirColor', s.dirColor)}
+            <div class="cb-card-tight-label" style="min-width:68px;">Key&nbsp;Light</div>
             <div class="cb-card-tight-control" style="flex:1;">
               <input type="range" id="fx-dir-int" min="0" max="2.0" step="0.05"
                      value="${s.dirIntensity}" class="cb-range">
@@ -2353,22 +2317,9 @@ export class EnvironmentBridge extends BaseBridge {
           ${subtitle('Fog')}
 
           <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Enabled</div>
-            <div class="cb-card-tight-control">
-              <input type="checkbox" id="fx-fog-enabled" ${s.fogEnabled ? 'checked' : ''}>
-            </div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Color</div>
-            <div class="cb-card-tight-control">
-              ${colorTrigger('fogColor', s.fogColor)}
-            </div>
-            <div class="cb-card-tight-value" id="fog-color-val">${s.fogColor}</div>
-          </div>
-
-          <div class="cb-card-tight">
-            <div class="cb-card-tight-label">Density</div>
+            <input type="checkbox" id="fx-fog-enabled" ${s.fogEnabled ? 'checked' : ''}>
+            ${colorTrigger('fogColor', s.fogColor)}
+            <div class="cb-card-tight-label" style="min-width:48px;">Fog</div>
             <div class="cb-card-tight-control" style="flex:1;">
               <input type="range" id="fx-fog-density" min="0.005" max="0.15" step="0.005"
                      value="${s.fogDensity}" class="cb-range">
@@ -2433,13 +2384,13 @@ export class EnvironmentBridge extends BaseBridge {
                            apply: (h) => this._applySkyColor('skyBot', h) },
             windowColor: { title: 'Window Pane',   valId: '#window-color-val',
                            apply: (h) => this._applyWindowColor(h) },
-            sunColor:    { title: 'Sun / Moon',    valId: '#sun-color-val',
+            sunColor:    { title: 'Sun / Moon',        valId: null,
                            apply: (h) => this._applySunColor(h) },
-            ambientColor:{ title: 'Ambient Light',  valId: '#ambient-color-val',
+            ambientColor:{ title: 'Ambient Light',     valId: null,
                            apply: (h) => this._applyAmbientColor(h) },
-            dirColor:    { title: 'Directional Light', valId: '#dir-color-val',
+            dirColor:    { title: 'Key Light',         valId: null,
                            apply: (h) => this._applyDirColor(h) },
-            fogColor:    { title: 'Fog Color',      valId: '#fog-color-val',
+            fogColor:    { title: 'Fog Color',         valId: null,
                            apply: (h) => this._applyFogColor(h) },
         };
         panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
