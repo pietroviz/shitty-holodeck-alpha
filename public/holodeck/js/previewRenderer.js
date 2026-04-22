@@ -98,6 +98,10 @@ async function _ensureVoice() {
 
 let _onSpeakStateChange = null;  // callback(isSpeaking) for UI updates
 
+// Environment preview state — populated by _buildEnvironmentPreview, consumed
+// in the tick loop for dynamic wall + ground-object culling and weather.
+let _envPreview = null;
+
 /** Register a callback for when speaking starts/stops. */
 export function setOnSpeakStateChange(cb) { _onSpeakStateChange = cb; }
 
@@ -252,6 +256,7 @@ export function showPreview(container, asset, opts = {}) {
     // Tear down previous preview if any
     _stopLoop();
     _musicViz = null;
+    _envPreview = null;
     if (_musicEngine) _musicEngine.stop();
 
     // Create or reuse renderer
@@ -371,6 +376,7 @@ export function showPreview(container, asset, opts = {}) {
 export function destroyPreview() {
     _stopLoop();
     _musicViz = null;
+    _envPreview = null;
     if (_voiceEngine) _voiceEngine.stop();
     if (_musicEngine) _musicEngine.stop();
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }
@@ -418,6 +424,13 @@ function _startLoop() {
         if (_voiceEngine && _mouthRig) {
             _voiceEngine.update(deltaMs);
             _mouthRig.update(_voiceEngine.getVisemeParams());
+        }
+
+        // Environment preview: dynamic culling + weather
+        if (_envPreview) {
+            if (_envPreview.walls) _envCullWalls(_envPreview.walls, _camera);
+            if (_envPreview.groundObjs.length) _envCullGroundObjects(_envPreview.groundObjs, _camera);
+            if (_envPreview.weather) _envTickWeather(_envPreview.weather, delta);
         }
 
         // Update music visualizer animation
@@ -935,6 +948,359 @@ const _ENV_WALL_THICK   = 0.25;
 const _ENV_ORB_RANGE    = 9;
 const _ENV_SKY_RADIUS   = 50;
 
+// Density + size constants (mirror EnvironmentBridge)
+const _ENV_GROUND_HEIGHT_CAP = 1.5;
+const _ENV_PROP_HEIGHT_CAP   = 0.6;
+const _ENV_SCATTER_COUNTS    = { low: 6, med: 14, high: 28 };
+const _ENV_TILE_SPACING      = { low: 3.5, med: 2.5, high: 1.8 };
+const _ENV_STAGE_SCATTER     = { low: 3, med: 6, high: 10 };
+const _ENV_STAGE_TILE        = { low: 2.0, med: 1.4, high: 1.0 };
+
+// Weather constants
+const _ENV_WEATHER_COUNT   = 500;
+const _ENV_WEATHER_SPREAD  = 14;
+const _ENV_WEATHER_HEIGHT  = 12;
+const _ENV_WEATHER_CFG = {
+    snow:   { size: 0.12, color: 0xffffff, speed: 1.2, drift: 0.6, opacity: 0.85 },
+    rain:   { size: 0.06, color: 0xaaccee, speed: 8.0, drift: 0.3, opacity: 0.5  },
+    leaves: { size: 0.15, color: 0x88aa44, speed: 0.8, drift: 1.5, opacity: 0.9  },
+};
+
+// Default camera is at (5.2, 3.9, 5.2) — camera corridor wedge
+const _ENV_CAM_DIR_X = 5.2, _ENV_CAM_DIR_Z = 5.2;
+const _ENV_CAM_CORRIDOR_COS = Math.cos(Math.PI * 2 / 9);
+const _ENV_CAM_LEN  = Math.sqrt(_ENV_CAM_DIR_X * _ENV_CAM_DIR_X + _ENV_CAM_DIR_Z * _ENV_CAM_DIR_Z);
+const _ENV_CAM_NX   = _ENV_CAM_DIR_X / _ENV_CAM_LEN;
+const _ENV_CAM_NZ   = _ENV_CAM_DIR_Z / _ENV_CAM_LEN;
+
+// BINGO grid: B=left, O=right columns; 5=front, 1=back
+const _ENV_BINGO = 'BINGO';
+function _envCellToWorld(cell) {
+    if (!cell || cell.length < 2) return null;
+    const c = _ENV_BINGO.indexOf(cell[0].toUpperCase());
+    const n = parseInt(cell.slice(1), 10);
+    if (c < 0 || n < 1 || n > 5) return null;
+    return { x: c - 2, z: n - 3 };
+}
+
+function _envInCameraCorridor(x, z, stageHalf) {
+    const len = Math.sqrt(x * x + z * z);
+    if (len < stageHalf + 0.5) return false;
+    const dot = (x * _ENV_CAM_NX + z * _ENV_CAM_NZ) / (len || 1);
+    return dot > _ENV_CAM_CORRIDOR_COS;
+}
+
+// Object manifest + asset JSON caches (shared across env previews in a session)
+let _envObjectList = null;
+async function _envLoadObjectList() {
+    if (_envObjectList) return _envObjectList;
+    try {
+        const res = await fetch('global_assets/objects/manifest.json');
+        const manifest = await res.json();
+        const list = [];
+        const skip = new Set(['headwear', 'items', 'panels', 'fashion']);
+        for (const [catKey, cat] of Object.entries(manifest.categories)) {
+            if (skip.has(catKey)) continue;
+            for (const file of cat.files) {
+                const id = file.replace('.json', '');
+                list.push({ id, path: `global_assets/objects/${catKey}/${file}` });
+            }
+        }
+        _envObjectList = list;
+    } catch { _envObjectList = []; }
+    return _envObjectList;
+}
+
+const _envAssetCache = new Map();
+async function _envFetchAsset(path) {
+    if (_envAssetCache.has(path)) return _envAssetCache.get(path);
+    const res  = await fetch(path);
+    const data = await res.json();
+    _envAssetCache.set(path, data);
+    return data;
+}
+
+/** Build a Three.js Group from an object asset's element list. Bottom sits at y=0. */
+function _envBuildMeshFromAsset(asset) {
+    const elements = asset?.payload?._editor?.elements;
+    if (!elements || !elements.length) return null;
+    const colors = asset.payload.color_assignments || {};
+
+    const group = new THREE.Group();
+    for (const el of elements) {
+        let geom;
+        switch (el.type) {
+            case 'box':
+                geom = new THREE.BoxGeometry(el.width || 1, el.height || 1, el.depth || 1); break;
+            case 'cylinder':
+                geom = new THREE.CylinderGeometry(
+                    el.radiusTop ?? 0.5, el.radiusBottom ?? 0.5, el.height || 1, 16); break;
+            case 'cone':
+                geom = new THREE.ConeGeometry(el.radius ?? 0.5, el.height || 1, 16); break;
+            case 'sphere':
+                geom = new THREE.SphereGeometry(el.radius ?? 0.5, 16, 12); break;
+            case 'torus':
+                geom = new THREE.TorusGeometry(el.radius ?? 0.5, el.tube ?? 0.2, 12, 24); break;
+            default:
+                geom = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        }
+        const hex = (typeof el.fill === 'string' && colors[el.fill])
+            ? colors[el.fill] : (el.fill || '#888888');
+        const mat = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(hex),
+            roughness: el.roughness ?? 0.85,
+            metalness: el.metalness ?? 0,
+            transparent: (el.opacity ?? 1) < 1,
+            opacity: el.opacity ?? 1,
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(el.px || 0, el.py || 0, el.pz || 0);
+        mesh.rotation.set(el.rx || 0, el.ry || 0, el.rz || 0);
+        mesh.castShadow = true;
+        group.add(mesh);
+    }
+    const box3 = new THREE.Box3().setFromObject(group);
+    if (box3.min.y !== 0) group.children.forEach(c => { c.position.y -= box3.min.y; });
+    group.userData._templateHeight = box3.max.y - box3.min.y;
+    return group;
+}
+
+function _envDisposeGroup(g) {
+    g.traverse(child => {
+        child.geometry?.dispose?.();
+        if (Array.isArray(child.material)) child.material.forEach(m => m.dispose?.());
+        else child.material?.dispose?.();
+    });
+}
+
+/** Scatter points inside the stage area, avoiding occupied cast cells. */
+function _envStageScatterPoints(count, usedCells) {
+    const pts = [];
+    let tries = 0;
+    while (pts.length < count && tries < count * 20) {
+        const x = (Math.random() - 0.5) * _ENV_STAGE_SIZE;
+        const z = (Math.random() - 0.5) * _ENV_STAGE_SIZE;
+        tries++;
+        let blocked = false;
+        for (const c of usedCells) {
+            const p = _envCellToWorld(c);
+            if (p && Math.abs(x - p.x) < 0.4 && Math.abs(z - p.z) < 0.4) {
+                blocked = true; break;
+            }
+        }
+        if (blocked) continue;
+        pts.push({ x, z, rotY: Math.random() * Math.PI * 2 });
+    }
+    return pts;
+}
+
+/** Regular grid inside the stage area, skipping occupied cast cells. */
+function _envStageTilePoints(spacing, usedCells) {
+    const half = _ENV_STAGE_SIZE / 2;
+    const pts = [];
+    for (let x = -half + spacing / 2; x < half; x += spacing) {
+        for (let z = -half + spacing / 2; z < half; z += spacing) {
+            let blocked = false;
+            for (const c of usedCells) {
+                const p = _envCellToWorld(c);
+                if (p && Math.abs(x - p.x) < 0.4 && Math.abs(z - p.z) < 0.4) {
+                    blocked = true; break;
+                }
+            }
+            if (blocked) continue;
+            pts.push({ x, z, rotY: 0 });
+        }
+    }
+    return pts;
+}
+
+/** Scatter random points across the ground, avoiding stage + camera corridor. */
+function _envGroundScatterPoints(halfGround, count, stageHalf) {
+    const pts = [];
+    let tries = 0;
+    while (pts.length < count && tries < count * 20) {
+        const x = (Math.random() - 0.5) * halfGround * 2;
+        const z = (Math.random() - 0.5) * halfGround * 2;
+        tries++;
+        if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+        if (_envInCameraCorridor(x, z, stageHalf)) continue;
+        pts.push({ x, z, rotY: Math.random() * Math.PI * 2 });
+    }
+    return pts;
+}
+
+/** Regular grid across the ground, skipping stage + camera corridor. */
+function _envGroundTilePoints(halfGround, spacing, stageHalf) {
+    const pts = [];
+    for (let x = -halfGround + spacing / 2; x < halfGround; x += spacing) {
+        for (let z = -halfGround + spacing / 2; z < halfGround; z += spacing) {
+            if (Math.abs(x) < stageHalf && Math.abs(z) < stageHalf) continue;
+            if (_envInCameraCorridor(x, z, stageHalf)) continue;
+            pts.push({ x, z, rotY: 0 });
+        }
+    }
+    return pts;
+}
+
+/** Build a weather particle system matching EnvironmentBridge behaviour. */
+function _envBuildWeather(type, hasWalls) {
+    const cfg = _ENV_WEATHER_CFG[type];
+    if (!cfg) return null;
+    const count = _ENV_WEATHER_COUNT;
+    const positions = new Float32Array(count * 3);
+    const vels      = new Float32Array(count * 3);
+    const stageHalf = _ENV_STAGE_SIZE / 2;
+
+    for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        let x, z;
+        do {
+            x = (Math.random() - 0.5) * _ENV_WEATHER_SPREAD * 2;
+            z = (Math.random() - 0.5) * _ENV_WEATHER_SPREAD * 2;
+        } while (hasWalls && Math.abs(x) < stageHalf && Math.abs(z) < stageHalf);
+
+        positions[i3]     = x;
+        positions[i3 + 1] = Math.random() * _ENV_WEATHER_HEIGHT;
+        positions[i3 + 2] = z;
+
+        const vary = 0.7 + Math.random() * 0.6;
+        vels[i3]     = (Math.random() - 0.5) * cfg.drift;
+        vels[i3 + 1] = -cfg.speed * vary;
+        vels[i3 + 2] = (Math.random() - 0.5) * cfg.drift;
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    if (type === 'leaves') {
+        const colors = new Float32Array(count * 3);
+        const palette = [
+            new THREE.Color(0x88aa44), new THREE.Color(0x669933),
+            new THREE.Color(0xbbaa33), new THREE.Color(0xcc8833),
+            new THREE.Color(0xaa5522),
+        ];
+        for (let i = 0; i < count; i++) {
+            const c = palette[Math.floor(Math.random() * palette.length)];
+            colors[i * 3]     = c.r;
+            colors[i * 3 + 1] = c.g;
+            colors[i * 3 + 2] = c.b;
+        }
+        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    }
+
+    const mat = new THREE.PointsMaterial({
+        size: cfg.size,
+        color: type === 'leaves' ? 0xffffff : cfg.color,
+        vertexColors: type === 'leaves',
+        transparent: true,
+        opacity: cfg.opacity,
+        depthWrite: false,
+        sizeAttenuation: true,
+        fog: true,
+    });
+    const points = new THREE.Points(geo, mat);
+    points.frustumCulled = false;
+    return { points, vels, type, hasWalls };
+}
+
+/** Advance weather particles by delta seconds. */
+function _envTickWeather(w, delta) {
+    const pos   = w.points.geometry.attributes.position;
+    const arr   = pos.array;
+    const vels  = w.vels;
+    const count = pos.count;
+    const stageH = _ENV_STAGE_SIZE / 2;
+    const drift = _ENV_WEATHER_CFG[w.type]?.drift || 0;
+    const time  = performance.now() * 0.001;
+
+    for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        arr[i3]     += vels[i3]     * delta;
+        arr[i3 + 1] += vels[i3 + 1] * delta;
+        arr[i3 + 2] += vels[i3 + 2] * delta;
+
+        if (w.type !== 'rain') {
+            arr[i3]     += Math.sin(time + i * 0.37) * drift * 0.3 * delta;
+            arr[i3 + 2] += Math.cos(time + i * 0.53) * drift * 0.3 * delta;
+        }
+
+        const y = arr[i3 + 1];
+        const x = arr[i3];
+        const z = arr[i3 + 2];
+        const outOfBounds = y < 0 ||
+            Math.abs(x) > _ENV_WEATHER_SPREAD ||
+            Math.abs(z) > _ENV_WEATHER_SPREAD;
+        const insideWalls = w.hasWalls && Math.abs(x) < stageH && Math.abs(z) < stageH;
+
+        if (outOfBounds || insideWalls) {
+            let nx, nz;
+            do {
+                nx = (Math.random() - 0.5) * _ENV_WEATHER_SPREAD * 2;
+                nz = (Math.random() - 0.5) * _ENV_WEATHER_SPREAD * 2;
+            } while (w.hasWalls && Math.abs(nx) < stageH && Math.abs(nz) < stageH);
+            arr[i3]     = nx;
+            arr[i3 + 1] = _ENV_WEATHER_HEIGHT + Math.random() * 2;
+            arr[i3 + 2] = nz;
+        }
+    }
+    pos.needsUpdate = true;
+}
+
+/** Dynamic wall culling: hide walls between camera and stage. Mirrors EnvironmentBridge. */
+function _envCullWalls(walls, camera) {
+    if (!walls) return;
+    const cx = camera.position.x;
+    const cz = camera.position.z;
+    const ax = Math.abs(cx);
+    const az = Math.abs(cz);
+
+    walls.back.visible  = true;
+    walls.front.visible = true;
+    walls.left.visible  = true;
+    walls.right.visible = true;
+
+    const ratio = Math.max(ax, az) / (Math.min(ax, az) + 0.001);
+    if (ratio > 2.5) {
+        if (ax > az) {
+            if (cx > 0) walls.right.visible = false;
+            else        walls.left.visible  = false;
+        } else {
+            if (cz > 0) walls.front.visible = false;
+            else        walls.back.visible  = false;
+        }
+    } else {
+        if (cx > 0) walls.right.visible = false;
+        else        walls.left.visible  = false;
+        if (cz > 0) walls.front.visible = false;
+        else        walls.back.visible  = false;
+    }
+}
+
+/** Dynamic ground-object culling: hide tall objects between camera and stage. */
+function _envCullGroundObjects(meshes, camera) {
+    if (!meshes || !meshes.length) return;
+    const cx = camera.position.x;
+    const cz = camera.position.z;
+    const camLen = Math.sqrt(cx * cx + cz * cz) || 1;
+    const cnx = cx / camLen;
+    const cnz = cz / camLen;
+    const cosThr   = Math.cos(Math.PI * 2 / 9);
+    const stageHalf = _ENV_STAGE_SIZE / 2 + 0.5;
+    const heightThr = 0.8;
+
+    for (let i = 0; i < meshes.length; i++) {
+        const m = meshes[i];
+        const ox = m.position.x;
+        const oz = m.position.z;
+        const oLen = Math.sqrt(ox * ox + oz * oz);
+        if (oLen < stageHalf) { m.visible = true; continue; }
+        const worldH = m.userData._worldHeight || 0;
+        if (worldH < heightThr) { m.visible = true; continue; }
+        const dot = (ox * cnx + oz * cnz) / (oLen || 1);
+        m.visible = dot <= cosThr;
+    }
+}
+
 function _envTinted(hex) {
     const c = new THREE.Color(hex);
     c.lerp(new THREE.Color(0xffffff), 0.5);
@@ -1002,8 +1368,10 @@ function _buildEnvWalls(state) {
         for (let i = 0; i < count; i++) { winCentres.push(x); x += winW + GUT; }
     }
 
-    const buildWall = (wallOrigin, isVertical) => {
+    const walls = {};
+    const buildWall = (wallOrigin, isVertical, name) => {
         const sub = new THREE.Group();
+        sub.name = name;
         sub.position.copy(wallOrigin);
         const addSlab = (along, y, width, height, isPane = false) => {
             const depth = isPane ? t * 0.3 : t;
@@ -1034,13 +1402,14 @@ function _buildEnvWalls(state) {
             }
         }
         group.add(sub);
+        walls[name] = sub;
     };
 
-    buildWall(new THREE.Vector3(0, 0, -halfW - t / 2), false);  // back
-    buildWall(new THREE.Vector3(0, 0,  halfW + t / 2), false);  // front
-    buildWall(new THREE.Vector3(-halfW - t / 2, 0, 0), true);   // left
-    buildWall(new THREE.Vector3( halfW + t / 2, 0, 0), true);   // right
-    return group;
+    buildWall(new THREE.Vector3(0, 0, -halfW - t / 2), false, 'back');
+    buildWall(new THREE.Vector3(0, 0,  halfW + t / 2), false, 'front');
+    buildWall(new THREE.Vector3(-halfW - t / 2, 0, 0), true,  'left');
+    buildWall(new THREE.Vector3( halfW + t / 2, 0, 0), true,  'right');
+    return { group, walls };
 }
 
 async function _buildEnvironmentPreview(asset) {
@@ -1048,6 +1417,8 @@ async function _buildEnvironmentPreview(asset) {
     _camera.lookAt(0, 0.5, 0);
     _camera.fov = 55;
     _camera.updateProjectionMatrix();
+
+    _envPreview = { walls: null, groundObjs: [], props: [], weather: null };
 
     const p = asset.payload || {};
     const s = p.state || {};
@@ -1130,8 +1501,12 @@ async function _buildEnvironmentPreview(asset) {
     _previewGroup.add(worldGrid);
 
     // Walls
-    const walls = _buildEnvWalls(s);
-    if (walls) _previewGroup.add(walls);
+    const wallsBundle = _buildEnvWalls(s);
+    if (wallsBundle) {
+        _previewGroup.add(wallsBundle.group);
+        _envPreview.walls = wallsBundle.walls;
+        _envCullWalls(_envPreview.walls, _camera);
+    }
 
     // Fog
     if (s.fogEnabled) {
@@ -1192,6 +1567,122 @@ async function _buildEnvironmentPreview(asset) {
         );
         orbMesh.position.set(0, h, 0);
         _previewGroup.add(orbMesh);
+    }
+
+    // Weather particles
+    if (s.weather && s.weather !== 'none') {
+        const hasWalls = (s.walls || 0) > 0;
+        const w = _envBuildWeather(s.weather, hasWalls);
+        if (w) {
+            _previewGroup.add(w.points);
+            _envPreview.weather = w;
+        }
+    }
+
+    // Capture a reference to this preview session so async fills from an
+    // older asset don't pollute the current one.
+    const previewRef = _envPreview;
+
+    // Props (stage) + ground objects — async asset loads
+    const objectList = await _envLoadObjectList();
+    if (_envPreview !== previewRef) return;  // preview changed while awaiting
+
+    // ── Props on stage ──
+    const usedCells = new Set(
+        (s.cast || []).filter(c => c?.cell).map(c => c.cell)
+    );
+    const propSlots = s.props || [];
+    for (const slot of propSlots) {
+        if (!slot.assetId || slot.assetId === 'none') continue;
+        const entry = objectList.find(o => o.id === slot.assetId);
+        if (!entry) continue;
+
+        let asset;
+        try { asset = await _envFetchAsset(entry.path); } catch { continue; }
+        if (_envPreview !== previewRef) return;
+
+        const template = _envBuildMeshFromAsset(asset);
+        if (!template) continue;
+
+        const baseScale = slot.scale ?? 1.0;
+        const templateH = template.userData._templateHeight || 1;
+
+        if (slot.mode === 'place') {
+            if (!slot.cell) { _envDisposeGroup(template); continue; }
+            const pos = _envCellToWorld(slot.cell);
+            if (!pos) { _envDisposeGroup(template); continue; }
+
+            const clone = template.clone();
+            clone.position.set(pos.x, 0, pos.z);
+            clone.rotation.y = Math.random() * Math.PI * 2;
+            let sc = baseScale;
+            if (templateH * sc > _ENV_PROP_HEIGHT_CAP) sc = _ENV_PROP_HEIGHT_CAP / templateH;
+            clone.scale.set(sc, sc, sc);
+            _previewGroup.add(clone);
+            _envPreview.props.push(clone);
+        } else {
+            const points = slot.mode === 'tile'
+                ? _envStageTilePoints(_ENV_STAGE_TILE[slot.density] ?? 1.4, usedCells)
+                : _envStageScatterPoints(_ENV_STAGE_SCATTER[slot.density] ?? 6, usedCells);
+            const isScatter = slot.mode !== 'tile';
+            for (const pt of points) {
+                const clone = template.clone();
+                clone.position.set(pt.x, 0, pt.z);
+                clone.rotation.y = pt.rotY;
+                let sc = isScatter
+                    ? baseScale * (0.7 + Math.random() * 0.6)
+                    : baseScale;
+                if (templateH * sc > _ENV_PROP_HEIGHT_CAP) sc = _ENV_PROP_HEIGHT_CAP / templateH;
+                clone.scale.set(sc, sc, sc);
+                _previewGroup.add(clone);
+                _envPreview.props.push(clone);
+            }
+        }
+        _envDisposeGroup(template);
+    }
+
+    // ── Ground objects ──
+    const groundHalf = (s.groundSize ?? 19) / 2;
+    const stageHalf  = _ENV_STAGE_SIZE / 2 + 0.5;
+    const groundSlots = s.groundObjects || [];
+    for (const slot of groundSlots) {
+        if (!slot.assetId || slot.assetId === 'none') continue;
+        const entry = objectList.find(o => o.id === slot.assetId);
+        if (!entry) continue;
+
+        let asset;
+        try { asset = await _envFetchAsset(entry.path); } catch { continue; }
+        if (_envPreview !== previewRef) return;
+
+        const template = _envBuildMeshFromAsset(asset);
+        if (!template) continue;
+
+        const points = slot.mode === 'tile'
+            ? _envGroundTilePoints(groundHalf, _ENV_TILE_SPACING[slot.density] ?? 2.5, stageHalf)
+            : _envGroundScatterPoints(groundHalf, _ENV_SCATTER_COUNTS[slot.density] ?? 14, stageHalf);
+
+        const baseScale = slot.scale ?? 1.0;
+        const isScatter = slot.mode !== 'tile';
+        const templateH = template.userData._templateHeight || 1;
+        for (const pt of points) {
+            const clone = template.clone();
+            clone.position.set(pt.x, 0, pt.z);
+            clone.rotation.y = pt.rotY;
+            let sc = isScatter
+                ? baseScale * (0.7 + Math.random() * 0.6)
+                : baseScale;
+            if (templateH * sc > _ENV_GROUND_HEIGHT_CAP) sc = _ENV_GROUND_HEIGHT_CAP / templateH;
+            clone.scale.set(sc, sc, sc);
+            clone.userData._worldHeight = templateH * sc;
+            _previewGroup.add(clone);
+            _envPreview.groundObjs.push(clone);
+        }
+        _envDisposeGroup(template);
+    }
+
+    // Run a ground-object cull pass now that everything is loaded.
+    if (_envPreview === previewRef) {
+        _envCullGroundObjects(_envPreview.groundObjs, _camera);
     }
 }
 
