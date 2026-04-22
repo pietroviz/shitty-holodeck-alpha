@@ -133,14 +133,17 @@
 
         const KEY = 'holodeck.mobilePanelHeight';
         const MIN_PX = 120;  // keep at least the handle + a couple of rows visible
-        const MAX_VH = 92;   // leave a strip of viewport for context
+        const MAX_VH = 85;   // leave ≥15vh of viewport so the bottom nav stays on screen
+
+        function clampVh(v) {
+            return Math.min(MAX_VH, Math.max(15, v));
+        }
 
         // Restore last height (clamped on read so stale values can't escape bounds).
         try {
             const saved = parseFloat(localStorage.getItem(KEY));
             if (Number.isFinite(saved)) {
-                const vh = Math.min(MAX_VH, Math.max(15, saved));
-                panel.style.setProperty('--mobile-panel-height', vh + 'vh');
+                panel.style.setProperty('--mobile-panel-height', clampVh(saved) + 'vh');
             }
         } catch {}
 
@@ -161,15 +164,15 @@
             if (!dragging) return;
             // Panel sits at the bottom — height is distance from pointer to viewport bottom.
             const vh = window.innerHeight;
-            const px = Math.min(vh - 40, Math.max(MIN_PX, vh - e.clientY));
-            const vhPct = (px / vh) * 100;
+            const px = Math.max(MIN_PX, vh - e.clientY);
+            const vhPct = clampVh((px / vh) * 100);
             panel.style.setProperty('--mobile-panel-height', vhPct + 'vh');
         }
         function onPointerUp(e) {
             if (!dragging) return;
             dragging = false;
             panel.classList.remove('dragging');
-            handle.releasePointerCapture?.(e.pointerId);
+            try { handle.releasePointerCapture?.(e.pointerId); } catch {}
             // Persist whatever CSS var currently resolves to.
             const cs = getComputedStyle(panel).getPropertyValue('--mobile-panel-height').trim();
             if (cs.endsWith('vh')) {
@@ -181,6 +184,11 @@
         handle.addEventListener('pointermove', onPointerMove);
         handle.addEventListener('pointerup', onPointerUp);
         handle.addEventListener('pointercancel', onPointerUp);
+        // Safety nets: if pointer capture fails or the pointer is released
+        // outside the handle, make sure we still clear drag state so the
+        // panel can transition normally on close.
+        window.addEventListener('pointerup', onPointerUp, true);
+        window.addEventListener('pointercancel', onPointerUp, true);
     })();
     </script>
 </body>

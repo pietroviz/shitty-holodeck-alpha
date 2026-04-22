@@ -1,7 +1,7 @@
 import { Scene3D }              from './scene3d.js';
 import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js?v=3';
-import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=40';
+import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=41';
 import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
 import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
@@ -340,7 +340,9 @@ function render() {
     E.titleText.textContent  = isNew
         ? (createType ? `Create New ${createType}…` : 'Create New…')
         : (displayAsset ? displayAsset.name : 'Untitled');
-    E.elCount.classList.toggle('hidden', isNew);
+    // Element count: hidden in "new" mode and in builder/edit mode
+    // (replaced by the Surprise Me button in edit mode).
+    E.elCount.classList.toggle('hidden', isNew || S.builderMode);
     // Edit button: only meaningful while actively previewing an asset
     // in the browse panel. Hidden in builder mode (you're already editing)
     // and on the index page (reserved for full simulations later).

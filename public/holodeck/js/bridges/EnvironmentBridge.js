@@ -48,22 +48,37 @@ const DEFAULT_WALL_HEIGHT  = 0;     // 0 = off, 1–3 = blocks
 const DEFAULT_WINDOW_STYLE = 'none'; // none | single | double | triple
 const DEFAULT_WINDOW_COLOR = '#8ec8f0'; // translucent pane tint (pale sky blue)
 const WINDOW_PANE_OPACITY  = 0.25;
+const WINDOW_OPACITY_MIN   = 0.05;
+const WINDOW_OPACITY_MAX   = 1.0;
 const DEFAULT_TEXTURE      = 'none';
 
 // Sky gradient defaults (top-to-bottom, subtle dusk)
-const DEFAULT_SKY_TOP = '#222034';   // DB32 deep navy
-const DEFAULT_SKY_MID = '#394b5a';   // muted blue-grey
-const DEFAULT_SKY_BOT = '#5a5a5a';   // horizon grey (matches old solid bg)
+const DEFAULT_SKY_TOP = '#4a5870';   // soft studio blue (visible, not near-black)
+const DEFAULT_SKY_MID = '#8497ac';   // lighter mid-tone at horizon
+const DEFAULT_SKY_BOT = '#b0bcc8';   // pale grey-blue beneath horizon
+
+// Orb light — floats above the stage for a little interior drama.
+// Off by default so existing envs keep their look; presets turn it on
+// where it fits (e.g. night / dusk).
+const DEFAULT_ORB_VISIBLE   = false;
+const DEFAULT_ORB_COLOR     = '#ffddaa';   // warm candle / torch
+const DEFAULT_ORB_INTENSITY = 1.4;
+const DEFAULT_ORB_HEIGHT    = 2.0;         // metres above the stage
+const DEFAULT_ORB_FLICKER   = false;
+const ORB_HEIGHT_MIN = 1.0;
+const ORB_HEIGHT_MAX = 3.0;
+const ORB_LIGHT_RANGE = 9;                 // metres — falloff distance
 
 // FX lighting presets
 const FX_PRESETS = {
     flat: {
         label: 'Flat',
-        skyTop: '#222034',  skyMid: '#394b5a',  skyBot: '#5a5a5a',
+        skyTop: '#4a5870',  skyMid: '#8497ac',  skyBot: '#b0bcc8',
         sunColor: '#ffffee', sunElevation: 60, sunVisible: false,
         ambientColor: '#ffffff', ambientIntensity: 1.2,
         dirColor: '#ffffff',     dirIntensity: 0.4,
         fogEnabled: false, fogColor: '#888888', fogDensity: 0.02,
+        orbVisible: false, orbColor: '#ffddaa', orbIntensity: 1.4, orbHeight: 2.0, orbFlicker: false,
     },
     day: {
         label: 'Day',
@@ -72,22 +87,25 @@ const FX_PRESETS = {
         ambientColor: '#e8eeff', ambientIntensity: 1.0,
         dirColor: '#fffae0',     dirIntensity: 1.2,
         fogEnabled: false, fogColor: '#c0d8f0', fogDensity: 0.01,
+        orbVisible: false, orbColor: '#ffddaa', orbIntensity: 1.4, orbHeight: 2.0, orbFlicker: false,
     },
     dusk: {
         label: 'Dusk',
-        skyTop: '#1a1040',  skyMid: '#8a4070',  skyBot: '#e08050',
+        skyTop: '#4a2a78',  skyMid: '#c4609a',  skyBot: '#ffa060',
         sunColor: '#ff9944', sunElevation: 10, sunVisible: true,
         ambientColor: '#9080b0', ambientIntensity: 0.7,
         dirColor: '#ffaa55',     dirIntensity: 0.9,
         fogEnabled: true,  fogColor: '#6a4060', fogDensity: 0.02,
+        orbVisible: true,  orbColor: '#ffaa66', orbIntensity: 1.2, orbHeight: 2.0, orbFlicker: false,
     },
     night: {
         label: 'Night',
-        skyTop: '#080818',  skyMid: '#182040',  skyBot: '#283050',
+        skyTop: '#1a1f3a',  skyMid: '#364070',  skyBot: '#5a6490',
         sunColor: '#bbddff', sunElevation: 40, sunVisible: true,
         ambientColor: '#405880', ambientIntensity: 0.5,
         dirColor: '#88aacc',     dirIntensity: 0.5,
         fogEnabled: true,  fogColor: '#101828', fogDensity: 0.03,
+        orbVisible: true,  orbColor: '#ffcc88', orbIntensity: 1.8, orbHeight: 2.0, orbFlicker: true,
     },
 };
 
@@ -288,16 +306,19 @@ export class EnvironmentBridge extends BaseBridge {
         const d = { ...(this.asset?.payload?.state || this.asset?.state || {}) };
 
         // Legacy sky schema: stock env JSONs use skyTopColor / skyHorizonColor
-        // (and payload.skybox.{top,bottom}Color). Translate to the new
-        // 3-stop gradient so those environments actually show a sky.
+        // (a 2-stop zenith→horizon gradient). Translate to the new 3-stop
+        // layout so those environments read the way their authors intended:
+        //   legacy top      → skyTop  (zenith)
+        //   legacy horizon  → skyMid  (the horizon band)
+        //   skyBot is synthesized as a mild brightening of mid so looking
+        //   under the horizon isn't a sudden dark cut.
         const _legacyTop = d.skyTopColor     || this.asset?.payload?.skybox?.topColor;
-        const _legacyBot = d.skyHorizonColor || this.asset?.payload?.skybox?.bottomColor;
+        const _legacyHor = d.skyHorizonColor || this.asset?.payload?.skybox?.bottomColor;
         if (_legacyTop && !d.skyTop) d.skyTop = _legacyTop;
-        if (_legacyBot && !d.skyBot) d.skyBot = _legacyBot;
-        if (!d.skyMid && (_legacyTop || _legacyBot)) {
-            const a = new THREE.Color(d.skyTop || DEFAULT_SKY_TOP);
-            const b = new THREE.Color(d.skyBot || DEFAULT_SKY_BOT);
-            d.skyMid = '#' + a.clone().lerp(b, 0.5).getHexString();
+        if (_legacyHor && !d.skyMid) d.skyMid = _legacyHor;
+        if (!d.skyBot && _legacyHor) {
+            const m = new THREE.Color(_legacyHor);
+            d.skyBot = '#' + m.clone().lerp(new THREE.Color(0xffffff), 0.25).getHexString();
         }
 
         this._state = {
@@ -313,6 +334,8 @@ export class EnvironmentBridge extends BaseBridge {
                             : DEFAULT_WALL_HEIGHT,
             windowStyle:    _migrateWindowStyle(d.windowStyle) || DEFAULT_WINDOW_STYLE,
             windowColor:    d.windowColor || DEFAULT_WINDOW_COLOR,
+            windowOpacity:  Math.min(WINDOW_OPACITY_MAX, Math.max(WINDOW_OPACITY_MIN,
+                                d.windowOpacity ?? WINDOW_PANE_OPACITY)),
             // Texture choices (stub for now — we just store the id;
             // applying real textures comes later)
             groundTexture:  d.groundTexture || DEFAULT_TEXTURE,
@@ -353,6 +376,13 @@ export class EnvironmentBridge extends BaseBridge {
             fogColor:       d.fogColor      || '#888888',
             fogDensity:     d.fogDensity    ?? 0.02,
             weather:        d.weather       || 'none',
+            // Floating orb light (interior drama — think torch / hovering lantern)
+            orbVisible:     d.orbVisible    ?? DEFAULT_ORB_VISIBLE,
+            orbColor:       d.orbColor      || DEFAULT_ORB_COLOR,
+            orbIntensity:   d.orbIntensity  ?? DEFAULT_ORB_INTENSITY,
+            orbHeight:      Math.min(ORB_HEIGHT_MAX, Math.max(ORB_HEIGHT_MIN,
+                                d.orbHeight ?? DEFAULT_ORB_HEIGHT)),
+            orbFlicker:     d.orbFlicker    ?? DEFAULT_ORB_FLICKER,
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -375,6 +405,9 @@ export class EnvironmentBridge extends BaseBridge {
         this._skyTexture  = null;     // THREE.CanvasTexture (legacy)
         this._skySphere   = null;     // sky dome mesh
         this._sunOrb      = null;     // visible sun/moon sphere
+        this._orbLight    = null;     // floating interior PointLight
+        this._orbMesh     = null;     // visible glowing sphere for the orb light
+        this._orbFlickerTime = 0;     // clock for smooth flicker noise
         this._ambientLight = null;    // THREE.AmbientLight
         this._dirLight     = null;    // THREE.DirectionalLight (follows sun)
         this._gridNumbers = [];       // sprites for square number labels
@@ -479,6 +512,10 @@ export class EnvironmentBridge extends BaseBridge {
         // Sun/moon orb (unlit sphere, positioned by elevation)
         this._buildSunOrb();
         this._applySunPosition();
+
+        // Floating orb light (interior drama)
+        this._buildOrbLight();
+        this._applyOrbLight();
 
         // Fog (off by default)
         this._applyFog();
@@ -689,7 +726,7 @@ export class EnvironmentBridge extends BaseBridge {
         const paneMat = new THREE.MeshStandardMaterial({
             color: new THREE.Color(this._state.windowColor || DEFAULT_WINDOW_COLOR),
             roughness: 0.3, metalness: 0.1,
-            transparent: true, opacity: WINDOW_PANE_OPACITY,
+            transparent: true, opacity: this._state.windowOpacity ?? WINDOW_PANE_OPACITY,
             side: THREE.DoubleSide,
         });
 
@@ -772,8 +809,9 @@ export class EnvironmentBridge extends BaseBridge {
     _buildSkySphere() {
         const radius = 50;
         const geo = new THREE.SphereGeometry(radius, 32, 16);
-        // Flip normals inward so we see the inside
-        geo.scale(-1, 1, 1);
+        // NOTE: don't flip the geometry with `scale(-1,1,1)` — BackSide alone
+        // is what makes the inside visible. Doing both cancels out and the
+        // sphere renders nothing, leaving the scene cleared to black.
 
         // Set vertex colours based on normalized Y (1=top, 0=mid, -1=bot)
         this._skyGeo = geo;
@@ -807,15 +845,17 @@ export class EnvironmentBridge extends BaseBridge {
 
         for (let i = 0; i < count; i++) {
             const y = pos.getY(i);
-            // Normalize: y ranges from -radius to +radius
-            const t = y / 50;  // -1 to +1
+            // Normalize: y ranges from -radius to +radius → t in [-1, +1]
+            const t = y / 50;
+            // Power curve so the mid colour reads as a visible band hugging
+            // the horizon, with top/bot only blooming near the poles.
+            // Exponent > 1 biases the lerp toward mid near the equator.
+            const k = Math.pow(Math.abs(t), 1.7);
             let color;
             if (t >= 0) {
-                // Upper half: lerp mid → top
-                color = mid.clone().lerp(top, t);
+                color = mid.clone().lerp(top, k);
             } else {
-                // Lower half: lerp mid → bot
-                color = mid.clone().lerp(bot, -t);
+                color = mid.clone().lerp(bot, k);
             }
             colors[i * 3]     = color.r;
             colors[i * 3 + 1] = color.g;
@@ -863,6 +903,46 @@ export class EnvironmentBridge extends BaseBridge {
         if (this._dirLight) this._dirLight.position.set(lx, ly, lz);
     }
 
+    /** Build the floating orb light — a PointLight paired with a small
+     *  glowing sphere so the source itself is visible in the scene.
+     *  Cost is ~1 extra light and ~192 tris; negligible on mobile. */
+    _buildOrbLight() {
+        const color = new THREE.Color(this._state.orbColor);
+        this._orbLight = new THREE.PointLight(color, this._state.orbIntensity, ORB_LIGHT_RANGE, 2);
+        this._orbLight.castShadow = false;   // shadows from point lights are expensive
+        this._scene.add(this._orbLight);
+        this._extraLights.push(this._orbLight);
+
+        // Visible orb — small unlit sphere so the source reads on camera.
+        const geo = new THREE.SphereGeometry(0.18, 16, 12);
+        const mat = new THREE.MeshBasicMaterial({ color: color.clone(), fog: false });
+        this._orbMesh = new THREE.Mesh(geo, mat);
+        this._scene.add(this._orbMesh);
+    }
+
+    /** Apply current state to the orb light + mesh (position, colour,
+     *  visibility, intensity). Flicker modulation happens in _onTick. */
+    _applyOrbLight() {
+        if (!this._orbLight) return;
+        const s = this._state;
+        const visible = !!s.orbVisible;
+        this._orbLight.visible = visible;
+        if (this._orbMesh) this._orbMesh.visible = visible;
+
+        const h = Math.min(ORB_HEIGHT_MAX, Math.max(ORB_HEIGHT_MIN, s.orbHeight ?? DEFAULT_ORB_HEIGHT));
+        this._orbLight.position.set(0, h, 0);
+        if (this._orbMesh) this._orbMesh.position.set(0, h, 0);
+
+        const col = new THREE.Color(s.orbColor);
+        this._orbLight.color.copy(col);
+        if (this._orbMesh) this._orbMesh.material.color.copy(col);
+
+        // When flicker is off, set intensity directly; when on, _onTick drives it.
+        if (!s.orbFlicker) {
+            this._orbLight.intensity = s.orbIntensity;
+        }
+    }
+
     /** Apply fog state.
      *  Uses exponential-squared fog so the scene stays clear up close and
      *  fades smoothly into the distance — matching how atmospheric haze
@@ -900,6 +980,15 @@ export class EnvironmentBridge extends BaseBridge {
             this._sunOrb.visible = p.sunVisible;
         }
         this._applySunPosition();
+
+        // Orb light — only overridden when the preset actually defines it,
+        // so older saves + flat presets don't clobber user tweaks.
+        if (p.orbVisible   != null) this._state.orbVisible   = p.orbVisible;
+        if (p.orbColor)             this._state.orbColor     = p.orbColor;
+        if (p.orbIntensity != null) this._state.orbIntensity = p.orbIntensity;
+        if (p.orbHeight    != null) this._state.orbHeight    = p.orbHeight;
+        if (p.orbFlicker   != null) this._state.orbFlicker   = p.orbFlicker;
+        this._applyOrbLight();
     }
 
     _applySunColor(hex) {
@@ -931,6 +1020,11 @@ export class EnvironmentBridge extends BaseBridge {
     _applyFogColor(hex) {
         this._state.fogColor = hex;
         this._applyFog();
+    }
+
+    _applyOrbColor(hex) {
+        this._state.orbColor = hex;
+        this._applyOrbLight();
     }
 
     // ── Weather particle system ─────────────────────────────────
@@ -1606,6 +1700,21 @@ export class EnvironmentBridge extends BaseBridge {
         }
     }
 
+    /** Update window pane opacity (0.05–1.0) on existing panes live. */
+    _applyWindowOpacity(val) {
+        const op = Math.min(WINDOW_OPACITY_MAX, Math.max(WINDOW_OPACITY_MIN, +val || 0));
+        this._state.windowOpacity = op;
+        for (const wall of [this._wallBack, this._wallFront, this._wallLeft, this._wallRight]) {
+            if (!wall) continue;
+            wall.traverse(child => {
+                if (child.material?.transparent) {
+                    child.material.opacity = op;
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    }
+
     /**
      * Dynamic wall culling — mostly 2 walls hidden, with a sweet spot
      * near the axes where only 1 wall hides (showing 3 walls).
@@ -1746,6 +1855,9 @@ export class EnvironmentBridge extends BaseBridge {
         if (state.windowColor && state.windowColor !== this._state.windowColor) {
             this._applyWindowColor(state.windowColor);
         }
+        if (state.windowOpacity != null && state.windowOpacity !== this._state.windowOpacity) {
+            this._applyWindowOpacity(state.windowOpacity);
+        }
         // Sky gradient
         for (const f of ['skyTop', 'skyMid', 'skyBot']) {
             if (state[f] && state[f] !== this._state[f]) {
@@ -1813,6 +1925,14 @@ export class EnvironmentBridge extends BaseBridge {
         if (state.fogEnabled != null || state.fogColor || state.fogDensity != null) {
             this._applyFog();
         }
+        // Orb light
+        let orbDirty = false;
+        if (state.orbVisible   != null) { this._state.orbVisible   = state.orbVisible;   orbDirty = true; }
+        if (state.orbColor)             { this._state.orbColor     = state.orbColor;     orbDirty = true; }
+        if (state.orbIntensity != null) { this._state.orbIntensity = state.orbIntensity; orbDirty = true; }
+        if (state.orbHeight    != null) { this._state.orbHeight    = state.orbHeight;    orbDirty = true; }
+        if (state.orbFlicker   != null) { this._state.orbFlicker   = state.orbFlicker;   orbDirty = true; }
+        if (orbDirty) this._applyOrbLight();
         // Weather
         if (state.weather && state.weather !== this._state.weather) {
             this._state.weather = state.weather;
@@ -1972,6 +2092,14 @@ export class EnvironmentBridge extends BaseBridge {
               ${colorTrigger('windowColor', s.windowColor)}
             </div>
             <div class="cb-card-tight-value" id="window-color-val">${s.windowColor}</div>
+          </div>
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label">Opacity</div>
+            <div class="cb-card-tight-control">
+              <input type="range" id="window-opacity" min="${WINDOW_OPACITY_MIN}" max="${WINDOW_OPACITY_MAX}" step="0.05"
+                     value="${s.windowOpacity}" class="cb-slider">
+            </div>
+            <div class="cb-card-tight-value" id="window-opacity-val">${Math.round(s.windowOpacity * 100)}%</div>
           </div>` : ''}
 
           ${subtitle('Ground Objects', 'groundObjects')}
@@ -2300,6 +2428,33 @@ export class EnvironmentBridge extends BaseBridge {
             <div class="cb-card-tight-value" id="fx-dir-int-val">${s.dirIntensity.toFixed(2)}</div>
           </div>
 
+          ${subtitle('Orb Light', 'orb')}
+
+          <div class="cb-card-tight">
+            <input type="checkbox" id="fx-orb-visible" ${s.orbVisible ? 'checked' : ''}>
+            ${colorTrigger('orbColor', s.orbColor)}
+            <div class="cb-card-tight-label" style="min-width:68px;">Intensity</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-orb-int" min="0" max="3.0" step="0.05"
+                     value="${s.orbIntensity}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-orb-int-val">${s.orbIntensity.toFixed(2)}</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <div class="cb-card-tight-label" style="min-width:68px; margin-left:26px;">Height</div>
+            <div class="cb-card-tight-control" style="flex:1;">
+              <input type="range" id="fx-orb-height" min="${ORB_HEIGHT_MIN}" max="${ORB_HEIGHT_MAX}" step="0.05"
+                     value="${s.orbHeight}" class="cb-range">
+            </div>
+            <div class="cb-card-tight-value" id="fx-orb-height-val">${s.orbHeight.toFixed(2)}m</div>
+          </div>
+
+          <div class="cb-card-tight">
+            <input type="checkbox" id="fx-orb-flicker" ${s.orbFlicker ? 'checked' : ''}>
+            <div class="cb-card-tight-label">Flicker</div>
+          </div>
+
           ${subtitle('Fog')}
 
           <div class="cb-card-tight">
@@ -2378,6 +2533,8 @@ export class EnvironmentBridge extends BaseBridge {
                            apply: (h) => this._applyDirColor(h) },
             fogColor:    { title: 'Fog Color',         valId: null,
                            apply: (h) => this._applyFogColor(h) },
+            orbColor:    { title: 'Orb Light',         valId: null,
+                           apply: (h) => this._applyOrbColor(h) },
         };
         panel.querySelectorAll('.cb-color-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
@@ -2420,6 +2577,17 @@ export class EnvironmentBridge extends BaseBridge {
                 this._renderPanel();          // show/hide pane colour picker
                 this._scheduleAutoSave();
             });
+        }
+
+        // Window pane opacity slider (live update without rebuild)
+        const winOp = panel.querySelector('#window-opacity');
+        if (winOp) {
+            const lbl = panel.querySelector('#window-opacity-val');
+            winOp.addEventListener('input', () => {
+                this._applyWindowOpacity(winOp.value);
+                if (lbl) lbl.textContent = Math.round(this._state.windowOpacity * 100) + '%';
+            });
+            winOp.addEventListener('change', () => this._scheduleAutoSave());
         }
 
         // Texture dropdowns (stub for now — saves choice to state)
@@ -2701,6 +2869,52 @@ export class EnvironmentBridge extends BaseBridge {
             fogDens.addEventListener('change', () => this._scheduleAutoSave());
         }
 
+        // Orb visible checkbox
+        const orbVis = panel.querySelector('#fx-orb-visible');
+        if (orbVis) {
+            orbVis.addEventListener('change', () => {
+                this._state.orbVisible = orbVis.checked;
+                this._applyOrbLight();
+                this._scheduleAutoSave();
+            });
+        }
+
+        // Orb intensity slider
+        const orbInt = panel.querySelector('#fx-orb-int');
+        if (orbInt) {
+            orbInt.addEventListener('input', () => {
+                const v = parseFloat(orbInt.value);
+                this._state.orbIntensity = v;
+                this._applyOrbLight();
+                const lbl = panel.querySelector('#fx-orb-int-val');
+                if (lbl) lbl.textContent = v.toFixed(2);
+            });
+            orbInt.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
+        // Orb height slider
+        const orbH = panel.querySelector('#fx-orb-height');
+        if (orbH) {
+            orbH.addEventListener('input', () => {
+                const v = parseFloat(orbH.value);
+                this._state.orbHeight = v;
+                this._applyOrbLight();
+                const lbl = panel.querySelector('#fx-orb-height-val');
+                if (lbl) lbl.textContent = `${v.toFixed(2)}m`;
+            });
+            orbH.addEventListener('change', () => this._scheduleAutoSave());
+        }
+
+        // Orb flicker checkbox
+        const orbFl = panel.querySelector('#fx-orb-flicker');
+        if (orbFl) {
+            orbFl.addEventListener('change', () => {
+                this._state.orbFlicker = orbFl.checked;
+                this._applyOrbLight();
+                this._scheduleAutoSave();
+            });
+        }
+
         // ── Surprise buttons (env-specific subtitles) ──────────
         // File-tab dice (name/description/tags) are wired by
         // wireFileTabEvents above; these handle Ground tab subtitles.
@@ -2866,6 +3080,16 @@ export class EnvironmentBridge extends BaseBridge {
             const weatherOpts = ['none', 'none', 'none', 'snow', 'rain', 'leaves'];
             this._state.weather = weatherOpts[Math.floor(Math.random() * weatherOpts.length)];
             this._buildWeather();
+            // Orb light — 35% chance visible; if on, jitter intensity/height/flicker/warm color
+            this._state.orbVisible = Math.random() < 0.35;
+            if (this._state.orbVisible) {
+                this._state.orbIntensity = +(0.6 + Math.random() * 1.9).toFixed(2);
+                this._state.orbHeight = +(ORB_HEIGHT_MIN + Math.random() * (ORB_HEIGHT_MAX - ORB_HEIGHT_MIN)).toFixed(2);
+                this._state.orbFlicker = Math.random() < 0.4;
+                const warm = ['#ffddaa', '#ffc27a', '#ffb36b', '#ffe4b8', '#ffa36b', '#e0c8ff', '#aee1ff'];
+                this._state.orbColor = warm[Math.floor(Math.random() * warm.length)];
+            }
+            this._applyOrbLight();
             this._renderPanel();
             this._scheduleAutoSave();
             return;
@@ -2914,6 +3138,21 @@ export class EnvironmentBridge extends BaseBridge {
         // Weather particles — only animate when playing
         if (this._isPlaying) {
             this._tickWeather(delta);
+        }
+
+        // Orb flicker — drive intensity with a mix of sinusoids so it
+        // feels candle-like rather than random strobing. Only runs when
+        // the orb is visible *and* flicker is on.
+        if (this._orbLight && this._state.orbVisible && this._state.orbFlicker) {
+            this._orbFlickerTime += delta;
+            const t = this._orbFlickerTime;
+            // Three low-freq sines combined — smooth, organic, no hard jumps.
+            const n = 0.5 * Math.sin(t * 7.3)
+                    + 0.3 * Math.sin(t * 13.1 + 1.7)
+                    + 0.2 * Math.sin(t * 19.9 + 3.2);
+            // Keep the dip gentle (0.6× – 1.0× base) so the orb never goes dark.
+            const base = this._state.orbIntensity;
+            this._orbLight.intensity = base * (0.8 + 0.2 * n);
         }
     }
 

@@ -2467,6 +2467,11 @@ svg    { display: block; flex-shrink: 0; }
            without this the sheet would stay at 400px even on narrow viewports. */
         width: 100%;
         height: var(--mobile-panel-height, 50vh);
+        /* Hard cap so the sheet can never consume so much viewport that the
+           bottom-nav (play / title / prompt) is pushed past the visible frame.
+           Uses dvh where supported to follow mobile URL-bar collapses. */
+        max-height: 85vh;
+        max-height: 85dvh;
         border-top-left-radius: 14px;
         border-top-right-radius: 14px;
         overflow: hidden;
