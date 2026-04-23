@@ -363,7 +363,8 @@ export function showPreview(container, asset, opts = {}) {
         if (_controls) _controls.target.set(0, 1, 0);
     } else if (type === 'story') {
         _buildStoryPreview(asset);
-        if (_controls) _controls.target.set(0, 0.8, 0);
+        _autoSpin = false;  // story preview is a read-through — camera stays put
+        if (_controls) _controls.target.set(0, 0.95, -0.25);
     } else {
         _buildFallbackPreview(asset);
         if (_controls) _controls.target.set(0, 0.5, 0);
@@ -440,9 +441,12 @@ function _startLoop() {
             _controls.update();
         }
 
-        // Update mouth rig from voice engine
+        // Advance the voice engine so visemeEngine keeps producing fresh
+        // jawOpen + viseme params. The character/voice preview writes those
+        // params to its singleton mouthRig; the story preview reads them back
+        // below to drive amp-based head jiggle + per-head talkParams.
+        if (_voiceEngine) _voiceEngine.update(deltaMs);
         if (_voiceEngine && _mouthRig) {
-            _voiceEngine.update(deltaMs);
             _mouthRig.update(_voiceEngine.getVisemeParams());
         }
 
@@ -453,7 +457,7 @@ function _startLoop() {
             if (_envPreview.weather) _envTickWeather(_envPreview.weather, delta);
         }
 
-        // Story preview: amp-driven mouth + head bob/bounce on the speaking slot.
+        // Story preview: amp-driven mouth + head jiggle on the speaking slot.
         if (_storyPreview) {
             const visemeParams = _voiceEngine ? _voiceEngine.getVisemeParams() : null;
             const amp = visemeParams ? Math.max(0, Math.min(1, visemeParams.jawOpen || 0)) : 0;
@@ -462,7 +466,6 @@ function _startLoop() {
                 amp,
                 visemeParams,
                 t: performance.now() * 0.001,
-                deltaS: delta,
             });
         }
 
@@ -2006,10 +2009,13 @@ function _buildFallbackPreview(asset) {
 // one BINGO cell deeper than the side two, and CHAR_B/C are rotated to
 // face inward as if mid-conversation — but cheated back toward the camera
 // so we don't see them in profile.
+// CHAR_A sits front-and-centre; B/C are pulled back + inward so the main
+// character reads as the focus. Spacing tightened so the trio feels grouped
+// without being crowded — they occupy ~1.8u × 0.85u instead of 2.3u × 1.0u.
 const _STORY_POS = {
-    CHAR_B: [-1.15, 0.95,  0.0],
-    CHAR_A: [ 0.00, 0.95, -1.0],
-    CHAR_C: [ 1.15, 0.95,  0.0],
+    CHAR_B: [-0.85, 0.95, -0.55],
+    CHAR_A: [ 0.00, 0.95,  0.00],
+    CHAR_C: [ 0.85, 0.95, -0.55],
 };
 const _STORY_ROT_Y = {
     CHAR_B:  0.55,  // ~31° — faces inward + slightly toward camera
@@ -2030,8 +2036,10 @@ function _teardownStoryPreview() {
 }
 
 function _buildStoryPreview(asset) {
-    _camera.position.set(0, 1.2, 3.4);
-    _camera.lookAt(0, 0.95, -0.35);
+    // Tighter framing: camera pulled in to match the narrower triangle,
+    // target sits just behind CHAR_A so B/C read as "behind and inward".
+    _camera.position.set(0, 1.15, 2.8);
+    _camera.lookAt(0, 0.95, -0.25);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
 
@@ -2065,8 +2073,6 @@ function _buildStoryPreview(asset) {
             talk: h.talk,
             talkParams: h.talkParams,
             dispose: h.dispose,
-            lastWasSpeaking: false,
-            bounceT: 0,
         });
     }
 

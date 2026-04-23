@@ -16,8 +16,9 @@
  */
 
 import { BaseBridge } from './BaseBridge.js?v=3';
-import { renderFileTab, wireFileTabEvents } from '../shared/builderUI.js';
+import { renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { standard } from '../shared/materials.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
 import {
@@ -66,20 +67,24 @@ const EMOTIONAL_ARCS = ['rising', 'falling', 'rise_then_fall', 'steady_with_spik
 
 const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 
-// Heads in a loose triangle: CHAR_A (main) sits one BINGO cell deeper than
-// CHAR_B/C so the framing reads as main + two speakers facing inward.
-// CHAR_B/C are yawed slightly inward but cheated toward camera so we
-// don't see them in pure profile.
+// CHAR_A sits front-and-centre; B/C are pulled back + inward so the main
+// character reads as the focus. Tighter spacing than a full BINGO cell so
+// the trio feels grouped without being crowded.
 const SLOT_POSITIONS = {
-    CHAR_B: [-1.15, 0.95,  0.0],
-    CHAR_A: [ 0.00, 0.95, -1.0],
-    CHAR_C: [ 1.15, 0.95,  0.0],
+    CHAR_B: [-0.85, 0.95, -0.55],
+    CHAR_A: [ 0.00, 0.95,  0.00],
+    CHAR_C: [ 0.85, 0.95, -0.55],
 };
 const SLOT_ROT_Y = {
     CHAR_B:  0.55,
     CHAR_A:  0,
     CHAR_C: -0.55,
 };
+
+// Initial camera pose — matches browse preview so browse → edit feels
+// continuous. Also the reset-view target.
+const INITIAL_CAM_POS    = new THREE.Vector3(0, 1.15, 2.8);
+const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.95, -0.25);
 
 // Corpus bundle is fetched once and shared across all StoryBridge instances
 // (it's ~7MB and doesn't change at runtime).
@@ -159,8 +164,22 @@ export class StoryBridge extends BaseBridge {
     // ═══════════════════════════════════════════════════════════════
 
     async _buildScene() {
-        this._camera.position.set(0, 1.2, 3.4);
-        this._camera.lookAt(0, 0.95, -0.35);
+        this._camera.position.copy(INITIAL_CAM_POS);
+        this._camera.lookAt(INITIAL_CAM_TARGET);
+        this._camera.fov = 50;
+        this._camera.updateProjectionMatrix();
+
+        // Orbit controls — matches the other builders (drag to orbit, pinch/wheel
+        // to zoom). Stays within the same distance/polar envelope so the user
+        // can't end up under the floor.
+        this._controls = new OrbitControls(this._camera, this._renderer.domElement);
+        this._controls.target.copy(INITIAL_CAM_TARGET);
+        this._controls.enableDamping = true;
+        this._controls.dampingFactor = 0.08;
+        this._controls.minDistance   = 1.2;
+        this._controls.maxDistance   = 6;
+        this._controls.maxPolarAngle = Math.PI * 0.85;
+        this._controls.update();
 
         this._buildHeads();
     }
@@ -190,8 +209,6 @@ export class StoryBridge extends BaseBridge {
                 talk: head.talk,
                 talkParams: head.talkParams,
                 dispose: head.dispose,
-                lastWasSpeaking: false,
-                bounceT: 0,
             });
         }
 
@@ -203,6 +220,7 @@ export class StoryBridge extends BaseBridge {
         // Pump the voice engine so visemeEngine advances and getVisemeParams()
         // returns fresh, audio-driven jawOpen + lip shape params.
         if (this._voiceEngine) this._voiceEngine.update((delta || 0) * 1000);
+        if (this._controls)    this._controls.update();
 
         const visemeParams = this._voiceEngine ? this._voiceEngine.getVisemeParams() : null;
         const amp = visemeParams ? Math.max(0, Math.min(1, visemeParams.jawOpen || 0)) : 0;
@@ -211,8 +229,18 @@ export class StoryBridge extends BaseBridge {
             amp,
             visemeParams,
             t: performance.now() * 0.001,
-            deltaS: delta || 0,
         });
+    }
+
+    /** Tween camera back to the initial triangle framing. */
+    resetView() {
+        if (!this._controls || !this._camera) return;
+        this._resetCancel?.();
+        this._resetCancel = tweenToPose(
+            this._camera, this._controls,
+            INITIAL_CAM_POS.clone(),
+            INITIAL_CAM_TARGET.clone(),
+        );
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -301,6 +329,7 @@ export class StoryBridge extends BaseBridge {
         removeSubtitle();
         for (const entry of this._heads) entry.dispose?.();
         this._heads = [];
+        if (this._controls) { this._controls.dispose(); this._controls = null; }
         if (wasPlaying) {
             document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
         }

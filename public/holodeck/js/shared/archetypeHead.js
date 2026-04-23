@@ -183,49 +183,27 @@ export function buildArchetypeHead(archetypeName) {
 // Drives the story heads for one frame. Used by both previewRenderer
 // (browse preview) and StoryBridge (edit view) so they stay visually
 // identical. Each head entry must carry:
-//   slot, container, basePos (Vector3), baseRotY (number), talk, talkParams,
-//   and the mutable fields `lastWasSpeaking` (bool) + `bounceT` (seconds).
+//   slot, container, basePos (Vector3), baseRotY (number), talk, talkParams.
 // `amp` is 0..1 voice jaw-open; `visemeParams` is VoiceEngine.getVisemeParams()
 // (optional — speaker mouth uses it when present, else falls back to amp).
-const BOUNCE_DURATION = 0.55;
-export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t, deltaS }) {
+export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t }) {
     amp = Math.max(0, Math.min(1, amp || 0));
-    const dt = Math.max(0, deltaS || 0);
     for (let i = 0; i < heads.length; i++) {
         const h = heads[i];
         const speaking = h.slot === speakingSlot;
-
-        // End-of-line bounce trigger: was speaking, now silent.
-        if (h.lastWasSpeaking && !speaking) {
-            h.bounceT = BOUNCE_DURATION;
-        }
-        h.lastWasSpeaking = speaking;
 
         // Idle sway — everyone drifts a bit so the scene never feels frozen.
         const idleBob = Math.sin(t * 1.25 + i * 1.3) * 0.012;
         const idleYaw = Math.sin(t * 0.8 + i * 0.9) * 0.02;
 
         // Speaker: amplitude-driven bob + head wiggle; scaled by instantaneous jaw open.
-        const speakBob = speaking ? (0.02 + amp * 0.09) * Math.sin(t * 9) : 0;
-        const speakYaw = speaking ? Math.sin(t * 7.5) * 0.05 * (0.3 + amp * 0.9) : 0;
+        const speakBob  = speaking ? (0.02 + amp * 0.09) * Math.sin(t * 9) : 0;
+        const speakYaw  = speaking ? Math.sin(t * 7.5) * 0.05 * (0.3 + amp * 0.9) : 0;
         const speakRoll = speaking ? Math.sin(t * 5.5) * 0.03 * amp : 0;
 
-        // Bounce envelope when a line just ended — sinusoidal ripple that decays.
-        const bounceElapsed = BOUNCE_DURATION - (h.bounceT || 0);
-        const bouncePhase = bounceElapsed / BOUNCE_DURATION;
-        const bounceY = (h.bounceT > 0)
-            ? Math.sin(bouncePhase * Math.PI * 3) * (1 - bouncePhase) * 0.07
-            : 0;
-        const bounceScale = (h.bounceT > 0)
-            ? 1 + Math.sin(bouncePhase * Math.PI) * (1 - bouncePhase) * 0.06
-            : 1;
-
-        h.container.position.y  = h.basePos.y + idleBob + speakBob + bounceY;
-        h.container.rotation.y  = (h.baseRotY || 0) + idleYaw + speakYaw;
-        h.container.rotation.z  = speakRoll;
-        h.container.scale.setScalar(bounceScale);
-
-        if (h.bounceT > 0) h.bounceT = Math.max(0, h.bounceT - dt);
+        h.container.position.y = h.basePos.y + idleBob + speakBob;
+        h.container.rotation.y = (h.baseRotY || 0) + idleYaw + speakYaw;
+        h.container.rotation.z = speakRoll;
 
         // Mouth — speaker uses voice-driven viseme params when available.
         if (speaking) {
