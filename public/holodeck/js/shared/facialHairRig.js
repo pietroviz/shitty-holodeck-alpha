@@ -22,8 +22,8 @@ const CANVAS_PX       = 256;
 // Base local-Y offsets relative to the mouth center (mouthY in faceAnchor
 // local space). Positive = above the mouth.
 const MOUSTACHE_BASE_Y_OFFSET =  0.028;
-const BEARD_BASE_Y_OFFSET     = -0.070;
-const FACE_Z_OFFSET           =  0.003;  // in front of the mouth plane
+const BEARD_BASE_Y_OFFSET     = -0.135;   // anchor below bottom lip, small gap
+const FACE_Z_OFFSET           =  0.003;   // in front of the mouth plane
 
 // Jaw motion coefficients (world units per unit jawOpen).
 const MOUSTACHE_JAW_Y     = 0.004;   // subtle upward drift
@@ -31,9 +31,9 @@ const BEARD_JAW_Y         = 0.028;   // chin drops → beard drops
 const BEARD_JAW_STRETCH_Y = 0.18;    // + scale.y as jaw opens
 
 // Each style defines moustachePath and/or beardPath as Path2D SVG strings.
-// Coordinates are in a 256-wide canvas with origin translated to the plane
-// center. Positive Y is downward on the canvas. Paths should stay within
-// ±100 on X and ±(CANVAS_PX/2) on Y.
+// Coordinates are in canvas-pixel space with origin at the plane center;
+// +Y is downward. Styles may override moustachePlaneW/H or beardPlaneW/H
+// (world units) for extra-wide / extra-tall silhouettes like walrus.
 const STYLES = {
     none:       null,
 
@@ -41,18 +41,26 @@ const STYLES = {
         moustachePath: 'M -78 -8 Q -40 -20 0 -14 Q 40 -20 78 -8 L 64 18 Q 30 6 0 10 Q -30 6 -64 18 Z',
     },
     handlebar: {
+        // Classic handlebar: thin flat body along the lip, tips curl upward into tight loops.
+        moustachePlaneW: 0.34,
+        moustachePlaneH: 0.14,
         moustachePath:
-            'M -96 -6 Q -72 -26 -50 -12 Q -28 -20 -12 -10 L 0 -12 L 12 -10 ' +
-            'Q 28 -20 50 -12 Q 72 -26 96 -6 ' +
-            'Q 74 -4 54 -6 Q 36 -4 18 4 L 0 4 L -18 4 Q -36 -4 -54 -6 Q -74 -4 -96 -6 Z',
+            'M -78 -2 Q -56 -8 -36 -4 Q -18 0 -8 -4 L 0 -6 L 8 -4 Q 18 0 36 -4 Q 56 -8 78 -2 ' +
+            'Q 92 -8 104 -24 Q 112 -40 100 -46 Q 88 -48 84 -36 Q 82 -26 90 -22 Q 82 -18 68 -14 ' +
+            'Q 48 -8 26 -2 Q 10 2 2 4 L 0 6 L -2 4 Q -10 2 -26 -2 Q -48 -8 -68 -14 Q -82 -18 -90 -22 ' +
+            'Q -82 -26 -84 -36 Q -88 -48 -100 -46 Q -112 -40 -104 -24 Q -92 -8 -78 -2 Z',
     },
     pencil: {
         moustachePath: 'M -72 -2 Q -36 -10 0 -6 Q 36 -10 72 -2 L 68 4 Q 34 -2 0 2 Q -34 -2 -68 4 Z',
     },
     walrus: {
+        // Wider plane (~2× stock moustache) + tall enough to carry the droop.
+        moustachePlaneW: 0.44,
+        moustachePlaneH: 0.22,
         moustachePath:
-            'M -96 -14 Q -52 -28 0 -20 Q 52 -28 96 -14 ' +
-            'Q 92 18 70 42 Q 46 54 22 46 Q 0 40 0 30 Q 0 40 -22 46 Q -46 54 -70 42 Q -92 18 -96 -14 Z',
+            'M -120 -22 Q -80 -38 -40 -30 Q 0 -24 40 -30 Q 80 -38 120 -22 ' +
+            'Q 118 20 96 46 Q 72 60 44 54 Q 20 46 4 36 Q 0 32 -4 36 Q -20 46 -44 54 ' +
+            'Q -72 60 -96 46 Q -118 20 -120 -22 Z',
     },
 
     goatee: {
@@ -62,6 +70,22 @@ const STYLES = {
     },
     soul_patch: {
         beardPath: 'M -14 -70 Q 0 -80 14 -70 L 10 -40 Q 0 -32 -10 -40 Z',
+    },
+    chin_curtain: {
+        // Beard-only, covers chin + jawline, no moustache (Lincoln-style).
+        beardPath:
+            'M -84 -78 Q -52 -88 0 -86 Q 52 -88 84 -78 ' +
+            'Q 82 -40 72 -6 Q 56 24 34 34 Q 14 40 0 40 Q -14 40 -34 34 ' +
+            'Q -56 24 -72 -6 Q -82 -40 -84 -78 Z',
+    },
+    viking_beard: {
+        // Beard-only, long + thick, no moustache.
+        beardPlaneW: 0.34,
+        beardPlaneH: 0.34,
+        beardPath:
+            'M -96 -78 Q -58 -94 0 -88 Q 58 -94 96 -78 ' +
+            'Q 98 -24 90 20 Q 78 58 56 86 Q 34 104 18 112 Q 8 116 0 116 Q -8 116 -18 112 ' +
+            'Q -34 104 -56 86 Q -78 58 -90 20 Q -98 -24 -96 -78 Z',
     },
 
     full_beard: {
@@ -74,9 +98,12 @@ const STYLES = {
     long_beard: {
         moustachePath:
             'M -92 -8 Q -48 -22 0 -14 Q 48 -22 92 -8 L 76 14 Q 40 2 0 6 Q -40 2 -76 14 Z',
+        beardPlaneW: 0.30,
+        beardPlaneH: 0.30,
         beardPath:
             'M -96 -82 Q -60 -98 0 -92 Q 60 -98 96 -82 ' +
-            'Q 92 -20 82 32 Q 66 78 30 104 Q 12 118 0 120 Q -12 118 -30 104 Q -66 78 -82 32 Q -92 -20 -96 -82 Z',
+            'Q 92 -20 82 32 Q 66 78 30 104 Q 12 116 0 118 Q -12 116 -30 104 ' +
+            'Q -66 78 -82 32 Q -92 -20 -96 -82 Z',
     },
 };
 
@@ -94,12 +121,12 @@ function resolveStyle(style) {
     return STYLE_ALIASES[style] || style;
 }
 
-function _makePathTexture(svgPath, planePx, color, planeHpx) {
+function _makePathTexture(svgPath, color, cvW, cvH) {
     const canvas = document.createElement('canvas');
-    canvas.width  = CANVAS_PX;
-    canvas.height = planeHpx;
+    canvas.width  = cvW;
+    canvas.height = cvH;
     const ctx = canvas.getContext('2d');
-    ctx.translate(CANVAS_PX / 2, planeHpx / 2);
+    ctx.translate(cvW / 2, cvH / 2);
     const p = new Path2D(svgPath);
     ctx.fillStyle = color;
     ctx.fill(p);
@@ -117,6 +144,7 @@ function _makePlane(planeW, planeH) {
     const geo = new THREE.PlaneGeometry(planeW, planeH);
     const mat = new THREE.MeshBasicMaterial({
         transparent: true, depthWrite: false, side: THREE.FrontSide,
+        toneMapped: false,  // keep flat canvas colours — scene uses ACES tone mapping
     });
     const mesh = new THREE.Mesh(geo, mat);
     return mesh;
@@ -181,8 +209,11 @@ export class FacialHairRig {
         const s = this.headWidth / REF_HEAD_WIDTH;
 
         if (cfg.moustachePath) {
-            const tex = _makePathTexture(cfg.moustachePath, CANVAS_PX, this.color, Math.round(CANVAS_PX * MOUSTACHE_PLANE.h / MOUSTACHE_PLANE.w));
-            const mesh = _makePlane(MOUSTACHE_PLANE.w, MOUSTACHE_PLANE.h);
+            const planeW = cfg.moustachePlaneW ?? MOUSTACHE_PLANE.w;
+            const planeH = cfg.moustachePlaneH ?? MOUSTACHE_PLANE.h;
+            const cvH    = Math.round(CANVAS_PX * planeH / planeW);
+            const tex    = _makePathTexture(cfg.moustachePath, this.color, CANVAS_PX, cvH);
+            const mesh   = _makePlane(planeW, planeH);
             mesh.material.map = tex;
             mesh.material.needsUpdate = true;
             mesh.name = 'facialHairMoustache';
@@ -194,8 +225,11 @@ export class FacialHairRig {
         }
 
         if (cfg.beardPath) {
-            const tex = _makePathTexture(cfg.beardPath, CANVAS_PX, this.color, Math.round(CANVAS_PX * BEARD_PLANE.h / BEARD_PLANE.w));
-            const mesh = _makePlane(BEARD_PLANE.w, BEARD_PLANE.h);
+            const planeW = cfg.beardPlaneW ?? BEARD_PLANE.w;
+            const planeH = cfg.beardPlaneH ?? BEARD_PLANE.h;
+            const cvH    = Math.round(CANVAS_PX * planeH / planeW);
+            const tex    = _makePathTexture(cfg.beardPath, this.color, CANVAS_PX, cvH);
+            const mesh   = _makePlane(planeW, planeH);
             mesh.material.map = tex;
             mesh.material.needsUpdate = true;
             mesh.name = 'facialHairBeard';

@@ -277,10 +277,12 @@ export const FACIAL_HAIR_STYLES = {
     handlebar:  { label: 'Handlebar' },
     pencil:     { label: 'Pencil' },
     walrus:     { label: 'Walrus' },
-    goatee:     { label: 'Goatee' },
-    soul_patch: { label: 'Soul Patch' },
-    full_beard: { label: 'Full Beard' },
-    long_beard: { label: 'Long Beard' },
+    goatee:       { label: 'Goatee' },
+    soul_patch:   { label: 'Soul Patch' },
+    chin_curtain: { label: 'Chin Curtain' },
+    viking_beard: { label: 'Viking Beard' },
+    full_beard:   { label: 'Full Beard' },
+    long_beard:   { label: 'Long Beard' },
 };
 
 // ── Letter → Viseme Mapping ──────────────────────────

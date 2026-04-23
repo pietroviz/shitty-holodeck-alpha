@@ -18,6 +18,7 @@ export class MouthRig {
         this.geometry = new THREE.PlaneGeometry(MOUTH_RIG.planeSize, MOUTH_RIG.planeSize);
         this.material = new THREE.MeshBasicMaterial({
             map: this.texture, transparent: true, depthWrite: false, side: THREE.FrontSide,
+            toneMapped: false,  // keep canvas colours flat — the scene renderer uses ACES tone mapping
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.name = 'mouthRigPlane';
