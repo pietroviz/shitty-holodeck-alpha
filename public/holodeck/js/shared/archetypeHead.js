@@ -408,11 +408,11 @@ export function updateStoryNameTags(heads, speakingSlot, camera, rendererEl) {
         }
         // Project world-space top-of-head into pixel space.
         h.container.getWorldPosition(_NAME_TAG_WORLD);
-        // Container origin is the head's visual centre. Medium head height is
-        // 0.58, so its top is at +0.29 from centre. Keep ~0.17 clearance above
-        // the head (a third less than the previous 0.25), so the label still
-        // floats clearly but sits tighter to the character.
-        _NAME_TAG_WORLD.y += 0.46;
+        // Default +0.46 works for archetype heads whose container is already
+        // lifted to head-centre. Full-body characters sit with container at
+        // ground level, so they pass an explicit labelOffsetY covering head-top
+        // plus clearance.
+        _NAME_TAG_WORLD.y += (typeof h.labelOffsetY === 'number') ? h.labelOffsetY : 0.46;
         _NAME_TAG_WORLD.project(camera);
         // Behind camera → hide.
         if (_NAME_TAG_WORLD.z > 1) { tag.style.opacity = '0'; continue; }

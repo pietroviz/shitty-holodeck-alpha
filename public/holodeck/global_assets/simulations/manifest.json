@@ -1,0 +1,12 @@
+{
+  "categories": {
+    "defaults": {
+      "name": "Getting Started",
+      "count": 1,
+      "files": [
+        "sim_meta_default.json"
+      ],
+      "folder": "defaults"
+    }
+  }
+}

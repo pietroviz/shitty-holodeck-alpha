@@ -1,0 +1,74 @@
+{
+  "id": "sim_meta_default",
+  "type": "simulation",
+  "name": "Meet Your Cast",
+  "tags": ["starter", "meta", "onboarding"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-23T00:00:00.000Z",
+    "modified": "2026-04-23T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "A gentle starter simulation. A cozy living room, a mellow score, and three archetypes saying hello. Swap any slot, roll the dice, or drill in to edit.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_cozy_living_room",
+      "musicId": "mus_crystal_cave",
+      "storyId": "story_meta_default",
+      "cast": [
+        { "slot": "CHAR_A", "charId": "char_influencer_aria", "archetype": "Edge" },
+        { "slot": "CHAR_B", "charId": "char_paladin_auric",    "archetype": "Bloom" },
+        { "slot": "CHAR_C", "charId": "char_luna_fang",        "archetype": "Glitch" }
+      ],
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "welcoming",
+          "tension": 2,
+          "lines": [
+            { "speaker": "CHAR_A", "text": "Hi. I'm CHAR_A — the first slot, the one you'll see centre-stage." },
+            { "speaker": "CHAR_B", "text": "I'm CHAR_B. I stand to CHAR_A's side." },
+            { "speaker": "CHAR_C", "text": "And I'm CHAR_C. I'm here too. Story's not a story with just two people." }
+          ]
+        },
+        {
+          "id": "narreme_002",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "teach",
+          "emotion": "curious",
+          "tension": 3,
+          "lines": [
+            { "speaker": "CHAR_B", "text": "Swap any of us out from the Setup tab." },
+            { "speaker": "CHAR_C", "text": "Or roll the dice. Chaos is good for you." },
+            { "speaker": "CHAR_A", "text": "Change the env, change the music. The scene swaps to match." }
+          ]
+        },
+        {
+          "id": "narreme_003",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "easy_landing",
+          "emotion": "warm",
+          "tension": 2,
+          "lines": [
+            { "speaker": "CHAR_A", "text": "That's it. You're the director now." },
+            { "speaker": "CHAR_B", "text": "Try something. We'll meet you there." },
+            { "speaker": "CHAR_C", "text": "Don't overthink it. The dials are dials." }
+          ]
+        }
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "sanctuary",
+        "notes": "the default environment — safe to experiment"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rising"
+    }
+  }
+}
