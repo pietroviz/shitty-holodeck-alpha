@@ -225,18 +225,20 @@ export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t })
 const SUBTITLE_ID = 'story-subtitle';
 const _subtitleState = { words: [], idx: -1 };
 
-// Chunky pixel display font for subtitles + name tags. Press Start 2P is the
-// canonical 8-bit pixel face; we load it once, the first time either element
-// is created, and fall back to a system monospace so missing font files never
-// leave us without a usable glyph.
-const PIXEL_FONT_STACK = "'Press Start 2P', 'Silkscreen', 'Courier New', monospace";
+// Chunky pixel display font for subtitles + name tags. Silkscreen is a
+// bitmap pixel face that's narrower than Press Start 2P while still reading
+// as retro/blocky, so long lines don't run out of horizontal room. We load
+// it once, the first time either element is created, and fall back to a
+// system monospace so missing font files never leave us without a usable
+// glyph.
+const PIXEL_FONT_STACK = "'Silkscreen', 'Press Start 2P', 'Courier New', monospace";
 function _ensurePixelFontLoaded() {
     if (typeof document === 'undefined') return;
     if (document.getElementById('story-pixel-font-link')) return;
     const link = document.createElement('link');
     link.id = 'story-pixel-font-link';
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap';
     document.head.appendChild(link);
 }
 

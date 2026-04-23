@@ -416,6 +416,13 @@ These conventions are now baked into the env state and the bridge/preview. Keep 
 - **BINGO grid** — Spatial placement for cast + placed props. Columns `B/I/N/G/O` (left→right), rows `5/4/3/2/1` (front→back). Cell string e.g. `N3` is centre. `_cellToWorld(cell)` → `{x: col-2, z: row-3}` in EnvironmentBridge (and the mirror `_envCellToWorld` in previewRenderer).
 - **Field names on env state**: `cast[]`, `props[]`, `groundObjects[]`, `weather`, `walls`, `windowStyle`. Legacy `stageItems` is read-only backwards compat.
 
+### Story Captions + Floating Name Tags (April 23 follow-up)
+
+- **New shared UI layer** (`public/holodeck/js/shared/archetypeHead.js`) — A single-line word-by-word caption (`#story-subtitle`) and a per-slot floating name tag layer (`#story-name-tags`) that hovers above whichever character is currently speaking. Both are driven by the VisemeEngine's `wordIdx` and positioned to track the Play button / head container.
+- **Chunky pixel font** — Silkscreen loaded once from Google Fonts, applied to both the caption and the tags (fallback `Press Start 2P` → `Courier New` → monospace). Narrow enough that long captions don't run out of horizontal room, but still reads as retro/blocky so it matches the pixel tone of the app.
+- **Positions tuned for the existing layout** — Caption centred vertically on the 72px Play button (`bottom:210px`). Name tag lifts `0.46` world units above each head container (~0.17 clearance above the head top given a medium-preset 0.58 head height).
+- **Public API + reuse pattern documented** in the new "Captions + Floating Name Tags" section below. This is the pattern the simulation-builder (and any future trailer/tutorial playback) should import directly rather than re-implementing.
+
 ### Batch-3 Environments + Thumbnail Farm (same session, later in day)
 - **40 new envs** (`scripts/generate-env-batch-3.js`) — Pushing toward the 200-env goal. Spread across all 9 active categories with a bias toward variety and bizarre comedy (Goblin Market, Fairy Dentist's Office, Cryo-DMV, Jelly Planet Surface, Haunted Karaoke Bar, Liminal Hotel Hallway, Dragon HR Department, Ball Pit Lounge, Therapy Goat Pen, Middle-Management Purgatory, and 30 more). Total stock env count is now **89** (48 batch-1/2 + 40 batch-3 + 1 blank `env_default`).
 - **3D thumbnail farm** (`public/holodeck/env-thumb-farm.html` + `src/app/api/admin/save-env-thumb/route.ts`) — Dev-only page that iterates every stock env, renders each via the existing `previewRenderer` pipeline, captures a 512×512 JPEG from the canvas, and POSTs it to an API route that writes the file into `public/holodeck/thumbnails/`. Replaces the old flat Python/Pillow thumbnails with real 3D captures that include stage props, ground dressing, and weather. Run it locally at `http://localhost:3000/holodeck/env-thumb-farm.html`, then commit the refreshed thumbnails. The API route returns 403 in production so there's no public write endpoint.
@@ -489,6 +496,98 @@ When loading a simulation, **build the env first**, then overlay cast, then star
 - `public/holodeck/js/voiceEngine.js` + `mouthRig.js` — lip-sync + viseme → mesh.
 - `public/holodeck/js/musicEngine.js` — layer/pattern playback.
 - `.claude/projects/-Users-skipper-Documents-Vibes-ShittyHolodeck-V0-9/memory/env_script_naming.md` — canonical naming convention.
+
+---
+
+## Captions + Floating Name Tags (Story Playback)
+
+Story playback has a small UI layer that sits *on top* of the 3D renderer: a single-line caption showing the currently-spoken word, and a floating label that hovers above whichever character is speaking. It's designed so the **simulation-builder** (and anything else that renders talking heads — trailers, tutorials, previews) can reuse the same pattern without reinventing it.
+
+All of it lives in one module: `public/holodeck/js/shared/archetypeHead.js`.
+
+### What exists
+
+- **One DOM subtitle element** (`#story-subtitle`) — a single-line caption that swaps its text word-by-word while the VisemeEngine speaks. Anchored inside `#ui-elements` so it rides the same positioning context as the Play button and stays responsive to layout changes.
+- **One DOM layer with per-character tags** (`#story-name-tags` → one `#name-tag-<slot>` child per head) — each tag is world-space projected to pixel coords every frame, and only the currently-speaking head's tag is visible.
+- **Shared chunky pixel font** — Silkscreen loaded once on demand from Google Fonts, applied to both the caption and the tags so the whole story UI reads as one coherent pixel-display style.
+
+### Public API (import from `shared/archetypeHead.js`)
+
+```js
+import {
+    showSubtitle, setSubtitleWord, hideSubtitle, removeSubtitle,
+    updateStoryNameTags, removeStoryNameTags,
+} from './shared/archetypeHead.js?v=4';
+```
+
+| Function | When to call | Notes |
+|----------|-------------|-------|
+| `showSubtitle(text)` | Start of a spoken line | Tokenises on whitespace the same way `VisemeEngine` does, shows word `[0]`, and fades in. Pass `''` or falsy to hide. |
+| `setSubtitleWord(idx)` | Every frame while speaking | Pass `visemeEngine.getParams().wordIdx`. Word index is clamped into range; a no-op if it hasn't changed. |
+| `hideSubtitle()` | End of a line | Fades out; keeps the element mounted. |
+| `removeSubtitle()` | Playback teardown | Removes the element entirely. |
+| `updateStoryNameTags(heads, speakingSlot, camera, rendererEl)` | Every frame | Projects each head's container world position → NDC → pixel-space. Only the `speakingSlot` tag is visible. `heads` is `[{ slot, container, label }]`. |
+| `removeStoryNameTags()` | Playback teardown | Removes the whole layer + children. |
+
+### Wiring pattern (how StoryBridge + previewRenderer do it today)
+
+```js
+// When starting a line:
+showSubtitle(line.text);
+speakingSlot = line.slot;
+
+// Every tick:
+const v = visemeEngine.getParams();
+setSubtitleWord(v.wordIdx);
+updateStoryNameTags(this._heads, this._speakingSlot, this._camera, this._renderer.domElement);
+
+// When the line ends:
+hideSubtitle();
+speakingSlot = null;
+
+// On teardown:
+removeSubtitle();
+removeStoryNameTags();
+```
+
+Heads handed to `updateStoryNameTags` need a consistent shape. StoryBridge and previewRenderer both build them like this:
+
+```js
+this._heads.push({
+    slot: cast.slot,                    // 'CHAR_A' etc.
+    container: headGroup,               // THREE.Object3D — its world Y centre is the head visual centre
+    label: `${cast.archetype}-core`,    // what the floating tag reads
+    // ...talk(), mouthRig, etc. for the head itself
+});
+```
+
+### Styling (don't re-derive these numbers in new callers)
+
+Both elements are styled inline at creation time — no external CSS file — so the style is the source of truth.
+
+- **Font:** Silkscreen (400/700), loaded from `https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap`. Fallback: `'Press Start 2P', 'Courier New', monospace`. The loader is idempotent (checks for `#story-pixel-font-link` before appending).
+- **Subtitle:** `15px`, `letter-spacing:0.02em`, `line-height:1.35`, `padding:10px 20px`, `max-width:min(80%, 720px)`. Dark translucent pill (`rgba(14,18,28,0.72)`) with blur backdrop. Anchored at `bottom:210px; left:50%; transform:translate(-50%, 50%)` so its vertical centre lines up with the 72px Play button's centre (Play button sits at `bottom:174px`, so centre = `174 + 36 = 210`). Lives inside `#ui-elements`.
+- **Name tag:** `10px`, `letter-spacing:0.04em`, `padding:5px 12px`, `border-radius:6px` (squared-off corners to match the pixel face). Same dark translucent pill. Fixed-position inside `#story-name-tags` layer.
+- **Name tag vertical lift:** `container.worldY + 0.46`. Medium head height is `0.58`, so the head top sits at `+0.29` above the container origin. `0.46` = `0.29 + 0.17` → ~0.17 world-unit clearance above the head top. Tune the `+ 0.46` constant in `updateStoryNameTags()` if head sizes ever change significantly.
+
+### Using this in the simulation builder (and beyond)
+
+The simulation-builder is the first downstream consumer that'll reuse this. Any time a simulation renders talking characters, it should:
+
+1. Build heads with `{ slot, container, label }` — `label` can be whatever makes sense (`"ANCHOR"`, character name, line speaker tag).
+2. Call `updateStoryNameTags` every tick from the simulation's render loop.
+3. Call `showSubtitle` / `setSubtitleWord` / `hideSubtitle` as lines start/end, feeding `wordIdx` from the VisemeEngine's `getParams()`.
+4. Call `removeSubtitle()` + `removeStoryNameTags()` on teardown so DOM state doesn't leak between simulations.
+
+The caption + label system doesn't care whether it's driven by a Story asset, a simulation script, or a one-off trailer — it just needs the `heads[]` shape and a `wordIdx`. Keep it that way; don't make it know about story-specific concerns.
+
+### Things to watch out for
+
+- **The caption's vertical anchor assumes `#play-wrap` exists at `bottom:174px` with a 72px tall button.** If that layout ever changes, the `bottom:210px` constant in `_ensureSubtitleEl()` needs to move with it.
+- **Name-tag lift assumes medium-preset head height (0.58).** If a simulation uses taller/shorter heads, the `+ 0.46` world-offset will look off. Consider parameterising per-head in a future pass.
+- **Caption tokenisation must match VisemeEngine tokenisation** (`text.split(/\s+/).filter(w => w.length > 0)`), otherwise `wordIdx` will point at the wrong word. If VisemeEngine ever changes how it splits lines (e.g. punctuation handling), update `showSubtitle()` too.
+- **One subtitle at a time, one speaking slot at a time.** The system is deliberately not multi-track. If a future feature needs simultaneous speakers, this needs a richer `_subtitleState` that keys off slot or line id.
+- **Cache-bust on edits.** Both StoryBridge.js and previewRenderer.js import `shared/archetypeHead.js?v=N`. Bump `N` whenever you change the module's public behaviour so browsers pick it up.
 
 ---
 
