@@ -225,9 +225,25 @@ export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t })
 const SUBTITLE_ID = 'story-subtitle';
 const _subtitleState = { words: [], idx: -1 };
 
+// Chunky pixel display font for subtitles + name tags. Press Start 2P is the
+// canonical 8-bit pixel face; we load it once, the first time either element
+// is created, and fall back to a system monospace so missing font files never
+// leave us without a usable glyph.
+const PIXEL_FONT_STACK = "'Press Start 2P', 'Silkscreen', 'Courier New', monospace";
+function _ensurePixelFontLoaded() {
+    if (typeof document === 'undefined') return;
+    if (document.getElementById('story-pixel-font-link')) return;
+    const link = document.createElement('link');
+    link.id = 'story-pixel-font-link';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+    document.head.appendChild(link);
+}
+
 function _ensureSubtitleEl() {
     let el = document.getElementById(SUBTITLE_ID);
     if (el) return el;
+    _ensurePixelFontLoaded();
     el = document.createElement('div');
     el.id = SUBTITLE_ID;
     el.setAttribute('aria-live', 'polite');
@@ -249,10 +265,11 @@ function _ensureSubtitleEl() {
         'padding:10px 20px',
         'background:rgba(14,18,28,0.72)',
         'color:#fff',
-        'font-size:22px',
-        'font-weight:600',
-        'letter-spacing:0.01em',
-        'line-height:1.25',
+        `font-family:${PIXEL_FONT_STACK}`,
+        'font-size:15px',
+        'font-weight:400',
+        'letter-spacing:0.02em',
+        'line-height:1.35',
         'border-radius:10px',
         'pointer-events:none',
         'text-align:center',
@@ -342,6 +359,7 @@ function _getOrMakeTag(layer, slot, label) {
     const id = `name-tag-${slot}`;
     let tag = document.getElementById(id);
     if (tag) return tag;
+    _ensurePixelFontLoaded();
     tag = document.createElement('div');
     tag.id = id;
     tag.style.cssText = [
@@ -349,13 +367,14 @@ function _getOrMakeTag(layer, slot, label) {
         'left:0',
         'top:0',
         'transform:translate(-50%, -100%)',
-        'padding:4px 10px',
+        'padding:5px 12px',
         'background:rgba(14,18,28,0.72)',
         'color:#fff',
-        'font-size:12px',
-        'font-weight:600',
-        'letter-spacing:0.02em',
-        'border-radius:999px',
+        `font-family:${PIXEL_FONT_STACK}`,
+        'font-size:10px',
+        'font-weight:400',
+        'letter-spacing:0.04em',
+        'border-radius:6px',
         'pointer-events:none',
         'white-space:nowrap',
         'opacity:0',
@@ -387,7 +406,11 @@ export function updateStoryNameTags(heads, speakingSlot, camera, rendererEl) {
         }
         // Project world-space top-of-head into pixel space.
         h.container.getWorldPosition(_NAME_TAG_WORLD);
-        _NAME_TAG_WORLD.y += 0.30; // lift above the head (pulled in from 0.45 per Pietro)
+        // Container origin is the head's visual centre. Medium head height is
+        // 0.58, so its top is at +0.29 from centre. Keep ~0.17 clearance above
+        // the head (a third less than the previous 0.25), so the label still
+        // floats clearly but sits tighter to the character.
+        _NAME_TAG_WORLD.y += 0.46;
         _NAME_TAG_WORLD.project(camera);
         // Behind camera → hide.
         if (_NAME_TAG_WORLD.z > 1) { tag.style.opacity = '0'; continue; }

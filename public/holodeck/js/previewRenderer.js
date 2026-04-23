@@ -30,7 +30,7 @@ import {
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from './shared/archetypeHead.js?v=3';
+} from './shared/archetypeHead.js?v=4';
 import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
