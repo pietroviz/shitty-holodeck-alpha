@@ -20,13 +20,14 @@ import {
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     BONE_HIERARCHY, BASE_BONES, EYE_SHAPES,
     HAIR_STYLES, HAT_STYLES, GLASSES_STYLES, FACIAL_HAIR_STYLES, EYELASH_STYLES, EYEBROW_STYLES,
-    PROP_REF_WIDTH, FACE_PROP_REF_WIDTH, FACIAL_HAIR_REF_WIDTH,
+    PROP_REF_WIDTH, FACE_PROP_REF_WIDTH,
     VOICE_PRESETS,
 } from '../shared/charConfig.js';
 import { generateHeadGeometry, HEAD_SHAPE_OPTIONS } from '../shared/headShapes.js';
 import { generateBodyGeometry, BODY_SHAPE_OPTIONS } from '../shared/bodyShapes.js';
 import { EyeRig, BlinkController } from '../shared/eyeRig.js';
 import { MouthRig } from '../shared/mouthRig.js';
+import { FacialHairRig } from '../shared/facialHairRig.js';
 import { renderProp } from '../shared/propRenderer.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
 import { AnimationManager, ANIMATION_FILES } from '../shared/animationManager.js';
@@ -267,7 +268,7 @@ export class CharacterBridge extends BaseBridge {
         this._mouthRig = null; this._leftEye = null; this._rightEye = null;
         this._blinkCtrl = new BlinkController();
         this._hairGroup = null; this._hatGroup = null;
-        this._glassesGroup = null; this._facialHairGrp = null;
+        this._glassesGroup = null; this._facialHairRig = null;
 
         this._palette = null;
         this._activeColorTarget = null;
@@ -345,9 +346,13 @@ export class CharacterBridge extends BaseBridge {
         const deltaMs = delta * 1000;
         this._blinkCtrl.update(deltaMs);
 
-        // Voice → mouth
+        // Voice → mouth + facial hair
         this._voiceEngine.update(deltaMs);
-        if (this._mouthRig) this._mouthRig.update(this._voiceEngine.getVisemeParams());
+        if (this._mouthRig || this._facialHairRig) {
+            const visemes = this._voiceEngine.getVisemeParams();
+            if (this._mouthRig) this._mouthRig.update(visemes);
+            if (this._facialHairRig) this._facialHairRig.update(visemes);
+        }
 
         // Animation mixer
         if (this._animManager) this._animManager.update(delta);
@@ -426,8 +431,11 @@ export class CharacterBridge extends BaseBridge {
         if (s.hatStyle !== 'none') { const d = await fetchProp(s.hatStyle); if (d) { this._hatGroup = createAccessoryMesh(d, s.hatColor, headWidth/PROP_REF_WIDTH); if (this._hatGroup) { this._hatGroup.position.y = headTopY; this._headGroup.add(this._hatGroup); } } }
         // Glasses
         if (s.glassesStyle !== 'none') { const d = await fetchProp(s.glassesStyle); if (d) { this._glassesGroup = createAccessoryMesh(d, s.glassesColor, headWidth/FACE_PROP_REF_WIDTH); if (this._glassesGroup) { this._glassesGroup.position.set(0, eyeY, faceZ+0.01); this._faceAnchor.add(this._glassesGroup); } } }
-        // Facial hair
-        if (s.facialHairStyle !== 'none') { const d = await fetchProp(s.facialHairStyle); if (d) { this._facialHairGrp = createAccessoryMesh(d, s.facialHairColor, headWidth/FACIAL_HAIR_REF_WIDTH); if (this._facialHairGrp) { this._facialHairGrp.position.set(0, mouthY-0.02, faceZ+0.01); this._faceAnchor.add(this._facialHairGrp); } } }
+        // Facial hair — 2D SVG planes anchored to the mouth, driven by visemes
+        this._facialHairRig = new FacialHairRig();
+        this._facialHairRig.setColor(s.facialHairColor);
+        this._facialHairRig.setStyle(s.facialHairStyle);
+        this._facialHairRig.attach(this._faceAnchor, mouthY, faceZ, headWidth);
     }
 
     _disposeCharacter() {
@@ -436,7 +444,7 @@ export class CharacterBridge extends BaseBridge {
         disposeGroup(this._hairGroup); this._hairGroup = null;
         disposeGroup(this._hatGroup); this._hatGroup = null;
         disposeGroup(this._glassesGroup); this._glassesGroup = null;
-        disposeGroup(this._facialHairGrp); this._facialHairGrp = null;
+        if (this._facialHairRig) { this._facialHairRig.dispose(); this._facialHairRig = null; }
         if (this._leftEye) { this._leftEye.dispose(); this._leftEye = null; }
         if (this._rightEye) { this._rightEye.dispose(); this._rightEye = null; }
         if (this._mouthRig) { this._mouthRig.dispose(); this._mouthRig = null; }
@@ -958,8 +966,9 @@ export class CharacterBridge extends BaseBridge {
                 if (el) el.style.background = hex;
                 if (p === 'eyeIrisColor') { this._leftEye?.setIrisColor(hex); this._rightEye?.setIrisColor(hex); }
                 else if (p === 'lipColor') { this._mouthRig?.setLipColor(hex); }
-                else if (p === 'hairColor' || p === 'hatColor' || p === 'glassesColor' || p === 'facialHairColor') {
-                    const grp = p === 'hairColor' ? this._hairGroup : p === 'hatColor' ? this._hatGroup : p === 'glassesColor' ? this._glassesGroup : this._facialHairGrp;
+                else if (p === 'facialHairColor') { this._facialHairRig?.setColor(hex); }
+                else if (p === 'hairColor' || p === 'hatColor' || p === 'glassesColor') {
+                    const grp = p === 'hairColor' ? this._hairGroup : p === 'hatColor' ? this._hatGroup : this._glassesGroup;
                     if (grp) grp.traverse(c => { if (c.isMesh && c.material && !c.material.map) c.material.color.set(hex); });
                 }
                 else this._applyColors();

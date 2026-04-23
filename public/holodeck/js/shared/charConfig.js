@@ -272,12 +272,15 @@ export const GLASSES_STYLES = {
 };
 
 export const FACIAL_HAIR_STYLES = {
-    none:              { label: 'None' },
-    prop_mustache:     { label: 'Mustache' },
-    prop_full_beard:   { label: 'Full Beard' },
-    prop_goatee:       { label: 'Goatee' },
-    prop_soul_patch:   { label: 'Soul Patch' },
-    prop_long_beard:   { label: 'Long Beard' },
+    none:       { label: 'None' },
+    chevron:    { label: 'Chevron' },
+    handlebar:  { label: 'Handlebar' },
+    pencil:     { label: 'Pencil' },
+    walrus:     { label: 'Walrus' },
+    goatee:     { label: 'Goatee' },
+    soul_patch: { label: 'Soul Patch' },
+    full_beard: { label: 'Full Beard' },
+    long_beard: { label: 'Long Beard' },
 };
 
 // ── Letter → Viseme Mapping ──────────────────────────
