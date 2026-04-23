@@ -85,8 +85,9 @@ const SLOT_ROT_Y = {
 };
 
 // Initial camera pose — matches browse preview so browse → edit feels
-// continuous. Also the reset-view target.
-const INITIAL_CAM_POS    = new THREE.Vector3(0, 1.15, 2.8);
+// continuous. Also the reset-view target. Camera dropped (1.15 → 0.75) so the
+// heads sit higher in the frame and read more centered vertically.
+const INITIAL_CAM_POS    = new THREE.Vector3(0, 0.75, 2.8);
 const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.95, -0.25);
 
 // Corpus bundle is fetched once and shared across all StoryBridge instances

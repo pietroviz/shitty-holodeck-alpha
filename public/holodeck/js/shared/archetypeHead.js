@@ -236,33 +236,33 @@ function _ensureSubtitleEl() {
     // #ui-shell. The subtitle sits inside that same positioning context so the
     // percentages resolve against the same container, anchored 16px above the
     // frame's bottom edge.
-    // Anchor the subtitle's bottom to the top of the large play button so it
-    // tracks with the existing UI. #play-wrap sits at bottom:174px with a 72px
-    // tall button, so bottom:254px puts the subtitle 8px above the play button.
-    // Living inside #ui-elements means it shares the same positioning context.
+    // Vertically centre the subtitle with the large play button so it tracks
+    // the existing UI. #play-wrap sits at bottom:174px with a 72px tall button,
+    // so the button's vertical centre is at bottom:(174+36)=210px. The
+    // translate(-50%, 50%) aligns the subtitle's centre to that line.
     el.style.cssText = [
         'position:absolute',
         'left:50%',
-        'bottom:254px',
-        'transform:translateX(-50%)',
+        'bottom:210px',
+        'transform:translate(-50%, 50%)',
         'max-width:min(80%, 720px)',
-        'padding:5px 10px',
+        'padding:10px 20px',
         'background:rgba(14,18,28,0.72)',
         'color:#fff',
-        'font-size:11px',
+        'font-size:22px',
         'font-weight:600',
         'letter-spacing:0.01em',
         'line-height:1.25',
-        'border-radius:6px',
+        'border-radius:10px',
         'pointer-events:none',
         'text-align:center',
         'z-index:20',
         'opacity:0',
         'transition:opacity 180ms ease',
-        'text-shadow:0 1px 2px rgba(0,0,0,0.5)',
-        'backdrop-filter:blur(3px)',
-        '-webkit-backdrop-filter:blur(3px)',
-        'min-width:60px',
+        'text-shadow:0 1px 3px rgba(0,0,0,0.6)',
+        'backdrop-filter:blur(4px)',
+        '-webkit-backdrop-filter:blur(4px)',
+        'min-width:120px',
     ].join(';');
     const host = document.getElementById('ui-elements')
               || document.getElementById('ui-shell')

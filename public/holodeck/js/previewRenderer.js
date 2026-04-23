@@ -2056,7 +2056,8 @@ function _teardownStoryPreview() {
 function _buildStoryPreview(asset) {
     // Tighter framing: camera pulled in to match the narrower triangle,
     // target sits just behind CHAR_A so B/C read as "behind and inward".
-    _camera.position.set(0, 1.15, 2.8);
+    // Camera dropped (1.15 → 0.75) so heads sit higher in the frame.
+    _camera.position.set(0, 0.75, 2.8);
     _camera.lookAt(0, 0.95, -0.25);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
