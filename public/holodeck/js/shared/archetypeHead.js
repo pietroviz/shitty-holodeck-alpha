@@ -236,14 +236,15 @@ function _ensureSubtitleEl() {
     // #ui-shell. The subtitle sits inside that same positioning context so the
     // percentages resolve against the same container, anchored 16px above the
     // frame's bottom edge.
-    // Stick to the bottom edge of the pink safe-area frame (inside): the frame's
-    // bottom sits at calc(50% + 30vh) inside #ui-shell, and the transform pulls
-    // the subtitle's bottom flush to that line.
+    // Anchor the subtitle's bottom to the top of the large play button so it
+    // tracks with the existing UI. #play-wrap sits at bottom:174px with a 72px
+    // tall button, so bottom:254px puts the subtitle 8px above the play button.
+    // Living inside #ui-elements means it shares the same positioning context.
     el.style.cssText = [
         'position:absolute',
         'left:50%',
-        'top:calc(50% + 30vh)',
-        'transform:translate(-50%, -100%)',
+        'bottom:254px',
+        'transform:translateX(-50%)',
         'max-width:min(80%, 720px)',
         'padding:5px 10px',
         'background:rgba(14,18,28,0.72)',
@@ -263,7 +264,9 @@ function _ensureSubtitleEl() {
         '-webkit-backdrop-filter:blur(3px)',
         'min-width:60px',
     ].join(';');
-    const host = document.getElementById('ui-shell') || document.body;
+    const host = document.getElementById('ui-elements')
+              || document.getElementById('ui-shell')
+              || document.body;
     host.appendChild(el);
     return el;
 }
@@ -384,7 +387,7 @@ export function updateStoryNameTags(heads, speakingSlot, camera, rendererEl) {
         }
         // Project world-space top-of-head into pixel space.
         h.container.getWorldPosition(_NAME_TAG_WORLD);
-        _NAME_TAG_WORLD.y += 0.45; // lift above the head
+        _NAME_TAG_WORLD.y += 0.30; // lift above the head (pulled in from 0.45 per Pietro)
         _NAME_TAG_WORLD.project(camera);
         // Behind camera → hide.
         if (_NAME_TAG_WORLD.z > 1) { tag.style.opacity = '0'; continue; }
