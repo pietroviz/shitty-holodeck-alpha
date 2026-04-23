@@ -50,7 +50,7 @@
  */
 
 const DB_NAME    = 'holodeck_assets';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const STORES = [
     'characters',
@@ -60,6 +60,7 @@ const STORES = [
     'images',
     'voices',
     'simulations',
+    'stories',
 ];
 
 let dbInstance = null;

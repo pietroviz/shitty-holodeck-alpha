@@ -53,5 +53,64 @@
       "eyebrowColor": "#8b4513"
     },
     "catchphrase": "My axe and my word — both unbreakable."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_scottish",
+      "sourceId": "voice_scottish",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_scottish",
+        "type": "voice",
+        "name": "Scottish",
+        "tags": [
+          "accented",
+          "scottish",
+          "english",
+          "hearty"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Hearty Scottish brogue accent.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-sc",
+            "variant": "m6",
+            "speed": 150,
+            "pitch": 40,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 1,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 78,
+            "audioLead": 27,
+            "lipColor": "#c06050",
+            "lipThickness": 3,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#d8b898",
+            "scalpColor": "#6a3020",
+            "captionSize": 18,
+            "presetKey": "scottish",
+            "previewText": "Aye! I speak with a bonnie Scottish brogue!"
+          }
+        }
+      }
+    }
+  ]
 }

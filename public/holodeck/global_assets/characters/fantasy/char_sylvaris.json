@@ -53,5 +53,65 @@
       "eyebrowColor": "#b8d4a0"
     },
     "catchphrase": "The forest speaks to those who listen."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_elf",
+      "sourceId": "voice_elf",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_elf",
+        "type": "voice",
+        "name": "Elf",
+        "tags": [
+          "creatures",
+          "elf",
+          "fantasy",
+          "ethereal",
+          "graceful"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Light, melodic, slightly ethereal elf voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "f3",
+            "speed": 160,
+            "pitch": 60,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 0,
+            "reverb": 15,
+            "wobble": 5,
+            "wobbleSpeed": 6,
+            "brightness": 20,
+            "breathiness": 15,
+            "vocalFry": 0,
+            "chorus": 15,
+            "mouthSnappiness": 75,
+            "audioLead": 8,
+            "lipColor": "#ccddcc",
+            "lipThickness": 2.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#d4a5a5",
+            "scalpColor": "#a0b580",
+            "captionSize": 18,
+            "presetKey": "elf",
+            "previewText": "Greetings, traveler. The forest speaks through me."
+          }
+        }
+      }
+    }
+  ]
 }

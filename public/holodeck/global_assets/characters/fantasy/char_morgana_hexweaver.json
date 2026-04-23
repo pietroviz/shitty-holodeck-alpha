@@ -52,5 +52,64 @@
       "eyebrowColor": "#1a1a1a"
     },
     "catchphrase": "Double, double, toil and trouble."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_villain",
+      "sourceId": "voice_villain",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_villain",
+        "type": "voice",
+        "name": "Villain",
+        "tags": [
+          "everyday",
+          "male",
+          "sinister",
+          "calculating"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Smooth, sinister, calculating villain voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m6",
+            "speed": 135,
+            "pitch": 30,
+            "volume": 100,
+            "amplitude": 95,
+            "wordgap": 3,
+            "reverb": 15,
+            "wobble": 2,
+            "wobbleSpeed": 2,
+            "brightness": -15,
+            "breathiness": 10,
+            "vocalFry": 15,
+            "chorus": 5,
+            "mouthSnappiness": 70,
+            "audioLead": 30,
+            "lipColor": "#5c3d5c",
+            "lipThickness": 2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#6b5b7f",
+            "scalpColor": "#2a2a2a",
+            "captionSize": 18,
+            "presetKey": "villain",
+            "previewText": "How delightful. Everything is going according to plan."
+          }
+        }
+      }
+    }
+  ]
 }

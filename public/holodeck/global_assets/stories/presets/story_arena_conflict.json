@@ -1,0 +1,385 @@
+{
+  "id": "story_arena_conflict",
+  "type": "story",
+  "name": "Arena Under Pressure",
+  "tags": [
+    "arena",
+    "reluctant",
+    "falling",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0003"
+  },
+  "payload": {
+    "description": "CHAR_B: \"Okay. Every single person in here is looking at us.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "reluctant_partners",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "arena",
+        "notes": "performative, public, watched"
+      },
+      "tension_level": "high",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "forced_entry",
+          "emotion": "performatively unbothered",
+          "tension": 9,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "urgent",
+              "tempo": "fast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. Every single person in here is looking at us."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No. They're looking at the concept of us. Different thing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's not better."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I didn't say it was better. I said it was different."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "friction",
+          "emotion": "spiraling",
+          "tension": 9,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crowded",
+              "noise": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Why are we even doing this together. Give me one real reason."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We have complementary skill sets."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What's my skill set."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You go places. I make the places weird. Unstoppable combo."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unexpected_arrival",
+          "emotion": "feral",
+          "tension": 8,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "bright",
+              "saturated": ""
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Good. You're both here. I told them you'd be here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Told who."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Doesn't matter. What matters is the door is open."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What door. I only see a wall."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Exactly. So we work fast."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "disagreement_under_pressure",
+          "emotion": "deadpan",
+          "tension": 8,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "malfunctioning"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "This was supposed to be ready."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It's not ready."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I can see it's not ready. Someone fix it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I could fix it. Or I could make it more interestingly broken."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Do NOT."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_moment",
+          "emotion": "lowkey devastated",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "You ever feel like every room you walk into is already watching?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Yeah."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Does it bother you."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Only when they decide they understand me."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "pivot",
+          "emotion": "locked in",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "shifting",
+              "warm": ""
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. New plan. Smaller. Weirder. Both of you just do exactly what you do."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's not a plan."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It's always worked before."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I respect the chaos-to-strategy ratio here."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "reluctant_alignment",
+          "emotion": "secretly pleased",
+          "tension": 7,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settling",
+              "noise": "falling"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "So we're actually doing this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I've been doing it since narreme one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's not a thing you can say."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You're right. And yet."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "earned_resolution",
+          "emotion": "hyped",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "resolute",
+              "tempo": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "They're still watching."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Let them."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Honestly? Being watched is fine. Being understood is the overstep."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm putting that on a poster."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Please do not."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Too late. It's already happening."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of breaking the pattern and fear of being taken too seriously shape every exchange — the surreal pivots (\"the concept of us\"), the retreat when `<CHAR_B>` gets genuinely close in narreme_005, the refusal to let the moment become a clean lesson. `<CHAR_B>`'s love of the unknown and fear of being stuck drives the friction with the public arena — they want to move, not perform; the reluctant_partners dynamic forces them to hold position, which costs them. `<CHAR_C>`'s love of making things happen and fear of being all talk are baked into the \"door is open / we work fast\" energy and the pivot in narreme_006 where a broken plan becomes a new plan before anyone can call the first one a failure. The Arena location's watched, performative pressure stays in the background of every beat — characters are alert, self-aware, hyper-conscious of the audience, without ever describing the audience directly. The falling arc traces: chaos under maximum scrutiny → a quiet crack → reluctant alignment → the crowd becomes irrelevant."
+    }
+  }
+}

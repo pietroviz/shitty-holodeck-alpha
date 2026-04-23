@@ -53,5 +53,65 @@
       "eyebrowColor": "#88ff88"
     },
     "catchphrase": "Sprinkle sprinkle, little star!"
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_pixie",
+      "sourceId": "voice_pixie",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_pixie",
+        "type": "voice",
+        "name": "Pixie",
+        "tags": [
+          "creatures",
+          "pixie",
+          "fantasy",
+          "sparkly",
+          "tiny"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Extremely high, fast, sparkly pixie voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "f5",
+            "speed": 200,
+            "pitch": 95,
+            "volume": 100,
+            "amplitude": 95,
+            "wordgap": 0,
+            "reverb": 5,
+            "wobble": 20,
+            "wobbleSpeed": 12,
+            "brightness": 50,
+            "breathiness": 8,
+            "vocalFry": 0,
+            "chorus": 25,
+            "mouthSnappiness": 100,
+            "audioLead": 20,
+            "lipColor": "#ff88dd",
+            "lipThickness": 1.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#ffccee",
+            "scalpColor": "#dd99cc",
+            "captionSize": 16,
+            "presetKey": "pixie",
+            "previewText": "Tee hee! Catch me if you can, silly human!"
+          }
+        }
+      }
+    }
+  ]
 }

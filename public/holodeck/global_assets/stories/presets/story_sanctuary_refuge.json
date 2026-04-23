@@ -1,0 +1,367 @@
+{
+  "id": "story_sanctuary_refuge",
+  "type": "story",
+  "name": "Sanctuary Refuge",
+  "tags": [
+    "sanctuary",
+    "mentor",
+    "rise_then_fall",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0001"
+  },
+  "payload": {
+    "description": "CHAR_B: \"I just need to sit somewhere no one needs anything from me.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "⚡",
+          "archetype": "Edge",
+          "loves": "calling it straight",
+          "fears": "being managed or softened",
+          "voice_hint": "Doesn't do vibes they didn't pick. Hot-take poster, 'I do not care for ___' energy. Not mean — just immune to peer pressure, which is exactly why everyone secretly wants Edge's opinion."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "'It me' energy. Relatable to a fault, self-aware, slightly tired, showing up anyway. The one everyone screenshots because Anchor just said the thing the whole group was thinking."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "'It me' energy. Relatable to a fault, self-aware, slightly tired, showing up anyway. The one everyone screenshots because Anchor just said the thing the whole group was thinking."
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "sanctuary",
+        "notes": "safe, restorative, protected; nest, hideaway, friend's room"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "unbothered (lying)",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "low_warm",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "I just need to sit somewhere no one needs anything from me."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah. Floor's yours."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You're not gonna ask what's wrong?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Not yet."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "settling",
+          "emotion": "lowkey exhausted",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "light": "dim_afternoon"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "I said a whole thing today. A really good thing. Nobody heard it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What did you say."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Doesn't matter now."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It matters. Say it again."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "reluctant_reveal",
+          "emotion": "earnestly trying",
+          "tension": 4,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm_muted"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "I said the whole group was burning out but everyone just laughed like it was a bit."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Because it was easier to treat it like a bit."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "So what do I do with that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You don't package it for them. You just say the true thing and let it be true."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "friction",
+          "emotion": "performatively annoyed",
+          "tension": 5,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "picked_up_absently"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "That's easy for you. You don't care if people hear you or not."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I do not care for that framing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It's true though."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Caring less about the reaction isn't the same as not caring. Those are different things."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "spiraling",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "slightly_urgent",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Sorry — I can come back—"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "No, get in here. You're having the same kind of day aren't you."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I said something really smart and everyone just moved on."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "SAME. It's giving invisible."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "confrontation",
+          "emotion": "deadpan",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "flat"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "How do you just say things and not spiral after."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I spiral. I just don't perform it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Wait that's actually really—"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't screenshot that."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_turn",
+          "emotion": "secretly pleased",
+          "tension": 4,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settling",
+              "light": "going_golden"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Here's the thing. You both said a real thing today. That's not nothing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It felt like nothing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah. It does for a while."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...That's kind of the saddest and most helpful sentence I've ever heard."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "easy_landing",
+          "emotion": "lowkey okay",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm_resolute",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Are we all just gonna stay here for a while."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Floor's big enough."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Nobody's going anywhere. I do not care for productivity right now."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Based."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of calling it straight and fear of being managed shapes every line — they don't soften the hard truth for `<CHAR_B>` or `<CHAR_C>`, but they also don't perform toughness. The spiral admission (\"I spiral. I just don't perform it.\") is the closest `<CHAR_A>` gets to vulnerability, and it lands harder for being offhand. `<CHAR_B>` and `<CHAR_C>` share the same Core but express it slightly differently — `<CHAR_B>` is more self-aware and wry, `<CHAR_C>` is slightly more raw — both fear being overlooked, which is why the shared-invisible-moment in narreme_005 pulls them together instinctively. The Sanctuary location suppresses big moves: nobody storms out, nobody escalates past honest friction. The tension rises because the truth gets more specific, not because anyone raises a voice, then settles because the room itself absorbs the weight. The mentor_student relationship between `<CHAR_A>` and `<CHAR_B>` operates sideways — `<CHAR_A>` doesn't lecture, just refuses to let `<CHAR_B>` stay in the wrong frame. That's the whole lesson."
+    }
+  }
+}

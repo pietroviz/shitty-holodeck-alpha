@@ -53,5 +53,64 @@
       "eyebrowColor": "#4a6a2a"
     },
     "catchphrase": "Fascinating. Don't touch it though."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_professor",
+      "sourceId": "voice_professor",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_professor",
+        "type": "voice",
+        "name": "Professor",
+        "tags": [
+          "everyday",
+          "male",
+          "intellectual",
+          "measured"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Measured, intellectual, precise male voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m5",
+            "speed": 140,
+            "pitch": 38,
+            "volume": 100,
+            "amplitude": 95,
+            "wordgap": 2,
+            "reverb": 1,
+            "wobble": 2,
+            "wobbleSpeed": 2,
+            "brightness": 0,
+            "breathiness": 5,
+            "vocalFry": 3,
+            "chorus": 0,
+            "mouthSnappiness": 75,
+            "audioLead": 35,
+            "lipColor": "#8b6f47",
+            "lipThickness": 2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#c9b8a8",
+            "scalpColor": "#8b8b8b",
+            "captionSize": 18,
+            "presetKey": "professor",
+            "previewText": "If we examine the evidence carefully, we can see clearly."
+          }
+        }
+      }
+    }
+  ]
 }

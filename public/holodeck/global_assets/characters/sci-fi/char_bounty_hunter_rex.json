@@ -52,5 +52,64 @@
       "eyebrowColor": "#4a3a2a"
     },
     "catchphrase": "Everyone's got a price. Even you."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_gruff",
+      "sourceId": "voice_gruff",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_gruff",
+        "type": "voice",
+        "name": "Gruff",
+        "tags": [
+          "everyday",
+          "male",
+          "rough",
+          "tough"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Low, rough, gravelly tough guy voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "croak",
+            "speed": 130,
+            "pitch": 22,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 3,
+            "reverb": 5,
+            "wobble": 3,
+            "wobbleSpeed": 2,
+            "brightness": -10,
+            "breathiness": 10,
+            "vocalFry": 35,
+            "chorus": 0,
+            "mouthSnappiness": 60,
+            "audioLead": 25,
+            "lipColor": "#8b5a3c",
+            "lipThickness": 2.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#a0785c",
+            "scalpColor": "#5c4033",
+            "captionSize": 18,
+            "presetKey": "gruff",
+            "previewText": "Listen here pal, I don't have time for games."
+          }
+        }
+      }
+    }
+  ]
 }

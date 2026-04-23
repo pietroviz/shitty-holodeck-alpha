@@ -53,5 +53,63 @@
       "eyebrowColor": "#d4a843"
     },
     "catchphrase": "Diamond hands, baby. To the moon!"
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_male",
+      "sourceId": "voice_male",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_male",
+        "type": "voice",
+        "name": "Male",
+        "tags": [
+          "standard",
+          "male",
+          "neutral"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Clean, neutral adult male voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m2",
+            "speed": 170,
+            "pitch": 35,
+            "volume": 100,
+            "amplitude": 110,
+            "wordgap": 0,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 85,
+            "audioLead": 40,
+            "lipColor": "#6aaa70",
+            "lipThickness": 3.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#8bc990",
+            "scalpColor": "#4a7a4e",
+            "captionSize": 18,
+            "presetKey": "male",
+            "previewText": "Hey there! I'm a standard male voice. How are you doing?"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -52,5 +52,64 @@
       "eyebrowColor": "#c0c0c0"
     },
     "catchphrase": "Knowledge is the greatest magic of all."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_elderly_woman",
+      "sourceId": "voice_elderly_woman",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_elderly_woman",
+        "type": "voice",
+        "name": "Elderly Woman",
+        "tags": [
+          "everyday",
+          "elderly",
+          "female",
+          "gentle"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Gentle, slightly quavery, kind elderly woman.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "f2",
+            "speed": 130,
+            "pitch": 60,
+            "volume": 100,
+            "amplitude": 85,
+            "wordgap": 2,
+            "reverb": 0,
+            "wobble": 10,
+            "wobbleSpeed": 4,
+            "brightness": 5,
+            "breathiness": 20,
+            "vocalFry": 8,
+            "chorus": 0,
+            "mouthSnappiness": 65,
+            "audioLead": 30,
+            "lipColor": "#d9a6a6",
+            "lipThickness": 2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#e8d4c8",
+            "scalpColor": "#e0e0e0",
+            "captionSize": 18,
+            "presetKey": "elderly_woman",
+            "previewText": "Oh dearie, come sit down and let me tell you a story."
+          }
+        }
+      }
+    }
+  ]
 }

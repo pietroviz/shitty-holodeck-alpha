@@ -18,6 +18,16 @@ import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
 import { MusicEngine } from './shared/musicEngine.js';
+import {
+    buildArchetypeHead,
+    runStoryPlayback,
+    showSubtitle,
+    hideSubtitle,
+    removeSubtitle,
+    pickThreeBeats,
+    speakWithArchetype,
+    animateStoryHeads,
+} from './shared/archetypeHead.js?v=2';
 import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
@@ -101,6 +111,10 @@ let _onSpeakStateChange = null;  // callback(isSpeaking) for UI updates
 // Environment preview state — populated by _buildEnvironmentPreview, consumed
 // in the tick loop for dynamic wall + ground-object culling and weather.
 let _envPreview = null;
+
+// Story preview state — populated by _buildStoryPreview, consumed in the tick
+// loop for head bob + mouth wiggle, and torn down on showPreview / destroyPreview.
+let _storyPreview = null;
 
 /** Register a callback for when speaking starts/stops. */
 export function setOnSpeakStateChange(cb) { _onSpeakStateChange = cb; }
@@ -257,6 +271,7 @@ export function showPreview(container, asset, opts = {}) {
     _stopLoop();
     _musicViz = null;
     _envPreview = null;
+    _teardownStoryPreview();
     if (_musicEngine) _musicEngine.stop();
 
     // Create or reuse renderer
@@ -346,6 +361,9 @@ export function showPreview(container, asset, opts = {}) {
         _buildImagePreview(asset);
         _autoSpin = false;  // 2D images don't rotate
         if (_controls) _controls.target.set(0, 1, 0);
+    } else if (type === 'story') {
+        _buildStoryPreview(asset);
+        if (_controls) _controls.target.set(0, 0.8, 0);
     } else {
         _buildFallbackPreview(asset);
         if (_controls) _controls.target.set(0, 0.5, 0);
@@ -377,6 +395,8 @@ export function destroyPreview() {
     _stopLoop();
     _musicViz = null;
     _envPreview = null;
+    _teardownStoryPreview();
+    removeSubtitle();
     if (_voiceEngine) _voiceEngine.stop();
     if (_musicEngine) _musicEngine.stop();
     if (_mouthRig) { _mouthRig.dispose(); _mouthRig = null; }
@@ -431,6 +451,19 @@ function _startLoop() {
             if (_envPreview.walls) _envCullWalls(_envPreview.walls, _camera);
             if (_envPreview.groundObjs.length) _envCullGroundObjects(_envPreview.groundObjs, _camera);
             if (_envPreview.weather) _envTickWeather(_envPreview.weather, delta);
+        }
+
+        // Story preview: amp-driven mouth + head bob/bounce on the speaking slot.
+        if (_storyPreview) {
+            const visemeParams = _voiceEngine ? _voiceEngine.getVisemeParams() : null;
+            const amp = visemeParams ? Math.max(0, Math.min(1, visemeParams.jawOpen || 0)) : 0;
+            animateStoryHeads(_storyPreview.heads, {
+                speakingSlot: _storyPreview.speakingSlot,
+                amp,
+                visemeParams,
+                t: performance.now() * 0.001,
+                deltaS: delta,
+            });
         }
 
         // Update music visualizer animation
@@ -1966,4 +1999,159 @@ function _buildFallbackPreview(asset) {
     );
     box.position.y = 0.5;
     _previewGroup.add(box);
+}
+
+// ── Story preview ───────────────────────────────────────────────
+// Three archetype heads arranged as a loose triangle: CHAR_A (main) sits
+// one BINGO cell deeper than the side two, and CHAR_B/C are rotated to
+// face inward as if mid-conversation — but cheated back toward the camera
+// so we don't see them in profile.
+const _STORY_POS = {
+    CHAR_B: [-1.15, 0.95,  0.0],
+    CHAR_A: [ 0.00, 0.95, -1.0],
+    CHAR_C: [ 1.15, 0.95,  0.0],
+};
+const _STORY_ROT_Y = {
+    CHAR_B:  0.55,  // ~31° — faces inward + slightly toward camera
+    CHAR_A:  0,
+    CHAR_C: -0.55,
+};
+
+function _teardownStoryPreview() {
+    if (!_storyPreview) return;
+    _storyPreview.playback?.stop?.();
+    hideSubtitle();
+    if (_voiceEngine) _voiceEngine.stop();
+    for (const h of _storyPreview.heads) {
+        h.container.parent?.remove(h.container);
+        h.dispose?.();
+    }
+    _storyPreview = null;
+}
+
+function _buildStoryPreview(asset) {
+    _camera.position.set(0, 1.2, 3.4);
+    _camera.lookAt(0, 0.95, -0.35);
+    _camera.fov = 50;
+    _camera.updateProjectionMatrix();
+
+    // Disable the ping-pong auto-spin — story preview is a read-through, the
+    // camera should stay put so subtitles + wiggles read cleanly.
+    _autoSpin = false;
+
+    const state = asset.payload?.state || asset.state || {};
+    const cast  = Array.isArray(state.cast) && state.cast.length ? state.cast : [
+        { slot: 'CHAR_A', archetype: 'Edge' },
+        { slot: 'CHAR_B', archetype: 'Bloom' },
+        { slot: 'CHAR_C', archetype: 'Glitch' },
+    ];
+    const beats = pickThreeBeats(Array.isArray(state.beats) ? state.beats : []);
+
+    const heads = [];
+    for (const c of cast) {
+        const h = buildArchetypeHead(c.archetype);
+        const container = new THREE.Group();
+        container.add(h.group);
+        const pos = _STORY_POS[c.slot] || [0, 0.95, 0];
+        const rotY = _STORY_ROT_Y[c.slot] || 0;
+        container.position.set(...pos);
+        container.rotation.y = rotY;
+        _previewGroup.add(container);
+        heads.push({
+            slot: c.slot,
+            container,
+            basePos: container.position.clone(),
+            baseRotY: rotY,
+            talk: h.talk,
+            talkParams: h.talkParams,
+            dispose: h.dispose,
+            lastWasSpeaking: false,
+            bounceT: 0,
+        });
+    }
+
+    _storyPreview = {
+        heads,
+        speakingSlot: null,
+        playback: null,
+        cast,
+        beats,
+        isPlaying: false,
+    };
+
+    // Prime the voice engine but don't auto-start playback — the Play button
+    // (and the autoplay toggle) decides whether to kick it off. This mirrors
+    // how env + music previews behave.
+    _voiceConfigured = _ensureVoice().then(() => {
+        if (!_voiceReady || !_voiceEngine) return;
+        // Reset to a neutral default so archetype deltas land on consistent
+        // baseline params on first speak.
+        if (_voiceEngine.applyState) {
+            _voiceEngine.applyState({ speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' });
+        }
+    });
+}
+
+function _startStoryPlayback() {
+    if (!_storyPreview || _storyPreview.playback) return;
+    const { cast, beats } = _storyPreview;
+    if (!beats || beats.length === 0) return;
+    _storyPreview.isPlaying = true;
+
+    _storyPreview.playback = runStoryPlayback({
+        beats,
+        getLabelForSlot: (slot) => {
+            const entry = cast.find(c => c.slot === slot);
+            return entry ? `${entry.archetype}-core` : slot;
+        },
+        getArchetypeForSlot: (slot) => {
+            const entry = cast.find(c => c.slot === slot);
+            return entry?.archetype || null;
+        },
+        onLine: ({ slot, label, text, silent }) => {
+            if (!_storyPreview) return;
+            if (silent) {
+                _storyPreview.speakingSlot = null;
+                hideSubtitle();
+                return;
+            }
+            _storyPreview.speakingSlot = slot;
+            showSubtitle(label, text);
+        },
+        onIdle: () => {
+            if (!_storyPreview) return;
+            _storyPreview.speakingSlot = null;
+            hideSubtitle();
+        },
+        speakLine: async (text, archetype) => {
+            if (_voiceConfigured) await _voiceConfigured;
+            if (!_voiceReady || !_voiceEngine) return;
+            await speakWithArchetype(_voiceEngine, {
+                text, archetype,
+                baseState: { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' },
+            });
+        },
+        loop: true,
+    });
+}
+
+function _stopStoryPlayback() {
+    if (!_storyPreview) return;
+    _storyPreview.playback?.stop?.();
+    _storyPreview.playback = null;
+    _storyPreview.isPlaying = false;
+    _storyPreview.speakingSlot = null;
+    hideSubtitle();
+    if (_voiceEngine) _voiceEngine.stop();
+}
+
+export function previewPlayStory() {
+    if (!_storyPreview) return;
+    _startStoryPlayback();
+}
+export function previewStopStory() {
+    _stopStoryPlayback();
+}
+export function isPreviewStoryPlaying() {
+    return !!(_storyPreview && _storyPreview.isPlaying);
 }

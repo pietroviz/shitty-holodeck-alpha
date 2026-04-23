@@ -52,5 +52,65 @@
       "eyebrowColor": "#3a6a2a"
     },
     "catchphrase": "Ooh, shiny! Mine now."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_goblin",
+      "sourceId": "voice_goblin",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_goblin",
+        "type": "voice",
+        "name": "Goblin",
+        "tags": [
+          "creatures",
+          "goblin",
+          "fantasy",
+          "small",
+          "mischievous"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Squeaky mischievous goblin voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m1",
+            "speed": 190,
+            "pitch": 85,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 0,
+            "reverb": 0,
+            "wobble": 15,
+            "wobbleSpeed": 8,
+            "brightness": 30,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 95,
+            "audioLead": 15,
+            "lipColor": "#66aa44",
+            "lipThickness": 2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#88bb66",
+            "scalpColor": "#446622",
+            "captionSize": 18,
+            "presetKey": "goblin",
+            "previewText": "Hehehe! Goblin wants your shiny treasure!"
+          }
+        }
+      }
+    }
+  ]
 }

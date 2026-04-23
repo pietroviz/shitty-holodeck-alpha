@@ -1,0 +1,391 @@
+{
+  "id": "story_wild_descent",
+  "type": "story",
+  "name": "Wild Descent",
+  "tags": [
+    "wild",
+    "falling",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0006"
+  },
+  "payload": {
+    "description": "CHAR_C: \"Nobody move. I am assessing.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "wild",
+        "notes": "untamed, unknown, outside social rules"
+      },
+      "tension_level": "high",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "crisis_opening",
+          "emotion": "feral",
+          "tension": 9,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "urgent",
+              "tempo": "fast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Nobody move. I am assessing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "There is nothing to assess. We are lost."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We're not lost. We're between the plan and the next plan."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That is what lost means."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_recon",
+          "emotion": "locked in",
+          "tension": 9,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "dense",
+              "visibility": "low"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. Sun's that way. Which means we came from — yeah."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You just figured that out from the sun."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I've done this before."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Where."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Somewhere weirder than this. Trust."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "disagreement",
+          "emotion": "unbothered (lying)",
+          "tension": 8,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "harsh"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "We are using the map."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The map is from before this section existed."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It was the official map."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "So was the one that got us here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Okay so both good points."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "tension_spike",
+          "emotion": "spiraling",
+          "tension": 8,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "missing"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Where is it. I packed it. I specifically packed it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I may have redistributed some things when I reorganized the bag."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You reorganized — why would you do that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I thought it would help. It was a vibe at the time."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_beat",
+          "emotion": "lowkey devastated",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "still",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Hey. We're fine."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You don't know that."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "No. But I've been fine in worse."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "For what it's worth — I know someone. When we get back."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "discovery",
+          "emotion": "hyped",
+          "tension": 6,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "clearing",
+              "light": "breaking_through"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Wait. Stop."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You see that gap in the trees?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Is that — yeah. Yeah that's a trail."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Told you."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "regrouping",
+          "emotion": "earnestly trying",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warmer"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. New plan. I'm writing it down."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You're making a plan in a clearing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Yes."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Love that for you. Actually — can I add something?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...You have thirty seconds."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_resolution",
+          "emotion": "secretly pleased",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "resolute",
+              "tempo": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "So. We good?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "We are functional. That is what we are."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Functional is a W, bestie."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Do not call me bestie."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Noted. Let's go."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of making things happen and fear of being seen as all talk drives the \"between the plan and the next plan\" deflection and the instinct to add themselves to `<CHAR_C>`'s new plan — they need to be useful, visibly. `<CHAR_B>`'s love of the next unknown and fear of being stuck drive the sun-navigation beat and the discovery of the trail — they stay oriented even when everyone else unravels, because moving forward is how they cope. `<CHAR_C>`'s love of holding it together and fear of losing control surface in the map dispute and the missing-item spiral — losing a small thing in a Wild location reads as losing the whole situation, which is catastrophic to them. The Wild location keeps everyone alert and reactive; there are no social scripts to fall back on, so each character defaults hard to their core love. The falling arc traces from collective panic through quiet stabilization to a functional (if prickly) truce — tension never fully resolves because the Wild doesn't grant clean endings, only forward motion."
+    }
+  }
+}

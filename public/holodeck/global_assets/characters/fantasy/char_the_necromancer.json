@@ -52,5 +52,64 @@
       "eyebrowColor": "#2a2a2a"
     },
     "catchphrase": "Death is merely a door, and I hold the key."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_demon",
+      "sourceId": "voice_demon",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_demon",
+        "type": "voice",
+        "name": "Demon",
+        "tags": [
+          "fantasy",
+          "demon",
+          "deep",
+          "dark"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Deep, menacing demon voice with vocal fry and heavy reverb.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m7",
+            "speed": 90,
+            "pitch": 5,
+            "volume": 100,
+            "amplitude": 140,
+            "wordgap": 4,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 60,
+            "audioLead": 60,
+            "lipColor": "#aa3333",
+            "lipThickness": 5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#cc4444",
+            "scalpColor": "#661111",
+            "captionSize": 22,
+            "presetKey": "demon",
+            "previewText": "I am the darkness that dwells below. Tremble before me, mortals."
+          }
+        }
+      }
+    }
+  ]
 }

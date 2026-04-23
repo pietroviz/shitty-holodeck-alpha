@@ -19,6 +19,7 @@ const GLOBAL_CATEGORIES = {
     '3D Objects': { folder: 'objects',       hasManifest: true,  type: 'prop' },
     '2D Images':  { folder: 'images',        hasManifest: false, type: 'asset' },
     Voices:       { folder: 'voices',        hasManifest: true,  type: 'voice' },
+    Stories:      { folder: 'stories',       hasManifest: true,  type: 'story' },
 };
 
 // Map "My Stuff" labels → IndexedDB store names
@@ -29,6 +30,7 @@ const USER_STORES = {
     '3D Objects': 'objects',
     '2D Images':  'images',
     Voices:       'voices',
+    Stories:      'stories',
 };
 
 const BASE_PATH = 'global_assets';

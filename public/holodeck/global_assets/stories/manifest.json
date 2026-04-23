@@ -1,0 +1,24 @@
+{
+  "categories": {
+    "defaults": {
+      "name": "Getting Started",
+      "count": 1,
+      "files": [
+        "story_meta_default.json"
+      ],
+      "folder": "defaults"
+    },
+    "presets": {
+      "name": "Presets",
+      "count": 5,
+      "files": [
+        "story_sanctuary_refuge.json",
+        "story_arena_conflict.json",
+        "story_wild_descent.json",
+        "story_home_strangers.json",
+        "story_crossroads_arrival.json"
+      ],
+      "folder": "presets"
+    }
+  }
+}

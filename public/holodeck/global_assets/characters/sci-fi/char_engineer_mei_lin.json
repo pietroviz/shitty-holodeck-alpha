@@ -53,5 +53,64 @@
       "eyebrowColor": "#1a1a1a"
     },
     "catchphrase": "Give me duct tape and I'll fix anything."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_cheerful",
+      "sourceId": "voice_cheerful",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_cheerful",
+        "type": "voice",
+        "name": "Cheerful",
+        "tags": [
+          "everyday",
+          "female",
+          "bright",
+          "happy"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Bright, energetic, happy female voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "f4",
+            "speed": 170,
+            "pitch": 65,
+            "volume": 100,
+            "amplitude": 105,
+            "wordgap": 1,
+            "reverb": 2,
+            "wobble": 4,
+            "wobbleSpeed": 6,
+            "brightness": 25,
+            "breathiness": 10,
+            "vocalFry": 2,
+            "chorus": 10,
+            "mouthSnappiness": 85,
+            "audioLead": 45,
+            "lipColor": "#e85a7a",
+            "lipThickness": 2.2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#f5d9c9",
+            "scalpColor": "#d4a574",
+            "captionSize": 18,
+            "presetKey": "cheerful",
+            "previewText": "Oh my gosh, this is going to be so much fun!"
+          }
+        }
+      }
+    }
+  ]
 }

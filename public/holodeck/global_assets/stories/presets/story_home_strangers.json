@@ -1,0 +1,325 @@
+{
+  "id": "story_home_strangers",
+  "type": "story",
+  "name": "Strangers at Home",
+  "tags": [
+    "home",
+    "strangers",
+    "rise_then_fall",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0005"
+  },
+  "payload": {
+    "description": "CHAR_A: \"You're just standing in the hallway.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🔥",
+          "archetype": "Flame",
+          "loves": "feeling it all the way",
+          "fears": "being dismissed as too much",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🔨",
+          "archetype": "Maker",
+          "loves": "bringing an idea into the world",
+          "fears": "the thing not being good",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "strangers_to_friends",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "home",
+        "notes": "domestic everyday baseline; familiar, low-stakes, slightly cramped"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "awkward_meeting",
+          "emotion": "performatively unbothered",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tentative",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You're just standing in the hallway."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Yeah. I'm clocking the layout."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It's a hallway."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Every hallway is a decision."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_space_discovery",
+          "emotion": "lowkey curious",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm_cluttered"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Don't touch that. It's mid-concept."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What's it going to be?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I don't know yet. That's the whole thing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay that's actually kind of beautiful though."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...Don't make it weird."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_friction",
+          "emotion": "spiraling (one of them)",
+          "tension": 5,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "too_quiet",
+              "light": "late_afternoon_flat"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You didn't laugh."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "At what."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The thing I said. Before."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I was thinking about it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You can just say it wasn't funny. I can take it. I literally cannot take it."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "tension_peak",
+          "emotion": "feral (low-stakes edition)",
+          "tension": 6,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "broken_in_half"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay who did that."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It was already like that."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It was NOT already like that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I can see exactly how this happened and honestly it was a little bit me."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "A little bit."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "A medium bit."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "repair_attempt",
+          "emotion": "earnestly trying",
+          "tension": 4,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "dim_then_warming"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "I can fix it. I just need twenty minutes and to not be looked at."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We can do that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm going to watch but in a supportive way."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That's still looking at me."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It's giving believe-in-you energy. It's different."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "settled_warmth",
+          "emotion": "secretly pleased (all three)",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "soft",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "It actually looks better now."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Don't."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm serious. The crack is giving character."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I improved it. Accidentally. But still."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You are both so unserious."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah but you're smiling."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...The smile is also mid-concept."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of feeling everything loudly and fear of being dismissed surface in the hallway non-laugh spiral — they're reading a pause like a verdict and immediately perform self-awareness about it. The home location keeps this grounded and low-temperature: the anxiety reads as genuine without requiring real stakes, because domestic familiarity makes small social moments feel both safe and weirdly high-pressure. `<CHAR_B>`'s Compass core shows up in how they hold the space between `<CHAR_A>` and `<CHAR_C>` — not attached to outcomes, observant enough to find the angle that moves things forward (\"the crack is giving character\"). `<CHAR_C>`'s fear of the thing not being good drives the broken-prop beat — it's not the break itself that stings, it's that the work was mid-process and therefore still vulnerable. The strangers-to-friends arc between `<CHAR_A>` and `<CHAR_B>` progresses through friction (the laugh beat) into genuine warmth (the \"you're smiling\" closer) without a dramatic declaration — they just stop being careful around each other. The nano LM should learn that home-location arcs don't need external threat; the domestic setting lets character self-consciousness carry the tension."
+    }
+  }
+}

@@ -53,5 +53,64 @@
       "eyebrowColor": "#ff69b4"
     },
     "catchphrase": "I'm not here to make friends."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_teenager",
+      "sourceId": "voice_teenager",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_teenager",
+        "type": "voice",
+        "name": "Teenager",
+        "tags": [
+          "everyday",
+          "young",
+          "casual",
+          "upbeat"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Fast, casual, upbeat teenager voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m2",
+            "speed": 175,
+            "pitch": 55,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 1,
+            "reverb": 0,
+            "wobble": 5,
+            "wobbleSpeed": 7,
+            "brightness": 15,
+            "breathiness": 8,
+            "vocalFry": 5,
+            "chorus": 0,
+            "mouthSnappiness": 80,
+            "audioLead": 40,
+            "lipColor": "#b85c75",
+            "lipThickness": 2,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#f0d7c9",
+            "scalpColor": "#704020",
+            "captionSize": 18,
+            "presetKey": "teenager",
+            "previewText": "Yo, that's totally awesome! Like, for real!"
+          }
+        }
+      }
+    }
+  ]
 }

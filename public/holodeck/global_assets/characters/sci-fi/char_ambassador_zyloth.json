@@ -53,5 +53,64 @@
       "eyebrowColor": "#2a8a6a"
     },
     "catchphrase": "Peace is the most logical conclusion."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_alien",
+      "sourceId": "voice_alien",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_alien",
+        "type": "voice",
+        "name": "Alien",
+        "tags": [
+          "fantasy",
+          "alien",
+          "otherworldly",
+          "sci-fi"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Otherworldly alien voice with wobble and chorus.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "klatt2",
+            "speed": 200,
+            "pitch": 90,
+            "volume": 100,
+            "amplitude": 80,
+            "wordgap": 0,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 70,
+            "audioLead": 50,
+            "lipColor": "#66bb88",
+            "lipThickness": 2.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#88ddaa",
+            "scalpColor": "#448866",
+            "captionSize": 18,
+            "presetKey": "alien",
+            "previewText": "We come in peace, earthlings. Take us to your leader."
+          }
+        }
+      }
+    }
+  ]
 }

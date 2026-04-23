@@ -53,5 +53,65 @@
       "eyebrowColor": "#4a6a2a"
     },
     "catchphrase": "I was old when the mountains were young."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_treant",
+      "sourceId": "voice_treant",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_treant",
+        "type": "voice",
+        "name": "Treant",
+        "tags": [
+          "creatures",
+          "treant",
+          "fantasy",
+          "ancient",
+          "nature"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Extremely slow, creaky, ancient treant voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "klatt2",
+            "speed": 85,
+            "pitch": 18,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 0,
+            "reverb": 25,
+            "wobble": 8,
+            "wobbleSpeed": 2,
+            "brightness": 12,
+            "breathiness": 25,
+            "vocalFry": 50,
+            "chorus": 10,
+            "mouthSnappiness": 40,
+            "audioLead": 5,
+            "lipColor": "#5d4437",
+            "lipThickness": 4,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#556b2f",
+            "scalpColor": "#2d3d1f",
+            "captionSize": 22,
+            "presetKey": "treant",
+            "previewText": "I... have... watched... the forests... grow..."
+          }
+        }
+      }
+    }
+  ]
 }

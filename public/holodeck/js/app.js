@@ -6,8 +6,9 @@ import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
 import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
+import { StoryBridge }          from './bridges/StoryBridge.js?v=3';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewResetView } from './previewRenderer.js?v=5';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=8';
 import { generateId }                       from './db.js';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -62,6 +63,7 @@ const _THUMB_PLACEHOLDERS = {
     object:      { icon: '📦', bg: '#2A3240' },
     image:       { icon: '🖼', bg: '#2A3240' },
     asset:       { icon: '🖼', bg: '#2A3240' },
+    story:       { icon: '📖', bg: '#2A3240' },
 };
 function _thumbHTML(item) {
     // Stock assets: ALWAYS use pre-rendered static thumbnail (never the browser-gen cache)
@@ -84,6 +86,7 @@ const BRIDGE_MAP = {
     '3D Object':   ObjectBridge,
     '2D Image':    ImageBridge,
     'Voice':       VoiceBridge,
+    'Story':       StoryBridge,
 };
 
 /** Map asset types (from JSON) → display labels for BRIDGE_MAP lookup. */
@@ -96,6 +99,7 @@ const TYPE_TO_LABEL = {
     image:     '2D Image',
     object:    '3D Object',
     voice:     'Voice',
+    story:     'Story',
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -135,6 +139,7 @@ const ICON = {
     music:        svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),
     box:          svg('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/>'),
     image:        svg('<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>'),
+    book:         svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
     dice:         `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="4" fill="white"/><circle cx="12" cy="8" r="1.5" fill="black"/><circle cx="8" cy="12" r="1.5" fill="black"/><circle cx="16" cy="12" r="1.5" fill="black"/><circle cx="12" cy="16" r="1.5" fill="black"/></svg>`,
     layout:       svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'),
     mic:          svg('<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>'),
@@ -154,6 +159,7 @@ const ASSET_CATEGORIES = [
     { label: 'Music',        singular: 'Music',        icon: ICON.music  },
     { label: '3D Objects',   singular: '3D Object',    icon: ICON.box    },
     { label: '2D Images',    singular: '2D Image',     icon: ICON.image  },
+    { label: 'Stories',      singular: 'Story',        icon: ICON.book   },
 ];
 
 const PANEL_CATEGORIES = {
@@ -163,6 +169,7 @@ const PANEL_CATEGORIES = {
     Music:        ['All Music', 'My Music'],
     '3D Objects': ['All 3D Objects', 'My 3D Objects'],
     '2D Images':  ['All 2D Images', 'My 2D Images'],
+    Stories:      ['All Stories', 'My Stories'],
 };
 
 /** One-level floating menu items. Each action handled directly. */
@@ -193,7 +200,7 @@ let panelLoading  = false;
 let panelSource   = '';   // 'explore' | 'mystuff'
 
 /** Panel labels that support auto-play preview when browsing. */
-const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters', 'Music', 'Environments']);
+const AUTO_PLAY_PANELS = new Set(['Voices', 'Characters', 'Music', 'Environments', 'Stories']);
 function _canAutoPlay(label) { return AUTO_PLAY_PANELS.has(label); }
 
 /* ══════════════════════════════════════════════════════════
@@ -946,6 +953,8 @@ function renderPanel() {
                     previewStopMusic();
                 } else if (S.previewAsset.type === 'environment') {
                     previewStopEnvironment();
+                } else if (S.previewAsset.type === 'story') {
+                    previewStopStory();
                 } else if (S.previewAsset.type === 'voice' || S.previewAsset.type === 'character') {
                     previewStopVoice();
                 }
@@ -959,7 +968,7 @@ function renderPanel() {
     if (createNewBtn) {
         createNewBtn.addEventListener('click', () => {
             // Map plural labels back to singular for Create
-            const singularMap = { Characters:'Character', Environments:'Environment', Voices:'Voice', Music:'Music', '3D Objects':'3D Object', '2D Images':'2D Image' };
+            const singularMap = { Characters:'Character', Environments:'Environment', Voices:'Voice', Music:'Music', '3D Objects':'3D Object', '2D Images':'2D Image', Stories:'Story' };
             const createType = singularMap[panelLabel] || panelLabel;
             closePanel();
             openCreate(createType);
@@ -1032,6 +1041,7 @@ function renderPanel() {
                                 : asset.type === 'environment' ? 'environments'
                                 : asset.type === 'music' ? 'music'
                                 : asset.type === 'prop' || asset.type === 'object' ? 'objects'
+                                : asset.type === 'story' ? 'stories'
                                 : 'images';
                     await dbSave(store, copy);
                     // If viewing My Stuff, refresh to show the new copy
@@ -1200,6 +1210,9 @@ function _autoPlayCurrentAsset() {
         // music/effects tied to the env's own settings.
         previewPlayEnvironment();
         _setPlayBtnState(true);
+    } else if (asset.type === 'story') {
+        previewPlayStory();
+        _setPlayBtnState(true);
     }
 }
 
@@ -1208,10 +1221,11 @@ function selectAsset(idx, items) {
     const asset = items?.[idx];
     if (!asset) return;
 
-    // Stop any currently playing voice/music/rotation before switching
+    // Stop any currently playing voice/music/rotation/story before switching
     previewStopVoice();
     previewStopMusic();
     previewStopEnvironment();
+    previewStopStory();
     _setPlayBtnState(false);
 
     S.selectedIndex = idx;
@@ -1240,6 +1254,7 @@ function selectAsset(idx, items) {
                                 : asset.type === 'voice' ? 'voices'
                                 : asset.type === 'music' ? 'music'
                                 : asset.type === 'prop' || asset.type === 'object' ? 'objects'
+                                : asset.type === 'story' ? 'stories'
                                 : 'images';
                     await dbSave(store, asset);
                 } catch (e) { /* silent — thumbnail is cached in memory as fallback */ }
@@ -1411,6 +1426,11 @@ async function openBuilder(BridgeClass, asset, label) {
         destroyPreview();
     }
 
+    // destroyPreview() stops any browse-preview playback (voice/story/env/music)
+    // but doesn't touch the global Play button — reset it here so the new
+    // bridge (which starts not-playing) doesn't inherit an is-speaking button.
+    _setPlayBtnState(false);
+
     S.builderMode      = true;
     S.panelOpen        = true;
     S.panelLabel       = asset ? `Edit ${label}` : `New ${label}`;
@@ -1430,6 +1450,11 @@ async function openBuilder(BridgeClass, asset, label) {
 function onStackChange({ depth, label, isEmpty, savedAsset }) {
     if (isEmpty) {
         S.builderMode = false;
+
+        // Returning to browse — bridge playback is already torn down, so make
+        // sure the global Play button is idle. Any restored preview will flip
+        // it back on via its own autoplay path if needed.
+        _setPlayBtnState(false);
 
         if (savedAsset) {
             S.lastSavedAsset = savedAsset;
@@ -1775,6 +1800,14 @@ function init() {
                     _setPlayBtnState(false);
                 } else {
                     previewPlayEnvironment();
+                    _setPlayBtnState(true);
+                }
+            } else if (S.previewAsset.type === 'story') {
+                if (isPreviewStoryPlaying()) {
+                    previewStopStory();
+                    _setPlayBtnState(false);
+                } else {
+                    previewPlayStory();
                     _setPlayBtnState(true);
                 }
             } else if (isPreviewSpeaking()) {

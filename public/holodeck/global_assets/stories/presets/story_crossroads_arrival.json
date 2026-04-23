@@ -1,0 +1,343 @@
+{
+  "id": "story_crossroads_arrival",
+  "type": "story",
+  "name": "Crossroads Arrival",
+  "tags": [
+    "crossroads",
+    "allies",
+    "rising",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0020"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Okay. We said we'd wait here.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "group chat mom, snack-carrier, everyone's allergies memorized"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "the earnest one, roots for everyone, caring out loud is cool"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "'it me' energy, relatable, slightly tired, showing up anyway"
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "crossroads",
+        "notes": "decision point, multiple paths; fork, junction, hub space"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rising",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "locked in",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "gentle",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. We said we'd wait here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We are waiting here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I brought snacks."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Of course you did."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "anticipation",
+          "emotion": "earnestly trying",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "paths": "three_directions"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Which way did we say?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We did not say."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Then we have a small situation."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I have a granola bar. We can think while we eat."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "unbothered (lying)",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "flat_daylight"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You two have been standing here for like nine minutes."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We're deciding."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Yeah. I could tell. The granola bar was a clue."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Come help us decide."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_disagreement",
+          "emotion": "performatively annoyed",
+          "tension": 2,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "pointed_at_path"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "That one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "How do you know?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I don't. But everyone keeps walking past the other two."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...That's actually smart. Do you want the last snack?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Yes. Obviously."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "doubt",
+          "emotion": "lowkey unsure",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "hesitant",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "What if it's the wrong one though."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Then it's the wrong one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "And that's okay?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I mean. It's a path. Not a personality test."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Okay I actually needed to hear that."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "realignment",
+          "emotion": "quietly moved",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<LOCATION_A>`",
+              "palette": "warm_late_afternoon"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Hey. For real though. I'm glad you showed up."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You were fine."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We were standing in a junction eating snacks."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Yeah. And now we're not. So."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "committed_departure",
+          "emotion": "hyped",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "path_chosen",
+              "movement": "forward"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. We go together?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Together."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Someone screenshot this so we remember it was my idea."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It was literally your idea."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I know. I just want it on record."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 7,
+      "conditioning_notes": "`<CHAR_A>`'s love of taking care of people shows up in the granola bar and the constant offering — they're not processing the crossroads decision, they're processing whether everyone has what they need. Their fear of not being needed surfaces as relief when `<CHAR_C>` arrives; suddenly there's someone to offer the last snack to. `<CHAR_B>`'s love of believing in people drives the \"what if it's the wrong one\" beat — they're not anxious about the path, they're anxious about letting the group down; their fear of being made to feel naive sits underneath the hesitation. `<CHAR_C>`'s love of being understood lands the \"it's a path, not a personality test\" line — they said the thing the group needed to hear without making it a big deal, which is exactly how they operate; their fear of being overlooked dissolves the moment `<CHAR_A>` says they're glad `<CHAR_C>` showed up, and the \"screenshot this\" exit is them securing proof they mattered. The crossroads location archetype keeps every beat at the threshold — the characters are never moving, never arrived, always deciding — which lets the tension rise without any single event escalating. The rising arc stays within the 1–3 range by holding tension in the *weight of the decision* rather than external conflict."
+    }
+  }
+}

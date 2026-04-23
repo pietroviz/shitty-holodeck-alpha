@@ -1,0 +1,93 @@
+{
+  "id": "story_meta_default",
+  "type": "story",
+  "name": "Meet Your Cast",
+  "tags": ["starter", "meta", "sanctuary"],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1
+  },
+  "payload": {
+    "description": "A gentle hello from your own cast. Change the dials below — the three archetypes, the tension, the emotional arc — and the story will reshape itself.",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        { "slot": "CHAR_A", "archetype": "Edge", "emoji": "⚡", "loves": "calling it straight", "fears": "being managed or softened", "voice_hint": "the hot take that lands because it wasn't pitched at anybody" },
+        { "slot": "CHAR_B", "archetype": "Bloom", "emoji": "🌱", "loves": "believing in people", "fears": "being made to feel naive", "voice_hint": "earnest out loud, caring on purpose" },
+        { "slot": "CHAR_C", "archetype": "Glitch", "emoji": "👾", "loves": "breaking the pattern", "fears": "being taken too seriously", "voice_hint": "surreal aside that somehow nails the vibe" }
+      ],
+      "relationship": "meta_introduction",
+      "relationship_between": ["CHAR_A", "CHAR_B"],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "sanctuary",
+        "notes": "the default environment — safe to experiment"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rising",
+      "age_target": "all",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "welcoming",
+          "tension": 2,
+          "cue": { "type": "music_box", "params": { "mood": "low_warm", "tempo": "slow" } },
+          "lines": [
+            { "speaker": "CHAR_A", "text": "Hi. I'm CHAR_A — the first slot, the one you'll see centre-stage." },
+            { "speaker": "CHAR_B", "text": "I'm CHAR_B. I stand to CHAR_A's side." },
+            { "speaker": "CHAR_C", "text": "And I'm CHAR_C. I'm here too. Story's not a story with just two people." }
+          ]
+        },
+        {
+          "id": "narreme_002",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "teach",
+          "emotion": "level",
+          "tension": 2,
+          "cue": { "type": "environment_box", "params": { "state": "still", "light": "soft" } },
+          "lines": [
+            { "speaker": "CHAR_A", "text": "Right now I'm an Edge core. If you change my archetype, I'll speak differently." },
+            { "speaker": "CHAR_B", "text": "And our relationship to each other shifts with us. Pick archetypes that contrast and we'll spark." },
+            { "speaker": "CHAR_C", "text": "Pick ones that echo and we'll settle in together." }
+          ]
+        },
+        {
+          "id": "narreme_003",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "teach",
+          "emotion": "curious",
+          "tension": 3,
+          "cue": { "type": "music_box", "params": { "mood": "bright", "tempo": "mid" } },
+          "lines": [
+            { "speaker": "CHAR_B", "text": "There's a tension dial. Low, medium, high — how hot the scene runs." },
+            { "speaker": "CHAR_C", "text": "And an arc — rising, falling, rise-then-fall, steady with a spike. That's the shape of the feeling across the beats." },
+            { "speaker": "CHAR_A", "text": "Move any of them. The story swaps to match." }
+          ]
+        },
+        {
+          "id": "narreme_004",
+          "characters": ["CHAR_A", "CHAR_B", "CHAR_C"],
+          "location": "LOCATION_A",
+          "function": "easy_landing",
+          "emotion": "warm",
+          "tension": 2,
+          "cue": { "type": "music_box", "params": { "mood": "warm_resolute", "tempo": "slow" } },
+          "lines": [
+            { "speaker": "CHAR_A", "text": "That's it. You're the director now." },
+            { "speaker": "CHAR_B", "text": "Try something. We'll meet you there." },
+            { "speaker": "CHAR_C", "text": "Don't overthink it. The dials are dials — you can always turn them back." }
+          ]
+        }
+      ],
+      "beat_count": 4,
+      "conditioning_notes": "Onboarding story. The three cast members are self-aware about being slot A/B/C and explicitly teach the user the dials. Keep warm, low-stakes, inviting."
+    }
+  }
+}

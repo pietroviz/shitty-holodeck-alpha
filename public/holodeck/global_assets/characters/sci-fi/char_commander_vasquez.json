@@ -53,5 +53,63 @@
       "eyebrowColor": "#1a1a1a"
     },
     "catchphrase": "All hands, battle stations. Now."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_female",
+      "sourceId": "voice_female",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_female",
+        "type": "voice",
+        "name": "Female",
+        "tags": [
+          "standard",
+          "female",
+          "warm"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Warm, slightly breathy adult female voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "f2",
+            "speed": 170,
+            "pitch": 60,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 0,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 85,
+            "audioLead": 40,
+            "lipColor": "#aa6aa5",
+            "lipThickness": 4,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#c98bbf",
+            "scalpColor": "#7a4a75",
+            "captionSize": 18,
+            "presetKey": "female",
+            "previewText": "Hi! I'm a warm female voice, nice to meet you!"
+          }
+        }
+      }
+    }
+  ]
 }

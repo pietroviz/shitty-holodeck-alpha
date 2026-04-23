@@ -53,5 +53,64 @@
       "eyebrowColor": "#d4a843"
     },
     "catchphrase": "Come on down!"
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_sports_announcer",
+      "sourceId": "voice_sports_announcer",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_sports_announcer",
+        "type": "voice",
+        "name": "Sports Announcer",
+        "tags": [
+          "everyday",
+          "male",
+          "loud",
+          "excited"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Fast, loud, excited sports announcer voice.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m3",
+            "speed": 185,
+            "pitch": 48,
+            "volume": 100,
+            "amplitude": 120,
+            "wordgap": 1,
+            "reverb": 3,
+            "wobble": 3,
+            "wobbleSpeed": 8,
+            "brightness": 20,
+            "breathiness": 8,
+            "vocalFry": 5,
+            "chorus": 0,
+            "mouthSnappiness": 90,
+            "audioLead": 50,
+            "lipColor": "#c84c3c",
+            "lipThickness": 2.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": false,
+            "faceColor": "#e8c4a0",
+            "scalpColor": "#8b4513",
+            "captionSize": 18,
+            "presetKey": "sports_announcer",
+            "previewText": "And the crowd goes wild! What an incredible play!"
+          }
+        }
+      }
+    }
+  ]
 }

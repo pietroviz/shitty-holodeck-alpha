@@ -53,5 +53,64 @@
       "eyebrowColor": "#4a3a2a"
     },
     "catchphrase": "Before we begin, a word from our sponsor."
-  }
+  },
+  "refs": [
+    {
+      "slot": "voice",
+      "assetId": "voice_narrator",
+      "sourceId": "voice_narrator",
+      "sourceVersion": 1,
+      "snapshot": {
+        "id": "voice_narrator",
+        "type": "voice",
+        "name": "Narrator",
+        "tags": [
+          "standard",
+          "narrator",
+          "warm",
+          "theatrical"
+        ],
+        "meta": {
+          "created": "2026-04-12",
+          "modified": "2026-04-12",
+          "origin": "preset",
+          "creator": "system",
+          "version": 1,
+          "thumbnail": null
+        },
+        "payload": {
+          "description": "Warm, theatrical narrator voice with subtle reverb and chorus.",
+          "format": "voice_state",
+          "state": {
+            "language": "en/en-us",
+            "variant": "m3",
+            "speed": 155,
+            "pitch": 40,
+            "volume": 100,
+            "amplitude": 100,
+            "wordgap": 1,
+            "reverb": 0,
+            "wobble": 0,
+            "wobbleSpeed": 5,
+            "brightness": 0,
+            "breathiness": 0,
+            "vocalFry": 0,
+            "chorus": 0,
+            "mouthSnappiness": 85,
+            "audioLead": 40,
+            "lipColor": "#5a99aa",
+            "lipThickness": 3.5,
+            "showLips": true,
+            "showTeeth": true,
+            "showTongue": true,
+            "faceColor": "#7eb8c9",
+            "scalpColor": "#3d6b7a",
+            "captionSize": 18,
+            "presetKey": "narrator",
+            "previewText": "Once upon a time, in a land far far away, there lived a storyteller."
+          }
+        }
+      }
+    }
+  ]
 }
