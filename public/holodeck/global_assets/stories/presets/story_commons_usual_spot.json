@@ -1,0 +1,367 @@
+{
+  "id": "story_commons_usual_spot",
+  "type": "story",
+  "name": "Commons Seat Trouble",
+  "tags": [
+    "commons",
+    "strangers",
+    "falling",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0021"
+  },
+  "payload": {
+    "description": "CHAR_A: \"You're in my usual spot.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "relatable to a fault, self-aware, slightly tired, showing up anyway"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": "unhinged reply energy, surreal, drops non-sequiturs that somehow nail the vibe"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "group chat mom, runs on snacks and emotional labor"
+        }
+      ],
+      "relationship": "strangers_to_friends",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "commons",
+        "notes": "neutral ground where strangers meet"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "awkward_meeting",
+          "emotion": "unbothered (lying)",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You're in my usual spot."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "This spot has no name on it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "There's a vibe on it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The vibe does not recognize your claim."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "friction",
+          "emotion": "performatively annoyed",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "flat"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. I'll just sit at the other end."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The other end is structurally inferior."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Then why aren't you sitting there."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Because I'm sitting here. Keep up."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "earnestly trying",
+          "tension": 5,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "offered"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Hi. Sorry. Do either of you want a snack?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...What kind."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I have four kinds. I always have four kinds."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "This is the most powerful person in this building."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_moment",
+          "emotion": "deadpan",
+          "tension": 5,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "busy",
+              "noise": "ambient"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You two look like you're in a standoff."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We are."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Over what."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "A bench. But also, philosophically, territory."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "accidental_connection",
+          "emotion": "lowkey surprised",
+          "tension": 4,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "shifting",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "You always here at this time?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Every day. Nobody usually notices."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I notice things. It's a curse."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Same, fr."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "warmth",
+          "emotion": "secretly pleased",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay I'm going to sit here because I don't trust either of you to eat."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We just met."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I know. That's my window."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "She's right. This is how it starts. Just let it happen."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "trust_beat",
+          "emotion": "earnestly trying",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "quieting",
+              "crowd": "thinning"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You're genuinely a lot."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Yeah. Most people bounce by now."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm still here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Noted. Don't make it weird."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "soft_landing",
+          "emotion": "hyped (quietly)",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Same time tomorrow?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Yeah. Probably."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'll be in your spot."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know. I'm already making peace with that."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of being understood and fear of being overlooked shape every interaction — they notice when `<CHAR_B>` says \"I notice things\" and visibly soften; they stay past the point most would leave because staying is how they push back against invisibility. `<CHAR_B>`'s love of breaking the pattern and fear of being taken too seriously drive the bench-philosophy bit and the \"don't make it weird\" deflection when sincerity gets too close — they let the moment land, then immediately swat at it. `<CHAR_C>`'s love of taking care and fear of not being needed turns a two-person standoff into an excuse to sit down and distribute snacks — they manufacture necessity. The Commons location archetype keeps everything low-stakes and observable — there's ambient crowd noise, shared benches with no assigned ownership, and the neutral ground lets two strangers have a territorial dispute that's actually about wanting to be seen. The tension falls across the arc not through resolution of a plot problem but through the quiet recognition that these three people are going to keep showing up to the same spot, and that's enough."
+    }
+  }
+}

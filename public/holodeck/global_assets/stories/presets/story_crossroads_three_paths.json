@@ -1,0 +1,366 @@
+{
+  "id": "story_crossroads_three_paths",
+  "type": "story",
+  "name": "Three Paths",
+  "tags": [
+    "crossroads",
+    "allies",
+    "steady_with_spike",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0026"
+  },
+  "payload": {
+    "description": "CHAR_A: \"So. Three paths.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": "Knows a guy. Shows up and things start happening — a collab lands, a door opens, a party forms. Doesn't do the work, just makes the work possible by being in the room."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": "The unhinged reply that makes the whole thread. Surreal, absurd, drops a non-sequitur that somehow nails the vibe. Other people's humor is jokes; Glitch's humor is a small rip in the simulation."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "The earnest one. Still says 'GM' and means it. Roots for everyone unironically, and when the rest of the group's being too online, Bloom's the reminder that caring out loud is actually cool."
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "crossroads",
+        "notes": "decision point, multiple paths; fork, junction, hub space"
+      },
+      "tension_level": "low",
+      "emotional_arc": "steady_with_spike",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "meeting",
+          "emotion": "locked in",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "easy",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "So. Three paths."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Technically four if you count the sky."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We're not counting the sky."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Bold choice. Very ground-based of you."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "smug",
+          "tension": 1,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "bright"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "I know someone who's been down each one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You know someone everywhere. You're like a contact list that gained sentience."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That's the nicest thing you've ever said to me."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It wasn't a compliment."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "introduction",
+          "emotion": "earnestly trying",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "open",
+              "wind": "still"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Good morning, both of you!"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It's the afternoon."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "GM is a state of mind."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...I respect that."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "deliberation",
+          "emotion": "unserious",
+          "tension": 2,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "held"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Which path do we think is right?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The one on the left opens doors. I can feel it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You can feel paths now."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I have a gift."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We're going to die."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "spike_conflict",
+          "emotion": "spiraling",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "sharp"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Actually — hold on. What if we just don't pick."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We have to pick. That's literally the whole situation."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "No one said that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The crossroads said that. The crossroads is implying it really hard right now."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay but — what if it matters which one and we get it wrong?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Sorry. Was that too much."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No. That was exactly the right amount."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_moment",
+          "emotion": "lowkey devastated",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You're not just going to say something and then it works out, right? Like — you actually believe it?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Most of the time."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "What about the other times?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The other times I say it louder."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...Okay. That actually helps."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "resolution",
+          "emotion": "hyped",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "easy",
+              "tempo": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "For the record, I still think the sky was an option."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Left path. Let's go."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm rooting for us so hard right now."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That is extremely something a person says."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Thank you."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...It wasn't — you know what. Left path."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 7,
+      "conditioning_notes": "`<CHAR_A>`'s love of making things happen and fear of being all talk surface in the quiet beat — they admit uncertainty but lean into the performance of confidence anyway, because the alternative is standing still at a fork. `<CHAR_B>`'s love of breaking patterns and fear of being taken too seriously drive every non-sequitur, but the spike beat reveals a sincere edge underneath — they stall because the decision is real and that's uncomfortable to admit. `<CHAR_C>`'s love of believing in people and fear of being made to feel naive collide at the spike: the earnest question (\"what if we get it wrong\") lands with more weight than intended, and instead of being laughed off, it reframes the whole scene. The crossroads location never gets described — it operates through the characters' inability to just move. Every beat runs on the fork being present but undecided. That tension between multiple valid paths shapes even the light beats, making the spike feel inevitable rather than inserted."
+    }
+  }
+}

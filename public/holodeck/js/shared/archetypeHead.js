@@ -10,6 +10,7 @@
  */
 
 import * as THREE from 'three';
+const _NAME_TAG_WORLD = new THREE.Vector3();
 import { HEAD, HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS, FACE_FEATURES } from './charConfig.js';
 import { generateHeadGeometry } from './headShapes.js';
 import { makeEyeTexture } from './eyeTexture.js';
@@ -217,11 +218,12 @@ export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t })
 
 // ── Subtitle overlay ────────────────────────────────────────────
 // Anchored to the inside bottom-centre of #safe-area. A single DOM element is
-// shared across the whole app — showSubtitle() updates its content, hide()
-// fades it out. Safe to call before safe-area exists (the element positions
-// itself purely with viewport units that match safe-area's CSS).
+// shared across the whole app — showSubtitle() sets the line's words and
+// renders the first, then setSubtitleWord() advances one word at a time driven
+// by the VisemeEngine's wordIdx.
 
 const SUBTITLE_ID = 'story-subtitle';
+const _subtitleState = { words: [], idx: -1 };
 
 function _ensureSubtitleEl() {
     let el = document.getElementById(SUBTITLE_ID);
@@ -234,54 +236,169 @@ function _ensureSubtitleEl() {
     // #ui-shell. The subtitle sits inside that same positioning context so the
     // percentages resolve against the same container, anchored 16px above the
     // frame's bottom edge.
+    // Stick to the bottom edge of the pink safe-area frame (inside): the frame's
+    // bottom sits at calc(50% + 30vh) inside #ui-shell, and the transform pulls
+    // the subtitle's bottom flush to that line.
     el.style.cssText = [
         'position:absolute',
         'left:50%',
-        'top:calc(50% + 30vh - 48px)',
+        'top:calc(50% + 30vh)',
         'transform:translate(-50%, -100%)',
         'max-width:min(80%, 720px)',
-        'padding:10px 16px',
+        'padding:5px 10px',
         'background:rgba(14,18,28,0.72)',
         'color:#fff',
-        'font-size:16px',
-        'line-height:1.35',
-        'border-radius:10px',
+        'font-size:11px',
+        'font-weight:600',
+        'letter-spacing:0.01em',
+        'line-height:1.25',
+        'border-radius:6px',
         'pointer-events:none',
         'text-align:center',
         'z-index:20',
         'opacity:0',
         'transition:opacity 180ms ease',
         'text-shadow:0 1px 2px rgba(0,0,0,0.5)',
-        'backdrop-filter:blur(4px)',
-        '-webkit-backdrop-filter:blur(4px)',
+        'backdrop-filter:blur(3px)',
+        '-webkit-backdrop-filter:blur(3px)',
+        'min-width:60px',
     ].join(';');
     const host = document.getElementById('ui-shell') || document.body;
     host.appendChild(el);
     return el;
 }
 
-function _esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, m => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]
-    ));
+export function showSubtitle(text) {
+    const el = _ensureSubtitleEl();
+    if (!text) {
+        el.style.opacity = '0';
+        _subtitleState.words = [];
+        _subtitleState.idx = -1;
+        return;
+    }
+    // Match VisemeEngine tokenization so wordIdx lines up.
+    const words = String(text).split(/\s+/).filter(w => w.length > 0);
+    _subtitleState.words = words;
+    _subtitleState.idx = 0;
+    el.textContent = words[0] || '';
+    el.style.opacity = words.length ? '1' : '0';
 }
 
-export function showSubtitle(label, text) {
-    const el = _ensureSubtitleEl();
-    if (!text) { el.style.opacity = '0'; return; }
-    const tag = label ? `<b style="opacity:.7;margin-right:8px;font-weight:600;">${_esc(label)}</b>` : '';
-    el.innerHTML = `${tag}<span>${_esc(text)}</span>`;
-    el.style.opacity = '1';
+export function setSubtitleWord(idx) {
+    const words = _subtitleState.words;
+    if (!words || words.length === 0) return;
+    if (idx == null || idx < 0) return; // keep showing current word between visemes
+    const clamped = Math.max(0, Math.min(words.length - 1, idx));
+    if (clamped === _subtitleState.idx) return;
+    _subtitleState.idx = clamped;
+    const el = document.getElementById(SUBTITLE_ID);
+    if (el) el.textContent = words[clamped];
 }
 
 export function hideSubtitle() {
     const el = document.getElementById(SUBTITLE_ID);
     if (el) el.style.opacity = '0';
+    _subtitleState.words = [];
+    _subtitleState.idx = -1;
 }
 
 export function removeSubtitle() {
     const el = document.getElementById(SUBTITLE_ID);
     if (el) el.remove();
+    _subtitleState.words = [];
+    _subtitleState.idx = -1;
+}
+
+// ── Floating name tags ──────────────────────────────────────────
+// A single DOM layer (#story-name-tags) overlays the renderer. Each head's
+// label (e.g. "Anchor-core") gets its own absolute-positioned child. Per frame
+// we project each head's world position → NDC → pixel space inside the
+// renderer's bounding rect. Only the currently-speaking head's tag is visible.
+
+const NAME_TAGS_LAYER_ID = 'story-name-tags';
+
+function _ensureNameTagsLayer(rendererEl) {
+    let layer = document.getElementById(NAME_TAGS_LAYER_ID);
+    if (layer && layer.parentNode) return layer;
+    layer = document.createElement('div');
+    layer.id = NAME_TAGS_LAYER_ID;
+    layer.style.cssText = [
+        'position:fixed',
+        'left:0',
+        'top:0',
+        'width:0',
+        'height:0',
+        'pointer-events:none',
+        'z-index:15',
+    ].join(';');
+    document.body.appendChild(layer);
+    return layer;
+}
+
+function _getOrMakeTag(layer, slot, label) {
+    const id = `name-tag-${slot}`;
+    let tag = document.getElementById(id);
+    if (tag) return tag;
+    tag = document.createElement('div');
+    tag.id = id;
+    tag.style.cssText = [
+        'position:fixed',
+        'left:0',
+        'top:0',
+        'transform:translate(-50%, -100%)',
+        'padding:4px 10px',
+        'background:rgba(14,18,28,0.72)',
+        'color:#fff',
+        'font-size:12px',
+        'font-weight:600',
+        'letter-spacing:0.02em',
+        'border-radius:999px',
+        'pointer-events:none',
+        'white-space:nowrap',
+        'opacity:0',
+        'transition:opacity 160ms ease',
+        'text-shadow:0 1px 2px rgba(0,0,0,0.5)',
+        'backdrop-filter:blur(3px)',
+        '-webkit-backdrop-filter:blur(3px)',
+    ].join(';');
+    tag.textContent = label;
+    layer.appendChild(tag);
+    return tag;
+}
+
+/**
+ * Position + show/hide floating name tags for every head.
+ * Call once per frame from the host's tick loop.
+ */
+export function updateStoryNameTags(heads, speakingSlot, camera, rendererEl) {
+    if (!heads || heads.length === 0 || !camera || !rendererEl) return;
+    const layer = _ensureNameTagsLayer(rendererEl);
+    const rect = rendererEl.getBoundingClientRect();
+    for (let i = 0; i < heads.length; i++) {
+        const h = heads[i];
+        if (!h || !h.container || !h.label) continue;
+        const tag = _getOrMakeTag(layer, h.slot, h.label);
+        if (h.slot !== speakingSlot) {
+            tag.style.opacity = '0';
+            continue;
+        }
+        // Project world-space top-of-head into pixel space.
+        h.container.getWorldPosition(_NAME_TAG_WORLD);
+        _NAME_TAG_WORLD.y += 0.45; // lift above the head
+        _NAME_TAG_WORLD.project(camera);
+        // Behind camera → hide.
+        if (_NAME_TAG_WORLD.z > 1) { tag.style.opacity = '0'; continue; }
+        const px = rect.left + (_NAME_TAG_WORLD.x + 1) * 0.5 * rect.width;
+        const py = rect.top  + (1 - (_NAME_TAG_WORLD.y + 1) * 0.5) * rect.height;
+        tag.style.left = `${px}px`;
+        tag.style.top  = `${py}px`;
+        tag.style.opacity = '1';
+    }
+}
+
+export function removeStoryNameTags() {
+    const layer = document.getElementById(NAME_TAGS_LAYER_ID);
+    if (layer) layer.remove();
 }
 
 // ── Playback driver ────────────────────────────────────────────

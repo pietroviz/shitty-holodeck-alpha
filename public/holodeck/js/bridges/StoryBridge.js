@@ -25,12 +25,15 @@ import {
     buildArchetypeHead,
     runStoryPlayback,
     showSubtitle,
+    setSubtitleWord,
     hideSubtitle,
     removeSubtitle,
+    updateStoryNameTags,
+    removeStoryNameTags,
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from '../shared/archetypeHead.js?v=2';
+} from '../shared/archetypeHead.js?v=3';
 
 // Neutral default voice params — the VoiceEngine is re-applied to these at
 // the top of every spoken line so per-archetype pitch/speed deltas don't
@@ -206,6 +209,7 @@ export class StoryBridge extends BaseBridge {
                 container,
                 basePos: container.position.clone(),
                 baseRotY: rotY,
+                label: `${cast.archetype}-core`,
                 talk: head.talk,
                 talkParams: head.talkParams,
                 dispose: head.dispose,
@@ -230,6 +234,12 @@ export class StoryBridge extends BaseBridge {
             visemeParams,
             t: performance.now() * 0.001,
         });
+
+        // Floating archetype name over the speaking head + one-word-at-a-time subtitle.
+        updateStoryNameTags(this._heads, this._speakingSlot, this._camera, this._renderer.domElement);
+        if (this._speakingSlot && visemeParams && visemeParams.wordIdx >= 0) {
+            setSubtitleWord(visemeParams.wordIdx);
+        }
     }
 
     /** Tween camera back to the initial triangle framing. */
@@ -269,14 +279,14 @@ export class StoryBridge extends BaseBridge {
                 const cast = this._state.cast.find(c => c.slot === slot);
                 return cast?.archetype || null;
             },
-            onLine: ({ slot, label, text, silent }) => {
+            onLine: ({ slot, text, silent }) => {
                 if (silent) {
                     this._speakingSlot = null;
                     hideSubtitle();
                     return;
                 }
                 this._speakingSlot = slot;
-                showSubtitle(label, text);
+                showSubtitle(text);
             },
             onIdle: () => {
                 this._speakingSlot = null;
@@ -327,6 +337,7 @@ export class StoryBridge extends BaseBridge {
         this._isPlaying = false;
         this._stopPlayback();
         removeSubtitle();
+        removeStoryNameTags();
         for (const entry of this._heads) entry.dispose?.();
         this._heads = [];
         if (this._controls) { this._controls.dispose(); this._controls = null; }

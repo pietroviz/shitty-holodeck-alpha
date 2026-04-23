@@ -224,7 +224,14 @@ class VisemeEngine {
             this.currentParams[key] += (this.targetParams[key] - this.currentParams[key]) * t;
     }
 
-    getParams() { return { ...this.currentParams, visemeKey: this.currentKey }; }
+    getParams() {
+        // wordIdx: index of the current word being spoken, or -1 if between
+        // words / not playing. Subtitle drivers can key off this to swap the
+        // visible word one at a time without waiting for an onWord callback.
+        const item = this.playing && this.queue.length > 0 ? this.queue[this.queueIndex] : null;
+        const wordIdx = item && item.wordIdx != null ? item.wordIdx : -1;
+        return { ...this.currentParams, visemeKey: this.currentKey, wordIdx };
+    }
 }
 
 // ── Audio Effect Chain ───────────────────────────────

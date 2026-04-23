@@ -10,13 +10,33 @@
     },
     "presets": {
       "name": "Presets",
-      "count": 5,
+      "count": 25,
       "files": [
         "story_sanctuary_refuge.json",
         "story_arena_conflict.json",
         "story_wild_descent.json",
         "story_home_strangers.json",
-        "story_crossroads_arrival.json"
+        "story_crossroads_arrival.json",
+        "story_ruin_walkthrough.json",
+        "story_trap_rivals.json",
+        "story_vantage_list_wrong.json",
+        "story_arena_say_the_thing.json",
+        "story_arena_everyone_staring.json",
+        "story_home_whole_thing_wrong.json",
+        "story_commons_something_weird.json",
+        "story_home_classroom.json",
+        "story_ruin_rivals_list.json",
+        "story_arena_watching_us.json",
+        "story_arena_allies_falter.json",
+        "story_passage_checklist.json",
+        "story_ruin_haunted_cafeteria.json",
+        "story_threshold_snack_offer.json",
+        "story_commons_usual_spot.json",
+        "story_hideout_schedule_fight.json",
+        "story_arena_coach_before.json",
+        "story_threshold_crossing_together.json",
+        "story_hideout_huddle.json",
+        "story_crossroads_three_paths.json"
       ],
       "folder": "presets"
     }

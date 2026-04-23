@@ -1,0 +1,375 @@
+{
+  "id": "story_home_classroom",
+  "type": "story",
+  "name": "Home Classroom",
+  "tags": [
+    "home",
+    "mentor",
+    "rising",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0013"
+  },
+  "payload": {
+    "description": "CHAR_B: \"So. Tell me what I'm doing wrong.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "⚡",
+          "archetype": "Edge",
+          "loves": "calling it straight",
+          "fears": "being managed or softened",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "home",
+        "notes": "domestic everyday baseline"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "rising",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "opening_dynamic",
+          "emotion": "performatively unbothered",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "casual",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "So. Tell me what I'm doing wrong."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You're asking like I might sugarcoat it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Are you going to sugarcoat it?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_lesson",
+          "emotion": "deadpan",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "flat_ordinary"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You're putting too much work into it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Into what."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Into being noticed."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...I do not appreciate how accurate that is."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "pushback",
+          "emotion": "lowkey stung",
+          "tension": 4,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "set_down"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay but what if I just. Explained myself better."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "To who."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "To everyone."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That is not a plan. That is a vibe. And not a good vibe."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "the_actual_point",
+          "emotion": "earnestly trying",
+          "tension": 4,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "light": "afternoon_ordinary"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Say the thing you actually think."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I do say it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You say the version that you think people want to hear."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...That's not — okay. Okay. That's it, isn't it."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "unserious",
+          "tension": 4,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "offbeat",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Sorry — am I interrupting something. I can leave."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We're having a moment."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Ooh. What kind."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The kind where you leave."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "outside_pressure",
+          "emotion": "spiraling",
+          "tension": 5,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "cluttered_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "For the record, I heard all of it from the hallway."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Oh no."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The thing you said about the version people want to hear? That was the thing. That was so the thing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Why are there suddenly two of you."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "tension_spike",
+          "emotion": "feral (quietly)",
+          "tension": 5,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "picked_up"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Say it. To both of us. The actual thing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I don't like when people look at me and decide who I am before I open my mouth."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Oh."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "There it is."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "peak_before_change",
+          "emotion": "lowkey devastated (and also kind of proud)",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "held_breath",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "I shouldn't have said that out loud."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Why not."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Because now it's real."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...That's kind of the whole point though, right?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't look at me. I'm not softening this."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of calling it straight and fear of being managed or softened drive the entire mentor posture — they refuse to cushion feedback, resist `<CHAR_B>`'s attempts to redirect into easier territory, and signal the lesson through absence of comfort rather than presence of warmth. `<CHAR_B>`'s love of being understood and fear of being overlooked are why they keep reformulating (\"what if I explained myself better\") — they're not hearing the feedback yet, they're still negotiating for comprehension, until the real admission surfaces. `<CHAR_C>`'s love of the next unknown and fear of being stuck means they drift in, hear something interesting, and stay — not to help, but because a stuck moment is a puzzle and they can't walk away from a puzzle. The home location holds the sequence in an ordinary pocket of time — no stakes imposed by environment, which means all stakes are internal, making the small admissions land heavier than they would anywhere else. The rising arc is driven not by external event but by `<CHAR_B>` getting incrementally less defended, which is the appropriate shape for a mentor_student relationship set in a domestic baseline."
+    }
+  }
+}

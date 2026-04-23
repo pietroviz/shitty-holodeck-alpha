@@ -1,0 +1,341 @@
+{
+  "id": "story_threshold_crossing_together",
+  "type": "story",
+  "name": "Crossing Together",
+  "tags": [
+    "threshold",
+    "allies",
+    "rise_then_fall",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0024"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Okay. We're doing this.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": "the organizer; not bossy, just the one who noticed nobody else would"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "the earnest one; roots for everyone unironically; caring out loud is cool, actually"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": "knows a guy; shows up and doors open; doesn't do the work, makes the work possible"
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "threshold",
+        "notes": "crossing from one state to another; doorway, bridge, station platform"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "locked in",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tentative",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. We're doing this."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We're so doing this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You have the list?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I have the list, I have the backup list, and I believe in us."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...The backup list was my idea."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I know. I told everyone it was your idea."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_obstacle",
+          "emotion": "performatively unbothered",
+          "tension": 4,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crowded",
+              "foot_traffic": "high"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "There are too many people going the other way."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We can wait."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We cannot wait. There is a window."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "When is the window."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The window was technically four minutes ago."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "feral",
+          "tension": 5,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "chaotic_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You're late."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We're—"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Doesn't matter. I already handled it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What did you handle."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Some things. Several things. The vibe is secured."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What does that mean."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "complication_reveal",
+          "emotion": "spiraling",
+          "tension": 6,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "wrong_place"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay so. Tiny thing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The thing I moved—"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You moved a thing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It was in the way. Now it's over there. It's fine."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It is giving distinctly not fine."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I had a whole system."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "repair_attempt",
+          "emotion": "earnestly trying",
+          "tension": 5,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "urgent",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. We can fix this. We fix it together."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "See, that's exactly the energy I called you two for."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You called us."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I manifested you. It's similar."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I actually think that's kind of beautiful."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It is not beautiful. Grab that end."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_resolution",
+          "emotion": "secretly pleased",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "settled_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "See? We figured it out."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Told you the vibe was securable."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The vibe was not — I'm not going to —"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You're smiling."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm not smiling. I'm assessing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It's giving smile. Fr."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of holding it together and fear of losing control of the room shape every reaction — they track the window, they built the backup list, and they spiral the moment `<CHAR_C>` moves something without asking. `<CHAR_B>`'s love of believing in people and fear of being made to feel naive show up as consistent, unironic warmth that is never played for cringe — when they say \"I actually think that's kind of beautiful,\" it lands without the scene punishing them for it. `<CHAR_C>`'s love of making things happen and fear of being seen as all talk drive the reveal structure — they claim credit for the vibe before the complication surfaces, and the complication (the misplaced prop) is the gap between their confidence and their follow-through. The threshold location archetype keeps everyone in a state of mid-crossing urgency — nobody has arrived yet, the window is closing, moving the wrong thing costs more here than it would in a stable room. The three interact like a system: `<CHAR_A>` holds the plan, `<CHAR_B>` holds the morale, `<CHAR_C>` holds the chaos, and the sequence is about all three getting each other to the other side of the door.\n\n➡️ end"
+    }
+  }
+}

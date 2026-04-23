@@ -1,0 +1,375 @@
+{
+  "id": "story_hideout_schedule_fight",
+  "type": "story",
+  "name": "Hideout Schedule Fight",
+  "tags": [
+    "hideout",
+    "reluctant",
+    "steady_with_spike",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0022"
+  },
+  "payload": {
+    "description": "CHAR_B: \"You moved the schedule.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🛡️",
+          "archetype": "Champion",
+          "loves": "rising to the moment",
+          "fears": "letting the group down",
+          "voice_hint": "main character energy without the delusion; does the thing, deflects the credit"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": "the organizer; noticed nobody was doing it and became that someone"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "📡",
+          "archetype": "Signal",
+          "loves": "seeing the pattern first",
+          "fears": "being wrong in public",
+          "voice_hint": "called it months ago; quiet until it matters"
+        }
+      ],
+      "relationship": "reluctant_partners",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "hideout",
+        "notes": "secret, off-grid, claimed by characters"
+      },
+      "tension_level": "low",
+      "emotional_arc": "steady_with_spike",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "establishment",
+          "emotion": "performatively unbothered",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "casual",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "You moved the schedule."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I moved it twelve minutes."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's not the point."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What is the point."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The point is you moved it."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "routine_friction",
+          "emotion": "deadpan",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm_dim"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "The list is wrong."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The list is correct."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The list has three items that are the same item."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "They're subtly different. I know which one I mean."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That's not how lists work."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "new_element",
+          "emotion": "lowkey unsure",
+          "tension": 2,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "light": "filtered"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Both of you. Pause."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We weren't arguing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We were discussing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You were doing the thing where you argue but call it discussing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Fair."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_task",
+          "emotion": "locked in",
+          "tension": 1,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "in_use"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. New plan. We split the sections."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Fine. I take the part that actually matters."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "They all matter."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Cool. I take the part you were going to give me anyway."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I already did mine."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "spike_reveal",
+          "emotion": "feral",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "sharp",
+              "tempo": "fast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "They know about this place."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Someone talked. The pattern's been in the data for two weeks."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "How long have you known."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I wasn't sure. I needed to be sure."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "And now?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Now I'm sure."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "response_to_spike",
+          "emotion": "earnestly trying",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "cooler"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. New protocol. Nobody panics."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Nobody's panicking."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm making sure. Out loud. For me."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We move the things that matter. We don't move anything else."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I can reroute."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Do it."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_resolution",
+          "emotion": "secretly pleased",
+          "tension": 2,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settled",
+              "light": "low_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Not bad."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Don't say that like you're surprised."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm not surprised. I just don't usually say it."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "For the record. I called this two weeks ago."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "For the record. We know."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We know."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 7,
+      "conditioning_notes": "`<CHAR_A>`'s love of rising to the moment shapes the spike beat — they don't freeze, they immediately move to action (\"We move the things that matter\"). Their fear of letting the group down surfaces in the quiet resolution: the \"not bad\" that they don't usually say is credit given because credit was earned, not deflection. `<CHAR_B>`'s love of holding it together and fear of losing control of the room shows up throughout — the schedule conflict at the top, the \"nobody panics\" self-narration in beat 6, the clean handoff to `<CHAR_C>` (\"do it\"). `<CHAR_C>`'s love of seeing the pattern first and fear of being wrong in public produce the spike beat's exact shape: Signal waited until certainty, *then* spoke — two weeks of watching before \"now I'm sure.\" The hideout location earns its function not through description but through behavior: characters are relaxed enough to bicker about lists, proprietary enough to treat the breach as a personal violation, and competent enough to respond without external help. The spike at tension 7 is sharp but brief, which is the whole grammar of steady_with_spike — the rest of the sequence earns the drop back down by showing the group actually handles it."
+    }
+  }
+}

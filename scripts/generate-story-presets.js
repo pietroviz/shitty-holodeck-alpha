@@ -21,12 +21,37 @@ const DEFAULT_DIR = path.join(ROOT, 'public', 'holodeck', 'global_assets', 'stor
 const MANIFEST   = path.join(ROOT, 'public', 'holodeck', 'global_assets', 'stories', 'manifest.json');
 
 // id-in-corpus → { filename, displayName, tags }
+// 25 total — 5 "origin" presets + 20 curated for variety across the 12 locations,
+// all 4 relationship types, all 4 emotional arcs, and all 3 tension levels.
 const PRESETS = [
+    // ── Original five ───────────────────────────────────────────
     { corpus_id: '0001', filename: 'story_sanctuary_refuge.json',     name: 'Sanctuary Refuge',     tags: ['sanctuary', 'mentor', 'rise_then_fall', 'medium'] },
     { corpus_id: '0003', filename: 'story_arena_conflict.json',       name: 'Arena Under Pressure', tags: ['arena', 'reluctant', 'falling', 'high'] },
     { corpus_id: '0006', filename: 'story_wild_descent.json',         name: 'Wild Descent',         tags: ['wild', 'falling', 'high'] },
     { corpus_id: '0005', filename: 'story_home_strangers.json',       name: 'Strangers at Home',    tags: ['home', 'strangers', 'rise_then_fall', 'medium'] },
     { corpus_id: '0020', filename: 'story_crossroads_arrival.json',   name: 'Crossroads Arrival',   tags: ['crossroads', 'allies', 'rising', 'low'] },
+
+    // ── Twenty more, curated for variety ────────────────────────
+    { corpus_id: '0002', filename: 'story_ruin_walkthrough.json',        name: 'Ruin Walkthrough',           tags: ['ruin', 'mentor', 'steady_with_spike', 'low'] },
+    { corpus_id: '0004', filename: 'story_trap_rivals.json',             name: 'Cornered Rivals',            tags: ['trap', 'rivals', 'falling', 'low'] },
+    { corpus_id: '0007', filename: 'story_vantage_list_wrong.json',      name: 'The List Is Wrong',          tags: ['vantage', 'mentor', 'falling', 'medium'] },
+    { corpus_id: '0008', filename: 'story_arena_say_the_thing.json',     name: 'Say The Thing And Leave',    tags: ['arena', 'allies', 'rise_then_fall', 'medium'] },
+    { corpus_id: '0010', filename: 'story_arena_everyone_staring.json',  name: 'Everyone Is Staring',        tags: ['arena', 'mentor', 'falling', 'low'] },
+    { corpus_id: '0011', filename: 'story_home_whole_thing_wrong.json',  name: 'The Whole Thing Is Wrong',   tags: ['home', 'allies', 'falling', 'high'] },
+    { corpus_id: '0012', filename: 'story_commons_something_weird.json', name: 'Something Weird East Side',  tags: ['commons', 'allies', 'rise_then_fall', 'high'] },
+    { corpus_id: '0013', filename: 'story_home_classroom.json',          name: 'Home Classroom',             tags: ['home', 'mentor', 'rising', 'medium'] },
+    { corpus_id: '0014', filename: 'story_ruin_rivals_list.json',        name: 'Not On The List',            tags: ['ruin', 'rivals', 'rise_then_fall', 'low'] },
+    { corpus_id: '0015', filename: 'story_arena_watching_us.json',       name: 'Everyone Is Watching Us',    tags: ['arena', 'rivals', 'rising', 'low'] },
+    { corpus_id: '0016', filename: 'story_arena_allies_falter.json',     name: 'Arena Drops Its Nerve',      tags: ['arena', 'allies', 'falling', 'medium'] },
+    { corpus_id: '0017', filename: 'story_passage_checklist.json',       name: 'Passage Checklist',          tags: ['passage', 'allies', 'rising', 'medium'] },
+    { corpus_id: '0018', filename: 'story_ruin_haunted_cafeteria.json',  name: 'Haunted Cafeteria Vibes',    tags: ['ruin', 'mentor', 'rise_then_fall', 'low'] },
+    { corpus_id: '0019', filename: 'story_threshold_snack_offer.json',   name: 'Threshold Snack Offer',      tags: ['threshold', 'strangers', 'falling', 'high'] },
+    { corpus_id: '0021', filename: 'story_commons_usual_spot.json',      name: 'Commons Seat Trouble',       tags: ['commons', 'strangers', 'falling', 'medium'] },
+    { corpus_id: '0022', filename: 'story_hideout_schedule_fight.json',  name: 'Hideout Schedule Fight',     tags: ['hideout', 'reluctant', 'steady_with_spike', 'low'] },
+    { corpus_id: '0023', filename: 'story_arena_coach_before.json',      name: 'Coach Before The Arena',     tags: ['arena', 'mentor', 'steady_with_spike', 'medium'] },
+    { corpus_id: '0024', filename: 'story_threshold_crossing_together.json', name: 'Crossing Together',      tags: ['threshold', 'allies', 'rise_then_fall', 'medium'] },
+    { corpus_id: '0025', filename: 'story_hideout_huddle.json',          name: 'Hideout Huddle',             tags: ['hideout', 'allies', 'rising', 'high'] },
+    { corpus_id: '0026', filename: 'story_crossroads_three_paths.json',  name: 'Three Paths',                tags: ['crossroads', 'allies', 'steady_with_spike', 'low'] },
 ];
 
 function summarise(seq) {

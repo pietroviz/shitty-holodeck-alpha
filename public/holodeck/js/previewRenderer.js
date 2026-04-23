@@ -22,12 +22,15 @@ import {
     buildArchetypeHead,
     runStoryPlayback,
     showSubtitle,
+    setSubtitleWord,
     hideSubtitle,
     removeSubtitle,
+    updateStoryNameTags,
+    removeStoryNameTags,
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from './shared/archetypeHead.js?v=2';
+} from './shared/archetypeHead.js?v=3';
 import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
@@ -365,6 +368,10 @@ export function showPreview(container, asset, opts = {}) {
         _buildStoryPreview(asset);
         _autoSpin = false;  // story preview is a read-through — camera stays put
         if (_controls) _controls.target.set(0, 0.95, -0.25);
+    } else if (type === 'simulation') {
+        _buildSimulationPreview(asset);
+        _autoSpin = false;  // simulation preview mirrors story framing
+        if (_controls) _controls.target.set(0, 0.95, -0.25);
     } else {
         _buildFallbackPreview(asset);
         if (_controls) _controls.target.set(0, 0.5, 0);
@@ -467,6 +474,16 @@ function _startLoop() {
                 visemeParams,
                 t: performance.now() * 0.001,
             });
+            // Floating archetype name over the speaking head + word-by-word subtitle.
+            updateStoryNameTags(
+                _storyPreview.heads,
+                _storyPreview.speakingSlot,
+                _camera,
+                _renderer.domElement,
+            );
+            if (_storyPreview.speakingSlot && visemeParams && visemeParams.wordIdx >= 0) {
+                setSubtitleWord(visemeParams.wordIdx);
+            }
         }
 
         // Update music visualizer animation
@@ -2027,6 +2044,7 @@ function _teardownStoryPreview() {
     if (!_storyPreview) return;
     _storyPreview.playback?.stop?.();
     hideSubtitle();
+    removeStoryNameTags();
     if (_voiceEngine) _voiceEngine.stop();
     for (const h of _storyPreview.heads) {
         h.container.parent?.remove(h.container);
@@ -2070,6 +2088,7 @@ function _buildStoryPreview(asset) {
             container,
             basePos: container.position.clone(),
             baseRotY: rotY,
+            label: `${c.archetype}-core`,
             talk: h.talk,
             talkParams: h.talkParams,
             dispose: h.dispose,
@@ -2114,7 +2133,7 @@ function _startStoryPlayback() {
             const entry = cast.find(c => c.slot === slot);
             return entry?.archetype || null;
         },
-        onLine: ({ slot, label, text, silent }) => {
+        onLine: ({ slot, text, silent }) => {
             if (!_storyPreview) return;
             if (silent) {
                 _storyPreview.speakingSlot = null;
@@ -2122,7 +2141,7 @@ function _startStoryPlayback() {
                 return;
             }
             _storyPreview.speakingSlot = slot;
-            showSubtitle(label, text);
+            showSubtitle(text);
         },
         onIdle: () => {
             if (!_storyPreview) return;
@@ -2160,4 +2179,37 @@ export function previewStopStory() {
 }
 export function isPreviewStoryPlaying() {
     return !!(_storyPreview && _storyPreview.isPlaying);
+}
+
+// ── Simulation preview ───────────────────────────────────────────
+// V1 simulation preview: three archetype heads (same framing as story)
+// plus looping music from the simulation's musicId. Env backdrop is
+// deferred — for now the simulation reads like a story with music.
+function _buildSimulationPreview(asset) {
+    // Reuse the story preview builder for heads + framing (cast+beats are
+    // copied into simulation state at apply time, so the shape matches).
+    _buildStoryPreview(asset);
+
+    // Kick the music track (fire-and-forget) if the simulation bundles one.
+    const state = asset.payload?.state || asset.state || {};
+    const musicId = state.musicId;
+    if (musicId) _autoPlaySimulationMusic(musicId);
+}
+
+async function _autoPlaySimulationMusic(musicId) {
+    if (!musicId) return;
+    try {
+        const folders = ['ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
+        let track = null;
+        for (const folder of folders) {
+            try {
+                const res = await fetch(`global_assets/music/${folder}/${musicId}.json`);
+                if (res.ok) { track = await res.json(); break; }
+            } catch { /* try next */ }
+        }
+        if (!track) return;
+        if (!_musicReady) await _ensureMusic();
+        if (!_musicReady || !_musicEngine) return;
+        _musicEngine.play(track);
+    } catch { /* silent */ }
 }

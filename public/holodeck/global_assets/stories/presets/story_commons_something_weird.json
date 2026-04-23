@@ -1,0 +1,433 @@
+{
+  "id": "story_commons_something_weird",
+  "type": "story",
+  "name": "Something Weird East Side",
+  "tags": [
+    "commons",
+    "allies",
+    "rise_then_fall",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0012"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Okay so I found something weird over by the east side.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": "Always just back from somewhere. Camera roll full of weird doors, ceilings, and street food. Curious about everything, settled about nothing, treats Google Maps like a playground."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": "The unhinged reply that makes the whole thread. Surreal, absurd, drops a non-sequitur that somehow nails the vibe. Other people's humor is jokes; Glitch's humor is a small rip in the simulation."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "The earnest one. Still says 'GM' and means it. Roots for everyone unironically, and when the rest of the group's being too online, Bloom's the reminder that caring out loud is actually cool."
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "commons",
+        "notes": "neutral ground where strangers meet; market, park, cafeteria"
+      },
+      "tension_level": "high",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "locked in",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "restless",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay so I found something weird over by the east side."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Define weird."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Like. Actually weird. Not cafeteria weird."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Cafeteria weird is a four on the scale. What's the number."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Eight, maybe nine."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm already walking."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_obstacle",
+          "emotion": "performatively annoyed",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "busy"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "It was right here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No, like. It was literally right here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The universe moved it. Classic."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That's not—"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The universe is unserious. We knew this."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unexpected_arrival",
+          "emotion": "hyped",
+          "tension": 7,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crowded",
+              "noise": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Oh hey! Are you two looking for the thing by the east wall?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yes. Wait. How do you know about the thing."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I've been watching it for like twenty minutes. I was waiting to see if anyone else noticed."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You just stood there waiting. For twenty minutes. In a crowd."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Someone had to keep an eye on it."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "discovery",
+          "emotion": "feral",
+          "tension": 8,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "unclaimed"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Nobody's touched it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Nobody's touched it and it's just sitting there like an NPC's entire lore."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "What if someone needs it back? What if they're looking for it right now?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What if it's a trap and we're the whole reason the simulation crashes."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm picking it up."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "—Wait—"
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "escalation",
+          "emotion": "spiraling",
+          "tension": 9,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "chaotic",
+              "tempo": "fast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay so there's something inside it."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Inside it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Inside it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I would like everyone to know I am logging off from this reality and will not be accepting further updates."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Don't log off, we need you!"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Fine but I'm going to be very weird about it."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "confrontation",
+          "emotion": "deadpan",
+          "tension": 9,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "sharp"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "There's a note. It says to find someone who won't keep it."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "What does that even mean."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It means it's a canon event and we're cooked."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It means it belongs to someone who'll pass it on."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Oh."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Oh."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "realisation",
+          "emotion": "lowkey devastated",
+          "tension": 7,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "quieting",
+              "crowd": "thinning"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "So we have to give it to someone."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "To someone we don't know yet."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "This is either the most meaningful thing that's happened to me or a very elaborate bit."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Can't it be both?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...yeah okay it can be both."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We look. We find the right person."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_resolution",
+          "emotion": "secretly pleased",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "There. I think it's them."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You sure?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "No. But I believe it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Bestie just said 'I believe it' with her whole chest. Unironically."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I am unapologetic about this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah. Me too, actually."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Ugh. Fine. Same. Don't make it weird."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of the next unknown drives the instant pull toward the unclaimed object and the willingness to pick it up before anyone else commits — they are drawn to open questions, not settled answers. Their fear of being stuck shows in how they keep moving the group forward even when the meaning is unclear. `<CHAR_B>`'s love of breaking the pattern surfaces as refusal to let a tense moment be purely tense — every escalation gets a rip in the simulation, not because they're deflecting, but because that's how they process. Their fear of being taken too seriously shows up precisely at the beat where sincerity threatens to land: \"ugh. fine. same. don't make it weird.\" `<CHAR_C>`'s love of believing in people drives the pivotal beat — \"no. but I believe it\" — and the twenty-minute vigil over an unclaimed object, because someone had to care. Their fear of feeling naive is in the way they wait to be heard before committing: they offer the belief, then hold it. The Commons location shapes all of it — characters are alert to strangers, moving through shared space where anything could belong to anyone, which makes an unclaimed object carry far more weight than it would somewhere private.\n\n➡️ end"
+    }
+  }
+}

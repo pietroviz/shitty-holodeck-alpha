@@ -1,0 +1,409 @@
+{
+  "id": "story_vantage_list_wrong",
+  "type": "story",
+  "name": "The List Is Wrong",
+  "tags": [
+    "vantage",
+    "mentor",
+    "falling",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0007"
+  },
+  "payload": {
+    "description": "CHAR_A: \"The list is wrong. Three items, wrong.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": "The organizer. Runs the calendar, remembers the birthdays, hosts the thing. Not bossy — just noticed that if nobody does it, nobody does it, and decided to be that someone."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "Group chat mom. 'Did you eat today?' 'Bring a sweater.' Runs on snacks and emotional labor, has everyone's allergies memorized, is secretly why the friend group still exists."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🛡️",
+          "archetype": "Champion",
+          "loves": "rising to the moment",
+          "fears": "letting the group down",
+          "voice_hint": "Main character energy, minus the delusion. Actually does the thing instead of posting about doing the thing. Shows up when it counts, deflects the credit, moves on."
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "vantage",
+        "notes": "elevated, perspective-giving; rooftop, hilltop, tower"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "opening_pressure",
+          "emotion": "spiraling",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "The list is wrong. Three items, wrong."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Which three."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "All of them."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...That's not how lists work."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know how lists work. That is not the problem right now."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "caretaking_deflected",
+          "emotion": "performatively annoyed",
+          "tension": 6,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "unopened"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Did you eat today."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I had—I don't know. Something."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Something is not a meal."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I will eat after the thing is fixed."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The thing is always being fixed. You are always after it."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "teaching_moment",
+          "emotion": "earnestly trying",
+          "tension": 5,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "open",
+              "wind": "still"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Look out there."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "From up here you can see where the whole thing goes sideways."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It looks fine from here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That is the point. You need height to see what the ground hides."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Oh. Oh, that's actually kind of useful."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "unbothered (lying)",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "sharp"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Found you both. Good."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We weren't hiding."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The thing downstairs is going sideways."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know. I can see it from here."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "So are we going, or are we watching it get worse from a scenic location."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "responsibility_handed_off",
+          "emotion": "locked in",
+          "tension": 5,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "turning",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Tell me what needs to happen."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I always tell everyone what needs to happen."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I know. Tell me anyway."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...You actually want the list."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Give me the list. I'll start at the top."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unexpected_competence",
+          "emotion": "secretly pleased",
+          "tension": 4,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "opened"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Go. I have this one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You sure? Because I also have snacks."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I will take one snack and then I will be fully operational."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That is the correct answer."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_realization",
+          "emotion": "lowkey devastated (in a small good way)",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settling",
+              "light": "golden"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "They've got it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You don't have to look like that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Like what."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Like someone just proved you did a good job and you don't know what to do with it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Eat something."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "earned_rest",
+          "emotion": "hyped (quietly)",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Done. All three items."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "All three."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Told you."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We should probably go back down."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "One minute."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Yeah. One minute."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of holding things together and fear of losing control of the room drive the list-anxiety in the opening — they can see the whole situation from the vantage point but can't stop cataloguing what's wrong. `<CHAR_B>`'s love of taking care of people and fear of not being needed shows up in the repeated food check and in the quiet recognition of `<CHAR_A>`'s discomfort — they are most useful in the unspoken moment, not the crisis. `<CHAR_C>`'s love of rising to the moment and fear of letting the group down surface through action not speech — they ask for the list, take one snack, and go; they deflect no credit because they weren't there for credit. The vantage location archetype shapes the whole sequence: characters speak differently from up high — more plainly, with less performance. The height gives `<CHAR_A>` the perspective they need to teach and the distance they need to eventually let go. The falling arc is not a collapse; it's a controlled release — each beat the grip loosens one notch, until the ending, which earns its stillness."
+    }
+  }
+}

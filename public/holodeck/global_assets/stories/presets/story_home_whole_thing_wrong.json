@@ -1,0 +1,371 @@
+{
+  "id": "story_home_whole_thing_wrong",
+  "type": "story",
+  "name": "The Whole Thing Is Wrong",
+  "tags": [
+    "home",
+    "allies",
+    "falling",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0011"
+  },
+  "payload": {
+    "description": "CHAR_A: \"It's wrong. The whole thing is wrong.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🔨",
+          "archetype": "Maker",
+          "loves": "bringing an idea into the world",
+          "fears": "the thing not being good",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "home",
+        "notes": "domestic everyday baseline"
+      },
+      "tension_level": "high",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "opening_conflict",
+          "emotion": "spiraling",
+          "tension": 9,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "fast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "It's wrong. The whole thing is wrong."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You've said that six times."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Because it's been wrong six times."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay but — wrong how."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "reveal_of_stakes",
+          "emotion": "lowkey devastated",
+          "tension": 9,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "harsh overhead light"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Look at this part. It should connect here. It doesn't."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Has it ever connected?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No. That's kind of the whole thing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Yeah. Okay. That's bad."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "friction",
+          "emotion": "performatively annoyed",
+          "tension": 8,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "shoved aside"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Can I see it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You won't see the problem."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Rude. Also you still handed it over."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm watching your face. Your face confirms it's bad."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unexpected_arrival",
+          "emotion": "feral",
+          "tension": 8,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "cluttered",
+              "ambient": "familiar hum of home"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "The door was open."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The door is never open."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It was open. I brought snacks. What's happening in here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Nothing. A crisis. Same thing."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "sidebar",
+          "emotion": "earnestly trying",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "cautious",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "How long has it been like this."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Since before I got here."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "But it's going to be okay, right."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...I mean. Define okay."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "turning_point",
+          "emotion": "deadpan",
+          "tension": 7,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warmer"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "What if you started from the part that works."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Oh no. That's a new silence."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That is. Actually. A different approach."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "cooperation",
+          "emotion": "locked in",
+          "tension": 6,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "partially reassembled"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Tell me what to hold."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "This part. Don't move."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm just here spiritually. Also emotionally. Also I've got snacks."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Bloom. You're carrying the team right now, fr."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_resolution",
+          "emotion": "secretly pleased",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "It connected."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I know. I felt it."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "SEE. I said it would be okay."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You said that after it was already okay."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That's called believing in people."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of bringing an idea into the world and fear of the thing not being good drive the sequence's ignition — the crisis is entirely internal, a failed connection on something they built, and no external enemy is needed. They hand over `<PROP_A>` before they finish protesting, because some part of them needs a second pair of eyes even when they resist it. `<CHAR_B>`'s love of being understood and fear of being overlooked surfaces not in complaint but in action — they keep asking the right questions, hold things literally, and the turning point beat (\"I know. I felt it\") is the moment they get to be seen doing something that mattered. `<CHAR_C>`'s love of believing in people and fear of being made to feel naive is the engine of the breakthrough — they offer the reframe without irony, and the closing beat plays their earnestness straight rather than as a joke. The home location shapes everything: the door was already open, there's ambient clutter, and the stakes feel urgent precisely because they're playing out somewhere ordinary and familiar. No one is performing for an audience; the pressure is entirely internal, which is what makes the quiet resolution land."
+    }
+  }
+}

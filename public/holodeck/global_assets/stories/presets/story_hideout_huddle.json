@@ -1,0 +1,336 @@
+{
+  "id": "story_hideout_huddle",
+  "type": "story",
+  "name": "Hideout Huddle",
+  "tags": [
+    "hideout",
+    "allies",
+    "rising",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0025"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Okay. So. We're doing this.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": "always just back from somewhere, curious about everything, settled about nothing"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🔨",
+          "archetype": "Maker",
+          "loves": "bringing an idea into the world",
+          "fears": "the thing not being good",
+          "voice_hint": "has a side project, probably three, gets a specific look near raw materials"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "group chat mom, everyone's allergies memorized, secretly why the friend group still exists"
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "hideout",
+        "notes": "secret, off-grid, claimed by characters"
+      },
+      "tension_level": "high",
+      "emotional_arc": "rising",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "locked in",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "focused",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. So. We're doing this."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We're doing this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Walk me through where you're at."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Version three is almost there. Almost."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Almost is not there."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Thank you for that. Very helpful."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "pressure_mounts",
+          "emotion": "performatively unbothered",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "cluttered_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Don't look at it like that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Like what."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Like it's a puzzle you've already solved."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm looking at it like it could be something else. Something better."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Keep talking."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "unserious (lying)",
+          "tension": 7,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "thrust_forward"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Nobody has eaten anything. I can tell by the vibe."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We're in the middle of—"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The vibe is extremely mid. Here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I love you but this is genuinely a bad time."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It's always a bad time. Eat."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "doubt_surfaces",
+          "emotion": "lowkey devastated",
+          "tension": 7,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "dim",
+              "noise": "settling_wood"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "It's good though, right. What you're building."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I don't know yet."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You always know."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "No. I always act like I know. It's different."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...Oh."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Yeah."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "stakes_revealed",
+          "emotion": "spiraling",
+          "tension": 8,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "urgent",
+              "tempo": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "How long do we have."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Before what."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Before someone finds this place."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Wait. Finds it? Who's finding it?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We maybe told one person."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "One person who tells everyone."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That is literally the worst one person to tell."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "point_of_no_return",
+          "emotion": "feral",
+          "tension": 9,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "harsh_contrast"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "If this doesn't work—"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It works. We make it work."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay but what do I actually do."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You hold it together. You always hold it together."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That is a terrifying amount of trust."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Welcome to the team. We're delulu. It's a canon event."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of the unknown and fear of being stuck shapes the relentless forward push — they treat the hideout not as safety but as a launchpad, and they reframe `<CHAR_B>`'s unfinished work as possibility rather than failure. `<CHAR_B>`'s love of making and fear of the thing not being good surface most clearly in beat four — the admission that acting-like-knowing and actually-knowing are different things is the Maker's core wound speaking. `<CHAR_C>`'s love of taking care and fear of not being needed drive the interruption in beat three and the quiet devastation in beat four; when `<CHAR_A>` names their function in beat six (\"you hold it together\"), it reads as the one thing `<CHAR_C>` needed to hear most. The hideout location keeps the sequence's emotional register intimate and precarious — characters speak frankly because the space is theirs, but the threat of discovery means nothing in it is safe forever, which accelerates the rising tension without requiring an external antagonist until beat five."
+    }
+  }
+}

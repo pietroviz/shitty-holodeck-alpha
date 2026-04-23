@@ -1,0 +1,407 @@
+{
+  "id": "story_arena_watching_us",
+  "type": "story",
+  "name": "Everyone Is Watching Us",
+  "tags": [
+    "arena",
+    "rivals",
+    "rising",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0015"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Love the energy in here. Very 'everyone is watching us.'\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "📡",
+          "archetype": "Signal",
+          "loves": "seeing the pattern first",
+          "fears": "being wrong in public",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "rivals",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "arena",
+        "notes": "performative, public, watched"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rising",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "establishment",
+          "emotion": "unbothered (lying)",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "breezy",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Love the energy in here. Very 'everyone is watching us.'"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "They're not watching us."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "They're absolutely watching us."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Okay. A few of them are watching us."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "warmup",
+          "emotion": "earnestly trying",
+          "tension": 1,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "offered"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Snack. Both of you. Before this gets weird."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It's already weird."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Weirder."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm fine."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You said that last time and then you had a whole thing."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_provocation",
+          "emotion": "performatively annoyed",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "sharp"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "The format favors whoever goes first. I noticed that before you did."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Cool. I'm going to go in the middle and ruin the whole format."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's not how it works."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Watch."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "audience_awareness",
+          "emotion": "smug",
+          "tension": 2,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "charged",
+              "crowd": "murmuring"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "People are recording."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Good. Someone should document this era."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "No one is documenting anything."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The people in the back row are literally pointing a phone at you right now."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Don't tell me things like that."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "pattern_clash",
+          "emotion": "locked in",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "building",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "You do the unpredictable thing on purpose."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yes."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Which means it's actually predictable."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "..."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I need a minute."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "escalation",
+          "emotion": "spiraling",
+          "tension": 3,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "knocked_over"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay, so. In a totally unrelated way. Is everyone still breathing?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "No."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I predicted this exact sequence of events by the way."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You did not."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I have notes."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Please do not have notes."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "public_moment",
+          "emotion": "feral",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "silent",
+              "crowd": "watching"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Everyone is looking."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know. Don't panic."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm not panicking."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Your left hand is doing the thing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What thing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The thing it does when you think you might be wrong."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "..."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unresolved_peak",
+          "emotion": "hyped",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "suspended",
+              "tempo": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "For what it's worth. I have snacks for after. Either outcome."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Love that for us."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm going first. I had it figured out first. That's final."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Sure. Totally. I'll just be over here absolutely cooking you from the middle."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You can't cook someone from the middle."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "New pattern. Watch."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of breaking the pattern and fear of being taken seriously drives every beat — they undercut `<CHAR_B>`'s analysis, volunteer chaos as strategy, and flinch when `<CHAR_B>` correctly frames their unpredictability as a pattern. The moment they need \"a minute\" in narreme_005 is the fear surfacing: being legible is the one thing they can't handle. `<CHAR_B>`'s love of seeing the pattern first and fear of being wrong in public shapes the quiet devastation when `<CHAR_A>` names the hand-thing — `<CHAR_B>` goes silent because being read correctly is exactly what they dread. The Arena location means neither character can fully drop the performance; every exchange has an audience function even when the two of them are just talking at each other. `<CHAR_C>` is the constant underneath: not resolving anything, just maintaining. Snacks before. Snacks after. The group still exists because of the person holding the `<PROP_A>` and memorizing who needs what. Tension stays within 1–3 across all eight beats but traces a genuine rise — social stakes accumulate even at low dial settings because the Arena makes every small observation feel like testimony."
+    }
+  }
+}

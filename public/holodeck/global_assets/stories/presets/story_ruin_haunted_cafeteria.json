@@ -1,0 +1,371 @@
+{
+  "id": "story_ruin_haunted_cafeteria",
+  "type": "story",
+  "name": "Haunted Cafeteria Vibes",
+  "tags": [
+    "ruin",
+    "mentor",
+    "rise_then_fall",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0018"
+  },
+  "payload": {
+    "description": "CHAR_B: \"This place is giving haunted cafeteria.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🛡️",
+          "archetype": "Champion",
+          "loves": "rising to the moment",
+          "fears": "letting the group down",
+          "voice_hint": "Main character energy, minus the delusion. Actually does the thing instead of posting about doing the thing. Shows up when it counts, deflects the credit, moves on."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🛡️",
+          "archetype": "Champion",
+          "loves": "rising to the moment",
+          "fears": "letting the group down",
+          "voice_hint": "Main character energy, minus the delusion. Actually does the thing instead of posting about doing the thing. Shows up when it counts, deflects the credit, moves on."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": "Knows a guy. Shows up and things start happening — a collab lands, a door opens, a party forms. Doesn't do the work, just makes the work possible by being in the room."
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "ruin",
+        "notes": "decayed, haunted by past; abandoned building, old temple, wreckage"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "deadpan",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "dust": "settled"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "This place is giving haunted cafeteria."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It's fine."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You keep saying that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "And it keeps being true. Come on."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "instruction",
+          "emotion": "earnestly trying",
+          "tension": 1,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "faded"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "See that. Don't touch it."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Why."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Because the last person who touched it is not here anymore."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Noted. Noted and logged."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "skill_test",
+          "emotion": "focused",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tentative",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Your footwork. You're telegraphing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm literally just walking."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "In a ruin. That is never just walking."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Okay. Okay, yeah."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "unexpected_arrival",
+          "emotion": "unserious",
+          "tension": 3,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "brandished"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay so — don't panic — but I found something."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Where did you even come from."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The far wing. There's a whole situation in there. Also hi."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Is the situation good or bad."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Depends on what you're trying to do."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "peak_moment",
+          "emotion": "locked in",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "creaking",
+              "light": "shifting"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "There's a way through. But someone has to go first."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'll go."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Hold on—"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I've got it. I've actually got it this time."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "trust_moment",
+          "emotion": "quietly proud",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "That worked."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You knew it was going to work."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I had a guess. You made it a fact."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "levity",
+          "emotion": "performatively unbothered",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "easy",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "I feel like I made that happen."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You showed up and waved something around."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "That is exactly what making things happen looks like."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Honestly. Not wrong."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_close",
+          "emotion": "settled",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "dust": "resettled"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "So. Same time next week?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Same time. Different ruin."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I know a place. Actually, I know three places."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Of course you do."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s fear of letting the group down shapes the instructor role — they call out the telegraphing footwork not to criticize but because they need `<CHAR_B>` to be ready. `<CHAR_B>`'s identical fear drives the opposite behavior: a hunger to prove competence by going first, not waiting to be told they're ready. The mentor_student relationship means `<CHAR_A>` already knows what `<CHAR_B>` can do; the beat lands when `<CHAR_A>` says \"you made it a fact\" — credit passed, no ceremony. `<CHAR_C>` doesn't solve the problem; they create the condition in which the problem becomes solvable, and then immediately takes implicit credit. The ruin location shapes everything at the behavioral level: characters don't relax here, they stay half-alert even when they're joking — the \"just walking\" exchange exists because in a ruin, walking is a skill. The low tension ceiling (1–3) means all of this plays out as a quiet, competent afternoon, not a crisis — the stakes are about trust and growth, not survival. The arc peaks at beat 4–5 when `<CHAR_B>` volunteers to go first and comes back down into warmth and the low-stakes comedy of `<CHAR_C>`'s self-congratulation."
+    }
+  }
+}

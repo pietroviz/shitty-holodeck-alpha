@@ -6,9 +6,10 @@ import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
 import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
-import { StoryBridge }          from './bridges/StoryBridge.js?v=3';
+import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
+import { SimulationBridge }     from './bridges/SimulationBridge.js?v=4';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=8';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=9';
 import { generateId }                       from './db.js';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -64,6 +65,7 @@ const _THUMB_PLACEHOLDERS = {
     image:       { icon: '🖼', bg: '#2A3240' },
     asset:       { icon: '🖼', bg: '#2A3240' },
     story:       { icon: '📖', bg: '#2A3240' },
+    simulation:  { icon: '🎬', bg: '#2A3240' },
 };
 function _thumbHTML(item) {
     // Stock assets: ALWAYS use pre-rendered static thumbnail (never the browser-gen cache)
@@ -87,6 +89,7 @@ const BRIDGE_MAP = {
     '2D Image':    ImageBridge,
     'Voice':       VoiceBridge,
     'Story':       StoryBridge,
+    'Simulation':  SimulationBridge,
 };
 
 /** Map asset types (from JSON) → display labels for BRIDGE_MAP lookup. */
@@ -100,6 +103,7 @@ const TYPE_TO_LABEL = {
     object:    '3D Object',
     voice:     'Voice',
     story:     'Story',
+    simulation:'Simulation',
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -153,6 +157,7 @@ const ICON = {
 
 /** Asset category items shared by Templates, My Stuff, and Create New. */
 const ASSET_CATEGORIES = [
+    { label: 'Simulations',  singular: 'Simulation',   icon: ICON.sparkle },
     { label: 'Environments', singular: 'Environment', icon: ICON.trees  },
     { label: 'Characters',   singular: 'Character',   icon: ICON.users  },
     { label: 'Voices',       singular: 'Voice',        icon: ICON.mic    },
@@ -163,6 +168,7 @@ const ASSET_CATEGORIES = [
 ];
 
 const PANEL_CATEGORIES = {
+    Simulations:  ['All Simulations', 'My Simulations'],
     Characters:   ['All Characters', 'My Characters'],
     Environments: ['All Environments', 'My Environments'],
     Voices:       ['All Voices', 'My Voices'],

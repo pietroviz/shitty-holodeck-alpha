@@ -1,0 +1,375 @@
+{
+  "id": "story_threshold_snack_offer",
+  "type": "story",
+  "name": "Threshold Snack Offer",
+  "tags": [
+    "threshold",
+    "strangers",
+    "falling",
+    "high"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0019"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Do you need a snack.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "group chat mom energy, runs on snacks and emotional labor"
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": "group chat mom energy, runs on snacks and emotional labor"
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "relatable to a fault, self-aware, slightly tired, showing up anyway"
+        }
+      ],
+      "relationship": "strangers_to_friends",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "threshold",
+        "notes": "crossing from one state to another; doorway, bridge, station platform"
+      },
+      "tension_level": "high",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_opening",
+          "emotion": "performatively unbothered",
+          "tension": 9,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Do you need a snack."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I have snacks."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Oh."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I know. Sorry."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "territorial_standoff",
+          "emotion": "deadpan",
+          "tension": 9,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "suspended",
+              "traffic": "halted"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Are you waiting for someone."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm always waiting for someone."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Same."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Cool. Cool cool cool."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "disruption",
+          "emotion": "spiraling",
+          "tension": 8,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "spilled"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay so that was my bag and everything inside it is now on the floor and I'm choosing not to feel things about that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Oh no—"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I got it—"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Both of you are already crouching. This is either sweet or a crisis."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "collision",
+          "emotion": "feral",
+          "tension": 8,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "chaotic_warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You go left."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I was going left."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Then I'll go left."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's also where I'm going."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You're both going left. Simultaneously. Into each other."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "recognition",
+          "emotion": "lowkey devastated",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "quiet",
+              "tempo": "slowing"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You had granola bars in here. Labeled with names."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "They're for whoever needs one."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Do you know these people."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Not all of them."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_vulnerability",
+          "emotion": "earnestly trying",
+          "tension": 6,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "opening",
+              "light": "shifting"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "For the record. I see what's happening here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Nothing is happening."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Two people who carry snacks for strangers are arguing about who gets to help me pick up my stuff. That's the thing that's happening."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...She's not wrong."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "tentative_connection",
+          "emotion": "secretly pleased",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Do you always carry that much."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Do you."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. Hi."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "threshold_crossed",
+          "emotion": "hyped (quietly)",
+          "tension": 6,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "gentle"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "I just want to say. I was going to be invisible today. That was the plan."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Didn't work."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Didn't work."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Do you want a granola bar."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...Yeah. Actually. Yeah."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "Both `<CHAR_A>` and `<CHAR_B>` share the 🪺 Nest core — their love of caring and fear of not being needed creates a low-key standoff at the top of the arc: two people who exist to help cannot help each other because neither will admit to needing it. The collision over `<CHAR_C>`'s spilled bag is where that dynamic erupts — two Nests descending on the same problem, going left simultaneously, unable to yield. The named granola bars are the crack in the wall: a detail that reveals how far each Nest has extended their care into the anonymous world. `<CHAR_C>`'s ⚓ Anchor core — fearing being overlooked — drives the disruption and the naming of what's happening. The Anchor is the one who sees the pattern and says it out loud, which is what finally lets the two Nests stop competing and start recognizing each other. The threshold location is never described — it lives in the suspended state, the halted traffic, the sense that characters are about to become something they weren't before. The tension falls across the arc not through resolution of a plot obstacle but through two strangers discovering they are the same kind of person."
+    }
+  }
+}

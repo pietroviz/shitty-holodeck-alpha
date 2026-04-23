@@ -1,0 +1,396 @@
+{
+  "id": "story_ruin_rivals_list",
+  "type": "story",
+  "name": "Not On The List",
+  "tags": [
+    "ruin",
+    "rivals",
+    "rise_then_fall",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0014"
+  },
+  "payload": {
+    "description": "CHAR_A: \"You were not on the list.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": "The organizer. Runs the calendar, remembers the birthdays, hosts the thing. Not bossy — just noticed that if nobody does it, nobody does it, and decided to be that someone."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": "Always just back from somewhere. Camera roll full of weird doors, ceilings, and street food. Curious about everything, settled about nothing, treats Google Maps like a playground."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "👾",
+          "archetype": "Glitch",
+          "loves": "breaking the pattern",
+          "fears": "being taken too seriously",
+          "voice_hint": "The unhinged reply that makes the whole thread. Surreal, absurd, drops a non-sequitur that somehow nails the vibe. Other people's humor is jokes; Glitch's humor is a small rip in the simulation."
+        }
+      ],
+      "relationship": "rivals",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "ruin",
+        "notes": "decayed, haunted by past; abandoned building, old temple, wreckage"
+      },
+      "tension_level": "low",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "meeting",
+          "emotion": "performatively annoyed",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "cautious",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You were not on the list."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "There's a list?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "There is always a list."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That is the saddest thing I have ever heard."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "exploration",
+          "emotion": "focused",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crumbling",
+              "light": "low"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Look at this ceiling. This ceiling has stories."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The ceiling is actively falling. Can we not."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That chunk fell like fifty years ago. Probably."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Probably is not the reassurance you think it is."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "unserious",
+          "tension": 1,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "discovered"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Oh good. You found the haunted part."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Where did you come from."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The wall, technically. There's a gap."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I love the gap. Classic gap behavior."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "disagreement",
+          "emotion": "deadpan",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "dusty"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "We came here for one specific reason."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We came here because it looked interesting."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That is not a reason. That is a personality problem."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I came here because a pigeon told me to and that's also valid."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "escalation",
+          "emotion": "spiraling",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "This door doesn't open inward."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "But someone opened it. From the inside."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I said I know."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Cool cool. And you're fine."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm completely fine. I am the most fine."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "peak_tension",
+          "emotion": "feral",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settling_groan",
+              "wind": "none"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "The building just made a noise."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Buildings do that."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It sounded like it said 'nope.'"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay. New plan. We leave via the gap."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The gap is not on the plan."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The gap doesn't care about the plan."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "cooperation_forced",
+          "emotion": "earnestly trying",
+          "tension": 2,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "passed_between"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Hold this."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What is — okay. I'm holding it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't move until I say."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...This is the most organized I have ever been."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You're both a little bit the same person and it's uncomfortable to watch."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_truce",
+          "emotion": "secretly pleased",
+          "tension": 1,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<LOCATION_A>`",
+              "palette": "warm_grey"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "That was kind of good."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It was adequate."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "High praise."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The pigeon was right. It usually is."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We are not crediting the pigeon."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...The pigeon gets partial credit."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of holding it together and fear of losing control of the room surface constantly — the list, the plan, the \"I know\" that is clearly a lie, the insistence on not crediting the pigeon. They never name what they're managing; they just keep managing. `<CHAR_B>`'s love of the next unknown and fear of being stuck drive their refusal to follow the list and their immediate orientation toward the ceiling, the gap, the door that opens wrong — they're cataloguing mysteries while `<CHAR_A>` is cataloguing risks. `<CHAR_C>`'s love of breaking the pattern and fear of being taken too seriously means they appear from a wall gap, speak pigeon theology with total sincerity, and casually detonate the rivals' dynamic by pointing out they're the same person — then retreat before anyone can respond seriously. The ruin location keeps the tension low but loaded: it's a space where plans feel slightly ridiculous and the past keeps interrupting, which suits two characters who are fighting about control vs. discovery in a place that belongs to neither of them. The arc peaks at the \"building said nope\" beat and settles when reluctant cooperation replaces the rivalry, temporarily."
+    }
+  }
+}

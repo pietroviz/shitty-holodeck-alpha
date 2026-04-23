@@ -1,0 +1,328 @@
+{
+  "id": "story_ruin_walkthrough",
+  "type": "story",
+  "name": "Ruin Walkthrough",
+  "tags": [
+    "ruin",
+    "mentor",
+    "steady_with_spike",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0002"
+  },
+  "payload": {
+    "description": "CHAR_A: \"Okay. Don't touch the ceiling tiles.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "🧭",
+          "archetype": "Compass",
+          "loves": "the next unknown",
+          "fears": "being stuck",
+          "voice_hint": "Always just back from somewhere. Camera roll full of weird doors, ceilings, and street food. Curious about everything, settled about nothing, treats Google Maps like a playground."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "The earnest one. Still says 'GM' and means it. Roots for everyone unironically, and when the rest of the group's being too online, Bloom's the reminder that caring out loud is actually cool."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "👑",
+          "archetype": "Crown",
+          "loves": "holding it together",
+          "fears": "losing control of the room",
+          "voice_hint": "The organizer. Runs the calendar, remembers the birthdays, hosts the thing. Not bossy — just noticed that if nobody does it, nobody does it, and decided to be that someone."
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "ruin",
+        "notes": "decayed, haunted by past; abandoned building, old temple, wreckage"
+      },
+      "tension_level": "low",
+      "emotional_arc": "steady_with_spike",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "hyped",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "curious",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. Don't touch the ceiling tiles."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "There are no ceiling tiles."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Exactly. Someone already touched them."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "This place is so unwell. I love it."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "lesson",
+          "emotion": "earnestly trying",
+          "tension": 1,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "faded"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "See that. What do you notice."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "It's. Old?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Older than that. Look at the edge."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Oh. Something broke it. Not time. Something broke it on purpose."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Now you're looking."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "interruption",
+          "emotion": "performatively annoyed",
+          "tension": 2,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "unsettled",
+              "dust": "falling"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "I made a floor plan. In case anyone wanted a floor plan."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You made a floor plan of a ruin."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I made a floor plan of *this* ruin. Yes."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Bestie. That's actually so helpful."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Thank you. Someone appreciates the craft."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "practice",
+          "emotion": "lowkey pleased",
+          "tension": 2,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "held_up_to_light"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Is this one important."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "What do you think."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I think somebody kept it. So yeah."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Correct. Kept things always mean something. Even here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay but who taught you all this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Places, mostly."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "spike",
+          "emotion": "feral",
+          "tension": 7,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "sudden",
+              "tempo": "sharp"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "The floor plan does not account for that."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The floor plan does not account for — what is that sound."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't move. Either of you."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I am very still and I hate everything about this."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It's fine. I've heard that sound before. We're fine."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You don't look fine."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I look extremely fine."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "settling",
+          "emotion": "secretly pleased",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<LOCATION_A>`",
+              "palette": "golden_dust"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. I'm updating the floor plan."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That was. A lot."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "And now it's not. That's how it goes."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Is that the lesson? That's the lesson isn't it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "The lesson is: ruins are not empty. Everything else you figured out yourself."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm putting that on the floor plan. Under 'notes.'"
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of the next unknown shapes every movement — they're already pointing at things, reading edges, treating the ruin like a conversation rather than a hazard. Their fear of being stuck is invisible at low tension but surfaces fast in the spike beat: the calm voice and the posture that doesn't quite match. `<CHAR_B>`'s love of believing in people makes them the one who immediately validates `<CHAR_C>`'s floor plan, and their fear of seeming naive drives them to answer `<CHAR_A>`'s questions carefully — they're working, not performing. `<CHAR_C>`'s love of holding it together produces the floor plan in the first place — they map the space because unmapped space is risk. Their fear of losing control of the room shows up in the spike beat as brittle stillness. The ruin location is never described literally; it shows up in the dropped ceiling tiles, the broken `<PROP_A>`, the sound without a visible source, and the golden-dust-settling image at resolution. The past haunts the space through what the characters notice, not through description. This is what the nano LM should reproduce: archetype + motivation + location all doing work in the negative space.\n\n➡️ end"
+    }
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "id": "story_trap_rivals",
+  "type": "story",
+  "name": "Cornered Rivals",
+  "tags": [
+    "trap",
+    "rivals",
+    "falling",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0004"
+  },
+  "payload": {
+    "description": "CHAR_A: \"This is not where I saw my afternoon going.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "⚓",
+          "archetype": "Anchor",
+          "loves": "being understood",
+          "fears": "being overlooked",
+          "voice_hint": "'It me' energy. Relatable to a fault, self-aware, slightly tired, showing up anyway."
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": "The earnest one. Roots for everyone unironically. Caring out loud is actually cool."
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "✨",
+          "archetype": "Magic",
+          "loves": "making things happen",
+          "fears": "being seen as all talk",
+          "voice_hint": "Knows a guy. Shows up and things start happening."
+        }
+      ],
+      "relationship": "rivals",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "trap",
+        "notes": "constrained, hard to exit; locked room, cave, stuck elevator"
+      },
+      "tension_level": "low",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "forced_proximity",
+          "emotion": "performatively annoyed",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "This is not where I saw my afternoon going."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Same. Very same."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't do that."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Do what."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Agree with me. We're not agreeing right now."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "territorial_standoff",
+          "emotion": "deadpan",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "still",
+              "air": "stale"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "There is enough space if you move two steps left."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I am already two steps left."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Then the space situation is just what it is."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah. It is. No cap, this is a lot."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "intervention",
+          "emotion": "unbothered (lying)",
+          "tension": 2,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "rattling"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. I know a thing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Is the thing a way out."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The thing is adjacent to a way out."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That is so much worse than just saying no."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "reluctant_collaboration",
+          "emotion": "earnestly trying",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "If you two hold that side, I can make this work."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You sure."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Seventy percent."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I respect the honesty. Fine. Moving."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Same."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_crack",
+          "emotion": "lowkey devastated",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "gentle",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You actually believed it was going to work."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Yeah. I do that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Doesn't that get exhausting."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Doesn't not doing it get exhausting."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...That was a genuinely good point. I'm annoyed."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "uneasy_resolution",
+          "emotion": "secretly pleased",
+          "tension": 1,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "shifting",
+              "light": "returning"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "It worked. By the way. The thing worked."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You're kidding."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I don't kid about adjacency."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Told you."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You literally said nothing."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I believed it quietly. Same thing."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of being understood and fear of being overlooked surface in how they resist agreement — if `<CHAR_B>` agrees too easily, it reads as not actually seeing them. The rival dynamic is less \"enemies\" and more \"two people who remind each other of the gap between them.\" `<CHAR_B>`'s love of believing in people and fear of being made to feel naive shape the \"doesn't not doing it get exhausting\" moment — they don't defend the belief, they just quietly live it, and that lands harder. `<CHAR_C>`'s love of making things happen and fear of being all talk drive the \"adjacent to a way out\" hedge — they need to under-promise so delivery still counts. The Trap location does not appear as description; it shows up in the stillness, the territorial step-counting, the stale air, and the fact that all three characters have nothing to do but wait and talk. Tension starts at 3 (friction, not threat), falls through reluctant proximity into actual connection, and bottoms out at 1 with the rivals quietly, accidentally, impressed by each other.\n\n➡️ end"
+    }
+  }
+}

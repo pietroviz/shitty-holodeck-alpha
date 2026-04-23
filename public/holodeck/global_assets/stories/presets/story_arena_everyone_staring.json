@@ -1,0 +1,366 @@
+{
+  "id": "story_arena_everyone_staring",
+  "type": "story",
+  "name": "Everyone Is Staring",
+  "tags": [
+    "arena",
+    "mentor",
+    "falling",
+    "low"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0010"
+  },
+  "payload": {
+    "description": "CHAR_B: \"Everyone is staring.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "📡",
+          "archetype": "Signal",
+          "loves": "seeing the pattern first",
+          "fears": "being wrong in public",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🔥",
+          "archetype": "Flame",
+          "loves": "feeling it all the way",
+          "fears": "being dismissed as too much",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "📡",
+          "archetype": "Signal",
+          "loves": "seeing the pattern first",
+          "fears": "being wrong in public",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "mentor_student",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "arena",
+        "notes": "performative, public, watched"
+      },
+      "tension_level": "low",
+      "emotional_arc": "falling",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "opening_stakes",
+          "emotion": "performatively unbothered",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "tense",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Everyone is staring."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "They always are."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That doesn't bother you?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Not yet."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_lesson",
+          "emotion": "earnestly trying",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crowded",
+              "ambient": "loud"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Look at the room. Not the people. The room."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Those are the same thing."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "They're really not."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Okay. I'm looking."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "doubt",
+          "emotion": "spiraling (lite)",
+          "tension": 3,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "bright_and_harsh"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm going to say something wrong up there. I can feel it coming."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You're pre-failing. It's a waste of your time."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I do this. I feel things before they happen."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "That's not a feeling. That's noise."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "complication",
+          "emotion": "deadpan",
+          "tension": 3,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_B>`": "",
+              "state": "passed_between"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You prepped the wrong section."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "The whole room knows which section it is."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I know that too."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "quiet_pivot",
+          "emotion": "lowkey devastated (briefly)",
+          "tension": 2,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "soft",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "So what do we do."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "We use what we have."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Which is?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "More than they think."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "mentor_release",
+          "emotion": "secretly pleased",
+          "tension": 2,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "settling",
+              "ambient": "quieting"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You're going to do the talking."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Me? You said I was too much."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I said your feelings were loud. That's different."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...That's kind of the nicest thing you've ever said."
+            }
+          ],
+          "next": "narreme_007"
+        },
+        {
+          "id": "narreme_007",
+          "characters": [
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "student_steps_up",
+          "emotion": "locked in",
+          "tension": 2,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_A>`",
+              "palette": "warm"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "Hey. Can I just — before we start. We got it wrong."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm sorry?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The wrong section. We know. So let's start from what's actually true."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "...People don't usually say that out loud."
+            }
+          ],
+          "next": "narreme_008"
+        },
+        {
+          "id": "narreme_008",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "resolution",
+          "emotion": "hyped (quiet version)",
+          "tension": 1,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "warm",
+              "tempo": "easy"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. Start from what's true."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "See? The room shifted."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I felt that."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Yeah. You did."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 8,
+      "conditioning_notes": "`<CHAR_A>`'s love of seeing the pattern first and fear of being wrong in public drive the whole arc — they know the wrong section was prepped before anyone announces it, they don't panic, and they redirect rather than retreat. In the arena, where everyone watches, being wrong publicly is the worst outcome; `<CHAR_A>` routes around it by giving the floor to `<CHAR_B>`. The mentor_student dynamic surfaces not in instruction but in permission — `<CHAR_A>` never says \"I believe in you\"; they just step back. `<CHAR_B>`'s love of feeling it all the way is the actual asset here: they can say \"we got it wrong\" with honesty the room responds to because they mean it completely. `<CHAR_B>`'s fear of being too much is what makes the mentor_release beat (\"that's kind of the nicest thing you've ever said\") land quietly instead of loudly. `<CHAR_C>`, also a 📡 Signal, occupies the external-evaluator position — a second pattern-spotter means any slip gets noticed twice, which raises the cost of the mistake without raising the volume. The arena location shapes posture throughout: characters speak in shorter bursts, nothing is private, and even a quiet exchange carries the weight of being visible. The falling arc starts at 3 (everyone is watching, something is wrong) and steps down to 1 (the room shifted, and the student felt it) — tension doesn't crash, it exhales."
+    }
+  }
+}

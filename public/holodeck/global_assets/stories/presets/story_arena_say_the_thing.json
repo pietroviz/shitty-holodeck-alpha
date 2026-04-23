@@ -1,0 +1,336 @@
+{
+  "id": "story_arena_say_the_thing",
+  "type": "story",
+  "name": "Say The Thing And Leave",
+  "tags": [
+    "arena",
+    "allies",
+    "rise_then_fall",
+    "medium"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-04-22T00:00:00.000Z",
+    "modified": "2026-04-22T00:00:00.000Z",
+    "version": 1,
+    "source_corpus_id": "0008"
+  },
+  "payload": {
+    "description": "CHAR_A: \"We go up, we say the thing, we leave.\"",
+    "format": "story_state",
+    "state": {
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "emoji": "⚡",
+          "archetype": "Edge",
+          "loves": "calling it straight",
+          "fears": "being managed or softened",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_B",
+          "emoji": "🌱",
+          "archetype": "Bloom",
+          "loves": "believing in people",
+          "fears": "being made to feel naive",
+          "voice_hint": null
+        },
+        {
+          "slot": "CHAR_C",
+          "emoji": "🪺",
+          "archetype": "Nest",
+          "loves": "taking care of people",
+          "fears": "not being needed",
+          "voice_hint": null
+        }
+      ],
+      "relationship": "allies",
+      "relationship_between": [
+        "CHAR_A",
+        "CHAR_B"
+      ],
+      "location": {
+        "slot": "LOCATION_A",
+        "type": "arena",
+        "notes": "performative, public, watched"
+      },
+      "tension_level": "medium",
+      "emotional_arc": "rise_then_fall",
+      "age_target": "10–16",
+      "beats": [
+        {
+          "id": "narreme_001",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "shared_intent",
+          "emotion": "locked in",
+          "tension": 3,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "determined",
+              "tempo": "slow"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "We go up, we say the thing, we leave."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Okay but also we could be a little warm about it."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I can do warm. I choose not to."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That's the least warm thing you've ever said."
+            }
+          ],
+          "next": "narreme_002"
+        },
+        {
+          "id": "narreme_002",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "pre_event_check",
+          "emotion": "performatively unbothered",
+          "tension": 3,
+          "cue": {
+            "type": "prop_box",
+            "params": {
+              "`<PROP_A>`": "",
+              "state": "pressed_into_hands"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Here. Both of you."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Is this a snack."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It's always a snack. Did you eat today?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "I do not need to be carb-loaded before I have an opinion."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "You do, actually. You get mean when you're hungry."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...It's good."
+            }
+          ],
+          "next": "narreme_003"
+        },
+        {
+          "id": "narreme_003",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "first_obstacle",
+          "emotion": "spiraling (just a little)",
+          "tension": 5,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "crowded",
+              "noise": "rising"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "There are more people watching than I expected."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Good. Bigger audience for the truth."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "What if they boo."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Then they boo. That's their job. This is ours."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "You are terrifyingly calm."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "One of us has to be."
+            }
+          ],
+          "next": "narreme_004"
+        },
+        {
+          "id": "narreme_004",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "peak_pressure",
+          "emotion": "feral",
+          "tension": 6,
+          "cue": {
+            "type": "image_box",
+            "params": {
+              "focus": "`<PROP_B>`",
+              "palette": "harsh_bright"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. They're calling your names."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Right now?"
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Right now. Go. Go go go. I'll be right here."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You don't have to wait."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I know."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "She's going to wait."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Obviously I'm going to wait."
+            }
+          ],
+          "next": "narreme_005"
+        },
+        {
+          "id": "narreme_005",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B"
+          ],
+          "location": "LOCATION_A",
+          "function": "moment_of_truth",
+          "emotion": "earnestly trying",
+          "tension": 5,
+          "cue": {
+            "type": "music_box",
+            "params": {
+              "mood": "wide_open",
+              "tempo": "mid"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "You go first."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Wait — really?"
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "You're better at the opening. I'm better at the part where it gets real."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "That is genuinely the nicest thing you have ever said to me."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Don't get used to it. Go."
+            }
+          ],
+          "next": "narreme_006"
+        },
+        {
+          "id": "narreme_006",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "aftermath",
+          "emotion": "secretly pleased",
+          "tension": 3,
+          "cue": {
+            "type": "environment_box",
+            "params": {
+              "state": "quieting",
+              "crowd": "thinning"
+            }
+          },
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "You both ate absolutely."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "We really did."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "It was fine."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "They clapped."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "They clapped politely."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I cried a little."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "...Okay. It was more than fine."
+            }
+          ],
+          "next": "end"
+        }
+      ],
+      "beat_count": 6,
+      "conditioning_notes": "`<CHAR_A>`'s love of calling it straight and fear of being managed surfaces in the refusal to be warmed up, carb-loaded, or softened — and in the flat \"they boo, that's their job.\" The crack of genuine recognition in narreme_005 (\"you're better at the opening\") lands harder because it costs `<CHAR_A>` something to say it without a buffer of irony. `<CHAR_B>`'s love of believing in people drives the earnest worry about the crowd — not stage fright exactly, but a need for the thing to land with people, to matter to them — and the fear of being naive shows up in how quickly they scan `<CHAR_A>` for confirmation that their optimism isn't misplaced. `<CHAR_C>`'s love of taking care and fear of not being needed runs the whole background register: the snack pressed into hands, the \"I'll be right here,\" the waiting. The Arena location is never named but governs everything — characters perform, the crowd is a presence even when silent, the exit is always on the other side of an audience. The stakes aren't life-or-death; they're the watched-moment stakes that a public arena makes enormous."
+    }
+  }
+}
