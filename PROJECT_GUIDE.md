@@ -419,7 +419,7 @@ These conventions are now baked into the env state and the bridge/preview. Keep 
 ### Story Captions + Floating Name Tags (April 23 follow-up)
 
 - **New shared UI layer** (`public/holodeck/js/shared/archetypeHead.js`) — A single-line word-by-word caption (`#story-subtitle`) and a per-slot floating name tag layer (`#story-name-tags`) that hovers above whichever character is currently speaking. Both are driven by the VisemeEngine's `wordIdx` and positioned to track the Play button / head container.
-- **Chunky pixel font** — Silkscreen loaded once from Google Fonts, applied to both the caption and the tags (fallback `Press Start 2P` → `Courier New` → monospace). Narrow enough that long captions don't run out of horizontal room, but still reads as retro/blocky so it matches the pixel tone of the app.
+- **Chunky pixel font** — Jersey 25 loaded once from Google Fonts, applied to both the caption and the tags (fallback `Silkscreen` → `Press Start 2P` → `Courier New` → monospace). Narrow enough that long captions don't run out of horizontal room, but still reads as retro/blocky so it matches the pixel tone of the app.
 - **Positions tuned for the existing layout** — Caption centred vertically on the 72px Play button (`bottom:210px`). Name tag lifts `0.46` world units above each head container (~0.17 clearance above the head top given a medium-preset 0.58 head height).
 - **Public API + reuse pattern documented** in the new "Captions + Floating Name Tags" section below. This is the pattern the simulation-builder (and any future trailer/tutorial playback) should import directly rather than re-implementing.
 
@@ -565,7 +565,7 @@ this._heads.push({
 
 Both elements are styled inline at creation time — no external CSS file — so the style is the source of truth.
 
-- **Font:** Silkscreen (400/700), loaded from `https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap`. Fallback: `'Press Start 2P', 'Courier New', monospace`. The loader is idempotent (checks for `#story-pixel-font-link` before appending).
+- **Font:** Jersey 25, loaded from `https://fonts.googleapis.com/css2?family=Jersey+25&display=swap`. Fallback: `'Silkscreen', 'Press Start 2P', 'Courier New', monospace`. The loader is idempotent (checks for `#story-pixel-font-link` before appending).
 - **Subtitle:** `15px`, `letter-spacing:0.02em`, `line-height:1.35`, `padding:10px 20px`, `max-width:min(80%, 720px)`. Dark translucent pill (`rgba(14,18,28,0.72)`) with blur backdrop. Anchored at `bottom:210px; left:50%; transform:translate(-50%, 50%)` so its vertical centre lines up with the 72px Play button's centre (Play button sits at `bottom:174px`, so centre = `174 + 36 = 210`). Lives inside `#ui-elements`.
 - **Name tag:** `10px`, `letter-spacing:0.04em`, `padding:5px 12px`, `border-radius:6px` (squared-off corners to match the pixel face). Same dark translucent pill. Fixed-position inside `#story-name-tags` layer.
 - **Name tag vertical lift:** `container.worldY + 0.46`. Medium head height is `0.58`, so the head top sits at `+0.29` above the container origin. `0.46` = `0.29 + 0.17` → ~0.17 world-unit clearance above the head top. Tune the `+ 0.46` constant in `updateStoryNameTags()` if head sizes ever change significantly.
