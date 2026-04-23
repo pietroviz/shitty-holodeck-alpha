@@ -31,8 +31,9 @@
                 thumbnail to <code>public/holodeck/thumbnails/</code>.
             </p>
             <p class="muted">
-                <strong>Delay per env:</strong>
-                <input id="delay" type="number" min="500" max="10000" step="100" value="3500" style="width:80px;background:#1e222e;color:#fff;border:1px solid #2e3446;border-radius:4px;padding:4px 6px;"> ms
+                <strong>Post-ready buffer:</strong>
+                <input id="delay" type="number" min="200" max="5000" step="100" value="600" style="width:80px;background:#1e222e;color:#fff;border:1px solid #2e3446;border-radius:4px;padding:4px 6px;"> ms
+                <br><em style="font-size:11px;color:#667386;">Polls for env.ready, then waits this long before capture.</em>
             </p>
             <button id="start">Start batch</button>
             <button id="stop" disabled>Stop</button>
@@ -53,7 +54,7 @@
     }
     </script>
     <script type="module">
-        import { showPreview, destroyPreview } from './js/previewRenderer.js';
+        import { showPreview, destroyPreview, isEnvPreviewReady, renderNow } from './js/previewRenderer.js';
 
         const container = document.getElementById('scene-container');
         const startBtn  = document.getElementById('start');
@@ -92,7 +93,18 @@
             const envId = asset.id;
 
             showPreview(container, asset);
-            await wait(delayMs);  // let async props + ground + weather settle
+
+            // Poll until async props + ground objects have all loaded, with a hard cap.
+            const readyDeadline = performance.now() + 15000;
+            while (!isEnvPreviewReady() && performance.now() < readyDeadline) {
+                await wait(100);
+            }
+            // Small post-ready buffer so the next tick actually renders the new meshes to the canvas.
+            await wait(Math.max(400, delayMs));
+
+            // Force a direct render so the latest scene state is definitely in the frame buffer
+            // before we read it back — the rAF tick loop can lag the async prop loads.
+            renderNow();
 
             const canvas = container.querySelector('canvas');
             if (!canvas) throw new Error('no canvas for ' + envId);
@@ -124,9 +136,9 @@
             stopBtn.disabled  = false;
             logEl.innerHTML   = '';
 
-            const delayMs = Math.max(500, Math.min(10000, parseInt(delayIn.value || '3500', 10)));
+            const delayMs = Math.max(200, Math.min(5000, parseInt(delayIn.value || '600', 10)));
             const envs    = await listEnvs();
-            line(`Found ${envs.length} envs. Delay ${delayMs}ms each. ≈ ${Math.round(envs.length * delayMs / 1000)}s total.`);
+            line(`Found ${envs.length} envs. Post-ready buffer ${delayMs}ms. Polls env readiness first.`);
 
             let done = 0, failed = 0;
             for (const p of envs) {

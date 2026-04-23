@@ -1418,7 +1418,7 @@ async function _buildEnvironmentPreview(asset) {
     _camera.fov = 55;
     _camera.updateProjectionMatrix();
 
-    _envPreview = { walls: null, groundObjs: [], props: [], weather: null };
+    _envPreview = { walls: null, groundObjs: [], props: [], weather: null, ready: false };
 
     const p = asset.payload || {};
     const s = p.state || {};
@@ -1683,6 +1683,20 @@ async function _buildEnvironmentPreview(asset) {
     // Run a ground-object cull pass now that everything is loaded.
     if (_envPreview === previewRef) {
         _envCullGroundObjects(_envPreview.groundObjs, _camera);
+        _envPreview.ready = true;
+    }
+}
+
+export function isEnvPreviewReady() {
+    return _envPreview?.ready === true;
+}
+
+// Force a synchronous render of the current scene. Lets the env thumb-farm
+// capture the canvas immediately after async prop/ground loads complete
+// without waiting for the next rAF tick.
+export function renderNow() {
+    if (_renderer && _scene && _camera) {
+        _renderer.render(_scene, _camera);
     }
 }
 
