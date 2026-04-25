@@ -33,7 +33,7 @@ import {
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from '../shared/archetypeHead.js?v=4';
+} from '../shared/archetypeHead.js?v=5';
 
 // Neutral default voice params — the VoiceEngine is re-applied to these at
 // the top of every spoken line so per-archetype pitch/speed deltas don't

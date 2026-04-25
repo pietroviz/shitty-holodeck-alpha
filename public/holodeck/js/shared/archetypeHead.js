@@ -207,10 +207,12 @@ export function animateStoryHeads(heads, { speakingSlot, amp, visemeParams, t })
         h.container.rotation.z = speakRoll;
 
         // Mouth — speaker uses voice-driven viseme params when available.
+        // Asset-built character heads use the shared mouthRig (driven from the
+        // tick loop) instead of a per-head talk() function, so guard the call.
         if (speaking) {
-            if (visemeParams && h.talkParams) h.talkParams(visemeParams);
-            else                              h.talk(amp);
-        } else {
+            if (visemeParams && h.talkParams)      h.talkParams(visemeParams);
+            else if (typeof h.talk === 'function') h.talk(amp);
+        } else if (typeof h.talk === 'function') {
             h.talk(0);
         }
     }

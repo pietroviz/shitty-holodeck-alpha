@@ -30,7 +30,7 @@ import {
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from './shared/archetypeHead.js?v=4';
+} from './shared/archetypeHead.js?v=5';
 import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
@@ -424,6 +424,12 @@ function _startLoop() {
         const delta = _clock.getDelta();
         const deltaMs = delta * 1000;
 
+        // Wrap the entire frame body — a throw inside any per-frame system
+        // (story heads, music viz, env culling) would otherwise abort tick
+        // before _renderer.render(), freezing the scene visually even though
+        // controls are still updating internally.
+        try {
+
         // Ping-pong rotation between 3/4 views (stops when user interacts)
         if (_controls) {
             if (_autoSpin) {
@@ -505,7 +511,13 @@ function _startLoop() {
             }
         }
 
-        _renderer.render(_scene, _camera);
+        } catch (e) {
+            console.warn('[previewRenderer] tick body threw, continuing:', e?.message);
+        }
+
+        // Always render — even if a per-frame system threw, the user should
+        // still see the scene update.
+        try { _renderer.render(_scene, _camera); } catch { /* renderer dead */ }
 
         // Capture thumbnail after a few frames (let async assets load)
         _frameCount++;

@@ -9,7 +9,7 @@ import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
 import { SimulationBridge }     from './bridges/SimulationBridge.js?v=9';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=13';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=14';
 import { generateId }                       from './db.js?v=2';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
