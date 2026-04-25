@@ -227,26 +227,6 @@ export function isPreviewEnvironmentPlaying() {
     return _currentAsset?.type === 'environment' && _autoSpin;
 }
 
-/** Auto-play music for an environment preview by fetching the music asset by ID. */
-async function _autoPlayEnvironmentMusic(musicId) {
-    if (!musicId) return;
-    try {
-        // Try loading from global music assets
-        const folders = ['ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
-        let track = null;
-        for (const folder of folders) {
-            try {
-                const res = await fetch(`global_assets/music/${folder}/${musicId}.json`);
-                if (res.ok) { track = await res.json(); break; }
-            } catch { /* try next */ }
-        }
-        if (!track) return;
-        if (!_musicReady) await _ensureMusic();
-        if (!_musicReady || !_musicEngine) return;
-        _musicEngine.play(track);
-    } catch { /* silent */ }
-}
-
 /** Wire up the voiceEngine's onSpeakEnd to notify the state change callback. */
 function _wireOnSpeakEnd() {
     if (!_voiceEngine || _voiceEngine._endHooked) return;
@@ -1488,10 +1468,6 @@ async function _buildEnvironmentPreview(asset) {
     const p = asset.payload || {};
     const s = p.state || {};
 
-    // Auto-play assigned music track
-    const musicId = s.musicId || p.musicId;
-    if (musicId) _autoPlayEnvironmentMusic(musicId);
-
     // Blank-template detection: render canonical Scene3D look.
     const skyTop = s.skyTop || s.skyTopColor || p.skybox?.topColor;
     const skyMid = s.skyMid || s.skyHorizonColor || p.skybox?.bottomColor;
@@ -2220,143 +2196,168 @@ async function _resolveSimAsset(refs, type, id) {
     } catch { return null; }
 }
 
-async function _buildSimulationPreview(asset) {
-    const session = _previewSession;          // capture for stale-result guard
-    const state = asset?.payload?.state || asset?.state || {};
-    const refs  = asset?.refs;
-
-    const cast = Array.isArray(state.cast) && state.cast.length ? state.cast : [
-        { slot: 'CHAR_A', archetype: 'Edge' },
-        { slot: 'CHAR_B', archetype: 'Bloom' },
-        { slot: 'CHAR_C', archetype: 'Glitch' },
-    ];
-
-    // Resolve env + every cast character in parallel so a slow build for
-    // one slot doesn't block the others. Each resolve has its own try/catch
-    // so one bad ID can't take the rest down.
-    const charPromises = cast.map(c =>
-        c.charId
-            ? _resolveSimAsset(refs, 'Characters', c.charId).catch(() => null)
-            : Promise.resolve(null)
-    );
-    const envPromise = state.envId
-        ? _resolveSimAsset(refs, 'Environments', state.envId).catch(() => null)
-        : Promise.resolve(null);
-    const [envAsset, ...charAssets] = await Promise.all([envPromise, ...charPromises]);
-    if (session !== _previewSession) return;  // user navigated away
-
-    // 1) Render the environment (or fall back to default lighting if missing).
-    // Wrapped in try/catch so a malformed env can't strand the user with no
-    // characters and a broken camera.
-    if (envAsset) {
-        try {
-            await _buildEnvironmentPreview(envAsset);
-        } catch (e) {
-            console.warn('[previewRenderer] sim env build failed, continuing with default scene:', e?.message);
-        }
-        if (session !== _previewSession) return;
-    }
-
-    // 2) Build heads/characters per cast slot in parallel. Each slot
-    // independently falls back to an archetype head if its asset is
-    // missing or the mesh build throws.
-    const builds = await Promise.all(cast.map(async (c, i) => {
-        const charAsset = charAssets[i] || null;
-        if (charAsset) {
-            try {
-                const mesh = await buildCharacterMesh(charAsset);
-                return { c, mesh };
-            } catch (e) {
-                console.warn(`[previewRenderer] sim char build failed for ${c.slot}, archetype fallback:`, e?.message);
-            }
-        }
-        return { c, mesh: null };
-    }));
-    if (session !== _previewSession) {
-        // Dispose any meshes we already built — they'll never be added.
-        for (const b of builds) b.mesh?.dispose?.();
-        return;
-    }
-
-    const heads = [];
-    for (const { c, mesh } of builds) {
-        const pos  = _SIM_SLOT_POSITIONS[c.slot] || [0, 0, 0];
-        const rotY = _SIM_SLOT_ROT_Y[c.slot]     || 0;
-        const container = new THREE.Group();
-        container.position.set(...pos);
-        container.rotation.y = rotY;
-
-        let entry;
-        if (mesh) {
-            container.add(mesh.group);
-            entry = {
-                slot: c.slot,
-                container,
-                basePos: container.position.clone(),
-                baseRotY: rotY,
-                label: `${c.archetype || 'Edge'}-core`,
-                talkParams: null,
-                dispose: () => mesh.dispose(),
-                isArchetype: false,
-            };
-        } else {
-            const head = buildArchetypeHead(c.archetype || 'Edge');
-            container.add(head.group);
-            container.position.y = _SIM_ARCHETYPE_LIFT_Y;
-            entry = {
-                slot: c.slot,
-                container,
-                basePos: container.position.clone(),
-                baseRotY: rotY,
-                label: `${c.archetype || 'Edge'}-core`,
-                talk: head.talk,
-                talkParams: head.talkParams,
-                dispose: head.dispose,
-                isArchetype: true,
-            };
-        }
-
-        _previewGroup.add(container);
-        heads.push(entry);
-    }
-
-    // 3) Final camera framing + orbit reset. Done AFTER heads are placed so
-    // even if the env build moved the camera or disabled controls, the
-    // simulation always lands at a known good pose with orbit working.
+function _applySimCamera() {
     _camera.position.set(0, 1.4, 4.2);
     _camera.lookAt(0, 0.95, -0.25);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
-        _controls.enabled = true;             // re-enable in case any prior bridge disabled it
+        _controls.enabled = true;
         _controls.target.set(0, 0.95, -0.25);
         _controls.update();
     }
-    // Snapshot the final pose so resetView() returns here, not the pre-build pose.
-    _initialCamPos = _camera.position.clone();
-    _initialTarget = _controls ? _controls.target.clone() : null;
+}
 
-    // 4) Story-style read-through state (so Play can drive subtitles + speak).
-    const beats = pickThreeBeats(Array.isArray(state.beats) ? state.beats : []);
-    _storyPreview = {
-        heads,
-        speakingSlot: null,
-        playback: null,
-        cast,
-        beats,
-        isPlaying: false,
-    };
+async function _buildSimulationPreview(asset) {
+    const session = _previewSession;          // capture for stale-result guard
+    try {
+        const state = asset?.payload?.state || asset?.state || {};
+        const refs  = asset?.refs;
 
-    _voiceConfigured = _ensureVoice().then(() => {
-        if (!_voiceReady || !_voiceEngine) return;
-        if (_voiceEngine.applyState) {
-            _voiceEngine.applyState({ speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' });
+        const cast = Array.isArray(state.cast) && state.cast.length ? state.cast : [
+            { slot: 'CHAR_A', archetype: 'Edge' },
+            { slot: 'CHAR_B', archetype: 'Bloom' },
+            { slot: 'CHAR_C', archetype: 'Glitch' },
+        ];
+
+        // Set the close-up camera up front so the user sees the right pose
+        // from the very first frame. The env build will briefly nudge it to
+        // a wide pose and we re-assert at the end.
+        _applySimCamera();
+        _initialCamPos = _camera.position.clone();
+        _initialTarget = _controls ? _controls.target.clone() : null;
+
+        // Resolve env + every cast character in parallel. Each resolve has
+        // its own try/catch so one bad ID can't take the rest down.
+        const charPromises = cast.map(c =>
+            c.charId
+                ? _resolveSimAsset(refs, 'Characters', c.charId).catch(() => null)
+                : Promise.resolve(null)
+        );
+        const envPromise = state.envId
+            ? _resolveSimAsset(refs, 'Environments', state.envId).catch(() => null)
+            : Promise.resolve(null);
+        const [envAsset, ...charAssets] = await Promise.all([envPromise, ...charPromises]);
+        if (session !== _previewSession) return;
+
+        // Kick the assigned music track BEFORE env build kicks off.
+        if (state.musicId) _autoPlaySimulationMusic(state.musicId, session);
+
+        // Kick the env build in PARALLEL with character build. If env build
+        // throws or hangs, characters + camera + music still come up — the
+        // user is never stranded with a wide shot and no cast.
+        const envBuildPromise = envAsset
+            ? _buildEnvironmentPreview(envAsset).catch(e => {
+                console.warn('[previewRenderer] sim env build failed:', e?.message);
+            })
+            : Promise.resolve();
+
+        // Build heads/characters per cast slot in parallel. Each slot
+        // independently falls back to an archetype head if its asset is
+        // missing or the mesh build throws.
+        const builds = await Promise.all(cast.map(async (c, i) => {
+            const charAsset = charAssets[i] || null;
+            if (charAsset) {
+                try {
+                    const mesh = await buildCharacterMesh(charAsset);
+                    return { c, mesh };
+                } catch (e) {
+                    console.warn(`[previewRenderer] sim char build failed for ${c.slot}, archetype fallback:`, e?.message);
+                }
+            }
+            return { c, mesh: null };
+        }));
+        if (session !== _previewSession) {
+            for (const b of builds) b.mesh?.dispose?.();
+            return;
         }
-    });
 
-    // 5) Kick the assigned music track (fire-and-forget; aborts if stale).
-    if (state.musicId) _autoPlaySimulationMusic(state.musicId, session);
+        // Place heads. Each placement is in its own try/catch so one bad
+        // head can't strand the rest.
+        const heads = [];
+        for (const { c, mesh } of builds) {
+            try {
+                const pos  = _SIM_SLOT_POSITIONS[c.slot] || [0, 0, 0];
+                const rotY = _SIM_SLOT_ROT_Y[c.slot]     || 0;
+                const container = new THREE.Group();
+                container.position.set(...pos);
+                container.rotation.y = rotY;
+
+                let entry;
+                if (mesh) {
+                    container.add(mesh.group);
+                    entry = {
+                        slot: c.slot,
+                        container,
+                        basePos: container.position.clone(),
+                        baseRotY: rotY,
+                        label: `${c.archetype || 'Edge'}-core`,
+                        talkParams: null,
+                        dispose: () => mesh.dispose(),
+                        isArchetype: false,
+                    };
+                } else {
+                    const head = buildArchetypeHead(c.archetype || 'Edge');
+                    container.add(head.group);
+                    container.position.y = _SIM_ARCHETYPE_LIFT_Y;
+                    entry = {
+                        slot: c.slot,
+                        container,
+                        basePos: container.position.clone(),
+                        baseRotY: rotY,
+                        label: `${c.archetype || 'Edge'}-core`,
+                        talk: head.talk,
+                        talkParams: head.talkParams,
+                        dispose: head.dispose,
+                        isArchetype: true,
+                    };
+                }
+
+                _previewGroup.add(container);
+                heads.push(entry);
+            } catch (e) {
+                console.warn(`[previewRenderer] sim head place failed for ${c.slot}:`, e?.message);
+                mesh?.dispose?.();
+            }
+        }
+
+        // Re-assert camera after heads land — the env build may have moved
+        // it to its wide framing before we got here.
+        _applySimCamera();
+        _initialCamPos = _camera.position.clone();
+        _initialTarget = _controls ? _controls.target.clone() : null;
+
+        // Story-style read-through state (so Play can drive subtitles + speak).
+        const beats = pickThreeBeats(Array.isArray(state.beats) ? state.beats : []);
+        _storyPreview = {
+            heads,
+            speakingSlot: null,
+            playback: null,
+            cast,
+            beats,
+            isPlaying: false,
+        };
+
+        _voiceConfigured = _ensureVoice().then(() => {
+            if (!_voiceReady || !_voiceEngine) return;
+            if (_voiceEngine.applyState) {
+                _voiceEngine.applyState({ speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' });
+            }
+        });
+
+        // Once the env build resolves, re-assert the camera one final time
+        // in case it moved during the long async load (props, ground, etc.).
+        envBuildPromise.then(() => {
+            if (session !== _previewSession) return;
+            _applySimCamera();
+        });
+    } catch (e) {
+        console.error('[previewRenderer] _buildSimulationPreview failed:', e);
+        // Even on failure, leave a usable camera and orbit state so the
+        // user isn't stuck staring at a default pose with broken controls.
+        if (session === _previewSession) _applySimCamera();
+    }
 }
 
 async function _autoPlaySimulationMusic(musicId, session) {
