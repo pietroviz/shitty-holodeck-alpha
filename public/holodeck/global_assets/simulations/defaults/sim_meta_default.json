@@ -2,19 +2,19 @@
   "id": "sim_meta_default",
   "type": "simulation",
   "name": "Default",
-  "tags": ["starter", "meta", "onboarding"],
+  "tags": ["starter", "meta", "onboarding", "nature", "vivid"],
   "meta": {
     "origin": "template",
     "created": "2026-04-23T00:00:00.000Z",
-    "modified": "2026-04-23T00:00:00.000Z",
-    "version": 1
+    "modified": "2026-04-25T00:00:00.000Z",
+    "version": 2
   },
   "payload": {
-    "description": "A gentle starter simulation. A cozy living room, a mellow score, and three archetypes saying hello. Swap any slot, roll the dice, or drill in to edit.",
+    "description": "A vivid starter simulation. A giant mushroom forest, a forest-canopy score, and three archetypes saying hello. Swap any slot, roll the dice, or drill in to edit.",
     "format": "simulation_state",
     "state": {
-      "envId": "env_cozy_living_room",
-      "musicId": "mus_crystal_cave",
+      "envId": "env_giant_mushroom_forest",
+      "musicId": "mus_forest_canopy",
       "storyId": "story_meta_default",
       "cast": [
         { "slot": "CHAR_A", "charId": "char_influencer_aria", "archetype": "Edge" },

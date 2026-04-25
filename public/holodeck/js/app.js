@@ -9,7 +9,7 @@ import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
 import { SimulationBridge }     from './bridges/SimulationBridge.js?v=7';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=9';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=10';
 import { generateId }                       from './db.js?v=2';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -440,8 +440,7 @@ function renderMenu(submenu) {
 }
 
 /**
- * "Explore" — return to the default home view (blank simulation).
- * Eventually this will load random simulations for discovery.
+ * "Explore" — return to the default home view (random sim if available).
  */
 function goExplore() {
     closeMenu();
@@ -464,8 +463,48 @@ function goExplore() {
     destroyPreview();
     if (scene) { scene.destroy(); scene = null; }
     scene = new Scene3D(E.sceneContainer);
+    _loadRandomLandingSim();
 
     render();
+}
+
+/**
+ * Load a randomly-picked simulation as the landing scene's preview, so the
+ * empty grey scene gives way to a colourful, populated sim. Silently no-ops
+ * if no sims load or if the user has navigated away while it was resolving.
+ */
+async function _loadRandomLandingSim() {
+    try {
+        const [sims, chars, envs, music] = await Promise.all([
+            loadGlobalAssets('Simulations'),
+            loadGlobalAssets('Characters'),
+            loadGlobalAssets('Environments'),
+            loadGlobalAssets('Music'),
+        ]);
+        if (!Array.isArray(sims) || sims.length === 0) return;
+
+        // Bail if the user is no longer on the landing view by the time the
+        // catalog resolves (e.g. they opened the panel or a builder).
+        if (S.panelOpen || S.builderMode || S.isNew || S.previewAsset) return;
+
+        // Pick a sim, then shake it up so every page load looks different —
+        // even with only one template available.
+        const base = sims[Math.floor(Math.random() * sims.length)];
+        const pick = JSON.parse(JSON.stringify(base));
+        const st   = pick.payload?.state || pick.state || {};
+        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        if (envs?.length)  st.envId   = rand(envs).id;
+        if (music?.length) st.musicId = rand(music).id;
+        if (Array.isArray(st.cast) && chars?.length) {
+            for (const c of st.cast) c.charId = rand(chars).id;
+        }
+
+        // Tear down the placeholder Scene3D so the preview can take over.
+        if (scene) { scene.destroy(); scene = null; }
+        showPreview(E.sceneContainer, pick, {});
+    } catch (e) {
+        console.warn('[landing] random sim load failed:', e?.message);
+    }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1700,7 +1739,10 @@ function init() {
     E.sendBtn.innerHTML      = ICON.send;
 
     // ── Three.js scene ──────────────────────────
+    // Show a randomized simulation as the landing view. The empty grid is
+    // still used as a fallback if catalogs fail or no sims are available.
     scene = new Scene3D(E.sceneContainer);
+    _loadRandomLandingSim();
 
     // ── Bridge stack ────────────────────────────
     bridgeStack = new BridgeStack(E.sceneContainer, E.panelInner, {

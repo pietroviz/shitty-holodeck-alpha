@@ -40,6 +40,8 @@ import {
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     FACE_FEATURES, FACE_PLACEMENT_PRESETS, DEFAULT_COLORS,
 } from './shared/charConfig.js';
+import { buildCharacterMesh } from './shared/characterMesh.js?v=2';
+import { loadGlobalAssets } from './assetLoader.js';
 
 let _renderer = null;
 let _scene    = null;
@@ -2186,15 +2188,136 @@ export function isPreviewStoryPlaying() {
 // V1 simulation preview: three archetype heads (same framing as story)
 // plus looping music from the simulation's musicId. Env backdrop is
 // deferred — for now the simulation reads like a story with music.
-function _buildSimulationPreview(asset) {
-    // Reuse the story preview builder for heads + framing (cast+beats are
-    // copied into simulation state at apply time, so the shape matches).
-    _buildStoryPreview(asset);
+// Triangle stage framing — match SimulationBridge's SLOT_POSITIONS / SLOT_ROT_Y
+const _SIM_SLOT_POSITIONS = {
+    CHAR_B: [-0.85, 0, -0.55],
+    CHAR_A: [ 0.00, 0,  0.00],
+    CHAR_C: [ 0.85, 0, -0.55],
+};
+const _SIM_SLOT_ROT_Y = { CHAR_B: 0.55, CHAR_A: 0, CHAR_C: -0.55 };
+const _SIM_ARCHETYPE_LIFT_Y = 0.95;
 
-    // Kick the music track (fire-and-forget) if the simulation bundles one.
-    const state = asset.payload?.state || asset.state || {};
-    const musicId = state.musicId;
-    if (musicId) _autoPlaySimulationMusic(musicId);
+async function _resolveSimAsset(refs, type, id) {
+    if (!id) return null;
+    if (Array.isArray(refs)) {
+        const hit = refs.find(r => r?.snapshot?.id === id || r?.id === id);
+        if (hit?.snapshot) return hit.snapshot;
+        if (hit?.payload || hit?.state) return hit;
+    }
+    try {
+        const list = await loadGlobalAssets(type);
+        return list?.find(a => a.id === id) || null;
+    } catch { return null; }
+}
+
+async function _buildSimulationPreview(asset) {
+    const state = asset?.payload?.state || asset?.state || {};
+    const refs  = asset?.refs;
+
+    // Resolve everything in parallel so the preview pops in fast.
+    const [envAsset, charA, charB, charC] = await Promise.all([
+        _resolveSimAsset(refs, 'Environments', state.envId),
+        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_A')?.charId),
+        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_B')?.charId),
+        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_C')?.charId),
+    ]);
+
+    // 1) Render the environment (or fall back to default lighting if missing).
+    if (envAsset) {
+        await _buildEnvironmentPreview(envAsset);
+    }
+
+    // 2) Camera framing — pull in to match story preview but keep some headroom.
+    _camera.position.set(0, 1.4, 4.2);
+    _camera.lookAt(0, 0.95, -0.25);
+    _camera.fov = 50;
+    _camera.updateProjectionMatrix();
+    _autoSpin = false;
+    if (_controls) {
+        _controls.target.set(0, 0.95, -0.25);
+        _controls.update();
+    }
+
+    // 3) Build heads/characters per cast slot. Use real char meshes when we
+    // have the asset; fall back to archetype heads when we don't.
+    const cast = Array.isArray(state.cast) && state.cast.length ? state.cast : [
+        { slot: 'CHAR_A', archetype: 'Edge' },
+        { slot: 'CHAR_B', archetype: 'Bloom' },
+        { slot: 'CHAR_C', archetype: 'Glitch' },
+    ];
+    const charBySlot = { CHAR_A: charA, CHAR_B: charB, CHAR_C: charC };
+    const heads = [];
+
+    for (const c of cast) {
+        const pos  = _SIM_SLOT_POSITIONS[c.slot] || [0, 0, 0];
+        const rotY = _SIM_SLOT_ROT_Y[c.slot]     || 0;
+        const container = new THREE.Group();
+        container.position.set(...pos);
+        container.rotation.y = rotY;
+
+        const charAsset = charBySlot[c.slot];
+        let entry = null;
+
+        if (charAsset) {
+            try {
+                const mesh = await buildCharacterMesh(charAsset);
+                container.add(mesh.group);
+                entry = {
+                    slot: c.slot,
+                    container,
+                    basePos: container.position.clone(),
+                    baseRotY: rotY,
+                    label: charAsset.name || `${c.archetype || 'Edge'}-core`,
+                    talkParams: null,
+                    dispose: () => mesh.dispose(),
+                    isArchetype: false,
+                };
+            } catch (e) {
+                console.warn('[previewRenderer] sim char build failed, archetype fallback:', e?.message);
+            }
+        }
+
+        if (!entry) {
+            const head = buildArchetypeHead(c.archetype || 'Edge');
+            container.add(head.group);
+            container.position.y = _SIM_ARCHETYPE_LIFT_Y;
+            entry = {
+                slot: c.slot,
+                container,
+                basePos: container.position.clone(),
+                baseRotY: rotY,
+                label: `${c.archetype || 'Edge'}-core`,
+                talk: head.talk,
+                talkParams: head.talkParams,
+                dispose: head.dispose,
+                isArchetype: true,
+            };
+        }
+
+        _previewGroup.add(container);
+        heads.push(entry);
+    }
+
+    // 4) Story-style read-through state (so Play can drive subtitles + speak).
+    const beats = pickThreeBeats(Array.isArray(state.beats) ? state.beats : []);
+    _storyPreview = {
+        heads,
+        speakingSlot: null,
+        playback: null,
+        cast,
+        beats,
+        isPlaying: false,
+    };
+
+    _voiceConfigured = _ensureVoice().then(() => {
+        if (!_voiceReady || !_voiceEngine) return;
+        if (_voiceEngine.applyState) {
+            _voiceEngine.applyState({ speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' });
+        }
+    });
+
+    // 5) Kick the assigned music track (fire-and-forget).
+    if (state.musicId) _autoPlaySimulationMusic(state.musicId);
 }
 
 async function _autoPlaySimulationMusic(musicId) {
