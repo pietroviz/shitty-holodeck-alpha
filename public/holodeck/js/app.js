@@ -7,7 +7,7 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
-import { SimulationBridge }     from './bridges/SimulationBridge.js?v=6';
+import { SimulationBridge }     from './bridges/SimulationBridge.js?v=7';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=9';
 import { generateId }                       from './db.js?v=2';
@@ -1042,14 +1042,8 @@ function renderPanel() {
                 if (action === 'duplicate' && asset) {
                     const copy = _duplicateAssetForEdit(asset);
                     copy.name = (asset.name || 'Untitled') + ' (Copy)';
-                    const { dbSave } = await import('./db.js?v=2');
-                    const store = asset.type === 'character' ? 'characters'
-                                : asset.type === 'environment' ? 'environments'
-                                : asset.type === 'music' ? 'music'
-                                : asset.type === 'prop' || asset.type === 'object' ? 'objects'
-                                : asset.type === 'story' ? 'stories'
-                                : 'images';
-                    await dbSave(store, copy);
+                    const { dbSave, storeForType } = await import('./db.js?v=2');
+                    await dbSave(storeForType(asset.type), copy);
                     // If viewing My Stuff, refresh to show the new copy
                     if (panelSource === 'mystuff') {
                         panelItems = await loadUserAssets(S.panelLabel);
@@ -1071,13 +1065,8 @@ function renderPanel() {
                     } else {
                         const confirmDelete = confirm(`Delete "${asset.name || 'Untitled'}"? This cannot be undone.`);
                         if (confirmDelete) {
-                            const { dbDelete } = await import('./db.js?v=2');
-                            const store = asset.type === 'character' ? 'characters'
-                                        : asset.type === 'environment' ? 'environments'
-                                        : asset.type === 'music' ? 'music'
-                                        : asset.type === 'prop' || asset.type === 'object' ? 'objects'
-                                        : 'images';
-                            await dbDelete(store, asset.id);
+                            const { dbDelete, storeForType } = await import('./db.js?v=2');
+                            await dbDelete(storeForType(asset.type), asset.id);
                             panelItems = panelItems.filter(it => it.id !== asset.id);
                             // Clear preview if we deleted the selected asset
                             if (S.previewAsset?.id === asset.id) {
@@ -1254,15 +1243,8 @@ function selectAsset(idx, items) {
             // Persist thumbnail to IndexedDB for user-owned assets
             if (asset.meta?.owner === 'user') {
                 try {
-                    const { dbSave } = await import('./db.js?v=2');
-                    const store = asset.type === 'character' ? 'characters'
-                                : asset.type === 'environment' ? 'environments'
-                                : asset.type === 'voice' ? 'voices'
-                                : asset.type === 'music' ? 'music'
-                                : asset.type === 'prop' || asset.type === 'object' ? 'objects'
-                                : asset.type === 'story' ? 'stories'
-                                : 'images';
-                    await dbSave(store, asset);
+                    const { dbSave, storeForType } = await import('./db.js?v=2');
+                    await dbSave(storeForType(asset.type), asset);
                 } catch (e) { /* silent — thumbnail is cached in memory as fallback */ }
             }
         } : null,

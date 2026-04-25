@@ -114,6 +114,18 @@ const STORE_TO_TYPE = {
     simulations:  'simulation',
 };
 
+// Inverse: asset.type → store name. Used by callers that have an asset and
+// need its store ('object' covers legacy 'prop' which never made it into a
+// store name). Falls back to 'images' so unknown types still hit *some* store.
+const TYPE_TO_STORE = Object.fromEntries(
+    Object.entries(STORE_TO_TYPE).map(([store, type]) => [type, store])
+);
+TYPE_TO_STORE.prop = 'objects';
+
+export function storeForType(type) {
+    return TYPE_TO_STORE[type] || 'images';
+}
+
 let _authStatePromise = null;
 async function _getAuthState() {
     if (_authStatePromise) return _authStatePromise;

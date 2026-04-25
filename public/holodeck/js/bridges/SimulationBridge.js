@@ -18,7 +18,7 @@
 import { BaseBridge } from './BaseBridge.js?v=3';
 import { renderFileTab, wireFileTabEvents, DICE_ICON, tweenToPose } from '../shared/builderUI.js';
 import { loadGlobalAssets } from '../assetLoader.js';
-import { setRef, getRef } from '../db.js?v=2';
+import { setRef, getRef, dbGetAll } from '../db.js?v=2';
 import { EnvironmentBridge } from './EnvironmentBridge.js?v=41';
 import { CharacterBridge }   from './CharacterBridge.js?v=3';
 import { MusicBridge }       from './MusicBridge.js?v=2';
@@ -257,16 +257,28 @@ export class SimulationBridge extends BaseBridge {
     }
 
     async _loadCatalogs() {
-        const [envs, chars, music, stories] = await Promise.all([
+        const [envs, chars, music, stories, userEnvs, userChars, userMusic, userStories] = await Promise.all([
             loadGlobalAssets('Environments'),
             loadGlobalAssets('Characters'),
             loadGlobalAssets('Music'),
             loadGlobalAssets('Stories'),
+            dbGetAll('environments').catch(() => []),
+            dbGetAll('characters').catch(() => []),
+            dbGetAll('music').catch(() => []),
+            dbGetAll('stories').catch(() => []),
         ]);
-        this._envs    = envs    || [];
-        this._chars   = chars   || [];
-        this._music   = music   || [];
-        this._stories = stories || [];
+        const merge = (globalList, userList) => {
+            const out = (globalList || []).slice();
+            const seen = new Set(out.map(a => a.id));
+            for (const a of (userList || [])) {
+                if (!seen.has(a.id)) { out.push(a); seen.add(a.id); }
+            }
+            return out;
+        };
+        this._envs    = merge(envs,    userEnvs);
+        this._chars   = merge(chars,   userChars);
+        this._music   = merge(music,   userMusic);
+        this._stories = merge(stories, userStories);
     }
 
     _findEnv(id)   { return this._envs?.find(e => e.id === id) || null; }
