@@ -48,7 +48,22 @@ const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, vari
 const TABS = [
     { id: 'file',  label: 'File',  icon: '📄' },
     { id: 'setup', label: 'Setup', icon: '🎬' },
-    { id: 'other', label: 'Other', icon: '✨' },
+    { id: 'story', label: 'Story', icon: '📖' },
+    { id: 'style', label: 'Style', icon: '✨' },
+];
+
+const CAMERA_STYLES = [
+    { id: 'static_wide',  label: 'Static wide — full triangle, no movement' },
+    { id: 'speaker_cuts', label: 'Speaker cuts — cut to whoever is speaking' },
+    { id: 'dolly_drift',  label: 'Dolly drift — slow orbit around the stage' },
+];
+
+const POST_FX_PRESETS = [
+    { id: 'none',     label: 'None' },
+    { id: 'vignette', label: 'Vignette — darken edges' },
+    { id: 'grain',    label: 'Film grain' },
+    { id: 'bw',       label: 'Black & white' },
+    { id: 'dream',    label: 'Dream — soft glow + warmth' },
 ];
 
 const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
@@ -165,6 +180,8 @@ export class SimulationBridge extends BaseBridge {
             location:       saved.location       || null,
             tension_level:  saved.tension_level  || null,
             emotional_arc:  saved.emotional_arc  || null,
+            cameraStyle:    saved.cameraStyle    || 'static_wide',
+            postFx:         saved.postFx         || 'none',
         };
 
         this._activeTab = 'setup';
@@ -423,6 +440,27 @@ export class SimulationBridge extends BaseBridge {
 
     _onTick(delta) {
         if (this._voiceEngine) this._voiceEngine.update((delta || 0) * 1000);
+
+        // Camera: dolly-drift orbits the stage while playing. Other styles let
+        // OrbitControls drive (with onLine cuts overlaying for speaker_cuts).
+        const drifting = this._isPlaying && this._state.cameraStyle === 'dolly_drift';
+        if (drifting) {
+            this._driftAngle = (this._driftAngle || 0) + (delta || 0) * 0.10;
+            const r = 5.2;
+            this._camera.position.set(
+                Math.sin(this._driftAngle) * r,
+                2.0,
+                Math.cos(this._driftAngle) * r - 0.25,
+            );
+            this._camera.lookAt(0, 1.0, -0.25);
+            if (this._controls) {
+                this._controls.target.set(0, 1.0, -0.25);
+                this._controls.enabled = false;
+            }
+        } else if (this._controls && !this._controls.enabled) {
+            this._controls.enabled = true;
+        }
+
         if (this._controls)    this._controls.update();
         if (this._envHandle)   this._envHandle.tick(delta, this._camera);
         const visemeParams = this._voiceEngine ? this._voiceEngine.getVisemeParams() : null;
@@ -488,6 +526,40 @@ export class SimulationBridge extends BaseBridge {
         if (this._voiceEngine) this._voiceEngine.stop();
         if (this._musicEngine) this._musicEngine.stop();
         hideSubtitle();
+        // Return camera to wide framing on stop, regardless of mode.
+        this._tweenCameraTo(INITIAL_CAM_POS.clone(), INITIAL_CAM_TARGET.clone(), 600);
+    }
+
+    _tweenCameraTo(toPos, toTarget, durationMs = 500) {
+        if (!this._camera || !this._controls) return;
+        this._camTweenCancel?.();
+        this._camTweenCancel = tweenToPose(this._camera, this._controls, toPos, toTarget, durationMs);
+    }
+
+    /** Snap the camera to the right starting framing for the chosen style. */
+    _applyCameraStyle() {
+        if (!this._camera || !this._controls) return;
+        // dolly_drift drives itself in _onTick; reset angle so it starts cleanly.
+        if (this._state.cameraStyle === 'dolly_drift') {
+            this._driftAngle = 0;
+            return;
+        }
+        // static_wide and speaker_cuts both anchor at the wide framing; cuts
+        // happen onLine.
+        this._tweenCameraTo(INITIAL_CAM_POS.clone(), INITIAL_CAM_TARGET.clone(), 500);
+    }
+
+    /** Cut the camera to a tight close-up on the given cast slot. */
+    _cutCameraToSpeaker(slot) {
+        if (!this._camera || !this._controls) return;
+        const pos = SLOT_POSITIONS[slot] || [0, 0, 0];
+        const [sx, , sz] = pos;
+        // Camera sits in front of the speaker, lifted to chest height,
+        // pulled back ~2 units. Subtle inward bias so off-axis slots
+        // (B/C) still feel framed.
+        const camPos    = new THREE.Vector3(sx * 0.45, 1.5, sz + 2.05);
+        const camTarget = new THREE.Vector3(sx, 1.05, sz);
+        this._tweenCameraTo(camPos, camTarget, 450);
     }
 
     _restartPlayback() {
@@ -500,6 +572,9 @@ export class SimulationBridge extends BaseBridge {
         }
 
         if (beats.length === 0) return;
+
+        // Engage the chosen camera style for this run.
+        this._applyCameraStyle();
 
         this._playback = runStoryPlayback({
             beats,
@@ -515,6 +590,9 @@ export class SimulationBridge extends BaseBridge {
                 if (silent) { this._speakingSlot = null; hideSubtitle(); return; }
                 this._speakingSlot = slot;
                 showSubtitle(text);
+                if (this._state.cameraStyle === 'speaker_cuts') {
+                    this._cutCameraToSpeaker(slot);
+                }
             },
             onIdle: () => { this._speakingSlot = null; hideSubtitle(); },
             speakLine: async (text, archetype) => {
@@ -585,7 +663,8 @@ export class SimulationBridge extends BaseBridge {
         let body = '';
         if (tab === 'file')  body = this._renderFileTab();
         if (tab === 'setup') body = this._renderSetupTab();
-        if (tab === 'other') body = this._renderOtherTab();
+        if (tab === 'story') body = this._renderStoryTab();
+        if (tab === 'style') body = this._renderStyleTab();
 
         return tabBar + `<div class="cb-tab-content">${body}</div>`;
     }
@@ -645,10 +724,37 @@ export class SimulationBridge extends BaseBridge {
           </div>`;
     }
 
-    _renderOtherTab() {
-        const music = this._state.musicId ? this._findMusic(this._state.musicId) : null;
+    _renderStoryTab() {
         const story = this._state.storyId ? this._findStory(this._state.storyId) : null;
+        const storyCard = _renderSlotCard({
+            key: 'story',
+            label: 'Story',
+            asset: story,
+            typeKey: 'story',
+            options: this._stories || [],
+            emphasis: '— drives dialogue + cores',
+        });
 
+        const coreChips = this._state.cast.map(c => `
+            <div style="flex:1;min-width:0;padding:10px;background:#1a1f2a;border:1px solid #2a3140;border-radius:8px;text-align:center;">
+                <div class="cb-label" style="font-size:11px;opacity:.6;margin-bottom:4px;">${_esc(c.slot)}</div>
+                <div style="font-weight:600;font-size:13px;color:#9fb4ce;">${_esc(c.archetype || '—')}-core</div>
+            </div>`).join('');
+
+        return this._renderSurpriseHeader() + `
+          <div class="cb-section">
+            <div class="cb-section-title">Story</div>
+            ${storyCard}
+          </div>
+          <div class="cb-section">
+            <div class="cb-section-title">Cores</div>
+            <div class="cb-hint" style="margin-bottom:8px;">Driven by the chosen story. Swap the story to load a new set of cores.</div>
+            <div style="display:flex;gap:8px;">${coreChips}</div>
+          </div>`;
+    }
+
+    _renderStyleTab() {
+        const music = this._state.musicId ? this._findMusic(this._state.musicId) : null;
         const musicCard = _renderSlotCard({
             key: 'music',
             label: 'Music Theme',
@@ -656,14 +762,13 @@ export class SimulationBridge extends BaseBridge {
             typeKey: 'music',
             options: this._music || [],
         });
-        const storyCard = _renderSlotCard({
-            key: 'story',
-            label: 'Story',
-            asset: story,
-            typeKey: 'story',
-            options: this._stories || [],
-            emphasis: '— drives dialogue',
-        });
+
+        const cameraOpts = CAMERA_STYLES.map(o =>
+            `<option value="${_esc(o.id)}" ${o.id === this._state.cameraStyle ? 'selected' : ''}>${_esc(o.label)}</option>`
+        ).join('');
+        const postFxOpts = POST_FX_PRESETS.map(o =>
+            `<option value="${_esc(o.id)}" ${o.id === this._state.postFx ? 'selected' : ''}>${_esc(o.label)}</option>`
+        ).join('');
 
         return this._renderSurpriseHeader() + `
           <div class="cb-section">
@@ -671,16 +776,17 @@ export class SimulationBridge extends BaseBridge {
             ${musicCard}
           </div>
           <div class="cb-section">
-            <div class="cb-section-title">Story</div>
-            ${storyCard}
-          </div>
-          <div class="cb-section">
             <div class="cb-section-title">Camera</div>
-            <div class="cb-hint">Camera styles — coming soon.</div>
+            <div class="cb-field" style="padding:10px;">
+              <select class="cb-select sim-camera-style">${cameraOpts}</select>
+            </div>
           </div>
           <div class="cb-section">
             <div class="cb-section-title">Post Effects</div>
-            <div class="cb-hint">Post effects — coming soon.</div>
+            <div class="cb-field" style="padding:10px;">
+              <select class="cb-select sim-post-fx">${postFxOpts}</select>
+              <div class="cb-hint" style="margin-top:6px;">Visual style is saved with the simulation. Render pass arrives in a follow-up.</div>
+            </div>
           </div>`;
     }
 
@@ -718,6 +824,16 @@ export class SimulationBridge extends BaseBridge {
         });
         panel.querySelectorAll('.sim-slot-edit').forEach(btn => {
             btn.addEventListener('click', () => this._onSlotEdit(btn.dataset.key));
+        });
+
+        panel.querySelector('.sim-camera-style')?.addEventListener('change', (e) => {
+            this._state.cameraStyle = e.target.value;
+            this._applyCameraStyle();
+            this._scheduleAutoSave();
+        });
+        panel.querySelector('.sim-post-fx')?.addEventListener('change', (e) => {
+            this._state.postFx = e.target.value;
+            this._scheduleAutoSave();
         });
     }
 
