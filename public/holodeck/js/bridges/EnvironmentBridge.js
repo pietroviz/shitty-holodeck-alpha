@@ -25,7 +25,7 @@ import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { OrbitControls }      from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
-import { BaseBridge } from './BaseBridge.js?v=3';
+import { BaseBridge } from './BaseBridge.js?v=4';
 import { loadPalette }     from '../shared/paletteLoader.js';
 import { showColorPicker } from '../shared/colorPicker.js';
 import { renderSubtitle, renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';

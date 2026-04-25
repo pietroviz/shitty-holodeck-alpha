@@ -183,9 +183,25 @@ export class BaseBridge {
             this._camera.aspect = c.clientWidth / c.clientHeight;
             this._camera.updateProjectionMatrix();
             this._renderer.setSize(c.clientWidth, c.clientHeight);
+            this._onResize?.(c.clientWidth, c.clientHeight);
         });
         this._ro.observe(c);
     }
+
+    /**
+     * Render a single frame. Subclasses can override to plug in an
+     * EffectComposer or other post-processing pipeline. Default is a
+     * straight scene render.
+     */
+    _renderFrame() {
+        this._renderer.render(this._scene, this._camera);
+    }
+
+    /**
+     * Optional hook called after the renderer is resized. Subclasses can
+     * override to resize an EffectComposer or other off-screen targets.
+     */
+    _onResize(_w, _h) {}
 
     _startRenderLoop() {
         if (this._raf) return; // already running
@@ -194,7 +210,7 @@ export class BaseBridge {
             this._raf = requestAnimationFrame(tick);
             const delta = this._clock.getDelta();
             this._onTick(delta);
-            this._renderer.render(this._scene, this._camera);
+            this._renderFrame();
 
             // Periodic dirty-check every ~15 frames (~250ms at 60fps)
             if (++_dirtyCheckCounter >= 15) {

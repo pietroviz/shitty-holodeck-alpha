@@ -9,7 +9,7 @@
  * Settings — duration behavior, fade in/out, mood colour, delete
  */
 
-import { BaseBridge } from './BaseBridge.js?v=3';
+import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { standard } from '../shared/materials.js';

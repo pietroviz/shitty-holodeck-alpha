@@ -7,7 +7,7 @@
  * OrbitControls with auto-spin, meSpeak voice + viseme mouth movement.
  */
 
-import { BaseBridge } from './BaseBridge.js?v=3';
+import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';

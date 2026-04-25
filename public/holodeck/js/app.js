@@ -7,7 +7,7 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
-import { SimulationBridge }     from './bridges/SimulationBridge.js?v=8';
+import { SimulationBridge }     from './bridges/SimulationBridge.js?v=9';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=10';
 import { generateId }                       from './db.js?v=2';

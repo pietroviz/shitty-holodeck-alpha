@@ -15,7 +15,7 @@
  * into that asset's bridge). On new, Surprise Me rolls a full sim.
  */
 
-import { BaseBridge } from './BaseBridge.js?v=3';
+import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents, DICE_ICON, tweenToPose } from '../shared/builderUI.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, dbGetAll } from '../db.js?v=2';
@@ -25,6 +25,11 @@ import { MusicBridge }       from './MusicBridge.js?v=2';
 import { StoryBridge }       from './StoryBridge.js?v=4';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }       from 'three/addons/postprocessing/RenderPass.js';
+import { ShaderPass }        from 'three/addons/postprocessing/ShaderPass.js';
+import { UnrealBloomPass }   from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass }        from 'three/addons/postprocessing/OutputPass.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
 import { MusicEngine } from '../shared/musicEngine.js';
 import {
@@ -65,6 +70,93 @@ const POST_FX_PRESETS = [
     { id: 'bw',       label: 'Black & white' },
     { id: 'dream',    label: 'Dream — soft glow + warmth' },
 ];
+
+// ── Post-FX shaders ───────────────────────────────────────────────
+// Pass-through vertex shader reused by every screen-space pass.
+const _PASS_VS = `
+    varying vec2 vUv;
+    void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+
+const VignetteShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        offset:   { value: 1.05 },   // radius where dark begins
+        darkness: { value: 0.85 },   // strength of the falloff
+    },
+    vertexShader: _PASS_VS,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float offset;
+        uniform float darkness;
+        varying vec2 vUv;
+        void main() {
+            vec4 texel = texture2D(tDiffuse, vUv);
+            vec2 uv = (vUv - 0.5) * 2.0;
+            float v = smoothstep(offset, offset - darkness, length(uv));
+            gl_FragColor = vec4(texel.rgb * v, texel.a);
+        }
+    `,
+};
+
+const GrainShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        time:     { value: 0 },
+        amount:   { value: 0.10 },
+    },
+    vertexShader: _PASS_VS,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float time;
+        uniform float amount;
+        varying vec2 vUv;
+        void main() {
+            vec4 texel = texture2D(tDiffuse, vUv);
+            float n = fract(sin(dot(vUv * (time + 1.0), vec2(12.9898, 78.233))) * 43758.5453);
+            gl_FragColor = vec4(texel.rgb + (n - 0.5) * amount, texel.a);
+        }
+    `,
+};
+
+const BWShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+    },
+    vertexShader: _PASS_VS,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        varying vec2 vUv;
+        void main() {
+            vec4 texel = texture2D(tDiffuse, vUv);
+            float gray = dot(texel.rgb, vec3(0.299, 0.587, 0.114));
+            gl_FragColor = vec4(vec3(gray), texel.a);
+        }
+    `,
+};
+
+const WarmTintShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        tint:     { value: new THREE.Color(0xffd9b3) },
+        strength: { value: 0.18 },
+    },
+    vertexShader: _PASS_VS,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec3 tint;
+        uniform float strength;
+        varying vec2 vUv;
+        void main() {
+            vec4 texel = texture2D(tDiffuse, vUv);
+            vec3 warmed = mix(texel.rgb, texel.rgb * tint, strength);
+            gl_FragColor = vec4(warmed, texel.a);
+        }
+    `,
+};
 
 const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 
@@ -202,6 +294,12 @@ export class SimulationBridge extends BaseBridge {
         this._voiceReady  = false;
         this._musicEngine = null;
         this._musicReady  = false;
+
+        // Post-FX render pipeline. Built lazily once the scene is up so we
+        // share the renderer's existing tone-mapping + sizing.
+        this._composer    = null;
+        this._composerFx  = 'none';      // last preset the composer was built for
+        this._grainPass   = null;        // kept for per-frame time updates
     }
 
     async _initVoice() {
@@ -245,6 +343,7 @@ export class SimulationBridge extends BaseBridge {
 
         this._initVoice();
         this._initMusic();
+        this._rebuildComposer();
 
         await this._loadCatalogs();
 
@@ -562,6 +661,88 @@ export class SimulationBridge extends BaseBridge {
         this._tweenCameraTo(camPos, camTarget, 450);
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    //  POST-FX
+    // ═══════════════════════════════════════════════════════════════
+
+    _disposeComposer() {
+        if (!this._composer) return;
+        for (const pass of this._composer.passes) {
+            pass.dispose?.();
+            // Bloom keeps owned textures around; clean those too.
+            pass.material?.dispose?.();
+        }
+        this._composer.renderTarget1?.dispose?.();
+        this._composer.renderTarget2?.dispose?.();
+        this._composer = null;
+        this._grainPass = null;
+    }
+
+    /** Build (or rebuild) the EffectComposer to match this._state.postFx. */
+    _rebuildComposer() {
+        this._disposeComposer();
+
+        const fx = this._state.postFx || 'none';
+        this._composerFx = fx;
+        if (fx === 'none' || !this._renderer) return;
+
+        const c = this.container;
+        const composer = new EffectComposer(this._renderer);
+        composer.setSize(c.clientWidth, c.clientHeight);
+        composer.setPixelRatio(this._renderer.getPixelRatio());
+        composer.addPass(new RenderPass(this._scene, this._camera));
+
+        if (fx === 'vignette') {
+            composer.addPass(new ShaderPass(VignetteShader));
+        } else if (fx === 'grain') {
+            const grain = new ShaderPass(GrainShader);
+            composer.addPass(grain);
+            this._grainPass = grain;
+        } else if (fx === 'bw') {
+            composer.addPass(new ShaderPass(BWShader));
+        } else if (fx === 'dream') {
+            // Soft glow on bright areas + warm tint pulled across the frame.
+            const bloom = new UnrealBloomPass(
+                new THREE.Vector2(c.clientWidth, c.clientHeight),
+                0.55,   // strength
+                0.85,   // radius
+                0.25,   // threshold (bloom from mid-bright and up)
+            );
+            composer.addPass(bloom);
+            composer.addPass(new ShaderPass(WarmTintShader));
+        }
+
+        composer.addPass(new OutputPass());
+        this._composer = composer;
+    }
+
+    /** Subclass hook from BaseBridge — keep the composer the same size. */
+    _onResize(w, h) {
+        if (this._composer) {
+            this._composer.setSize(w, h);
+            // UnrealBloomPass tracks its own internal resolution; nudge it.
+            for (const pass of this._composer.passes) {
+                if (pass.setSize) pass.setSize(w, h);
+            }
+        }
+    }
+
+    /** Subclass hook from BaseBridge — route through the composer if active. */
+    _renderFrame() {
+        // Rebuild on demand if the dropdown changed since last frame.
+        if (this._composerFx !== (this._state.postFx || 'none')) {
+            this._rebuildComposer();
+        }
+        if (this._composer) {
+            if (this._grainPass) {
+                this._grainPass.uniforms.time.value = performance.now() * 0.001;
+            }
+            this._composer.render();
+        } else {
+            this._renderer.render(this._scene, this._camera);
+        }
+    }
+
     _restartPlayback() {
         this._stopPlayback();
         const beats = this._state.beats || [];
@@ -640,6 +821,7 @@ export class SimulationBridge extends BaseBridge {
         this._heads = [];
         if (this._envHandle) { this._envHandle.dispose(); this._envHandle = null; }
         if (this._controls) { this._controls.dispose(); this._controls = null; }
+        this._disposeComposer();
         if (wasPlaying) {
             document.dispatchEvent(new CustomEvent('bridge-play-state', { detail: { playing: false } }));
         }
@@ -757,7 +939,7 @@ export class SimulationBridge extends BaseBridge {
         const music = this._state.musicId ? this._findMusic(this._state.musicId) : null;
         const musicCard = _renderSlotCard({
             key: 'music',
-            label: 'Music Theme',
+            label: 'Music',
             asset: music,
             typeKey: 'music',
             options: this._music || [],
@@ -785,7 +967,7 @@ export class SimulationBridge extends BaseBridge {
             <div class="cb-section-title">Post Effects</div>
             <div class="cb-field" style="padding:10px;">
               <select class="cb-select sim-post-fx">${postFxOpts}</select>
-              <div class="cb-hint" style="margin-top:6px;">Visual style is saved with the simulation. Render pass arrives in a follow-up.</div>
+              <div class="cb-hint" style="margin-top:6px;">Applied live to the preview and saved with the simulation.</div>
             </div>
           </div>`;
     }
@@ -833,6 +1015,7 @@ export class SimulationBridge extends BaseBridge {
         });
         panel.querySelector('.sim-post-fx')?.addEventListener('change', (e) => {
             this._state.postFx = e.target.value;
+            this._rebuildComposer();
             this._scheduleAutoSave();
         });
     }

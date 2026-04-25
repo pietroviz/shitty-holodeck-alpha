@@ -9,7 +9,7 @@
  *   - Text input + play/stop button
  */
 
-import { BaseBridge } from './BaseBridge.js?v=3';
+import { BaseBridge } from './BaseBridge.js?v=4';
 import { tweenToPose } from '../shared/builderUI.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
