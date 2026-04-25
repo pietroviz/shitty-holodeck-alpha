@@ -10,7 +10,7 @@ import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
 import { SimulationBridge }     from './bridges/SimulationBridge.js?v=6';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=9';
-import { generateId }                       from './db.js';
+import { generateId }                       from './db.js?v=2';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
 // ── Thumbnail cache (persists across category switches within session) ──
@@ -1042,7 +1042,7 @@ function renderPanel() {
                 if (action === 'duplicate' && asset) {
                     const copy = _duplicateAssetForEdit(asset);
                     copy.name = (asset.name || 'Untitled') + ' (Copy)';
-                    const { dbSave } = await import('./db.js');
+                    const { dbSave } = await import('./db.js?v=2');
                     const store = asset.type === 'character' ? 'characters'
                                 : asset.type === 'environment' ? 'environments'
                                 : asset.type === 'music' ? 'music'
@@ -1071,7 +1071,7 @@ function renderPanel() {
                     } else {
                         const confirmDelete = confirm(`Delete "${asset.name || 'Untitled'}"? This cannot be undone.`);
                         if (confirmDelete) {
-                            const { dbDelete } = await import('./db.js');
+                            const { dbDelete } = await import('./db.js?v=2');
                             const store = asset.type === 'character' ? 'characters'
                                         : asset.type === 'environment' ? 'environments'
                                         : asset.type === 'music' ? 'music'
@@ -1254,7 +1254,7 @@ function selectAsset(idx, items) {
             // Persist thumbnail to IndexedDB for user-owned assets
             if (asset.meta?.owner === 'user') {
                 try {
-                    const { dbSave } = await import('./db.js');
+                    const { dbSave } = await import('./db.js?v=2');
                     const store = asset.type === 'character' ? 'characters'
                                 : asset.type === 'environment' ? 'environments'
                                 : asset.type === 'voice' ? 'voices'

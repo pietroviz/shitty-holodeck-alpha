@@ -7,7 +7,7 @@ import { renderImage } from '../shared/imageRenderer.js';
 import { ObjectBridge } from './ObjectBridge.js';
 import { ImageBridge }  from './ImageBridge.js';
 import { loadGlobalAssets } from '../assetLoader.js';
-import { setRef, getRef, removeRef } from '../db.js';
+import { setRef, getRef, removeRef } from '../db.js?v=2';
 import { MusicEngine } from '../shared/musicEngine.js';
 
 export class EnvironmentBridge extends BaseBridge {

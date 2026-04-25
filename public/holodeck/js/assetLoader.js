@@ -6,7 +6,7 @@
  * User assets are stored in IndexedDB via db.js.
  */
 
-import { dbGetAll } from './db.js';
+import { dbGetAll } from './db.js?v=2';
 
 // ─────────────────────────────────────────────────────────────────
 //  CATEGORY → FOLDER MAPPING

@@ -35,7 +35,7 @@ import { createTwoZoneMaterial } from '../shared/materials.js';
 import { VoiceBridge } from './VoiceBridge.js';
 import { ObjectBridge } from './ObjectBridge.js';
 import { loadGlobalAssets } from '../assetLoader.js';
-import { setRef, getRef, removeRef, getState as dbGetState } from '../db.js';
+import { setRef, getRef, removeRef, getState as dbGetState } from '../db.js?v=2';
 import { loadPalette } from '../shared/paletteLoader.js';
 
 /* ═══════════════════════════════════════════════════════

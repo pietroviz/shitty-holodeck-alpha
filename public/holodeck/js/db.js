@@ -93,15 +93,126 @@ export function generateId() {
 }
 
 /* ══════════════════════════════════════════════════════════
-   CRUD
+   AUTH-AWARE CRUD DISPATCH
+   ──────────────────────────────────────────────────────────
+   Public dbSave / dbGetAll / dbGet / dbDelete decide on first
+   call whether the user is signed in (via /api/user/profile).
+   - signed in  → CRUD against /api/assets/* (Supabase, RLS)
+   - signed out → CRUD against IndexedDB (local-only, fallback)
+   The Local variants are still exported so callers that always
+   want browser-local storage (e.g. seeding) can opt in.
    ══════════════════════════════════════════════════════════ */
 
-/**
- * Save an asset to the appropriate store.
- * @param {string} storeName — e.g. 'characters', 'environments'
- * @param {Object} asset     — normalized asset object
- */
+const STORE_TO_TYPE = {
+    characters:   'character',
+    environments: 'environment',
+    music:        'music',
+    voices:       'voice',
+    objects:      'object',
+    images:       'image',
+    stories:      'story',
+    simulations:  'simulation',
+};
+
+let _authStatePromise = null;
+async function _getAuthState() {
+    if (_authStatePromise) return _authStatePromise;
+    _authStatePromise = (async () => {
+        try {
+            const res = await fetch('/api/user/profile', { credentials: 'include' });
+            if (!res.ok) return { signedIn: false };
+            const json = await res.json();
+            const signedIn = !!json.authenticated && !json.guest;
+            // One-time visibility so it's obvious in DevTools which path is active.
+            console.log(`[db] persistence: ${signedIn ? 'Supabase (signed in)' : 'IndexedDB (signed out)'}`);
+            return { signedIn };
+        } catch (err) {
+            console.warn('[db] auth check failed, falling back to IndexedDB', err);
+            return { signedIn: false };
+        }
+    })();
+    return _authStatePromise;
+}
+
+/** Save an asset. */
 export async function dbSave(storeName, asset) {
+    const auth = await _getAuthState();
+    if (!auth.signedIn) return dbSaveLocal(storeName, asset);
+
+    const type = STORE_TO_TYPE[storeName];
+    if (!type) throw new Error(`[db] Unknown store: ${storeName}`);
+
+    const body = {
+        id:      asset.id,
+        type:    asset.type || type,
+        name:    asset.name,
+        tags:    asset.tags    ?? [],
+        meta:    asset.meta    ?? {},
+        payload: asset.payload ?? {},
+        refs:    asset.refs    ?? [],
+    };
+    const res = await fetch('/api/assets/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        throw new Error(`[db] /api/assets/save ${res.status}: ${errText}`);
+    }
+    return asset;
+}
+
+/** Get all assets in a store, sorted newest-first. */
+export async function dbGetAll(storeName) {
+    const auth = await _getAuthState();
+    if (!auth.signedIn) return dbGetAllLocal(storeName);
+
+    const type = STORE_TO_TYPE[storeName];
+    if (!type) throw new Error(`[db] Unknown store: ${storeName}`);
+
+    const res = await fetch(`/api/assets/list?type=${encodeURIComponent(type)}`, {
+        credentials: 'include',
+    });
+    if (!res.ok) throw new Error(`[db] /api/assets/list ${res.status}`);
+    const json = await res.json();
+    const results = (json.assets || []).map(migrateAsset);
+    results.sort((a, b) => (b.meta?.modified || 0) - (a.meta?.modified || 0));
+    return results;
+}
+
+/** Get a single asset by id, or null if not found. */
+export async function dbGet(storeName, id) {
+    const auth = await _getAuthState();
+    if (!auth.signedIn) return dbGetLocal(storeName, id);
+
+    const res = await fetch(`/api/assets/${encodeURIComponent(id)}`, {
+        credentials: 'include',
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`[db] /api/assets/${id} ${res.status}`);
+    const json = await res.json();
+    return json.asset ? migrateAsset(json.asset) : null;
+}
+
+/** Delete an asset by id. */
+export async function dbDelete(storeName, id) {
+    const auth = await _getAuthState();
+    if (!auth.signedIn) return dbDeleteLocal(storeName, id);
+
+    const res = await fetch(`/api/assets/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+    if (!res.ok) throw new Error(`[db] /api/assets/${id} delete ${res.status}`);
+}
+
+/* ══════════════════════════════════════════════════════════
+   INDEXEDDB CRUD (local fallback)
+   ══════════════════════════════════════════════════════════ */
+
+export async function dbSaveLocal(storeName, asset) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readwrite');
@@ -111,10 +222,7 @@ export async function dbSave(storeName, asset) {
     });
 }
 
-/**
- * Get all assets from a store, sorted newest-first.
- */
-export async function dbGetAll(storeName) {
+export async function dbGetAllLocal(storeName) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx  = db.transaction(storeName, 'readonly');
@@ -128,10 +236,7 @@ export async function dbGetAll(storeName) {
     });
 }
 
-/**
- * Get a single asset by ID.
- */
-export async function dbGet(storeName, id) {
+export async function dbGetLocal(storeName, id) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx  = db.transaction(storeName, 'readonly');
@@ -141,10 +246,7 @@ export async function dbGet(storeName, id) {
     });
 }
 
-/**
- * Delete an asset by ID.
- */
-export async function dbDelete(storeName, id) {
+export async function dbDeleteLocal(storeName, id) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readwrite');
@@ -341,7 +443,9 @@ export async function seedFromManifest(storeName, manifest) {
     let seeded = 0;
     for (const entry of manifest) {
         try {
-            const existing = await dbGet(storeName, entry.id);
+            // Use Local variants explicitly: stock assets must never be written
+            // to a signed-in user's Supabase account by the seed path.
+            const existing = await dbGetLocal(storeName, entry.id);
             if (existing) continue;
 
             const resp = await fetch(entry.path + '?t=' + Date.now());
@@ -376,7 +480,7 @@ export async function seedFromManifest(storeName, manifest) {
                 state: json.payload?.state || json.state || {},
             };
 
-            await dbSave(storeName, asset);
+            await dbSaveLocal(storeName, asset);
             seeded++;
         } catch (err) {
             console.warn(`[Seed] Error loading ${entry.path}:`, err);

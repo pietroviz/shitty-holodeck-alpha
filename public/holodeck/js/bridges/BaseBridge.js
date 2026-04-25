@@ -366,7 +366,7 @@ export class BaseBridge {
             // Ensure refs array exists
             if (!this.asset.refs) this.asset.refs = [];
         } else {
-            const { createAsset } = await import('../db.js');
+            const { createAsset } = await import('../db.js?v=2');
             this.asset = createAsset(this.storeName.replace(/s$/, ''), state, name, {
                 description,
             });
@@ -377,7 +377,7 @@ export class BaseBridge {
             this.asset.state = { ...state };
         }
 
-        const { dbSave } = await import('../db.js');
+        const { dbSave } = await import('../db.js?v=2');
         await dbSave(this.storeName, this.asset);
 
         this._lastSavedJSON  = stateJSON;
