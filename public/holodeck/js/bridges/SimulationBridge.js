@@ -31,7 +31,7 @@ import { ShaderPass }        from 'three/addons/postprocessing/ShaderPass.js';
 import { UnrealBloomPass }   from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass }        from 'three/addons/postprocessing/OutputPass.js';
 import { VoiceEngine } from '../shared/voiceEngine.js';
-import { MusicEngine } from '../shared/musicEngine.js';
+import { MusicEngine } from '../shared/musicEngine.js?v=2';
 import {
     buildArchetypeHead,
     runStoryPlayback,

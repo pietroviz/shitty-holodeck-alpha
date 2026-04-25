@@ -17,7 +17,7 @@ import { standard, groundMaterial, gridColors } from './shared/materials.js';
 import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
-import { MusicEngine } from './shared/musicEngine.js';
+import { MusicEngine } from './shared/musicEngine.js?v=2';
 import {
     buildArchetypeHead,
     runStoryPlayback,
@@ -2232,35 +2232,32 @@ async function _buildSimulationPreview(asset) {
     ];
 
     // Resolve env + every cast character in parallel so a slow build for
-    // one slot doesn't block the others.
+    // one slot doesn't block the others. Each resolve has its own try/catch
+    // so one bad ID can't take the rest down.
     const charPromises = cast.map(c =>
-        c.charId ? _resolveSimAsset(refs, 'Characters', c.charId) : Promise.resolve(null)
+        c.charId
+            ? _resolveSimAsset(refs, 'Characters', c.charId).catch(() => null)
+            : Promise.resolve(null)
     );
-    const [envAsset, ...charAssets] = await Promise.all([
-        _resolveSimAsset(refs, 'Environments', state.envId),
-        ...charPromises,
-    ]);
+    const envPromise = state.envId
+        ? _resolveSimAsset(refs, 'Environments', state.envId).catch(() => null)
+        : Promise.resolve(null);
+    const [envAsset, ...charAssets] = await Promise.all([envPromise, ...charPromises]);
     if (session !== _previewSession) return;  // user navigated away
 
     // 1) Render the environment (or fall back to default lighting if missing).
+    // Wrapped in try/catch so a malformed env can't strand the user with no
+    // characters and a broken camera.
     if (envAsset) {
-        await _buildEnvironmentPreview(envAsset);
+        try {
+            await _buildEnvironmentPreview(envAsset);
+        } catch (e) {
+            console.warn('[previewRenderer] sim env build failed, continuing with default scene:', e?.message);
+        }
         if (session !== _previewSession) return;
     }
 
-    // 2) Camera framing — pull in to match story preview but keep some headroom.
-    _camera.position.set(0, 1.4, 4.2);
-    _camera.lookAt(0, 0.95, -0.25);
-    _camera.fov = 50;
-    _camera.updateProjectionMatrix();
-    _autoSpin = false;
-    if (_controls) {
-        _controls.enabled = true;             // a previous bridge may have disabled it
-        _controls.target.set(0, 0.95, -0.25);
-        _controls.update();
-    }
-
-    // 3) Build heads/characters per cast slot in parallel. Each slot
+    // 2) Build heads/characters per cast slot in parallel. Each slot
     // independently falls back to an archetype head if its asset is
     // missing or the mesh build throws.
     const builds = await Promise.all(cast.map(async (c, i) => {
@@ -2322,6 +2319,23 @@ async function _buildSimulationPreview(asset) {
         _previewGroup.add(container);
         heads.push(entry);
     }
+
+    // 3) Final camera framing + orbit reset. Done AFTER heads are placed so
+    // even if the env build moved the camera or disabled controls, the
+    // simulation always lands at a known good pose with orbit working.
+    _camera.position.set(0, 1.4, 4.2);
+    _camera.lookAt(0, 0.95, -0.25);
+    _camera.fov = 50;
+    _camera.updateProjectionMatrix();
+    _autoSpin = false;
+    if (_controls) {
+        _controls.enabled = true;             // re-enable in case any prior bridge disabled it
+        _controls.target.set(0, 0.95, -0.25);
+        _controls.update();
+    }
+    // Snapshot the final pose so resetView() returns here, not the pre-build pose.
+    _initialCamPos = _camera.position.clone();
+    _initialTarget = _controls ? _controls.target.clone() : null;
 
     // 4) Story-style read-through state (so Play can drive subtitles + speak).
     const beats = pickThreeBeats(Array.isArray(state.beats) ? state.beats : []);
