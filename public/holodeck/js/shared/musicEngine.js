@@ -61,7 +61,12 @@ export class MusicEngine {
      * @param {Object} opts  — { loop: undefined } (overrides duration_behavior if set)
      */
     play(asset, opts = {}) {
-        this.stop();
+        // Hard-stop (no fade) so any in-flight oscillators are torn down
+        // synchronously before we schedule new ones. A fade-out cleanup
+        // runs in a setTimeout, which would otherwise fire AFTER the new
+        // notes are queued in `_nodes` and silently kill them — and worse,
+        // any conflicting masterGain ramps would compound.
+        this.stop(0);
         if (!this._ctx) return;
         if (this._ctx.state === 'suspended') this._ctx.resume();
 
@@ -78,9 +83,12 @@ export class MusicEngine {
 
         this._playing = true;
 
-        // Fade in master gain
-        this._masterGain.gain.setValueAtTime(0, this._ctx.currentTime);
-        this._masterGain.gain.linearRampToValueAtTime(0.35, this._ctx.currentTime + fadeIn);
+        // Fade in master gain — cancel any prior schedule first so we don't
+        // stack ramps from a previous stop()/play() cycle.
+        const t0 = this._ctx.currentTime;
+        this._masterGain.gain.cancelScheduledValues(t0);
+        this._masterGain.gain.setValueAtTime(0, t0);
+        this._masterGain.gain.linearRampToValueAtTime(0.35, t0 + fadeIn);
 
         const beatDur = 60 / bpm; // seconds per beat
         this._schedulePass(layers, beatDur, this._ctx.currentTime);

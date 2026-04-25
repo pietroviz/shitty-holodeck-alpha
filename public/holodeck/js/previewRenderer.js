@@ -63,6 +63,11 @@ let _initialCamPos = null;      // camera pose captured at preview build time
 let _initialTarget = null;      // controls target captured at preview build time
 let _resetRaf = null;           // active reset tween
 
+// Bumped on every showPreview / destroyPreview. Async builders capture the
+// id at start and bail if it changed before they could apply their result —
+// otherwise stale music plays and stale meshes leak into a new preview.
+let _previewSession = 0;
+
 // ── Browse voice + mouth rig (for "Look at me" in browse preview) ──
 let _mouthRig    = null;    // MouthRig instance for the current character preview
 let _voiceEngine = null;    // VoiceEngine shared across previews
@@ -272,6 +277,10 @@ export function showPreview(container, asset, opts = {}) {
     _currentAsset = asset;
     _thumbnailCallback = opts.onThumbnail || null;
 
+    // Bump session so any in-flight async builders / music plays from a
+    // previous preview no-op when they finally resolve.
+    _previewSession++;
+
     // Tear down previous preview if any
     _stopLoop();
     _musicViz = null;
@@ -402,6 +411,7 @@ export function showPreview(container, asset, opts = {}) {
  * Destroy the preview and clean up.
  */
 export function destroyPreview() {
+    _previewSession++;
     _stopLoop();
     _musicViz = null;
     _envPreview = null;
@@ -2211,20 +2221,31 @@ async function _resolveSimAsset(refs, type, id) {
 }
 
 async function _buildSimulationPreview(asset) {
+    const session = _previewSession;          // capture for stale-result guard
     const state = asset?.payload?.state || asset?.state || {};
     const refs  = asset?.refs;
 
-    // Resolve everything in parallel so the preview pops in fast.
-    const [envAsset, charA, charB, charC] = await Promise.all([
+    const cast = Array.isArray(state.cast) && state.cast.length ? state.cast : [
+        { slot: 'CHAR_A', archetype: 'Edge' },
+        { slot: 'CHAR_B', archetype: 'Bloom' },
+        { slot: 'CHAR_C', archetype: 'Glitch' },
+    ];
+
+    // Resolve env + every cast character in parallel so a slow build for
+    // one slot doesn't block the others.
+    const charPromises = cast.map(c =>
+        c.charId ? _resolveSimAsset(refs, 'Characters', c.charId) : Promise.resolve(null)
+    );
+    const [envAsset, ...charAssets] = await Promise.all([
         _resolveSimAsset(refs, 'Environments', state.envId),
-        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_A')?.charId),
-        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_B')?.charId),
-        _resolveSimAsset(refs, 'Characters',   state.cast?.find(c => c.slot === 'CHAR_C')?.charId),
+        ...charPromises,
     ]);
+    if (session !== _previewSession) return;  // user navigated away
 
     // 1) Render the environment (or fall back to default lighting if missing).
     if (envAsset) {
         await _buildEnvironmentPreview(envAsset);
+        if (session !== _previewSession) return;
     }
 
     // 2) Camera framing — pull in to match story preview but keep some headroom.
@@ -2234,50 +2255,54 @@ async function _buildSimulationPreview(asset) {
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
+        _controls.enabled = true;             // a previous bridge may have disabled it
         _controls.target.set(0, 0.95, -0.25);
         _controls.update();
     }
 
-    // 3) Build heads/characters per cast slot. Use real char meshes when we
-    // have the asset; fall back to archetype heads when we don't.
-    const cast = Array.isArray(state.cast) && state.cast.length ? state.cast : [
-        { slot: 'CHAR_A', archetype: 'Edge' },
-        { slot: 'CHAR_B', archetype: 'Bloom' },
-        { slot: 'CHAR_C', archetype: 'Glitch' },
-    ];
-    const charBySlot = { CHAR_A: charA, CHAR_B: charB, CHAR_C: charC };
-    const heads = [];
+    // 3) Build heads/characters per cast slot in parallel. Each slot
+    // independently falls back to an archetype head if its asset is
+    // missing or the mesh build throws.
+    const builds = await Promise.all(cast.map(async (c, i) => {
+        const charAsset = charAssets[i] || null;
+        if (charAsset) {
+            try {
+                const mesh = await buildCharacterMesh(charAsset);
+                return { c, mesh };
+            } catch (e) {
+                console.warn(`[previewRenderer] sim char build failed for ${c.slot}, archetype fallback:`, e?.message);
+            }
+        }
+        return { c, mesh: null };
+    }));
+    if (session !== _previewSession) {
+        // Dispose any meshes we already built — they'll never be added.
+        for (const b of builds) b.mesh?.dispose?.();
+        return;
+    }
 
-    for (const c of cast) {
+    const heads = [];
+    for (const { c, mesh } of builds) {
         const pos  = _SIM_SLOT_POSITIONS[c.slot] || [0, 0, 0];
         const rotY = _SIM_SLOT_ROT_Y[c.slot]     || 0;
         const container = new THREE.Group();
         container.position.set(...pos);
         container.rotation.y = rotY;
 
-        const charAsset = charBySlot[c.slot];
-        let entry = null;
-
-        if (charAsset) {
-            try {
-                const mesh = await buildCharacterMesh(charAsset);
-                container.add(mesh.group);
-                entry = {
-                    slot: c.slot,
-                    container,
-                    basePos: container.position.clone(),
-                    baseRotY: rotY,
-                    label: charAsset.name || `${c.archetype || 'Edge'}-core`,
-                    talkParams: null,
-                    dispose: () => mesh.dispose(),
-                    isArchetype: false,
-                };
-            } catch (e) {
-                console.warn('[previewRenderer] sim char build failed, archetype fallback:', e?.message);
-            }
-        }
-
-        if (!entry) {
+        let entry;
+        if (mesh) {
+            container.add(mesh.group);
+            entry = {
+                slot: c.slot,
+                container,
+                basePos: container.position.clone(),
+                baseRotY: rotY,
+                label: `${c.archetype || 'Edge'}-core`,
+                talkParams: null,
+                dispose: () => mesh.dispose(),
+                isArchetype: false,
+            };
+        } else {
             const head = buildArchetypeHead(c.archetype || 'Edge');
             container.add(head.group);
             container.position.y = _SIM_ARCHETYPE_LIFT_Y;
@@ -2316,23 +2341,27 @@ async function _buildSimulationPreview(asset) {
         }
     });
 
-    // 5) Kick the assigned music track (fire-and-forget).
-    if (state.musicId) _autoPlaySimulationMusic(state.musicId);
+    // 5) Kick the assigned music track (fire-and-forget; aborts if stale).
+    if (state.musicId) _autoPlaySimulationMusic(state.musicId, session);
 }
 
-async function _autoPlaySimulationMusic(musicId) {
+async function _autoPlaySimulationMusic(musicId, session) {
     if (!musicId) return;
     try {
         const folders = ['ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
         let track = null;
         for (const folder of folders) {
+            if (session !== _previewSession) return;
             try {
                 const res = await fetch(`global_assets/music/${folder}/${musicId}.json`);
+                if (session !== _previewSession) return;
                 if (res.ok) { track = await res.json(); break; }
             } catch { /* try next */ }
         }
+        if (session !== _previewSession) return;
         if (!track) return;
         if (!_musicReady) await _ensureMusic();
+        if (session !== _previewSession) return;
         if (!_musicReady || !_musicEngine) return;
         _musicEngine.play(track);
     } catch { /* silent */ }
