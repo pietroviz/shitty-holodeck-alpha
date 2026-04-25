@@ -1,7 +1,7 @@
 {
   "id": "sim_meta_default",
   "type": "simulation",
-  "name": "Meet Your Cast",
+  "name": "Default",
   "tags": ["starter", "meta", "onboarding"],
   "meta": {
     "origin": "template",
