@@ -39,7 +39,7 @@ Stored in `.env.local` (not committed — see `.env.local.example` for the templ
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://jtdcdzguzbfhqbpsptvt.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
-SITE_PASSWORD=pppicard
+SITE_PASSWORD=ohio
 ```
 
 These same values are set in **Vercel → Settings → Environment Variables** for production.
@@ -52,7 +52,7 @@ The site has a **two-layer access system**:
 
 ### Layer 1: Password Gate
 - Every visitor hits the gate first (`/gate`)
-- They enter a shared password (`pppicard`) — this is a simple private beta gate, not per-user auth
+- They enter a shared password (`ohio`) — this is a simple private beta gate, not per-user auth
 - On success, an `httpOnly` cookie (`site_access=granted`) is set with a 30-day expiry
 - The middleware (`middleware.ts`) checks this cookie on every request and redirects to `/gate` if missing
 - Once past the gate, users don't see it again until the cookie expires or is cleared
