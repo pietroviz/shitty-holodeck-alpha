@@ -163,18 +163,23 @@ const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 // Default starter archetypes if we have no story yet.
 const DEFAULT_ARCHETYPES = { CHAR_A: 'Edge', CHAR_B: 'Bloom', CHAR_C: 'Glitch' };
 
-// Triangle stage framing. Full-body characters stand on the ground (y=0);
-// archetype-head fallbacks are lifted in _buildCast so their heads float at
-// a similar height to a real character's head.
+// Triangle stage framing on the BINGO grid — matches the env builder's
+// character-reference placement so the simulation reads consistently with
+// the env editor (and the preview pipeline). Keep these in sync with
+// _SIM_SLOT_POSITIONS in previewRenderer.js.
+//   N3 → ( 0, 0,  0) — CHAR_A, centre
+//   I2 → (-1, 0, -1) — CHAR_B, back-left
+//   G2 → ( 1, 0, -1) — CHAR_C, back-right
 const SLOT_POSITIONS = {
-    CHAR_B: [-0.85, 0, -0.55],
-    CHAR_A: [ 0.00, 0,  0.00],
-    CHAR_C: [ 0.85, 0, -0.55],
+    CHAR_B: [-1.0, 0, -1.0],
+    CHAR_A: [ 0.0, 0,  0.0],
+    CHAR_C: [ 1.0, 0, -1.0],
 };
 const SLOT_ROT_Y = { CHAR_B: 0.55, CHAR_A: 0, CHAR_C: -0.55 };
 const ARCHETYPE_HEAD_LIFT_Y = 0.95;   // match previous head-only look when no char asset
-const INITIAL_CAM_POS    = new THREE.Vector3(0, 2.0, 4.8);
-const INITIAL_CAM_TARGET = new THREE.Vector3(0, 1.0, -0.25);
+// Soft 3/4 angle wide enough to fit the new BINGO spacing (chars at ±1 world units).
+const INITIAL_CAM_POS    = new THREE.Vector3(1.4, 2.2, 5.2);
+const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.9, -0.5);
 
 // Closed-mouth rest pose fed to non-speaking characters each tick so their
 // viseme shapes don't freeze mid-word when the speaker changes.

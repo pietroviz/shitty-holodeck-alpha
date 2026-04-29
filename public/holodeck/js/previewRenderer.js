@@ -2182,15 +2182,39 @@ export function isPreviewStoryPlaying() {
     return !!(_storyPreview && _storyPreview.isPlaying);
 }
 
+// ── Simulation playback (read-through + music together) ──────────
+// Simulations differ from stories by also kicking the assigned music
+// track. The sim build deliberately does NOT auto-play music — only this
+// function (called from the global Play button) starts audio.
+export function previewPlaySimulation() {
+    if (!_storyPreview) return;
+    _startStoryPlayback();
+    // Kick music if the sim has one assigned. Idempotent — _autoPlaySimulationMusic
+    // bails if music isn't ready yet and re-tries on its own.
+    if (_storyPreview.musicId) {
+        _autoPlaySimulationMusic(_storyPreview.musicId, _previewSession);
+    }
+}
+export function previewStopSimulation() {
+    _stopStoryPlayback();
+    if (_musicEngine) _musicEngine.stop();
+}
+export function isPreviewSimulationPlaying() {
+    return !!(_storyPreview && _storyPreview.isPlaying);
+}
+
 // ── Simulation preview ───────────────────────────────────────────
-// V1 simulation preview: three archetype heads (same framing as story)
-// plus looping music from the simulation's musicId. Env backdrop is
-// deferred — for now the simulation reads like a story with music.
-// Triangle stage framing — match SimulationBridge's SLOT_POSITIONS / SLOT_ROT_Y
+// Three characters arranged on the BINGO stage grid, matching the env
+// builder's character-reference placement: A center-stage, B/C flanking
+// to the back-left/back-right with the same spread as env builder's
+// I2/N3/G2 default cells. Keep these in sync with SimulationBridge.
+//   N3 → ( 0, 0,  0) — CHAR_A, centre
+//   I2 → (-1, 0, -1) — CHAR_B, back-left
+//   G2 → ( 1, 0, -1) — CHAR_C, back-right
 const _SIM_SLOT_POSITIONS = {
-    CHAR_B: [-0.85, 0, -0.55],
-    CHAR_A: [ 0.00, 0,  0.00],
-    CHAR_C: [ 0.85, 0, -0.55],
+    CHAR_B: [-1.0, 0, -1.0],
+    CHAR_A: [ 0.0, 0,  0.0],
+    CHAR_C: [ 1.0, 0, -1.0],
 };
 const _SIM_SLOT_ROT_Y = { CHAR_B: 0.55, CHAR_A: 0, CHAR_C: -0.55 };
 const _SIM_ARCHETYPE_LIFT_Y = 0.95;
@@ -2209,14 +2233,18 @@ async function _resolveSimAsset(refs, type, id) {
 }
 
 function _applySimCamera() {
-    _camera.position.set(0, 1.4, 4.2);
-    _camera.lookAt(0, 0.95, -0.25);
+    // Soft 3/4 angle wide enough to fit the env-builder-style BINGO spacing —
+    // chars are spread further apart now (CHAR_B/C at ±1 world units), so we
+    // pull back and lift the camera to keep the whole triangle in frame.
+    // Target sits between A (front) and B/C (back) at chest height.
+    _camera.position.set(1.4, 2.2, 5.2);
+    _camera.lookAt(0, 0.9, -0.5);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
         _controls.enabled = true;
-        _controls.target.set(0, 0.95, -0.25);
+        _controls.target.set(0, 0.9, -0.5);
         _controls.update();
     }
 }
@@ -2253,8 +2281,9 @@ async function _buildSimulationPreview(asset) {
         const [envAsset, ...charAssets] = await Promise.all([envPromise, ...charPromises]);
         if (session !== _previewSession) return;
 
-        // Kick the assigned music track BEFORE env build kicks off.
-        if (state.musicId) _autoPlaySimulationMusic(state.musicId, session);
+        // Music is wired to the sim but DOES NOT auto-play here — only the
+        // user pressing Play (via previewPlaySimulation) starts audio. Stash
+        // the musicId on _storyPreview so the play handler can find it.
 
         // Kick the env build in PARALLEL with character build. If env build
         // throws or hangs, characters + camera + music still come up — the
@@ -2349,6 +2378,10 @@ async function _buildSimulationPreview(asset) {
             cast,
             beats,
             isPlaying: false,
+            // Stashed so previewPlaySimulation can kick the music when the
+            // user hits Play. Not auto-played on build.
+            musicId: state.musicId || null,
+            isSimulation: true,
         };
 
         _voiceConfigured = _ensureVoice().then(() => {

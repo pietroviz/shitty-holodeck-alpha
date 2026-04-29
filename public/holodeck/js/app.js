@@ -7,9 +7,9 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
-import { SimulationBridge }     from './bridges/SimulationBridge.js?v=9';
+import { SimulationBridge }     from './bridges/SimulationBridge.js?v=10';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewResetView } from './previewRenderer.js?v=14';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewPlaySimulation, previewStopSimulation, isPreviewSimulationPlaying, previewResetView } from './previewRenderer.js?v=15';
 import { generateId }                       from './db.js?v=2';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 
@@ -356,13 +356,15 @@ function render() {
     // Element count: hidden in "new" mode and in builder/edit mode
     // (replaced by the Surprise Me button in edit mode).
     E.elCount.classList.toggle('hidden', isNew || S.builderMode);
-    // Edit button: only meaningful while actively previewing an asset
-    // in the browse panel. Hidden in builder mode (you're already editing)
-    // and on the index page (reserved for full simulations later).
-    const canEditNow = !S.builderMode && !!S.previewAsset && S.panelOpen;
+    // Edit button: visible whenever a previewed asset exists — works for
+    // browse-panel selection AND for the home-page randomized simulation.
+    // Hidden in builder mode (you're already editing) and "new" mode.
+    const canEditNow = !S.builderMode && !!S.previewAsset;
     E.editBtn.classList.toggle('hidden', isNew || !canEditNow);
-    // Surprise button: visible in "new" mode AND in builder/edit mode
-    E.surpriseBtn.classList.toggle('hidden', !isNew && !S.builderMode);
+    // Surprise button: visible in "new" mode, builder/edit mode, AND on the
+    // home page when a randomized sim is loaded (so the user can re-roll it).
+    const showSurprise = isNew || S.builderMode || (!S.panelOpen && !!S.previewAsset);
+    E.surpriseBtn.classList.toggle('hidden', !showSurprise);
 
     // ── New toggle btn ─────────────────────
     E.newBtn.classList.toggle('active', isNew);
@@ -459,10 +461,12 @@ function goExplore() {
     S.lastSavedAsset = null;
     _panelNav = { section: '', sectionLabel: '', level: 0, category: '' };
 
-    // Destroy any preview and restore default scene
+    // Destroy any preview. _loadRandomLandingSim will mount a fresh sim
+    // preview, or fall back to a Scene3D if the catalog is empty/unreachable.
+    // (Skipping the up-front Scene3D create avoids the grey-flash on reset.)
     destroyPreview();
     if (scene) { scene.destroy(); scene = null; }
-    scene = new Scene3D(E.sceneContainer);
+    S.previewAsset = null;
     _loadRandomLandingSim();
 
     render();
@@ -474,6 +478,7 @@ function goExplore() {
  * if no sims load or if the user has navigated away while it was resolving.
  */
 async function _loadRandomLandingSim() {
+    let pickedSim = null;
     try {
         const [sims, chars, envs, music] = await Promise.all([
             loadGlobalAssets('Simulations'),
@@ -481,29 +486,36 @@ async function _loadRandomLandingSim() {
             loadGlobalAssets('Environments'),
             loadGlobalAssets('Music'),
         ]);
-        if (!Array.isArray(sims) || sims.length === 0) return;
 
-        // Bail if the user is no longer on the landing view by the time the
-        // catalog resolves (e.g. they opened the panel or a builder).
-        if (S.panelOpen || S.builderMode || S.isNew || S.previewAsset) return;
+        // Bail if the user navigated away or already has something loaded.
+        if (S.panelOpen || S.builderMode || S.isNew) return;
 
-        // Pick a sim, then shake it up so every page load looks different —
-        // even with only one template available.
-        const base = sims[Math.floor(Math.random() * sims.length)];
-        const pick = JSON.parse(JSON.stringify(base));
-        const st   = pick.payload?.state || pick.state || {};
-        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-        if (envs?.length)  st.envId   = rand(envs).id;
-        if (music?.length) st.musicId = rand(music).id;
-        if (Array.isArray(st.cast) && chars?.length) {
-            for (const c of st.cast) c.charId = rand(chars).id;
+        if (Array.isArray(sims) && sims.length > 0) {
+            // Pick a sim, then shake it up so every page load looks different —
+            // even with only one template available.
+            const base = sims[Math.floor(Math.random() * sims.length)];
+            pickedSim = JSON.parse(JSON.stringify(base));
+            const st   = pickedSim.payload?.state || pickedSim.state || {};
+            const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            if (envs?.length)  st.envId   = rand(envs).id;
+            if (music?.length) st.musicId = rand(music).id;
+            if (Array.isArray(st.cast) && chars?.length) {
+                for (const c of st.cast) c.charId = rand(chars).id;
+            }
         }
-
-        // Tear down the placeholder Scene3D so the preview can take over.
-        if (scene) { scene.destroy(); scene = null; }
-        showPreview(E.sceneContainer, pick, {});
     } catch (e) {
         console.warn('[landing] random sim load failed:', e?.message);
+    }
+
+    if (pickedSim) {
+        // Tear down any placeholder Scene3D so the preview can take over.
+        if (scene) { scene.destroy(); scene = null; }
+        S.previewAsset = pickedSim;          // makes Edit button visible on home
+        showPreview(E.sceneContainer, pickedSim, {});
+        render();
+    } else if (!scene) {
+        // No sim available → fall back to the empty grey scene.
+        scene = new Scene3D(E.sceneContainer);
     }
 }
 
@@ -1739,9 +1751,11 @@ function init() {
     E.sendBtn.innerHTML      = ICON.send;
 
     // ── Three.js scene ──────────────────────────
-    // Show a randomized simulation as the landing view. The empty grid is
-    // still used as a fallback if catalogs fail or no sims are available.
-    scene = new Scene3D(E.sceneContainer);
+    // Show a randomized simulation as the landing view. _loadRandomLandingSim
+    // mounts the sim preview directly when one resolves; if the catalog is
+    // empty or fails, it falls back to the empty grey Scene3D. We deliberately
+    // do NOT create Scene3D up-front — that caused a visible grey-flash before
+    // the sim swap kicked in.
     _loadRandomLandingSim();
 
     // ── Bridge stack ────────────────────────────
@@ -1840,6 +1854,17 @@ function init() {
                     previewPlayStory();
                     _setPlayBtnState(true);
                 }
+            } else if (S.previewAsset.type === 'simulation') {
+                // Simulation toggle: read-through + music together. The sim
+                // preview deliberately does not auto-play; this is the only
+                // place audio starts on the home screen.
+                if (isPreviewSimulationPlaying()) {
+                    previewStopSimulation();
+                    _setPlayBtnState(false);
+                } else {
+                    previewPlaySimulation();
+                    _setPlayBtnState(true);
+                }
             } else if (isPreviewSpeaking()) {
                 previewStopVoice();
             } else {
@@ -1863,34 +1888,33 @@ function init() {
     });
 
     E.editBtn.addEventListener('click', () => {
-        // Index-page Edit is reserved for full simulations later.
-        // Until then, only act when actively previewing an asset
-        // in the browse panel.
-        if (!S.panelOpen || !S.previewAsset) return;
+        // Works in two contexts:
+        //   1. Browse panel — edit the selected asset.
+        //   2. Home page — edit the currently loaded randomized simulation.
+        if (!S.previewAsset) return;
         const asset = S.previewAsset;
-        if (asset) {
-            const label = TYPE_TO_LABEL[asset.type] || 'Character';
-            const BridgeClass = BRIDGE_MAP[label];
-            if (BridgeClass) {
-                // Save browse state if panel is open so we can return to it
-                if (S.panelOpen && panelItems.length > 0) {
-                    _savedBrowseState = {
-                        panelLabel: S.panelLabel,
-                        panelSource: panelSource,
-                        panelItems: [...panelItems],
-                        selectedIndex: S.selectedIndex,
-                        previewAsset: S.previewAsset,
-                        sortOrder: S.sortOrder,
-                        panelCategory: S.panelCategory,
-                    };
-                }
+        const label = TYPE_TO_LABEL[asset.type] || 'Character';
+        const BridgeClass = BRIDGE_MAP[label];
+        if (!BridgeClass) return;
 
-                // Template assets → duplicate to user storage first
-                const isTemplate = panelSource === 'explore' || asset.meta?.owner !== 'user';
-                const editAsset = isTemplate ? _duplicateAssetForEdit(asset) : asset;
-                openBuilder(BridgeClass, editAsset, label);
-            }
+        // Save browse state only if we're currently in the panel — for the
+        // home-page case there's nothing to restore on pop.
+        if (S.panelOpen && panelItems.length > 0) {
+            _savedBrowseState = {
+                panelLabel: S.panelLabel,
+                panelSource: panelSource,
+                panelItems: [...panelItems],
+                selectedIndex: S.selectedIndex,
+                previewAsset: S.previewAsset,
+                sortOrder: S.sortOrder,
+                panelCategory: S.panelCategory,
+            };
         }
+
+        // Template assets → duplicate to user storage first
+        const isTemplate = panelSource === 'explore' || asset.meta?.owner !== 'user';
+        const editAsset = isTemplate ? _duplicateAssetForEdit(asset) : asset;
+        openBuilder(BridgeClass, editAsset, label);
     });
 
     E.surpriseBtn.addEventListener('click', async () => {
@@ -1901,13 +1925,21 @@ function init() {
             return;
         }
 
-        // "New" mode — pick a random character template and show it
+        // Home page (no panel, no builder) — re-roll the random landing sim
+        // so Surprise Me here means "give me another simulation".
+        if (!S.panelOpen) {
+            destroyPreview();
+            S.previewAsset = null;
+            await _loadRandomLandingSim();
+            return;
+        }
+
+        // "New" mode (panel open) — pick a random character template
         try {
             const chars = await loadGlobalAssets('Characters');
             if (chars.length === 0) return;
             const pick = chars[Math.floor(Math.random() * chars.length)];
 
-            // Open the browse panel to Characters and select it
             panelItems   = chars;
             panelSource  = 'explore';
             panelLoading = false;
