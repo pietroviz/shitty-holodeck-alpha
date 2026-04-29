@@ -659,46 +659,55 @@ svg    { display: block; flex-shrink: 0; }
     pointer-events: auto;
 }
 
+/* The thumbnail-shaped square IS the edit button now — turquoise, with a
+   pencil glyph inside. Falls back to a transparent frame in "new" mode
+   (no asset to edit) where the wand glyph is shown instead. */
 #title-thumb {
     width: 40px; height: 40px;
-    background: rgba(255,255,255,0.1);
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-    overflow: hidden;
-}
-#title-thumb img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-}
-
-#title-text {
-    flex: 1;
-    font-size: 20px; font-weight: 700;
-    color: #fff;
-}
-
-#el-count {
-    font-size: 12px;
-    color: #fff;
-}
-#el-count.hidden { display: none; }
-
-#edit-btn {
-    display: flex; align-items: center; gap: 6px;
     background: var(--accent);
     color: var(--text-dark);
     border: none;
-    border-radius: var(--radius-xl);
-    padding: 0 20px;
-    height: 40px;
-    font-size: 15px; font-weight: 600;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
     transition: background 0.15s;
+    padding: 0;
 }
-#edit-btn:hover { background: var(--accent-dark); }
-#edit-btn.hidden { display: none; }
+#title-thumb:hover { background: var(--accent-dark); }
+#title-thumb.hidden { display: none; }
+#title-thumb svg { width: 18px; height: 18px; }
+/* When the thumb is in "non-editable" presentational mode (e.g. "new" wand),
+   render it muted to match the previous translucent placeholder look. */
+#title-thumb.is-display {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: default;
+}
+#title-thumb.is-display:hover { background: rgba(255,255,255,0.1); }
+
+/* Title + tally stack vertically; both are clickable when an asset is
+   loaded (they pair with the thumbnail-edit button). */
+#title-stack {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column;
+    line-height: 1.15;
+}
+#title-stack.is-clickable { cursor: pointer; }
+
+#title-text {
+    margin: 0;
+    font-size: 20px; font-weight: 700;
+    color: #fff;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+#el-count {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 2px;
+}
+#el-count.hidden { display: none; }
 
 #surprise-btn {
     display: flex; align-items: center; gap: 8px;

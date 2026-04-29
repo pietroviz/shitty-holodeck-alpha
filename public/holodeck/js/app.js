@@ -7,7 +7,7 @@ import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
 import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
-import { SimulationBridge }     from './bridges/SimulationBridge.js?v=10';
+import { SimulationBridge }     from './bridges/SimulationBridge.js?v=11';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
 import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewPlaySimulation, previewStopSimulation, isPreviewSimulationPlaying, previewResetView } from './previewRenderer.js?v=15';
 import { generateId }                       from './db.js?v=2';
@@ -39,6 +39,42 @@ function _relTime(ms) {
     if (wk   < 5)   return `Modified ${wk} ${wk === 1 ? 'week' : 'weeks'} ago`;
     if (mo   < 12)  return `Modified ${mo} ${mo === 1 ? 'month' : 'months'} ago`;
     return `Modified ${yr} ${yr === 1 ? 'year' : 'years'} ago`;
+}
+
+/**
+ * Count the discrete loaded entities in an asset, for the title-row tally.
+ * Each loaded asset reference (env, char, music, story) counts as 1, plus
+ * each populated prop / ground-object slot. Anything with assetId === 'none'
+ * is skipped — those are empty slots, not loaded elements.
+ */
+function _countAssetElements(asset) {
+    if (!asset) return 0;
+    const state = asset.payload?.state || asset.state || {};
+    const t = asset.type;
+    if (t === 'simulation') {
+        let n = 0;
+        if (state.envId)     n += 1;
+        if (state.musicId)   n += 1;
+        if (state.storyId)   n += 1;
+        if (Array.isArray(state.cast)) n += state.cast.filter(c => c?.charId).length;
+        return n;
+    }
+    if (t === 'environment') {
+        let n = 1; // the env itself
+        const populated = (arr) => Array.isArray(arr)
+            ? arr.filter(x => x?.assetId && x.assetId !== 'none').length : 0;
+        n += populated(state.props);
+        n += populated(state.groundObjects);
+        if (state.musicId) n += 1;
+        return n;
+    }
+    if (t === 'story') {
+        const beats = Array.isArray(state.beats) ? state.beats.length : 0;
+        const cast  = Array.isArray(state.cast)  ? state.cast.length  : 0;
+        return cast + beats;
+    }
+    // Singleton assets (character, music, voice, image, prop) count as one.
+    return 1;
 }
 
 function _itemModifiedLabel(item) {
@@ -339,28 +375,43 @@ function render() {
 
     // ── Title row ──────────────────────────
     const displayAsset = S.previewAsset || S.lastSavedAsset;
-    const assetTypeIcon = displayAsset ? (
-        { character: ICON.users, prop: ICON.box, music: ICON.music, asset: ICON.image,
-          environment: ICON.trees, object: ICON.box, image: ICON.image, voice: ICON.music
-        }[displayAsset.type] || ICON.box
-    ) : '';
-    // Show asset thumbnail in title row (fall back to type icon)
-    if (!isNew && displayAsset) {
-        E.titleThumb.innerHTML = _thumbHTML(displayAsset);
+    const canEditNow = !S.builderMode && !!S.previewAsset;
+
+    // Title-thumb IS the edit button — turquoise pencil when an asset is
+    // editable, muted wand/icon when nothing is loaded ("new" mode etc.).
+    if (canEditNow) {
+        E.titleThumb.innerHTML = ICON.pencil;
+        E.titleThumb.classList.remove('is-display');
+        E.titleThumb.classList.remove('hidden');
+        E.titleThumb.disabled = false;
+    } else if (isNew) {
+        E.titleThumb.innerHTML = ICON.wand;
+        E.titleThumb.classList.add('is-display');
+        E.titleThumb.classList.remove('hidden');
+        E.titleThumb.disabled = true;
     } else {
-        E.titleThumb.innerHTML = isNew ? ICON.wand : assetTypeIcon;
+        // No editable asset and not in "new" mode — hide entirely.
+        E.titleThumb.classList.add('hidden');
     }
-    E.titleText.textContent  = isNew
+
+    E.titleText.textContent = isNew
         ? (createType ? `Create New ${createType}…` : 'Create New…')
         : (displayAsset ? displayAsset.name : 'Untitled');
-    // Element count: hidden in "new" mode and in builder/edit mode
-    // (replaced by the Surprise Me button in edit mode).
-    E.elCount.classList.toggle('hidden', isNew || S.builderMode);
-    // Edit button: visible whenever a previewed asset exists — works for
-    // browse-panel selection AND for the home-page randomized simulation.
-    // Hidden in builder mode (you're already editing) and "new" mode.
-    const canEditNow = !S.builderMode && !!S.previewAsset;
-    E.editBtn.classList.toggle('hidden', isNew || !canEditNow);
+
+    // Element tally — count the actual entities loaded in the current asset
+    // (env + cast + music + story + populated stage props/ground objects).
+    // Hidden while "new" mode or builder/edit mode (panel shows its own).
+    if (!isNew && !S.builderMode && displayAsset) {
+        const n = _countAssetElements(displayAsset);
+        E.elCount.textContent = `${n} ${n === 1 ? 'element' : 'elements'}`;
+        E.elCount.classList.remove('hidden');
+    } else {
+        E.elCount.classList.add('hidden');
+    }
+
+    // Whole title stack becomes clickable when an edit is possible.
+    E.titleStack?.classList.toggle('is-clickable', canEditNow);
+
     // Surprise button: visible in "new" mode, builder/edit mode, AND on the
     // home page when a randomized sim is loaded (so the user can re-roll it).
     const showSurprise = isNew || S.builderMode || (!S.panelOpen && !!S.previewAsset);
@@ -1732,9 +1783,9 @@ function init() {
         playBtn:         document.getElementById('play-btn'),
         titleRow:        document.getElementById('title-row'),
         titleThumb:      document.getElementById('title-thumb'),
+        titleStack:      document.getElementById('title-stack'),
         titleText:       document.getElementById('title-text'),
         elCount:         document.getElementById('el-count'),
-        editBtn:         document.getElementById('edit-btn'),
         surpriseBtn:     document.getElementById('surprise-btn'),
         promptBox:       document.getElementById('prompt-box'),
         promptInput:     document.getElementById('prompt-input'),
@@ -1746,7 +1797,8 @@ function init() {
     E.hamburgerBtn.innerHTML = ICON.menu;
     E.resetBtn.innerHTML     = ICON.video;
     E.playBtn.innerHTML      = ICON.play;
-    E.editBtn.innerHTML      = `${ICON.pencil}<span>Edit</span>`;
+    // titleThumb (the new edit button) gets its glyph swapped per-render
+    // so it can flip between pencil (editable) and wand ("new" mode).
     E.surpriseBtn.innerHTML  = `${ICON.dice}<span>Surprise me!</span>`;
     E.sendBtn.innerHTML      = ICON.send;
 
@@ -1887,10 +1939,11 @@ function init() {
         _setPlayBtnState(!!e.detail?.playing);
     });
 
-    E.editBtn.addEventListener('click', () => {
-        // Works in two contexts:
-        //   1. Browse panel — edit the selected asset.
-        //   2. Home page — edit the currently loaded randomized simulation.
+    // The pencil-thumb button AND the title/tally text both fire edit.
+    // Works in two contexts:
+    //   1. Browse panel — edit the selected asset.
+    //   2. Home page — edit the currently loaded randomized simulation.
+    const _openEditForCurrent = () => {
         if (!S.previewAsset) return;
         const asset = S.previewAsset;
         const label = TYPE_TO_LABEL[asset.type] || 'Character';
@@ -1915,6 +1968,13 @@ function init() {
         const isTemplate = panelSource === 'explore' || asset.meta?.owner !== 'user';
         const editAsset = isTemplate ? _duplicateAssetForEdit(asset) : asset;
         openBuilder(BridgeClass, editAsset, label);
+    };
+    E.titleThumb.addEventListener('click', _openEditForCurrent);
+    E.titleStack.addEventListener('click', () => {
+        // Only act when actually editable — the stack is only marked
+        // .is-clickable in render() under those conditions, so guard via
+        // the same predicate to avoid stray clicks in "new" mode etc.
+        if (!S.builderMode && S.previewAsset) _openEditForCurrent();
     });
 
     E.surpriseBtn.addEventListener('click', async () => {

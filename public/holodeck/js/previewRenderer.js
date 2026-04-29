@@ -2204,19 +2204,19 @@ export function isPreviewSimulationPlaying() {
 }
 
 // ── Simulation preview ───────────────────────────────────────────
-// Three characters arranged on the BINGO stage grid, matching the env
-// builder's character-reference placement: A center-stage, B/C flanking
-// to the back-left/back-right with the same spread as env builder's
-// I2/N3/G2 default cells. Keep these in sync with SimulationBridge.
-//   N3 → ( 0, 0,  0) — CHAR_A, centre
-//   I2 → (-1, 0, -1) — CHAR_B, back-left
-//   G2 → ( 1, 0, -1) — CHAR_C, back-right
+// Three characters arranged like the env builder's default cast: a row
+// across the middle of the BINGO stage at z=0, matching cells I3/N3/G3.
+// Keep these in sync with SimulationBridge.
+//   I3 → (-1, 0, 0) — CHAR_B, left
+//   N3 → ( 0, 0, 0) — CHAR_A, centre
+//   G3 → ( 1, 0, 0) — CHAR_C, right
 const _SIM_SLOT_POSITIONS = {
-    CHAR_B: [-1.0, 0, -1.0],
-    CHAR_A: [ 0.0, 0,  0.0],
-    CHAR_C: [ 1.0, 0, -1.0],
+    CHAR_B: [-1.0, 0, 0.0],
+    CHAR_A: [ 0.0, 0, 0.0],
+    CHAR_C: [ 1.0, 0, 0.0],
 };
-const _SIM_SLOT_ROT_Y = { CHAR_B: 0.55, CHAR_A: 0, CHAR_C: -0.55 };
+// All face the camera (no inward turn — matches the env builder reference).
+const _SIM_SLOT_ROT_Y = { CHAR_B: 0, CHAR_A: 0, CHAR_C: 0 };
 const _SIM_ARCHETYPE_LIFT_Y = 0.95;
 
 async function _resolveSimAsset(refs, type, id) {
@@ -2233,18 +2233,18 @@ async function _resolveSimAsset(refs, type, id) {
 }
 
 function _applySimCamera() {
-    // Soft 3/4 angle wide enough to fit the env-builder-style BINGO spacing —
-    // chars are spread further apart now (CHAR_B/C at ±1 world units), so we
-    // pull back and lift the camera to keep the whole triangle in frame.
-    // Target sits between A (front) and B/C (back) at chest height.
-    _camera.position.set(1.4, 2.2, 5.2);
-    _camera.lookAt(0, 0.9, -0.5);
+    // True isometric 3/4 — matches the blank Scene3D pose at (5.2, 3.9, 5.2)
+    // so the home-screen sim doesn't visually jolt as the placeholder gives
+    // way to the loaded simulation. Target sits at chest height of the
+    // chars (z=0 row) so the whole cast lands centered in frame.
+    _camera.position.set(5.2, 3.9, 5.2);
+    _camera.lookAt(0, 0.9, 0);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
         _controls.enabled = true;
-        _controls.target.set(0, 0.9, -0.5);
+        _controls.target.set(0, 0.9, 0);
         _controls.update();
     }
 }

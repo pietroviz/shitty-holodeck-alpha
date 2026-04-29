@@ -84,11 +84,16 @@
                     </div>
 
                     <!-- Current item title row -->
+                    <!-- The turquoise thumbnail-shaped button on the left is
+                         the edit affordance — clicking it (or the title /
+                         tally beside it) opens the asset's bridge. The
+                         former separate Edit button is gone. -->
                     <div id="title-row">
-                        <div id="title-thumb" aria-hidden="true"></div>
-                        <h2 id="title-text">Untitled</h2>
-                        <span id="el-count">37 Elements</span>
-                        <button id="edit-btn"></button>
+                        <button id="title-thumb" aria-label="Edit"></button>
+                        <div id="title-stack">
+                            <h2 id="title-text">Untitled</h2>
+                            <span id="el-count"></span>
+                        </div>
                         <button id="surprise-btn"></button>
                     </div>
 
@@ -120,7 +125,7 @@
         }
     }
     </script>
-    <script type="module" src="js/app.js?v=43"></script>
+    <script type="module" src="js/app.js?v=44"></script>
 
     <!-- Mobile / narrow-aspect: drag the handle to resize the bottom sheet.
          The gesture only fires when the browser is below a 1:1 aspect ratio;

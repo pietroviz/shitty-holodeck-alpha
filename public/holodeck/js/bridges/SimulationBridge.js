@@ -163,23 +163,24 @@ const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 // Default starter archetypes if we have no story yet.
 const DEFAULT_ARCHETYPES = { CHAR_A: 'Edge', CHAR_B: 'Bloom', CHAR_C: 'Glitch' };
 
-// Triangle stage framing on the BINGO grid — matches the env builder's
-// character-reference placement so the simulation reads consistently with
-// the env editor (and the preview pipeline). Keep these in sync with
-// _SIM_SLOT_POSITIONS in previewRenderer.js.
-//   N3 → ( 0, 0,  0) — CHAR_A, centre
-//   I2 → (-1, 0, -1) — CHAR_B, back-left
-//   G2 → ( 1, 0, -1) — CHAR_C, back-right
+// Row-across-stage framing on the BINGO grid — matches the env builder's
+// default-sim character-reference placement so the simulation reads
+// consistently with the env editor. Keep in sync with previewRenderer.js.
+//   I3 → (-1, 0, 0) — CHAR_B, left
+//   N3 → ( 0, 0, 0) — CHAR_A, centre
+//   G3 → ( 1, 0, 0) — CHAR_C, right
 const SLOT_POSITIONS = {
-    CHAR_B: [-1.0, 0, -1.0],
-    CHAR_A: [ 0.0, 0,  0.0],
-    CHAR_C: [ 1.0, 0, -1.0],
+    CHAR_B: [-1.0, 0, 0.0],
+    CHAR_A: [ 0.0, 0, 0.0],
+    CHAR_C: [ 1.0, 0, 0.0],
 };
-const SLOT_ROT_Y = { CHAR_B: 0.55, CHAR_A: 0, CHAR_C: -0.55 };
+// All face the camera (no inward turn — matches the env builder reference).
+const SLOT_ROT_Y = { CHAR_B: 0, CHAR_A: 0, CHAR_C: 0 };
 const ARCHETYPE_HEAD_LIFT_Y = 0.95;   // match previous head-only look when no char asset
-// Soft 3/4 angle wide enough to fit the new BINGO spacing (chars at ±1 world units).
-const INITIAL_CAM_POS    = new THREE.Vector3(1.4, 2.2, 5.2);
-const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.9, -0.5);
+// True isometric 3/4 angle — matches the blank Scene3D pose so swapping in
+// the loaded sim doesn't jolt the camera.
+const INITIAL_CAM_POS    = new THREE.Vector3(5.2, 3.9, 5.2);
+const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.9, 0);
 
 // Closed-mouth rest pose fed to non-speaking characters each tick so their
 // viseme shapes don't freeze mid-word when the speaker changes.
@@ -865,16 +866,26 @@ export class SimulationBridge extends BaseBridge {
     }
 
     _renderSurpriseHeader() {
-        const playIcon  = this._isPlaying ? '■' : '▶';
-        const playLabel = this._isPlaying ? 'Stop' : 'Play';
-        return `
-          <div class="cb-section">
-            <button class="cb-shape-btn sim-surprise-all" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;margin-bottom:8px;">
-              <span style="width:18px;height:18px;display:inline-flex;">${DICE_ICON}</span>
-              Surprise Me — roll a new simulation
-            </button>
-            <button class="vb-play-btn sim-play-btn${this._isPlaying ? ' speaking' : ''}" style="width:100%;">${playIcon} ${playLabel}</button>
-          </div>`;
+        // The Surprise + Play buttons used to live in every tab here. They've
+        // been removed in favour of the global bottom-nav controls, which
+        // surpriseAll() / play() / stopPlayback() on the active bridge.
+        // Kept as an empty stub so existing render paths still call into
+        // a single hook if we ever want a header back.
+        return '';
+    }
+
+    /**
+     * Re-roll the entire simulation — env, cast, music, story all randomized.
+     * Called by the global bottom-nav Surprise button via app.js's
+     * `entry?.bridge?.surpriseAll` hook when this bridge is active.
+     */
+    async surpriseAll() {
+        for (const c of this._state.cast) c.charId = null;
+        await this._rollAll();
+        this._rebuildEnv();
+        await this._buildCast();
+        this._scheduleAutoSave();
+        this._renderPanel();
     }
 
     _renderSetupTab() {
@@ -992,16 +1003,9 @@ export class SimulationBridge extends BaseBridge {
             return;
         }
 
-        panel.querySelector('.sim-surprise-all')?.addEventListener('click', async () => {
-            // Clear cast character picks so _rollAll re-rolls them.
-            for (const c of this._state.cast) c.charId = null;
-            await this._rollAll();
-            this._rebuildEnv();
-            await this._buildCast();
-            this._scheduleAutoSave();
-            this._renderPanel();
-        });
-        panel.querySelector('.sim-play-btn')?.addEventListener('click', () => this._togglePlay());
+        // Surprise + Play used to be wired here against in-panel duplicates.
+        // The duplicates were removed; the global bottom-nav buttons now
+        // drive surpriseAll() / play() / stopPlayback() directly via app.js.
 
         panel.querySelectorAll('.sim-slot-select').forEach(sel => {
             sel.addEventListener('change', (e) => this._onSlotSwap(sel.dataset.key, e.target.value));
