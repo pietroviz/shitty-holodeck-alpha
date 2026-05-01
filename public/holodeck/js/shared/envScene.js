@@ -24,7 +24,7 @@ import {
     STAGE_SIZE,
     cellToWorld as _cellToWorld,
     inCameraCorridor as _inCameraCorridor,
-} from './envGeometry.js?v=3';
+} from './envGeometry.js?v=4';
 
 const WALL_THICK  = 0.25;
 const SKY_RADIUS  = 50;

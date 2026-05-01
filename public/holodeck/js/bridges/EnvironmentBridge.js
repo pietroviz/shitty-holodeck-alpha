@@ -39,7 +39,7 @@ import {
     DEFAULT_CAMERA,
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
-} from '../shared/envGeometry.js?v=3';
+} from '../shared/envGeometry.js?v=4';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;

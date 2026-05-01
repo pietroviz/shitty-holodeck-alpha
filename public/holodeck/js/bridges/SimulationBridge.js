@@ -52,7 +52,7 @@ import {
     SIM_CAMERA,
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
-} from '../shared/envGeometry.js?v=3';
+} from '../shared/envGeometry.js?v=4';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 

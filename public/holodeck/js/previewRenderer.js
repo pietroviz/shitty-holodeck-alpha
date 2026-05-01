@@ -50,7 +50,7 @@ import {
     SIM_CAMERA,
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
-} from './shared/envGeometry.js?v=3';
+} from './shared/envGeometry.js?v=4';
 
 let _renderer = null;
 let _scene    = null;

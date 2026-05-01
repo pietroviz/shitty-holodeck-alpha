@@ -47,27 +47,31 @@ export const DIRECTIONS = Object.freeze({
 });
 
 // ── Default camera (environment builder + browse preview) ────────
-// Square-on framing for env editing and browse-panel preview. Slightly
-// lowered + pulled back from the v1 default so more of the surrounding
-// world (back walls, sky, distant ground) reads in frame.
+// Square-on framing for env editing and browse-panel preview. Lowered +
+// pulled back from the v1 default + wider FOV so back walls, sky, and
+// distant ground all read in frame.
 //
 // pos    — world-space camera position
 // target — world-space lookAt point
 // fov    — vertical field of view in degrees
 export const DEFAULT_CAMERA = Object.freeze({
-    pos:    [0, 3.1, 6.5],   // x=centre, y≈3 m up, z=6.5 m back
+    pos:    [0, 3.1, 7.0],   // x=centre, y≈3 m up, z=7 m back
     target: [0, 0.9, 0],     // looking at chest height, centre of stage
-    fov:    55,              // a bit wider than the v1 50° to show more env
+    fov:    58,              // wide enough to take in the whole 5 m stage + walls
 });
 
 // ── Sim camera (simulation playback) ──────────────────────────────
-// Eye-level, closer to the cast — frames the conversation rather than the
-// whole stage. Looks slightly forward (target z=−0.4) so CHAR_A (upstage)
-// reads as the focal point.
+// Pulled back from the v1 close-up so the env walls + sky read in frame
+// alongside the cast — the env changes are part of the show, not just a
+// backdrop. Still lower + closer than DEFAULT_CAMERA so the conversation
+// triangle reads as the focal point.
+//   pos: y=1.9 (slight lift to take in the back wall above CHAR_A)
+//        z=5.0 (back enough to frame the trio + back wall in one shot)
+//   target z=−0.5 so CHAR_A (upstage at z=−1) is dead-centre.
 export const SIM_CAMERA = Object.freeze({
-    pos:    [0, 1.5, 3.0],
-    target: [0, 0.95, -0.4],
-    fov:    45,
+    pos:    [0, 1.9, 5.0],
+    target: [0, 1.0, -0.5],
+    fov:    50,
 });
 
 // Orbit controls — maximum zoom-out distance. Bumped from the old 20 m so
