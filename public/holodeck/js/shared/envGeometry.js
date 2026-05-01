@@ -46,21 +46,33 @@ export const DIRECTIONS = Object.freeze({
     down:     { axis: 'y', sign: -1, label: 'Down'     },
 });
 
-// ── Default camera ────────────────────────────────────────────────
-// Square-on framing — camera dead-centre on the X axis, looking forward
-// (toward −Z) at chest height. This replaces the old 45° diamond view.
-//
-// Each builder either uses this exactly or scoots forward/backward along Z
-// for tighter / wider framing — but always square-on.
+// ── Default camera (environment builder + browse preview) ────────
+// Square-on framing for env editing and browse-panel preview. Slightly
+// lowered + pulled back from the v1 default so more of the surrounding
+// world (back walls, sky, distant ground) reads in frame.
 //
 // pos    — world-space camera position
 // target — world-space lookAt point
 // fov    — vertical field of view in degrees
 export const DEFAULT_CAMERA = Object.freeze({
-    pos:    [0, 3.9, 5.2],   // x=centre, y=4 m up, z=5.2 m back from origin
+    pos:    [0, 3.1, 6.5],   // x=centre, y≈3 m up, z=6.5 m back
     target: [0, 0.9, 0],     // looking at chest height, centre of stage
-    fov:    50,
+    fov:    55,              // a bit wider than the v1 50° to show more env
 });
+
+// ── Sim camera (simulation playback) ──────────────────────────────
+// Eye-level, closer to the cast — frames the conversation rather than the
+// whole stage. Looks slightly forward (target z=−0.4) so CHAR_A (upstage)
+// reads as the focal point.
+export const SIM_CAMERA = Object.freeze({
+    pos:    [0, 1.5, 3.0],
+    target: [0, 0.95, -0.4],
+    fov:    45,
+});
+
+// Orbit controls — maximum zoom-out distance. Bumped from the old 20 m so
+// users can pull back far enough to read the whole stage + walls + sky.
+export const ORBIT_MAX_DISTANCE = 50;
 
 /**
  * Build a per-builder camera by sliding the default forward/backward along Z.
@@ -82,6 +94,32 @@ export function cameraFor({ forwardOffset = 0, heightOffset = 0, targetY } = {})
         fov: DEFAULT_CAMERA.fov,
     };
 }
+
+// ── Cast layout (3-character conversation arrangement) ───────────
+// Fixed v1 arrangement — CHAR_A upstage centre, CHAR_B/C downstage left/right
+// turned 45° inward so the trio reads as "having a conversation" rather than
+// a flat row facing the audience. Used by the simulation render AND by the
+// env-builder's ghost-cast preview, so a future tweak ripples to both.
+//
+//   pos  — [x, y, z] in metres
+//   rotY — Y-axis rotation in radians (default character orientation
+//          faces +Z toward the camera; +rotY turns toward stage-right)
+//
+//                    Camera (square-on, +Z)
+//                            ↑
+//          CHAR_B  ........  audience  ........  CHAR_C
+//          (-1,0,0) ↗                         ↖ (1,0,0)
+//
+//                       CHAR_A  (0,0,-1)  ← upstage
+//
+export const CAST_LAYOUT = Object.freeze({
+    CHAR_A: { pos: [ 0, 0, -1], rotY:  0          },
+    CHAR_B: { pos: [-1, 0,  0], rotY:  Math.PI / 4 },
+    CHAR_C: { pos: [ 1, 0,  0], rotY: -Math.PI / 4 },
+});
+
+/** All three slot ids in canonical order. */
+export const CAST_SLOTS = Object.freeze(['CHAR_A', 'CHAR_B', 'CHAR_C']);
 
 // ── BINGO grid (legacy, still supported during migration) ─────────
 // Old format: column letter (B/I/N/G/O) + row number (1..5).

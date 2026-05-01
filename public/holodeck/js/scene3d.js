@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Line2 }        from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
-import { DEFAULT_CAMERA } from './shared/envGeometry.js?v=2';
+import { DEFAULT_CAMERA } from './shared/envGeometry.js?v=3';
 
 /**
  * Scene3D — Three.js viewport with orbit + pan + zoom controls.

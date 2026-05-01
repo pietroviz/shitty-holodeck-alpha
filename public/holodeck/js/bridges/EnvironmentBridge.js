@@ -37,7 +37,9 @@ import {
     ALL_CELLS,
     inCameraCorridor as _inCameraCorridor,
     DEFAULT_CAMERA,
-} from '../shared/envGeometry.js?v=2';
+    CAST_LAYOUT,
+    ORBIT_MAX_DISTANCE,
+} from '../shared/envGeometry.js?v=3';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -417,7 +419,7 @@ export class EnvironmentBridge extends BaseBridge {
         this._controls.enableDamping = true;
         this._controls.dampingFactor = 0.08;
         this._controls.minDistance   = 2;
-        this._controls.maxDistance   = 20;
+        this._controls.maxDistance   = ORBIT_MAX_DISTANCE;
         // No maxPolarAngle — free roam lets you orbit under the island
         this._controls.update();
 
@@ -1179,33 +1181,24 @@ export class EnvironmentBridge extends BaseBridge {
     }
 
     /**
-     * Build the 3D meshes for every cast slot (CHAR_A/B/C) that has a cell
-     * assigned. Each slot gets its assigned colour as a subtle tint.
+     * Build the ghost-cast greybox figures from the shared CAST_LAYOUT —
+     * fixed conversation arrangement (CHAR_A upstage centre, CHAR_B/C
+     * downstage flanks turned 45° inward). Single source of truth in
+     * shared/envGeometry.js; updates ripple to the sim render too.
      */
     _buildCast() {
         this._clearCast();
-        const camX = 5.2, camZ = 5.2;
 
-        for (let i = 0; i < CAST_SLOT_COUNT; i++) {
-            const slot = this._state.cast[i];
-            if (!slot || !slot.cell) continue;
-            const pos = _cellToWorld(slot.cell);
-            if (!pos) continue;
+        const slots = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
+        for (let i = 0; i < slots.length; i++) {
+            const slot = slots[i];
+            const layout = CAST_LAYOUT[slot];
+            if (!layout) continue;
 
             const color = CAST_COLORS[i] || '#888888';
             const group = this._makeGreyboxCharacter(color);
-            group.position.set(pos.x, 0, pos.z);
-
-            // Apply facing rotation
-            const facing = slot.facing || 'camera';
-            if (facing === 'camera') {
-                group.rotation.y = Math.atan2(camX - pos.x, camZ - pos.z);
-            } else {
-                const target = _cellToWorld(facing);
-                if (target) {
-                    group.rotation.y = Math.atan2(target.x - pos.x, target.z - pos.z);
-                }
-            }
+            group.position.set(...layout.pos);
+            group.rotation.y = layout.rotY;
 
             this._scene.add(group);
             this._castMeshes.push(group);
@@ -1237,9 +1230,16 @@ export class EnvironmentBridge extends BaseBridge {
         const list = this._objectList || [];
         const half = STAGE_SIZE / 2;
 
-        // Cells occupied by cast members — props avoid these
+        // Cells occupied by cast — fixed by CAST_LAYOUT. Stored as legacy
+        // BINGO labels here because the scatter/tile points use them directly.
+        // The avoidance is approximate (±0.4 m around each cell centre).
         const usedCells = new Set(
-            (this._state.cast || []).filter(s => s?.cell).map(s => s.cell)
+            Object.values(CAST_LAYOUT).map(({ pos: [x,, z] }) => {
+                // Map world (x, z) back to a BINGO label for the existing
+                // _stageScatterPoints / _stageTilePoints avoidance loop.
+                // letterIdx = x + 2, num = z + 3
+                return BINGO_COLS[Math.round(x) + 2] + (Math.round(z) + 3);
+            })
         );
 
         for (const slot of this._state.props) {
@@ -2179,74 +2179,24 @@ export class EnvironmentBridge extends BaseBridge {
 
     // ── Stage tab ────────────────────────────────────────────────
     _renderStageTab() {
-        const cast = this._state.cast || [];
         const subtitle = renderSubtitle;
 
-        // ── Facing options for the dropdown
-        const facingOpts = [
-            { value: 'camera', label: 'Camera' },
-            ...ALL_CELLS.map(c => ({ value: c, label: c })),
-        ];
-
-        // ── Cast Placement cards — 3 slots: CHAR_A, CHAR_B, CHAR_C
-        const castCards = Array.from({ length: CAST_SLOT_COUNT }, (_, i) => {
-            const slot  = cast[i] || {};
+        // ── Cast — fixed v1 arrangement, no per-slot controls ─────
+        // Three characters in a conversation triangle (CHAR_A upstage,
+        // CHAR_B/C flanks turned 45° inward). The arrangement is the same
+        // here and in sim playback (see CAST_LAYOUT in shared/envGeometry.js).
+        // Per-slot placement controls return in a future pass.
+        const castCards = ['CHAR_A', 'CHAR_B', 'CHAR_C'].map((slot, i) => {
             const color = CAST_COLORS[i];
-            const empty = !slot.cell;
-            const facing = slot.facing || 'camera';
-            const charLabel = `CHAR_${String.fromCharCode(65 + i)}`;
-
-            if (empty) {
-                return `
-                <div class="cb-cast-card" data-slot="${i}">
-                    <span class="cb-cast-chip" style="background:${color};"></span>
-                    <span class="cb-cast-label" style="color:var(--text-dim);">${charLabel} — empty</span>
-                    <button type="button" class="cb-cast-add" data-slot="${i}"
-                            style="margin-left:auto; background:none; border:1px solid var(--text-dim);
-                            color:var(--text-dim); border-radius:4px; padding:2px 8px; cursor:pointer;
-                            font-size:0.75rem; font-family:inherit;">+ Add</button>
-                </div>`;
-            }
-
-            const facingSelect = `<select class="cb-cast-facing" data-slot="${i}"
-                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
-                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
-                font-family:inherit; max-width:80px;">
-                ${facingOpts.map(o =>
-                    `<option value="${o.value}"${facing === o.value ? ' selected' : ''}>${o.label}</option>`
-                ).join('')}
-            </select>`;
-
-            // Column letter + row number selectors
-            const curLetter = slot.cell ? slot.cell[0].toUpperCase() : 'N';
-            const curNum    = slot.cell ? slot.cell.slice(1) : '3';
-
-            const letterSelect = `<select class="cb-cast-letter" data-slot="${i}"
-                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
-                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
-                font-family:inherit; width:38px;">
-                ${'BINGO'.split('').map(l =>
-                    `<option value="${l}"${curLetter === l ? ' selected' : ''}>${l}</option>`
-                ).join('')}
-            </select>`;
-
-            const numSelect = `<select class="cb-cast-num" data-slot="${i}"
-                style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
-                border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
-                font-family:inherit; width:38px;">
-                ${[1,2,3,4,5].map(n =>
-                    `<option value="${n}"${curNum === String(n) ? ' selected' : ''}>${n}</option>`
-                ).join('')}
-            </select>`;
-
+            const layout = CAST_LAYOUT[slot];
+            const role = i === 0 ? 'upstage centre'
+                       : i === 1 ? 'left, turned inward'
+                       : 'right, turned inward';
             return `
                 <div class="cb-cast-card" data-slot="${i}">
                     <span class="cb-cast-chip" style="background:${color};"></span>
-                    <span class="cb-cast-pos">${letterSelect}${numSelect}</span>
-                    <span class="cb-cast-facing-wrap">→ ${facingSelect}</span>
-                    <button type="button" class="cb-cast-remove" data-slot="${i}"
-                            style="margin-left:auto; background:none; border:none; color:var(--text-dim);
-                            cursor:pointer; font-size:1rem;" aria-label="Remove">&times;</button>
+                    <span class="cb-cast-label">${slot}</span>
+                    <span class="cb-cast-role" style="color:var(--text-dim); font-size:0.75rem; margin-left:auto;">${role}</span>
                 </div>`;
         }).join('');
 
@@ -2254,7 +2204,7 @@ export class EnvironmentBridge extends BaseBridge {
         const propsHtml = this._renderPropSlots();
 
         return `
-          ${subtitle('Cast Placement', 'cast')}
+          ${subtitle('Cast')}
           ${castCards}
 
           ${subtitle('Props', 'props')}
@@ -2607,70 +2557,8 @@ export class EnvironmentBridge extends BaseBridge {
             });
         });
 
-        // ── Cast Placement controls ─────────────────────────────
-        // Position: letter (row) dropdown
-        panel.querySelectorAll('.cb-cast-letter').forEach(sel => {
-            sel.addEventListener('change', () => {
-                const i = parseInt(sel.dataset.slot, 10);
-                const slot = this._state.cast[i];
-                if (!slot || !slot.cell) return;
-                const num = slot.cell.slice(1);
-                slot.cell = sel.value + num;
-                this._buildCast();
-                this._renderPanel();
-                this._scheduleAutoSave();
-            });
-        });
-        // Position: number (column) dropdown
-        panel.querySelectorAll('.cb-cast-num').forEach(sel => {
-            sel.addEventListener('change', () => {
-                const i = parseInt(sel.dataset.slot, 10);
-                const slot = this._state.cast[i];
-                if (!slot || !slot.cell) return;
-                const letter = slot.cell[0].toUpperCase();
-                slot.cell = letter + sel.value;
-                this._buildCast();
-                this._renderPanel();
-                this._scheduleAutoSave();
-            });
-        });
-        // Facing dropdown
-        panel.querySelectorAll('.cb-cast-facing').forEach(sel => {
-            sel.addEventListener('change', () => {
-                const i = parseInt(sel.dataset.slot, 10);
-                const slot = this._state.cast[i];
-                if (!slot) return;
-                slot.facing = sel.value;
-                this._buildCast();
-                this._scheduleAutoSave();
-            });
-        });
-        // Remove button (empties the slot, keeps it visible)
-        panel.querySelectorAll('.cb-cast-remove').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const i = parseInt(btn.dataset.slot, 10);
-                this._state.cast[i] = { cell: null, facing: 'camera' };
-                this._buildCast();
-                this._renderPanel();
-                this._scheduleAutoSave();
-            });
-        });
-        // Add button (fills an empty slot with centre cell)
-        panel.querySelectorAll('.cb-cast-add').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const i = parseInt(btn.dataset.slot, 10);
-                // Find a cell not already taken
-                const used = new Set(this._state.cast.filter(s => s?.cell).map(s => s.cell));
-                let cell = 'N3';
-                if (used.has(cell)) {
-                    cell = ALL_CELLS.find(c => !used.has(c)) || 'N3';
-                }
-                this._state.cast[i] = { cell, facing: 'camera' };
-                this._buildCast();
-                this._renderPanel();
-                this._scheduleAutoSave();
-            });
-        });
+        // ── Cast — fixed v1 arrangement, no event handlers needed.
+        // Per-slot placement controls return in a future pass.
 
         // ── Prop controls ────────────────────────────────────────
         panel.querySelectorAll('.cb-prop-select').forEach(sel => {

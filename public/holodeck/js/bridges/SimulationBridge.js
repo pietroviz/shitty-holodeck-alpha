@@ -19,7 +19,7 @@ import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents, DICE_ICON, tweenToPose } from '../shared/builderUI.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, dbGetAll } from '../db.js?v=2';
-import { EnvironmentBridge } from './EnvironmentBridge.js?v=43';
+import { EnvironmentBridge } from './EnvironmentBridge.js?v=44';
 import { CharacterBridge }   from './CharacterBridge.js?v=3';
 import { MusicBridge }       from './MusicBridge.js?v=2';
 import { StoryBridge }       from './StoryBridge.js?v=4';
@@ -47,7 +47,12 @@ import {
 } from '../shared/archetypeHead.js?v=2';
 import { buildEnvScene } from '../shared/envScene.js?v=3';
 import { buildCharacterMesh } from '../shared/characterMesh.js?v=2';
-import { DEFAULT_CAMERA } from '../shared/envGeometry.js?v=2';
+import {
+    DEFAULT_CAMERA,
+    SIM_CAMERA,
+    CAST_LAYOUT,
+    ORBIT_MAX_DISTANCE,
+} from '../shared/envGeometry.js?v=3';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 
@@ -164,25 +169,21 @@ const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 // Default starter archetypes if we have no story yet.
 const DEFAULT_ARCHETYPES = { CHAR_A: 'Edge', CHAR_B: 'Bloom', CHAR_C: 'Glitch' };
 
-// Row-across-stage framing on the BINGO grid — matches the env builder's
-// default-sim character-reference placement so the simulation reads
-// consistently with the env editor. Keep in sync with previewRenderer.js.
-//   I3 → (-1, 0, 0) — CHAR_B, left
-//   N3 → ( 0, 0, 0) — CHAR_A, centre
-//   G3 → ( 1, 0, 0) — CHAR_C, right
-const SLOT_POSITIONS = {
-    CHAR_B: [-1.0, 0, 0.0],
-    CHAR_A: [ 0.0, 0, 0.0],
-    CHAR_C: [ 1.0, 0, 0.0],
-};
-// All face the camera (no inward turn — matches the env builder reference).
-const SLOT_ROT_Y = { CHAR_B: 0, CHAR_A: 0, CHAR_C: 0 };
-const ARCHETYPE_HEAD_LIFT_Y = 0.95;   // match previous head-only look when no char asset
-// Square-on DEFAULT_CAMERA — matches the blank Scene3D pose so swapping in
-// the loaded sim doesn't jolt the camera. Single source of truth in
-// shared/envGeometry.js — change there to retune all builders at once.
-const INITIAL_CAM_POS    = new THREE.Vector3(...DEFAULT_CAMERA.pos);
-const INITIAL_CAM_TARGET = new THREE.Vector3(...DEFAULT_CAMERA.target);
+// Conversation framing — CAST_LAYOUT in shared/envGeometry.js is the single
+// source of truth for both the sim render and the env-builder ghost cast.
+//   CHAR_A upstage centre (0, 0, -1), facing camera
+//   CHAR_B downstage left  (-1, 0, 0), turned 45° inward (+π/4)
+//   CHAR_C downstage right ( 1, 0, 0), turned 45° inward (-π/4)
+const SLOT_POSITIONS = Object.fromEntries(
+    Object.entries(CAST_LAYOUT).map(([slot, { pos }]) => [slot, pos])
+);
+const SLOT_ROT_Y = Object.fromEntries(
+    Object.entries(CAST_LAYOUT).map(([slot, { rotY }]) => [slot, rotY])
+);
+const ARCHETYPE_HEAD_LIFT_Y = 0.95;
+// SIM_CAMERA — eye-level, closer than the env-default DEFAULT_CAMERA.
+const INITIAL_CAM_POS    = new THREE.Vector3(...SIM_CAMERA.pos);
+const INITIAL_CAM_TARGET = new THREE.Vector3(...SIM_CAMERA.target);
 
 // Closed-mouth rest pose fed to non-speaking characters each tick so their
 // viseme shapes don't freeze mid-word when the speaker changes.
@@ -345,7 +346,7 @@ export class SimulationBridge extends BaseBridge {
         this._controls.enableDamping = true;
         this._controls.dampingFactor = 0.08;
         this._controls.minDistance   = 2;
-        this._controls.maxDistance   = 12;
+        this._controls.maxDistance   = ORBIT_MAX_DISTANCE;
         this._controls.maxPolarAngle = Math.PI * 0.85;
         this._controls.update();
 

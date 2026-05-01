@@ -57,18 +57,22 @@ export const DICE_ICON = `
 </svg>`;
 
 /**
- * Subtitle row used as a group header in tabs.
+ * Subtitle row used as a group header in tabs. Pass a falsy `surpriseKey` to
+ * omit the dice button (for static / read-only sections like the fixed Cast).
  *   <div class="cb-subtitle-row">
  *     <div class="cb-subtitle">TEXT</div>
- *     <button class="cb-field-surprise" data-surprise="key">🎲</button>
+ *     <button class="cb-field-surprise" data-surprise="key">🎲</button>   ← optional
  *   </div>
  */
 export function renderSubtitle(text, surpriseKey) {
+    const dice = surpriseKey
+        ? `<button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}"
+               aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>`
+        : '';
     return `
         <div class="cb-subtitle-row">
             <div class="cb-subtitle">${_esc(text)}</div>
-            <button type="button" class="cb-field-surprise" data-surprise="${surpriseKey}"
-                    aria-label="Surprise me" title="Surprise me">${DICE_ICON}</button>
+            ${dice}
         </div>`;
 }
 

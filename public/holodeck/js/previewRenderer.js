@@ -47,7 +47,10 @@ import {
     cellToWorld as _envCellToWorld,
     inCameraCorridor as _envInCameraCorridor,
     DEFAULT_CAMERA,
-} from './shared/envGeometry.js?v=2';
+    SIM_CAMERA,
+    CAST_LAYOUT,
+    ORBIT_MAX_DISTANCE,
+} from './shared/envGeometry.js?v=3';
 
 let _renderer = null;
 let _scene    = null;
@@ -304,7 +307,7 @@ export function showPreview(container, asset, opts = {}) {
     _controls.enableDamping = true;
     _controls.dampingFactor = 0.08;
     _controls.minDistance   = 1.5;
-    _controls.maxDistance   = 8;
+    _controls.maxDistance   = ORBIT_MAX_DISTANCE;
     _controls.maxPolarAngle = Math.PI * 0.85;
     _autoSpin = true;
     _pingPongAngle = 0;
@@ -2190,19 +2193,16 @@ export function isPreviewSimulationPlaying() {
 }
 
 // ── Simulation preview ───────────────────────────────────────────
-// Three characters arranged like the env builder's default cast: a row
-// across the middle of the BINGO stage at z=0, matching cells I3/N3/G3.
-// Keep these in sync with SimulationBridge.
-//   I3 → (-1, 0, 0) — CHAR_B, left
-//   N3 → ( 0, 0, 0) — CHAR_A, centre
-//   G3 → ( 1, 0, 0) — CHAR_C, right
-const _SIM_SLOT_POSITIONS = {
-    CHAR_B: [-1.0, 0, 0.0],
-    CHAR_A: [ 0.0, 0, 0.0],
-    CHAR_C: [ 1.0, 0, 0.0],
-};
-// All face the camera (no inward turn — matches the env builder reference).
-const _SIM_SLOT_ROT_Y = { CHAR_B: 0, CHAR_A: 0, CHAR_C: 0 };
+// Cast positions + rotations come from CAST_LAYOUT in shared/envGeometry.js
+// so the sim render and the env-builder ghost-cast preview stay in sync.
+// Conversation arrangement: CHAR_A upstage centre (0, 0, -1), CHAR_B/C
+// downstage flanks turned 45° inward.
+const _SIM_SLOT_POSITIONS = Object.fromEntries(
+    Object.entries(CAST_LAYOUT).map(([slot, { pos }]) => [slot, pos])
+);
+const _SIM_SLOT_ROT_Y = Object.fromEntries(
+    Object.entries(CAST_LAYOUT).map(([slot, { rotY }]) => [slot, rotY])
+);
 const _SIM_ARCHETYPE_LIFT_Y = 0.95;
 
 async function _resolveSimAsset(refs, type, id) {
@@ -2219,18 +2219,17 @@ async function _resolveSimAsset(refs, type, id) {
 }
 
 function _applySimCamera() {
-    // Square-on DEFAULT_CAMERA — matches the blank Scene3D pose so the
-    // home-screen sim doesn't visually jolt as the placeholder gives way
-    // to the loaded simulation. Target sits at chest height (y=0.9) so the
-    // whole cast lands centered in frame.
-    _camera.position.set(...DEFAULT_CAMERA.pos);
-    _camera.lookAt(...DEFAULT_CAMERA.target);
-    _camera.fov = DEFAULT_CAMERA.fov;
+    // SIM_CAMERA — eye-level, closer than DEFAULT_CAMERA. Frames the cast
+    // conversation rather than the whole stage. Single source of truth in
+    // shared/envGeometry.js — change there to retune all sim playback.
+    _camera.position.set(...SIM_CAMERA.pos);
+    _camera.lookAt(...SIM_CAMERA.target);
+    _camera.fov = SIM_CAMERA.fov;
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
         _controls.enabled = true;
-        _controls.target.set(...DEFAULT_CAMERA.target);
+        _controls.target.set(...SIM_CAMERA.target);
         _controls.update();
     }
 }
