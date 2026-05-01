@@ -9,10 +9,10 @@
     "clinical"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A sickly-sweet pastel clinic where enormous tools float above a single velvet chair.",
@@ -40,6 +40,7 @@
       "orbIntensity": 2,
       "orbHeight": 2.7,
       "orbFlicker": false,
+      "scaleClass": 0.55,
       "props": [
         {
           "assetId": "prop_chair_batch",
@@ -49,7 +50,7 @@
             "y": 0,
             "z": 0
           },
-          "scale": 1.2,
+          "scale": 0.66,
           "density": "med"
         },
         {
@@ -60,7 +61,7 @@
             "y": 0,
             "z": -1
           },
-          "scale": 1.2,
+          "scale": 0.66,
           "density": "med"
         },
         {
@@ -71,7 +72,7 @@
             "y": 0,
             "z": 0
           },
-          "scale": 0.9,
+          "scale": 0.5,
           "density": "med"
         },
         {
@@ -82,7 +83,7 @@
             "y": 0,
             "z": 0
           },
-          "scale": 0.9,
+          "scale": 0.5,
           "density": "med"
         },
         {
@@ -93,7 +94,7 @@
             "y": 0,
             "z": -2
           },
-          "scale": 1,
+          "scale": 0.55,
           "density": "med"
         }
       ],
@@ -102,13 +103,13 @@
           "assetId": "prop_flower_batch",
           "mode": "tile",
           "density": "low",
-          "scale": 1
+          "scale": 0.55
         },
         {
           "assetId": "prop_mug_batch",
           "mode": "scatter",
           "density": "low",
-          "scale": 1
+          "scale": 0.55
         },
         {
           "assetId": "none",

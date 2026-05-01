@@ -24,7 +24,9 @@ import {
     STAGE_SIZE,
     cellToWorld as _cellToWorld,
     inCameraCorridor as _inCameraCorridor,
-} from './envGeometry.js?v=4';
+    propHeightCap,
+    groundObjHeightCap,
+} from './envGeometry.js?v=5';
 
 const WALL_THICK  = 0.25;
 const SKY_RADIUS  = 50;
@@ -40,8 +42,8 @@ const WEATHER_CFG = {
 };
 
 // Stage + ground scatter/tile constants — must match EnvironmentBridge.
-const PROP_HEIGHT_CAP        = 0.6;
-const GROUND_OBJ_HEIGHT_CAP  = 1.5;
+// Height caps live in shared/envGeometry.js (scaleClass-aware) and are read
+// at render-time below via propHeightCap / groundObjHeightCap.
 const SCATTER_COUNTS         = { low: 6, med: 14, high: 28 };
 const TILE_SPACING           = { low: 3.5, med: 2.5, high: 1.8 };
 const STAGE_SCATTER_COUNTS   = { low: 3, med: 6, high: 10 };
@@ -602,6 +604,7 @@ export function buildEnvScene(scene, asset) {
 
             const baseScale = slot.scale ?? 1.0;
             const templateH = template.userData._templateHeight || 1;
+            const propCap   = propHeightCap(s.scaleClass);
 
             if (slot.mode === 'place') {
                 if (!slot.cell) { _disposeGroup(template); continue; }
@@ -611,7 +614,7 @@ export function buildEnvScene(scene, asset) {
                 clone.position.set(pos.x, 0, pos.z);
                 clone.rotation.y = Math.random() * Math.PI * 2;
                 let sc = baseScale;
-                if (templateH * sc > PROP_HEIGHT_CAP) sc = PROP_HEIGHT_CAP / templateH;
+                if (templateH * sc > propCap) sc = propCap / templateH;
                 clone.scale.set(sc, sc, sc);
                 group.add(clone);
                 propMeshes.push(clone);
@@ -625,7 +628,7 @@ export function buildEnvScene(scene, asset) {
                     clone.position.set(pt.x, 0, pt.z);
                     clone.rotation.y = pt.rotY;
                     let sc = isScatter ? baseScale * (0.7 + Math.random() * 0.6) : baseScale;
-                    if (templateH * sc > PROP_HEIGHT_CAP) sc = PROP_HEIGHT_CAP / templateH;
+                    if (templateH * sc > propCap) sc = propCap / templateH;
                     clone.scale.set(sc, sc, sc);
                     group.add(clone);
                     propMeshes.push(clone);
@@ -658,12 +661,13 @@ export function buildEnvScene(scene, asset) {
             const baseScale = slot.scale ?? 1.0;
             const isScatter = slot.mode !== 'tile';
             const templateH = template.userData._templateHeight || 1;
+            const groundCap = groundObjHeightCap(s.scaleClass);
             for (const pt of points) {
                 const clone = template.clone();
                 clone.position.set(pt.x, 0, pt.z);
                 clone.rotation.y = pt.rotY;
                 let sc = isScatter ? baseScale * (0.7 + Math.random() * 0.6) : baseScale;
-                if (templateH * sc > GROUND_OBJ_HEIGHT_CAP) sc = GROUND_OBJ_HEIGHT_CAP / templateH;
+                if (templateH * sc > groundCap) sc = groundCap / templateH;
                 clone.scale.set(sc, sc, sc);
                 clone.userData._worldHeight = templateH * sc;
                 group.add(clone);

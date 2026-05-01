@@ -9,10 +9,10 @@
     "white"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A palace of columns and fountains floating in a lavender sea of clouds.",
@@ -45,6 +45,7 @@
       "orbIntensity": 1.5,
       "orbHeight": 2.8,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_fountain",

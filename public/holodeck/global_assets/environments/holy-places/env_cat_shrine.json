@@ -9,10 +9,10 @@
     "offerings"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A small stone shrine overflowing with offerings of mugs, flowers, and one unimpressed cat statue.",
@@ -43,6 +43,7 @@
       "orbIntensity": 1.3,
       "orbHeight": 2.2,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_shrine",

@@ -9,10 +9,10 @@
     "overgrown"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A rusted swing set in fog, stumps and logs crooked at odd angles, something watching from the slide.",
@@ -40,6 +40,7 @@
       "orbIntensity": 1.4,
       "orbHeight": 2.4,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_scaffold",

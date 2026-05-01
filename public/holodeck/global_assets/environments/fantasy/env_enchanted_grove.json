@@ -9,10 +9,10 @@
     "green"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A moonlit grove where glowing mushrooms and spirit orbs hover between ancient oaks.",
@@ -40,6 +40,7 @@
       "orbIntensity": 1.9,
       "orbHeight": 2.5,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_magic_portal_batch",

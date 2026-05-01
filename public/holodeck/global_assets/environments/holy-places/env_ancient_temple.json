@@ -9,10 +9,10 @@
     "sand"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "Weathered sandstone columns and silent stone heads under a brass-coloured sky.",
@@ -41,6 +41,7 @@
       "fogColor": "#c8a068",
       "fogDensity": 0.03,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_obelisk",

@@ -9,10 +9,10 @@
     "noir"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A mint-green banker-lamp basement stacked with manuscripts, beige walls, one desk.",
@@ -38,6 +38,7 @@
       "orbIntensity": 1.8,
       "orbHeight": 1.6,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_table_batch",

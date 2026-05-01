@@ -9,10 +9,10 @@
     "pastel"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A powder-blue snowbowl under a cotton-candy sunrise with drifting flurries.",
@@ -40,6 +40,7 @@
       "fogDensity": 0.03,
       "weather": "snow",
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_pine_tree_batch",

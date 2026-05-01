@@ -9,10 +9,10 @@
     "tar"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A tar-paper rooftop crowded with wire coops, a cracked fire pit, and a forest of TV antennas.",
@@ -39,6 +39,7 @@
       "fogColor": "#b8a898",
       "fogDensity": 0.03,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_nest",

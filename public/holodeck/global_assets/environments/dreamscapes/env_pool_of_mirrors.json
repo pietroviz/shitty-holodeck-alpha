@@ -9,10 +9,10 @@
     "mauve"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A still silver lagoon reflecting a mauve twilight — no horizon, just echoes.",
@@ -43,6 +43,7 @@
       "orbIntensity": 1.2,
       "orbHeight": 2.2,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_pond_batch",

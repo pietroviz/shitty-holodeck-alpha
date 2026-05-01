@@ -9,10 +9,10 @@
     "surreal"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An impossible atrium of stone steps that meet in directions that stop making sense if you stare.",
@@ -38,6 +38,7 @@
       "fogColor": "#9c9488",
       "fogDensity": 0.04,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_column",

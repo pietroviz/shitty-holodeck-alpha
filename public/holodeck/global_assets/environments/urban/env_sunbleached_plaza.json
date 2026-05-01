@@ -9,10 +9,10 @@
     "dusty"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A terracotta square baking under a peach sun, dust motes drifting between arches.",
@@ -41,6 +41,7 @@
       "fogColor": "#e0b890",
       "fogDensity": 0.015,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_fountain",

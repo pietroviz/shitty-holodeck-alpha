@@ -26,29 +26,9 @@ const CATEGORY_LABELS = {
   playful:            'Playful Spaces',
 };
 
-const PROP_SLOTS   = 5;
-const GROUND_SLOTS = 3;
-
-function propArr(items = []) {
-  const out = [];
-  for (let i = 0; i < PROP_SLOTS; i++) {
-    const it = items[i];
-    out.push(it
-      ? { assetId: it.id, mode: 'place', cell: it.cell, scale: it.scale ?? 1.0, density: 'med' }
-      : { assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med' });
-  }
-  return out;
-}
-function groundArr(items = []) {
-  const out = [];
-  for (let i = 0; i < GROUND_SLOTS; i++) {
-    const it = items[i];
-    out.push(it
-      ? { assetId: it.id, mode: it.mode ?? 'scatter', density: it.density ?? 'med', scale: it.scale ?? 1.0 }
-      : { assetId: 'none', mode: 'scatter', density: 'med', scale: 1.0 });
-  }
-  return out;
-}
+// Shared emitter — handles cell-coord schema (BINGO → {x,y,z}) and
+// scale-class detection from the env's name/tags.
+const { emitEnv } = require('./lib/env-emit.js');
 
 const BATCH = [
 
@@ -1111,11 +1091,9 @@ const BATCH = [
 
 // ── Build file JSON ─────────────────────────────────────────────
 function buildAsset(spec) {
-  const state = {
-    ...spec.state,
-    props:         propArr(spec.props),
-    groundObjects: groundArr(spec.ground),
-  };
+  // emitEnv normalises cells to {x,y,z}, applies the env's scale class
+  // multiplier, and stamps `scaleClass` onto the state.
+  const { state } = emitEnv(spec);
   return {
     id: spec.id,
     type: 'environment',
@@ -1125,7 +1103,7 @@ function buildAsset(spec) {
       created: NOW,
       modified: NOW,
       origin: 'template',
-      version: 1,
+      version: 2,    // schema v2: integer cell coords + scaleClass
     },
     payload: {
       description: spec.description,

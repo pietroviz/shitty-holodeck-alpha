@@ -9,10 +9,10 @@
     "cyan"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An endless sepia hallway ticking under cyan-bulb lamps; time pools on the floor.",
@@ -42,6 +42,7 @@
       "orbIntensity": 1.8,
       "orbHeight": 2.4,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_pictureframe_batch",

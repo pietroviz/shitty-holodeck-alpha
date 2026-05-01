@@ -50,7 +50,9 @@ import {
     SIM_CAMERA,
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
-} from './shared/envGeometry.js?v=4';
+    propHeightCap,
+    groundObjHeightCap,
+} from './shared/envGeometry.js?v=5';
 
 let _renderer = null;
 let _scene    = null;
@@ -1019,8 +1021,9 @@ const _ENV_ORB_RANGE    = 9;
 const _ENV_SKY_RADIUS   = 50;
 
 // Density + size constants (mirror EnvironmentBridge)
-const _ENV_GROUND_HEIGHT_CAP = 1.5;
-const _ENV_PROP_HEIGHT_CAP   = 0.6;
+// Height caps are scaleClass-aware — see propHeightCap / groundObjHeightCap
+// imported from shared/envGeometry.js. The site-local references below pass
+// the env's scaleClass through.
 const _ENV_SCATTER_COUNTS    = { low: 6, med: 14, high: 28 };
 const _ENV_TILE_SPACING      = { low: 3.5, med: 2.5, high: 1.8 };
 const _ENV_STAGE_SCATTER     = { low: 3, med: 6, high: 10 };
@@ -1631,6 +1634,7 @@ async function _buildEnvironmentPreview(asset) {
     if (_envPreview !== previewRef) return;  // preview changed while awaiting
 
     // ── Props on stage ──
+    const propCap   = propHeightCap(s.scaleClass);
     const usedCells = new Set(
         (s.cast || []).filter(c => c?.cell).map(c => c.cell)
     );
@@ -1659,7 +1663,7 @@ async function _buildEnvironmentPreview(asset) {
             clone.position.set(pos.x, 0, pos.z);
             clone.rotation.y = Math.random() * Math.PI * 2;
             let sc = baseScale;
-            if (templateH * sc > _ENV_PROP_HEIGHT_CAP) sc = _ENV_PROP_HEIGHT_CAP / templateH;
+            if (templateH * sc > propCap) sc = propCap / templateH;
             clone.scale.set(sc, sc, sc);
             _previewGroup.add(clone);
             _envPreview.props.push(clone);
@@ -1675,7 +1679,7 @@ async function _buildEnvironmentPreview(asset) {
                 let sc = isScatter
                     ? baseScale * (0.7 + Math.random() * 0.6)
                     : baseScale;
-                if (templateH * sc > _ENV_PROP_HEIGHT_CAP) sc = _ENV_PROP_HEIGHT_CAP / templateH;
+                if (templateH * sc > propCap) sc = propCap / templateH;
                 clone.scale.set(sc, sc, sc);
                 _previewGroup.add(clone);
                 _envPreview.props.push(clone);
@@ -1685,6 +1689,7 @@ async function _buildEnvironmentPreview(asset) {
     }
 
     // ── Ground objects ──
+    const groundCap = groundObjHeightCap(s.scaleClass);
     const groundHalf = (s.groundSize ?? 19) / 2;
     const stageHalf  = _ENV_STAGE_SIZE / 2 + 0.5;
     const groundSlots = s.groundObjects || [];
@@ -1714,7 +1719,7 @@ async function _buildEnvironmentPreview(asset) {
             let sc = isScatter
                 ? baseScale * (0.7 + Math.random() * 0.6)
                 : baseScale;
-            if (templateH * sc > _ENV_GROUND_HEIGHT_CAP) sc = _ENV_GROUND_HEIGHT_CAP / templateH;
+            if (templateH * sc > groundCap) sc = groundCap / templateH;
             clone.scale.set(sc, sc, sc);
             clone.userData._worldHeight = templateH * sc;
             _previewGroup.add(clone);

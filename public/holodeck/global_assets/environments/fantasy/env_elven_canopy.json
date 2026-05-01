@@ -9,10 +9,10 @@
     "gold"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An emerald cathedral of trees spangled with golden leaves and dust-shafted light.",
@@ -42,6 +42,7 @@
       "orbIntensity": 1,
       "orbHeight": 2.6,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_oak_tree_batch",

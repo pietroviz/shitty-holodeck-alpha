@@ -39,7 +39,9 @@ import {
     DEFAULT_CAMERA,
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
-} from '../shared/envGeometry.js?v=4';
+    propHeightCap,
+    groundObjHeightCap,
+} from '../shared/envGeometry.js?v=5';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -208,9 +210,9 @@ const _SCATTER_COUNTS = { low: 6, med: 14, high: 28 };
 const _TILE_SPACING   = { low: 3.5, med: 2.5, high: 1.8 };
 
 // Stage set-dressing constants
-const PROP_SLOT_COUNT = 5;             // 5 prop slots per env — PROP_A..PROP_E in the upcoming script/camera format
-const PROP_HEIGHT_CAP = 0.6;            // max height in world units (~waist height, won't block cast faces)
-const GROUND_OBJ_HEIGHT_CAP  = 1.5;    // max height for ground plane objects
+const PROP_SLOT_COUNT = 5;             // 5 prop slots per env — PROP_A..PROP_E
+// Height caps live in shared/envGeometry.js — propHeightCap(scaleClass) and
+// groundObjHeightCap(scaleClass) so a "Giant Mushroom Forest" reads big.
 const _STAGE_SCATTER_COUNTS = { low: 3, med: 6, high: 10 };
 const _STAGE_TILE_SPACING   = { low: 2.0, med: 1.4, high: 1.0 };
 
@@ -343,6 +345,11 @@ export class EnvironmentBridge extends BaseBridge {
             orbHeight:      Math.min(ORB_HEIGHT_MAX, Math.max(ORB_HEIGHT_MIN,
                                 d.orbHeight ?? DEFAULT_ORB_HEIGHT)),
             orbFlicker:     d.orbFlicker    ?? DEFAULT_ORB_FLICKER,
+            // World-scale hint set by the generator from env name keywords
+            // ("Giant Mushroom Forest" → 2.0; "Doll's House Diner" → 0.55).
+            // Multiplies the prop / ground-object height caps so big envs
+            // get big props. Defaults to 1.0 for legacy envs / user envs.
+            scaleClass:     d.scaleClass    ?? 1.0,
         };
 
         // Texture options cache (loaded with palette in _buildScene)
@@ -1255,6 +1262,7 @@ export class EnvironmentBridge extends BaseBridge {
 
             const baseScale = slot.scale ?? 1.0;
             const templateH = template.userData._templateHeight || 1;
+            const cap       = propHeightCap(this._state.scaleClass);
 
             if (slot.mode === 'place') {
                 // Single placement on a specific cell
@@ -1266,11 +1274,9 @@ export class EnvironmentBridge extends BaseBridge {
                 clone.position.set(pos.x, 0, pos.z);
                 clone.rotation.y = Math.random() * Math.PI * 2;
 
-                // Height-cap: scale down if it would exceed the cap
+                // Height-cap (scaleClass-aware): scale down if exceeded
                 let s = baseScale;
-                if (templateH * s > PROP_HEIGHT_CAP) {
-                    s = PROP_HEIGHT_CAP / templateH;
-                }
+                if (templateH * s > cap) s = cap / templateH;
                 clone.scale.set(s, s, s);
                 this._scene.add(clone);
                 this._propMeshes.push(clone);
@@ -1289,10 +1295,7 @@ export class EnvironmentBridge extends BaseBridge {
                     let s = isScatter
                         ? baseScale * (0.7 + Math.random() * 0.6)
                         : baseScale;
-                    // Height-cap
-                    if (templateH * s > PROP_HEIGHT_CAP) {
-                        s = PROP_HEIGHT_CAP / templateH;
-                    }
+                    if (templateH * s > cap) s = cap / templateH;
                     clone.scale.set(s, s, s);
                     this._scene.add(clone);
                     this._propMeshes.push(clone);
@@ -1434,6 +1437,7 @@ export class EnvironmentBridge extends BaseBridge {
 
             const baseScale = slot.scale ?? 1.0;
             const isScatter = slot.mode !== 'tile';
+            const groundCap = groundObjHeightCap(this._state.scaleClass);
             for (const pt of points) {
                 // Auto-cull: skip points inside the camera corridor
                 if (_inCameraCorridor(pt.x, pt.z, stageHalf)) continue;
@@ -1447,10 +1451,8 @@ export class EnvironmentBridge extends BaseBridge {
                 let s = isScatter
                     ? baseScale * (0.7 + Math.random() * 0.6)
                     : baseScale;
-                // Height-cap: scale down if it would exceed the ground object cap
-                if (templateH * s > GROUND_OBJ_HEIGHT_CAP) {
-                    s = GROUND_OBJ_HEIGHT_CAP / templateH;
-                }
+                // Height-cap (scaleClass-aware): clamp tall ground objects
+                if (templateH * s > groundCap) s = groundCap / templateH;
                 clone.scale.set(s, s, s);
 
                 // Store actual world height for dynamic camera culling

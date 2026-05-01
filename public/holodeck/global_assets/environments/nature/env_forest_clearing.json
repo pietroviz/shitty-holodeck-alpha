@@ -9,10 +9,10 @@
     "peaceful"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A sun-dappled clearing ringed by pine and oak, with moss-covered stumps and wildflowers.",
@@ -39,6 +39,7 @@
       "fogColor": "#a8c890",
       "fogDensity": 0.02,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_stump_batch",

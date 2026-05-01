@@ -9,10 +9,10 @@
     "purple"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A floor of violet glass spirals downward into a mint-green event horizon.",
@@ -40,6 +40,7 @@
       "orbIntensity": 2,
       "orbHeight": 2.8,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_magic_portal_batch",

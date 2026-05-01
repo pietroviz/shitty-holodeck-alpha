@@ -9,10 +9,10 @@
     "silver"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A perfectly still silver lake reflecting a pale dawn sky.",
@@ -39,6 +39,7 @@
       "fogColor": "#c8d4dc",
       "fogDensity": 0.04,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_stone_statue",

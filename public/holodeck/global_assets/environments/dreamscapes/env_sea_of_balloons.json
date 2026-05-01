@@ -9,10 +9,10 @@
     "bright"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An impossibly blue sky packed shoulder-to-shoulder with drifting coloured orbs as far as the horizon.",
@@ -43,6 +43,7 @@
       "orbIntensity": 1.8,
       "orbHeight": 2.8,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_magic_orb_batch",

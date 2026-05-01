@@ -9,10 +9,10 @@
     "candles"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A carpeted basement cleared for ritual — folding chairs in a circle, a ring of candles, suspiciously fresh flowers.",
@@ -42,6 +42,7 @@
       "orbIntensity": 1.7,
       "orbHeight": 2.2,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_candle_batch",

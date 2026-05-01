@@ -9,10 +9,10 @@
     "cold"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A sterile chrome-and-grey docking bay with warning lights and stacked cargo crates.",
@@ -40,6 +40,7 @@
       "orbIntensity": 1.6,
       "orbHeight": 2.6,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_crate",

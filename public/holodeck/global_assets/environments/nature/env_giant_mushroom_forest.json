@@ -9,10 +9,10 @@
     "whimsical"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "Towering red-capped mushrooms taller than pines, dappled light spilling through their stems.",
@@ -39,6 +39,7 @@
       "fogColor": "#5a7030",
       "fogDensity": 0.02,
       "orbVisible": false,
+      "scaleClass": 2,
       "props": [
         {
           "assetId": "prop_magic_mushroom_batch",
@@ -48,7 +49,7 @@
             "y": 0,
             "z": -2
           },
-          "scale": 1.6,
+          "scale": 3.2,
           "density": "med"
         },
         {
@@ -59,7 +60,7 @@
             "y": 0,
             "z": -1
           },
-          "scale": 1.4,
+          "scale": 2.8,
           "density": "med"
         },
         {
@@ -70,7 +71,7 @@
             "y": 0,
             "z": -1
           },
-          "scale": 1.4,
+          "scale": 2.8,
           "density": "med"
         },
         {
@@ -81,7 +82,7 @@
             "y": 0,
             "z": 0
           },
-          "scale": 1,
+          "scale": 2,
           "density": "med"
         },
         {
@@ -92,7 +93,7 @@
             "y": 0,
             "z": 2
           },
-          "scale": 1,
+          "scale": 2,
           "density": "med"
         }
       ],
@@ -101,19 +102,19 @@
           "assetId": "prop_mushroom_batch",
           "mode": "scatter",
           "density": "high",
-          "scale": 1
+          "scale": 2
         },
         {
           "assetId": "prop_grass_patch_batch",
           "mode": "scatter",
           "density": "high",
-          "scale": 1
+          "scale": 2
         },
         {
           "assetId": "prop_flower_batch",
           "mode": "scatter",
           "density": "med",
-          "scale": 1
+          "scale": 2
         }
       ]
     }

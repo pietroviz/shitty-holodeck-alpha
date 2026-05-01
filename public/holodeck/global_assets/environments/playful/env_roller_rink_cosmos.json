@@ -9,10 +9,10 @@
     "cyan-pink"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A mirror-ball roller rink: hot-pink and cyan shafts carve a starfield floor.",
@@ -42,6 +42,7 @@
       "orbIntensity": 2.4,
       "orbHeight": 2.8,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_magic_orb_batch",

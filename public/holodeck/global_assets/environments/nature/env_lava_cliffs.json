@@ -9,10 +9,10 @@
     "molten"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "Black obsidian cliffs bleeding veins of molten orange into a choking ash sky.",
@@ -43,6 +43,7 @@
       "orbIntensity": 2.2,
       "orbHeight": 2.4,
       "orbFlicker": true,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_fire_pit",

@@ -9,10 +9,10 @@
     "grey"
   ],
   "meta": {
-    "created": "2026-04-22T17:08:51.196Z",
-    "modified": "2026-04-22T17:08:51.196Z",
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "Raked grey gravel, moss stones, and a single shrine under a soft pale sky.",
@@ -34,6 +34,7 @@
       "dirIntensity": 0.8,
       "fogEnabled": false,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_shrine",

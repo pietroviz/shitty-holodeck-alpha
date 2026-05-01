@@ -9,10 +9,10 @@
     "bright"
   ],
   "meta": {
-    "created": "2026-04-22T17:55:23.349Z",
-    "modified": "2026-04-22T17:55:23.349Z",
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An airy loft of splattered floors, leaning canvases, and half-full coffee mugs on every surface.",
@@ -39,6 +39,7 @@
       "dirIntensity": 1,
       "fogEnabled": false,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_pictureframe_batch",

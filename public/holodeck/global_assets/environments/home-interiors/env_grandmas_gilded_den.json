@@ -9,10 +9,10 @@
     "gold"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "A rust-velvet sitting room dripping with gold trim, doilies, and the smell of butter.",
@@ -40,6 +40,7 @@
       "orbIntensity": 1.4,
       "orbHeight": 2.2,
       "orbFlicker": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_sofa_batch",

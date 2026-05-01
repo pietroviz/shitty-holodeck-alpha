@@ -78,6 +78,27 @@ export const SIM_CAMERA = Object.freeze({
 // users can pull back far enough to read the whole stage + walls + sky.
 export const ORBIT_MAX_DISTANCE = 50;
 
+// ── Prop / ground height caps ─────────────────────────────────────
+// Stage props are clamped low (≈ 0.6 m) so they don't block cast faces.
+// Ground objects scatter outside the stage and get a more generous cap
+// so trees / lamps / pillars read at proper height.
+//
+// Both caps are *base values* — multiplied by the env's `scaleClass` at
+// runtime so a "Giant Mushroom Forest" actually has 3 m mushrooms, not
+// 1.5 m clamped stumps.
+export const PROP_HEIGHT_CAP_BASE       = 0.6;
+export const GROUND_OBJ_HEIGHT_CAP_BASE = 1.5;
+
+/** Effective stage-prop height cap for an env at the given scaleClass. */
+export function propHeightCap(scaleClass = 1.0) {
+    return PROP_HEIGHT_CAP_BASE * (scaleClass || 1.0);
+}
+
+/** Effective ground-object height cap for an env at the given scaleClass. */
+export function groundObjHeightCap(scaleClass = 1.0) {
+    return GROUND_OBJ_HEIGHT_CAP_BASE * (scaleClass || 1.0);
+}
+
 /**
  * Build a per-builder camera by sliding the default forward/backward along Z.
  * Negative `forwardOffset` pulls the camera *closer* to the stage (tighter

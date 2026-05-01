@@ -18,7 +18,7 @@ import { standard } from '../shared/materials.js';
 import { renderProp } from '../shared/propRenderer.js';
 import { BUILDERS, PRIMITIVE_IDS, buildMesh } from '../shared/primitives.js';
 import { loadPalette, paletteGridHtml } from '../shared/paletteLoader.js';
-import { ORBIT_MAX_DISTANCE } from '../shared/envGeometry.js?v=4';
+import { ORBIT_MAX_DISTANCE } from '../shared/envGeometry.js?v=5';
 
 // ── Tab definitions ─────────────────────────────────────────────
 const TABS = [

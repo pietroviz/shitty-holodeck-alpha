@@ -9,10 +9,10 @@
     "sun"
   ],
   "meta": {
-    "created": "2026-04-22T05:16:25.944Z",
-    "modified": "2026-04-22T05:16:25.944Z",
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
     "origin": "template",
-    "version": 1
+    "version": 2
   },
   "payload": {
     "description": "An ochre maze carved under a blood-red sun — stone corridors hum with heat.",
@@ -39,6 +39,7 @@
       "fogColor": "#783018",
       "fogDensity": 0.025,
       "orbVisible": false,
+      "scaleClass": 1,
       "props": [
         {
           "assetId": "prop_ruins",
