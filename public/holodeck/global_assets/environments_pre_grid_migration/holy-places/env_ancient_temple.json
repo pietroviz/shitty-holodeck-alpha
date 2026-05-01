@@ -1,0 +1,103 @@
+{
+  "id": "env_ancient_temple",
+  "type": "environment",
+  "name": "Ancient Temple",
+  "tags": [
+    "holy",
+    "temple",
+    "stone",
+    "sand"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Weathered sandstone columns and silent stone heads under a brass-coloured sky.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#9a7a4e",
+      "stageColor": "#c8a068",
+      "wallColor": "#a88868",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#ffd898",
+      "windowOpacity": 0.4,
+      "skyTop": "#dcb86a",
+      "skyMid": "#f0d490",
+      "skyBot": "#ffe8b0",
+      "fxPreset": "dusk",
+      "sunColor": "#ffb860",
+      "sunElevation": 22,
+      "sunVisible": true,
+      "ambientColor": "#e0b870",
+      "ambientIntensity": 1,
+      "dirColor": "#ffd080",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#c8a068",
+      "fogDensity": 0.03,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_obelisk",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stone_head",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stone_head",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_ruins",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_column",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rock_large_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

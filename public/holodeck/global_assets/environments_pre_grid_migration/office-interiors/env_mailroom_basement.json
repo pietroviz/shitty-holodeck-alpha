@@ -1,0 +1,104 @@
+{
+  "id": "env_mailroom_basement",
+  "type": "environment",
+  "name": "Mailroom Basement",
+  "tags": [
+    "office",
+    "mailroom",
+    "basement",
+    "parcels"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A cramped sub-basement mailroom stacked with parcels, a single dented mailbox overseeing it all.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#605448",
+      "stageColor": "#80705c",
+      "wallColor": "#5a4c3c",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#f8d068",
+      "windowOpacity": 0.35,
+      "skyTop": "#0a0804",
+      "skyMid": "#1a140c",
+      "skyBot": "#302418",
+      "fxPreset": "night",
+      "ambientColor": "#b09878",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffc878",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#1a140c",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#ffc878",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_mailbox",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crate",
+          "mode": "tile",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "id": "env_haunted_playground",
+  "type": "environment",
+  "name": "Haunted Playground",
+  "tags": [
+    "playful",
+    "haunted",
+    "abandoned",
+    "overgrown"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A rusted swing set in fog, stumps and logs crooked at odd angles, something watching from the slide.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a4a38",
+      "stageColor": "#586858",
+      "wallColor": "#4a4638",
+      "groundSize": 21,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#202a30",
+      "skyMid": "#384848",
+      "skyBot": "#5a6058",
+      "fxPreset": "night",
+      "ambientColor": "#708078",
+      "ambientIntensity": 0.8,
+      "dirColor": "#b0b890",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#3a4840",
+      "fogDensity": 0.08,
+      "orbVisible": true,
+      "orbColor": "#b0d880",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

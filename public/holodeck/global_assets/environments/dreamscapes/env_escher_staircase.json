@@ -42,35 +42,55 @@
         {
           "assetId": "prop_column",
           "mode": "place",
-          "cell": "B2",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -1
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_column",
           "mode": "place",
-          "cell": "O2",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -1
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_obelisk",
           "mode": "place",
-          "cell": "N1",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_stone_statue",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_bridge",
           "mode": "place",
-          "cell": "B5",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
           "scale": 1,
           "density": "med"
         }

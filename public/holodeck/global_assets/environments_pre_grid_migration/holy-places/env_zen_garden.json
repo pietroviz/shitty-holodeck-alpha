@@ -1,0 +1,96 @@
+{
+  "id": "env_zen_garden",
+  "type": "environment",
+  "name": "Zen Garden",
+  "tags": [
+    "holy",
+    "garden",
+    "minimal",
+    "grey"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Raked grey gravel, moss stones, and a single shrine under a soft pale sky.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#c8c4b8",
+      "stageColor": "#e0dcd0",
+      "wallColor": "#8a8678",
+      "groundSize": 19,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#d4d8dc",
+      "skyMid": "#e8ecf0",
+      "skyBot": "#f4f4ec",
+      "fxPreset": "dawn",
+      "ambientColor": "#e0ddd5",
+      "ambientIntensity": 1.2,
+      "dirColor": "#fff4e0",
+      "dirIntensity": 0.8,
+      "fogEnabled": false,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_shrine",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pond_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stone_statue",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_bush_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

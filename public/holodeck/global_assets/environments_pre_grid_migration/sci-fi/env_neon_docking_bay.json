@@ -1,0 +1,104 @@
+{
+  "id": "env_neon_docking_bay",
+  "type": "environment",
+  "name": "Neon Docking Bay",
+  "tags": [
+    "sci-fi",
+    "neon",
+    "pink",
+    "teal"
+  ],
+  "meta": {
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A chrome hangar slathered in hot-pink and arctic-teal holos — boarding in T-minus.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#18202a",
+      "stageColor": "#ff2a88",
+      "wallColor": "#283240",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#2affe8",
+      "windowOpacity": 0.8,
+      "skyTop": "#060812",
+      "skyMid": "#281830",
+      "skyBot": "#ff2a88",
+      "fxPreset": "night",
+      "ambientColor": "#2affe8",
+      "ambientIntensity": 1,
+      "dirColor": "#ff2a88",
+      "dirIntensity": 1.2,
+      "fogEnabled": true,
+      "fogColor": "#0a0c18",
+      "fogDensity": 0.03,
+      "orbVisible": true,
+      "orbColor": "#ff2a88",
+      "orbIntensity": 2.4,
+      "orbHeight": 2.8,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crate",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

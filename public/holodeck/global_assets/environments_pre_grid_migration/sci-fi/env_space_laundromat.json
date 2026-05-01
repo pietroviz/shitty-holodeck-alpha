@@ -1,0 +1,104 @@
+{
+  "id": "env_space_laundromat",
+  "type": "environment",
+  "name": "Abandoned Space Laundromat",
+  "tags": [
+    "sci-fi",
+    "decay",
+    "neon",
+    "liminal"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Banks of cracked machines humming under dying fluorescents, a single sock drifting past the window.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#5a6068",
+      "stageColor": "#7a8088",
+      "wallColor": "#a4b0b8",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#80e8d0",
+      "windowOpacity": 0.4,
+      "skyTop": "#080a14",
+      "skyMid": "#141830",
+      "skyBot": "#2a3050",
+      "fxPreset": "night",
+      "ambientColor": "#80d4c0",
+      "ambientIntensity": 0.9,
+      "dirColor": "#b0f8e0",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#1a2030",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#90e8d0",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.8,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_trash_can",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

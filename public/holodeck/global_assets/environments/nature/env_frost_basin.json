@@ -44,21 +44,33 @@
         {
           "assetId": "prop_pine_tree_batch",
           "mode": "place",
-          "cell": "B1",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_pine_tree_batch",
           "mode": "place",
-          "cell": "O1",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_rock_small_batch",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 0.9,
           "density": "med"
         },

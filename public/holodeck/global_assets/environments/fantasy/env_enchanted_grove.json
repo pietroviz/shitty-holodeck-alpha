@@ -44,35 +44,55 @@
         {
           "assetId": "prop_magic_portal_batch",
           "mode": "place",
-          "cell": "N1",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_magic_mushroom_batch",
           "mode": "place",
-          "cell": "B3",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_magic_mushroom_batch",
           "mode": "place",
-          "cell": "O3",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_magic_orb_batch",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_totem_pole_batch",
           "mode": "place",
-          "cell": "B5",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
           "scale": 1,
           "density": "med"
         }

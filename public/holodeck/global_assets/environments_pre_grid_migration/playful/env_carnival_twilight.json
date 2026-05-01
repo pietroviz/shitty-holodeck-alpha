@@ -1,0 +1,107 @@
+{
+  "id": "env_carnival_twilight",
+  "type": "environment",
+  "name": "Carnival Twilight",
+  "tags": [
+    "playful",
+    "carnival",
+    "amber",
+    "cotton-candy"
+  ],
+  "meta": {
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A royal-blue fairground at twilight, gold lamps and candy-pink bunting everywhere.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a2458",
+      "stageColor": "#ffb430",
+      "wallColor": "#ff6898",
+      "groundSize": 23,
+      "walls": 2,
+      "windowStyle": "double",
+      "windowColor": "#ffd860",
+      "windowOpacity": 0.7,
+      "skyTop": "#0a0838",
+      "skyMid": "#4028a0",
+      "skyBot": "#ffac48",
+      "fxPreset": "dusk",
+      "sunColor": "#ffa030",
+      "sunElevation": 10,
+      "sunVisible": true,
+      "ambientColor": "#604090",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffbc58",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#281848",
+      "fogDensity": 0.02,
+      "orbVisible": true,
+      "orbColor": "#ffc058",
+      "orbIntensity": 2,
+      "orbHeight": 2.6,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_tent",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rainbow_arch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_tent",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

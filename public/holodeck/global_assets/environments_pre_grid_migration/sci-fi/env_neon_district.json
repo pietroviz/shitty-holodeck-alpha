@@ -1,0 +1,105 @@
+{
+  "id": "env_neon_district",
+  "type": "environment",
+  "name": "Neon District",
+  "tags": [
+    "sci-fi",
+    "cyberpunk",
+    "neon",
+    "rain"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A rain-slicked cyberpunk alley glowing with magenta signs and guttering lamp-posts.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#0a0818",
+      "stageColor": "#1a1430",
+      "wallColor": "#2a1848",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#ff50a4",
+      "windowOpacity": 0.65,
+      "skyTop": "#050410",
+      "skyMid": "#18082a",
+      "skyBot": "#50188c",
+      "fxPreset": "night",
+      "ambientColor": "#4a20a0",
+      "ambientIntensity": 0.8,
+      "dirColor": "#ff80d4",
+      "dirIntensity": 0.5,
+      "fogEnabled": true,
+      "fogColor": "#181030",
+      "fogDensity": 0.06,
+      "orbVisible": true,
+      "orbColor": "#ff40a0",
+      "orbIntensity": 2.4,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "weather": "rain",
+      "props": [
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dumpster",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_street_sign",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_trash_can",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

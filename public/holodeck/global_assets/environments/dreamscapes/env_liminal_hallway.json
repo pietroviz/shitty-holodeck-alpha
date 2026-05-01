@@ -44,35 +44,55 @@
         {
           "assetId": "prop_floorlamp_batch",
           "mode": "place",
-          "cell": "B1",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_floorlamp_batch",
           "mode": "place",
-          "cell": "O1",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_pictureframe_batch",
           "mode": "place",
-          "cell": "B3",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_pictureframe_batch",
           "mode": "place",
-          "cell": "O3",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_pottedplant_batch",
           "mode": "place",
-          "cell": "N1",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1,
           "density": "med"
         }

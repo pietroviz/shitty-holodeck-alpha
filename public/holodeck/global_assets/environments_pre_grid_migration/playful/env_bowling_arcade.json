@@ -1,0 +1,104 @@
+{
+  "id": "env_bowling_arcade",
+  "type": "environment",
+  "name": "Bowling Arcade",
+  "tags": [
+    "playful",
+    "arcade",
+    "neon",
+    "carpet"
+  ],
+  "meta": {
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A purple-carpet bowling alley pulsing with yellow neon and pinball cackles.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3018a8",
+      "stageColor": "#a04cff",
+      "wallColor": "#281860",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffe020",
+      "windowOpacity": 0.65,
+      "skyTop": "#0a0430",
+      "skyMid": "#3818a0",
+      "skyBot": "#ffe020",
+      "fxPreset": "night",
+      "ambientColor": "#6028d4",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffe020",
+      "dirIntensity": 0.8,
+      "fogEnabled": true,
+      "fogColor": "#180838",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#ffe020",
+      "orbIntensity": 2.2,
+      "orbHeight": 2.8,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

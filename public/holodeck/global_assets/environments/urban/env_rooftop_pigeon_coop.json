@@ -43,35 +43,55 @@
         {
           "assetId": "prop_nest",
           "mode": "place",
-          "cell": "N1",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_scaffold",
           "mode": "place",
-          "cell": "B3",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_fire_pit",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_tent",
           "mode": "place",
-          "cell": "O3",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 0.9,
           "density": "med"
         },
         {
           "assetId": "prop_crate",
           "mode": "place",
-          "cell": "B5",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
           "scale": 1,
           "density": "med"
         }

@@ -1,0 +1,102 @@
+{
+  "id": "env_startup_loft",
+  "type": "environment",
+  "name": "Startup Loft",
+  "tags": [
+    "office",
+    "loft",
+    "industrial",
+    "warm"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Exposed brick, warm Edison bulbs, and a patchwork of sofas and whiteboards.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#5a4a3a",
+      "stageColor": "#8a6a4a",
+      "wallColor": "#a46a48",
+      "groundSize": 19,
+      "walls": 2,
+      "windowStyle": "triple",
+      "windowColor": "#e8c078",
+      "windowOpacity": 0.4,
+      "skyTop": "#2a1a10",
+      "skyMid": "#5a3a20",
+      "skyBot": "#9a6430",
+      "fxPreset": "dusk",
+      "ambientColor": "#e0a860",
+      "ambientIntensity": 1,
+      "dirColor": "#ffc080",
+      "dirIntensity": 0.9,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb060",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.6,
+      "orbFlicker": false,
+      "props": [
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": "B2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": "O2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": "N5",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

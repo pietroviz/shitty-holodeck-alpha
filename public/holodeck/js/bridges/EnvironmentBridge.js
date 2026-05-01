@@ -2241,25 +2241,29 @@ export class EnvironmentBridge extends BaseBridge {
                       </div>
                     </div>`;
 
-                // Cell selector — only visible in Place mode
+                // Cell selector — only visible in Place mode.
+                // Two integer dropdowns (Left↔Right and Forward↔Backward), each
+                // ranging −2..+2 in metres from stage centre. Reads the slot's
+                // current cell via _cellToWorld which accepts both the new
+                // {x,y,z} object form and legacy "N3" BINGO strings.
+                const cellWorld = _cellToWorld(slot.cell) || { x: 0, y: 0, z: 0 };
+                const cellAxisOpts = (cur) => [-2, -1, 0, 1, 2].map(v =>
+                    `<option value="${v}"${cur === v ? ' selected' : ''}>${v}</option>`
+                ).join('');
+                const cellSelectStyle = `style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
+                    border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
+                    font-family:inherit; width:48px;"`;
                 const cellRow = slot.mode === 'place' ? `
                     <div class="cb-gobj-row">
-                      <span style="font-size:0.75rem; color:var(--text-dim); min-width:30px;">Cell</span>
-                      <select class="cb-prop-letter" data-slot="${i}"
-                          style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
-                          border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
-                          font-family:inherit; width:38px;">
-                          ${'BINGO'.split('').map(l =>
-                              `<option value="${l}"${(slot.cell?.[0]?.toUpperCase() || 'N') === l ? ' selected' : ''}>${l}</option>`
-                          ).join('')}
+                      <span style="font-size:0.75rem; color:var(--text-dim); min-width:80px;">Left ↔ Right</span>
+                      <select class="cb-prop-x" data-slot="${i}" ${cellSelectStyle}>
+                          ${cellAxisOpts(cellWorld.x)}
                       </select>
-                      <select class="cb-prop-num" data-slot="${i}"
-                          style="font-size:0.75rem; padding:1px 2px; background:rgba(255,255,255,0.08);
-                          border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:var(--text-primary);
-                          font-family:inherit; width:38px;">
-                          ${[1,2,3,4,5].map(n =>
-                              `<option value="${n}"${(slot.cell?.slice(1) || '3') === String(n) ? ' selected' : ''}>${n}</option>`
-                          ).join('')}
+                    </div>
+                    <div class="cb-gobj-row">
+                      <span style="font-size:0.75rem; color:var(--text-dim); min-width:80px;">Forward ↔ Backward</span>
+                      <select class="cb-prop-z" data-slot="${i}" ${cellSelectStyle}>
+                          ${cellAxisOpts(cellWorld.z)}
                       </select>
                     </div>` : '';
 
@@ -2561,13 +2565,16 @@ export class EnvironmentBridge extends BaseBridge {
         // Per-slot placement controls return in a future pass.
 
         // ── Prop controls ────────────────────────────────────────
+        // Default cell when first picking an object / switching to Place mode:
+        // {x:0, y:0, z:0} (centre of stage).
+        const _DEFAULT_CELL = () => ({ x: 0, y: 0, z: 0 });
+
         panel.querySelectorAll('.cb-prop-select').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
                 this._state.props[i].assetId = sel.value;
-                // Default to 'place' + centre cell when first picking an object
                 if (sel.value !== 'none' && !this._state.props[i].cell) {
-                    this._state.props[i].cell = 'N3';
+                    this._state.props[i].cell = _DEFAULT_CELL();
                 }
                 this._rebuildProps();
                 this._renderPanel();
@@ -2578,9 +2585,8 @@ export class EnvironmentBridge extends BaseBridge {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.closest('.cb-prop-mode').dataset.slot, 10);
                 this._state.props[i].mode = btn.dataset.mode;
-                // Ensure cell is set for Place mode
                 if (btn.dataset.mode === 'place' && !this._state.props[i].cell) {
-                    this._state.props[i].cell = 'N3';
+                    this._state.props[i].cell = _DEFAULT_CELL();
                 }
                 this._rebuildProps();
                 this._renderPanel();
@@ -2596,23 +2602,24 @@ export class EnvironmentBridge extends BaseBridge {
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-prop-letter').forEach(sel => {
+        // X-axis (Left ↔ Right) and Z-axis (Forward ↔ Backward) cell pickers.
+        // Always read the current cell via _cellToWorld so legacy "N3" strings
+        // get migrated to {x,y,z} on the next user edit.
+        panel.querySelectorAll('.cb-prop-x').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
-                const num = this._state.props[i].cell?.slice(1) || '3';
-                this._state.props[i].cell = sel.value + num;
+                const cur = _cellToWorld(this._state.props[i].cell) || _DEFAULT_CELL();
+                this._state.props[i].cell = { x: parseInt(sel.value, 10), y: 0, z: cur.z };
                 this._rebuildProps();
-                this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
-        panel.querySelectorAll('.cb-prop-num').forEach(sel => {
+        panel.querySelectorAll('.cb-prop-z').forEach(sel => {
             sel.addEventListener('change', () => {
                 const i = parseInt(sel.dataset.slot, 10);
-                const letter = this._state.props[i].cell?.[0]?.toUpperCase() || 'N';
-                this._state.props[i].cell = letter + sel.value;
+                const cur = _cellToWorld(this._state.props[i].cell) || _DEFAULT_CELL();
+                this._state.props[i].cell = { x: cur.x, y: 0, z: parseInt(sel.value, 10) };
                 this._rebuildProps();
-                this._renderPanel();
                 this._scheduleAutoSave();
             });
         });
@@ -2889,12 +2896,14 @@ export class EnvironmentBridge extends BaseBridge {
             if (!objs.length) return;
             const modes = ['place', 'scatter', 'tile'];
             const dens  = ['low', 'med', 'high'];
-            // Fill 2–4 random slots, leave the rest empty
+            // Fill 2–4 random slots, leave the rest empty.
+            // 'place' cells write the new {x,y,z} integer schema directly.
             const count = 2 + Math.floor(Math.random() * 3);
+            const randInt = () => Math.floor(Math.random() * 5) - 2;   // −2..+2
             this._state.props = Array.from({ length: PROP_SLOT_COUNT }, (_, i) => {
                 if (i >= count) return { assetId: 'none', mode: 'place', cell: null, scale: 1.0, density: 'med' };
                 const mode = modes[Math.floor(Math.random() * modes.length)];
-                const cell = mode === 'place' ? ALL_CELLS[Math.floor(Math.random() * 25)] : null;
+                const cell = mode === 'place' ? { x: randInt(), y: 0, z: randInt() } : null;
                 return {
                     assetId: objs[Math.floor(Math.random() * objs.length)].id,
                     mode,

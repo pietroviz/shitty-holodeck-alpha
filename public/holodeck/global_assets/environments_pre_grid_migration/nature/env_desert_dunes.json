@@ -1,0 +1,101 @@
+{
+  "id": "env_desert_dunes",
+  "type": "environment",
+  "name": "Desert Dunes",
+  "tags": [
+    "nature",
+    "desert",
+    "sand",
+    "hot"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "Rolling golden dunes under a bleached sky, cacti tracing long sharp shadows.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#d4a864",
+      "stageColor": "#e8c080",
+      "wallColor": "#b88848",
+      "groundSize": 23,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#f4d898",
+      "skyMid": "#f8e4b0",
+      "skyBot": "#ffedcc",
+      "fxPreset": "day",
+      "sunColor": "#fff4d0",
+      "sunElevation": 55,
+      "sunVisible": true,
+      "ambientColor": "#f0d890",
+      "ambientIntensity": 1.2,
+      "dirColor": "#fff0c8",
+      "dirIntensity": 1.4,
+      "fogEnabled": true,
+      "fogColor": "#e8d098",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_tall_cactus",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.3,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_tent",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_boulder",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_cactus_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_tall_cactus",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

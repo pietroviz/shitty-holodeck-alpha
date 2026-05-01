@@ -44,35 +44,55 @@
         {
           "assetId": "prop_chair_batch",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_desklamp_batch",
           "mode": "place",
-          "cell": "N2",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
           "scale": 1.2,
           "density": "med"
         },
         {
           "assetId": "prop_potion_bottle_batch",
           "mode": "place",
-          "cell": "B3",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 0.9,
           "density": "med"
         },
         {
           "assetId": "prop_potion_bottle_batch",
           "mode": "place",
-          "cell": "O3",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 0.9,
           "density": "med"
         },
         {
           "assetId": "prop_pottedplant_batch",
           "mode": "place",
-          "cell": "B1",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
           "scale": 1,
           "density": "med"
         }

@@ -1,0 +1,102 @@
+{
+  "id": "env_frost_basin",
+  "type": "environment",
+  "name": "Frost Basin",
+  "tags": [
+    "nature",
+    "ice",
+    "winter",
+    "pastel"
+  ],
+  "meta": {
+    "created": "2026-04-22T05:16:25.944Z",
+    "modified": "2026-04-22T05:16:25.944Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A powder-blue snowbowl under a cotton-candy sunrise with drifting flurries.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#e8f2ff",
+      "stageColor": "#c8d8ee",
+      "wallColor": "#a0b4d0",
+      "groundSize": 21,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#7a4a9c",
+      "skyMid": "#f0a8cc",
+      "skyBot": "#fcdcc0",
+      "fxPreset": "day",
+      "sunColor": "#fff0f8",
+      "sunElevation": 25,
+      "sunVisible": true,
+      "ambientColor": "#d8e4ff",
+      "ambientIntensity": 1.1,
+      "dirColor": "#fff4fa",
+      "dirIntensity": 1,
+      "fogEnabled": true,
+      "fogColor": "#e0ecff",
+      "fogDensity": 0.03,
+      "weather": "snow",
+      "orbVisible": false,
+      "props": [
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pine_tree_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "env_dragon_hr_department",
+  "type": "environment",
+  "name": "Dragon HR Department",
+  "tags": [
+    "fantasy",
+    "bureaucratic",
+    "bizarre",
+    "office"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:55:23.349Z",
+    "modified": "2026-04-22T17:55:23.349Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A tired desk covered in policy binders, a waiting bench, and an alarming pile of skulls in the corner.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a2014",
+      "stageColor": "#5a3a24",
+      "wallColor": "#4a2e18",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#ff9040",
+      "windowOpacity": 0.45,
+      "skyTop": "#1a0a04",
+      "skyMid": "#3a1408",
+      "skyBot": "#802810",
+      "fxPreset": "dusk",
+      "ambientColor": "#a04020",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ff8040",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#2a1008",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#ffa040",
+      "orbIntensity": 1.5,
+      "orbHeight": 2.3,
+      "orbFlicker": true,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": "N3",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": "N2",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": "O5",
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_treasure_chest_batch",
+          "mode": "place",
+          "cell": "B5",
+          "scale": 0.9,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

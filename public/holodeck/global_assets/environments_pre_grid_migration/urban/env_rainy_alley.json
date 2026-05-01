@@ -1,0 +1,105 @@
+{
+  "id": "env_rainy_alley",
+  "type": "environment",
+  "name": "Rainy Alley",
+  "tags": [
+    "urban",
+    "alley",
+    "rain",
+    "dark"
+  ],
+  "meta": {
+    "created": "2026-04-22T17:08:51.196Z",
+    "modified": "2026-04-22T17:08:51.196Z",
+    "origin": "template",
+    "version": 1
+  },
+  "payload": {
+    "description": "A wet grey alley choked with dumpsters and steam, a single fire-pit glowing at the end.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a2a2e",
+      "stageColor": "#3a3a3e",
+      "wallColor": "#4a484a",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#c8d8e8",
+      "windowOpacity": 0.3,
+      "skyTop": "#080810",
+      "skyMid": "#18182a",
+      "skyBot": "#282840",
+      "fxPreset": "night",
+      "ambientColor": "#5a687a",
+      "ambientIntensity": 0.7,
+      "dirColor": "#a8b8c8",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#1a1a22",
+      "fogDensity": 0.06,
+      "orbVisible": true,
+      "orbColor": "#ff8040",
+      "orbIntensity": 1.4,
+      "orbHeight": 2,
+      "orbFlicker": true,
+      "weather": "rain",
+      "props": [
+        {
+          "assetId": "prop_dumpster",
+          "mode": "place",
+          "cell": "B1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dumpster",
+          "mode": "place",
+          "cell": "O1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fire_pit",
+          "mode": "place",
+          "cell": "N1",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_trash_can",
+          "mode": "place",
+          "cell": "B3",
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": "O3",
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_trash_can",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

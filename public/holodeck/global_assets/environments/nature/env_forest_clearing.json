@@ -43,35 +43,55 @@
         {
           "assetId": "prop_stump_batch",
           "mode": "place",
-          "cell": "N3",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1.1,
           "density": "med"
         },
         {
           "assetId": "prop_log_batch",
           "mode": "place",
-          "cell": "B3",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_log_batch",
           "mode": "place",
-          "cell": "O3",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_mushroom_batch",
           "mode": "place",
-          "cell": "I4",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 1
+          },
           "scale": 1,
           "density": "med"
         },
         {
           "assetId": "prop_flower_batch",
           "mode": "place",
-          "cell": "G4",
+          "cell": {
+            "x": 1,
+            "y": 0,
+            "z": 1
+          },
           "scale": 1,
           "density": "med"
         }
