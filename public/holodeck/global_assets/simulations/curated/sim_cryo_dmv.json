@@ -1,0 +1,99 @@
+{
+  "id": "sim_cryo_dmv",
+  "type": "simulation",
+  "name": "Cryo-DMV Existential Crisis",
+  "tags": [
+    "scifi",
+    "comedy",
+    "bureaucracy",
+    "deadpan"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three thawed-out humans waiting in line at a frozen department of motor vehicles.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_cryo_dmv",
+      "musicId": "mus_synthwave_sunset",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_unit_7_android",
+          "archetype": "Anchor"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_judge_fontaine",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_dr_elara_quantum",
+          "archetype": "Bloom"
+        }
+      ],
+      "beats": [
+        {
+          "id": "dmv_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "observation",
+          "emotion": "deadpan",
+          "tension": 2,
+          "lines": [
+            {
+              "speaker": "CHAR_B",
+              "text": "How long have we been in this line."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Local time, four hours. Subjective time, eleven years."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I think I had a child while we were in this line."
+            }
+          ]
+        },
+        {
+          "id": "dmv_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "comedic",
+          "emotion": "resigned",
+          "tension": 1,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Now serving number eight thousand and one."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'm number eight thousand and forty-seven."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'm just here because I love a queue."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

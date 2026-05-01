@@ -1,0 +1,99 @@
+{
+  "id": "sim_mushroom_council",
+  "type": "simulation",
+  "name": "Mushroom Forest Council",
+  "tags": [
+    "fantasy",
+    "nature",
+    "elder",
+    "council"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three forest folk weigh in on a problem the trees have been gossiping about.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_giant_mushroom_forest",
+      "musicId": "mus_forest_canopy",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_oakbeard",
+          "archetype": "Anchor"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_pixie_dust",
+          "archetype": "Bloom"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_willow_moonwhisper",
+          "archetype": "Edge"
+        }
+      ],
+      "beats": [
+        {
+          "id": "council_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "wary",
+          "tension": 4,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "The mushrooms have been whispering. Something's wrong upstream."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Wrong how? Is it the water? It's always the water."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "It's not the water. The trees know. They're waiting for us to ask."
+            }
+          ]
+        },
+        {
+          "id": "council_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "plan",
+          "emotion": "resolute",
+          "tension": 3,
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "We have to walk to the spring before sundown."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Then we walk."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "I'll bring the lantern. And snacks. Snacks are non-negotiable."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

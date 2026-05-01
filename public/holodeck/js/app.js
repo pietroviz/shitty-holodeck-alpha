@@ -531,28 +531,20 @@ function goExplore() {
 async function _loadRandomLandingSim() {
     let pickedSim = null;
     try {
-        const [sims, chars, envs, music] = await Promise.all([
-            loadGlobalAssets('Simulations'),
-            loadGlobalAssets('Characters'),
-            loadGlobalAssets('Environments'),
-            loadGlobalAssets('Music'),
-        ]);
+        const sims = await loadGlobalAssets('Simulations');
 
         // Bail if the user navigated away or already has something loaded.
         if (S.panelOpen || S.builderMode || S.isNew) return;
 
         if (Array.isArray(sims) && sims.length > 0) {
-            // Pick a sim, then shake it up so every page load looks different —
-            // even with only one template available.
-            const base = sims[Math.floor(Math.random() * sims.length)];
-            pickedSim = JSON.parse(JSON.stringify(base));
-            const st   = pickedSim.payload?.state || pickedSim.state || {};
-            const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-            if (envs?.length)  st.envId   = rand(envs).id;
-            if (music?.length) st.musicId = rand(music).id;
-            if (Array.isArray(st.cast) && chars?.length) {
-                for (const c of st.cast) c.charId = rand(chars).id;
-            }
+            // Prefer a curated template — these are hand-paired (env + music
+            // + cast + script) so the homepage reads as a coherent scene
+            // rather than random soup. Falls back to any sim if no curated
+            // ones exist (e.g. early in dev).
+            const curated = sims.filter(s => s._category === 'Curated');
+            const pool    = curated.length ? curated : sims;
+            const base    = pool[Math.floor(Math.random() * pool.length)];
+            pickedSim     = JSON.parse(JSON.stringify(base));
         }
     } catch (e) {
         console.warn('[landing] random sim load failed:', e?.message);

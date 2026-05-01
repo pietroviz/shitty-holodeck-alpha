@@ -1,0 +1,99 @@
+{
+  "id": "sim_goblin_haggle",
+  "type": "simulation",
+  "name": "Goblin Market Haggle",
+  "tags": [
+    "fantasy",
+    "market",
+    "scrappy",
+    "comedy"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three travellers trying not to get fleeced by a goblin selling questionable wares.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_goblin_market",
+      "musicId": "mus_celtic_meadow",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_gronk_the_goblin",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_paladin_auric",
+          "archetype": "Anchor"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_zephyr_the_bard",
+          "archetype": "Bloom"
+        }
+      ],
+      "beats": [
+        {
+          "id": "haggle_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "conflict",
+          "emotion": "arch",
+          "tension": 3,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Ten gold for the bottle. Cures whatever ails you. Probably."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Ten gold could cure a famine. We'll give you two."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "I'll throw in a song. My songs are worth at least one gold each."
+            }
+          ]
+        },
+        {
+          "id": "haggle_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "resolution",
+          "emotion": "wry",
+          "tension": 2,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Three gold. And the song. Final offer. Don't push me."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Done."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Excellent. I'll start with the long one."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

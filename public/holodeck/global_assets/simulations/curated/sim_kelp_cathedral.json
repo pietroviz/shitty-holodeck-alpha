@@ -1,0 +1,91 @@
+{
+  "id": "sim_kelp_cathedral",
+  "type": "simulation",
+  "name": "Cathedral of Echoes",
+  "tags": [
+    "underwater",
+    "mystical",
+    "prophecy",
+    "awe"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three pilgrims at the edge of a kelp cathedral. Something ancient is listening.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_kelp_cathedral",
+      "musicId": "mus_crystal_cave",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_coral_the_merfolk",
+          "archetype": "Anchor"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_brother_cedric",
+          "archetype": "Bloom"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_xenobiologist_orin",
+          "archetype": "Edge"
+        }
+      ],
+      "beats": [
+        {
+          "id": "cathedral_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "arrival",
+          "emotion": "awed",
+          "tension": 5,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Stand still. It's awake."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "What is — the cathedral?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Cathedrals don't wake up. Things inside them do."
+            }
+          ]
+        },
+        {
+          "id": "cathedral_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "invocation",
+          "emotion": "reverent",
+          "tension": 4,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Whatever you ask now, ask carefully. It's been a long time since anyone asked."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

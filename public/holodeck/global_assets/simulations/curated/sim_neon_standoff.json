@@ -1,0 +1,99 @@
+{
+  "id": "sim_neon_standoff",
+  "type": "simulation",
+  "name": "Neon District After Midnight",
+  "tags": [
+    "cyberpunk",
+    "urban",
+    "tense",
+    "noir"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three operators in a rain-slick alley, working out who got burned.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_neon_district",
+      "musicId": "mus_neon_pulse",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_hacker_zero",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_cyborg_kai",
+          "archetype": "Glitch"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_bounty_hunter_rex",
+          "archetype": "Anchor"
+        }
+      ],
+      "beats": [
+        {
+          "id": "neon_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "conflict",
+          "emotion": "wary",
+          "tension": 6,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Someone tipped them off. The whole drop was a setup."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Wasn't me. I run clean. You know that."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Doesn't matter who. Matters what we do in the next ten minutes."
+            }
+          ]
+        },
+        {
+          "id": "neon_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "plan",
+          "emotion": "resolute",
+          "tension": 5,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "We split up. Different exits. Meet at the third spot in an hour."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Third spot's compromised."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Then we go to the fourth."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

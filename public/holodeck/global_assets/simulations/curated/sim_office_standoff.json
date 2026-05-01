@@ -1,0 +1,95 @@
+{
+  "id": "sim_office_standoff",
+  "type": "simulation",
+  "name": "Office Standoff",
+  "tags": [
+    "office",
+    "dystopian",
+    "tension",
+    "corporate"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three colleagues in a windowless conference room. Someone is about to be fired.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_dystopian_call_centre",
+      "musicId": "mus_tension_rising",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_commander_vasquez",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_tech_bro_tyler",
+          "archetype": "Glitch"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_news_anchor_nkechi",
+          "archetype": "Anchor"
+        }
+      ],
+      "beats": [
+        {
+          "id": "office_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "conflict",
+          "emotion": "cold",
+          "tension": 6,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "The numbers are not the numbers we agreed on."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "The numbers are the numbers I gave you. They're correct."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Both of you stop. Walk me through it from the top."
+            }
+          ]
+        },
+        {
+          "id": "office_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "plan",
+          "emotion": "measured",
+          "tension": 5,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "If they're correct, someone else is wrong. And we have to name them by Friday."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Friday. Not today. Today we just understand the problem."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

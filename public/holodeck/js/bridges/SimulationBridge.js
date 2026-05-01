@@ -282,7 +282,7 @@ export class SimulationBridge extends BaseBridge {
             location:       saved.location       || null,
             tension_level:  saved.tension_level  || null,
             emotional_arc:  saved.emotional_arc  || null,
-            cameraStyle:    saved.cameraStyle    || 'static_wide',
+            cameraStyle:    saved.cameraStyle    || 'speaker_cuts',
             postFx:         saved.postFx         || 'none',
         };
 

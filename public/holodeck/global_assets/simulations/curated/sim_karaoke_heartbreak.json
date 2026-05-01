@@ -1,0 +1,95 @@
+{
+  "id": "sim_karaoke_heartbreak",
+  "type": "simulation",
+  "name": "Karaoke Heartbreak",
+  "tags": [
+    "urban",
+    "melancholy",
+    "confession",
+    "late-night"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Three regulars at a haunted karaoke bar. Someone's about to sing the wrong song on purpose.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_haunted_karaoke_bar",
+      "musicId": "mus_vinyl_memories",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_soap_star_sandra",
+          "archetype": "Bloom"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_streamerking",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_chef_ramona",
+          "archetype": "Anchor"
+        }
+      ],
+      "beats": [
+        {
+          "id": "karaoke_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "reveal",
+          "emotion": "ache",
+          "tension": 5,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "I'm going to sing it. The one you said not to."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Don't. He's not even here."
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "Maybe that's the point."
+            }
+          ]
+        },
+        {
+          "id": "karaoke_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "support",
+          "emotion": "tender",
+          "tension": 4,
+          "lines": [
+            {
+              "speaker": "CHAR_A",
+              "text": "Three minutes. Three minutes and then I never have to sing it again."
+            },
+            {
+              "speaker": "CHAR_C",
+              "text": "Okay. We'll be right here."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}

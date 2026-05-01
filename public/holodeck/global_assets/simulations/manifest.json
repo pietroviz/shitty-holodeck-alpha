@@ -7,6 +7,21 @@
         "sim_meta_default.json"
       ],
       "folder": "defaults"
+    },
+    "curated": {
+      "name": "Curated",
+      "count": 8,
+      "files": [
+        "sim_mushroom_council.json",
+        "sim_neon_standoff.json",
+        "sim_cozy_catchup.json",
+        "sim_kelp_cathedral.json",
+        "sim_cryo_dmv.json",
+        "sim_goblin_haggle.json",
+        "sim_office_standoff.json",
+        "sim_karaoke_heartbreak.json"
+      ],
+      "folder": "curated"
     }
   }
 }

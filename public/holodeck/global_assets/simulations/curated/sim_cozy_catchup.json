@@ -1,0 +1,95 @@
+{
+  "id": "sim_cozy_catchup",
+  "type": "simulation",
+  "name": "Cozy Living Room Catch-up",
+  "tags": [
+    "cozy",
+    "home",
+    "friendship",
+    "quiet"
+  ],
+  "meta": {
+    "origin": "template",
+    "created": "2026-05-01T18:08:31.967Z",
+    "modified": "2026-05-01T18:08:31.967Z",
+    "version": 2
+  },
+  "payload": {
+    "description": "Old friends, new tea, one small confession that changes the room.",
+    "format": "simulation_state",
+    "state": {
+      "envId": "env_cozy_living_room",
+      "musicId": "mus_late_night_lofi",
+      "storyId": null,
+      "cast": [
+        {
+          "slot": "CHAR_A",
+          "charId": "char_influencer_aria",
+          "archetype": "Edge"
+        },
+        {
+          "slot": "CHAR_B",
+          "charId": "char_sitcom_steve",
+          "archetype": "Bloom"
+        },
+        {
+          "slot": "CHAR_C",
+          "charId": "char_podcast_pat",
+          "archetype": "Anchor"
+        }
+      ],
+      "beats": [
+        {
+          "id": "cozy_1",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "reveal",
+          "emotion": "tender",
+          "tension": 4,
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "I quit the podcast."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Wait, what — when?"
+            },
+            {
+              "speaker": "CHAR_B",
+              "text": "...Are we surprised, though?"
+            }
+          ]
+        },
+        {
+          "id": "cozy_2",
+          "characters": [
+            "CHAR_A",
+            "CHAR_B",
+            "CHAR_C"
+          ],
+          "location": "LOCATION_A",
+          "function": "support",
+          "emotion": "warm",
+          "tension": 2,
+          "lines": [
+            {
+              "speaker": "CHAR_C",
+              "text": "Last week. I haven't told anyone yet. You're the first."
+            },
+            {
+              "speaker": "CHAR_A",
+              "text": "Okay. Okay. Tea first. Then you tell us everything."
+            }
+          ]
+        }
+      ],
+      "cameraStyle": "speaker_cuts",
+      "postFx": "none"
+    }
+  }
+}
