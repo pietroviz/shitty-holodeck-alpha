@@ -18,6 +18,7 @@ import { standard } from '../shared/materials.js';
 import { renderProp } from '../shared/propRenderer.js';
 import { BUILDERS, PRIMITIVE_IDS, buildMesh } from '../shared/primitives.js';
 import { loadPalette, paletteGridHtml } from '../shared/paletteLoader.js';
+import { ORBIT_MAX_DISTANCE } from '../shared/envGeometry.js?v=4';
 
 // ── Tab definitions ─────────────────────────────────────────────
 const TABS = [
@@ -163,7 +164,11 @@ export class ObjectBridge extends BaseBridge {
     // ═══════════════════════════════════════════════════════════════
 
     _buildScene() {
-        this._camera.position.set(3, 2.5, 4);
+        // Square-on default — matches the unified pattern (DEFAULT_CAMERA in
+        // shared/envGeometry.js). Object editor uses its own framing depth so
+        // small objects fill the frame without losing scale relative to the
+        // 5 m stage. Auto-framed below from the prop bounding box.
+        this._camera.position.set(0, 2.0, 4.0);
         this._camera.lookAt(0, 0.5, 0);
         this._camera.fov = 50;
         this._camera.updateProjectionMatrix();
@@ -173,7 +178,7 @@ export class ObjectBridge extends BaseBridge {
         this._orbitControls.dampingFactor  = 0.08;
         this._orbitControls.target.set(0, 0.5, 0);
         this._orbitControls.minDistance    = 1;
-        this._orbitControls.maxDistance    = 12;
+        this._orbitControls.maxDistance    = ORBIT_MAX_DISTANCE;
 
         this._rebuildProp();
     }
@@ -244,7 +249,8 @@ export class ObjectBridge extends BaseBridge {
         const fov    = this._camera.fov * (Math.PI / 180);
         let dist     = (maxDim / 2) / Math.tan(fov / 2);
         dist = Math.max(dist * 1.5, 2);
-        this._camera.position.set(dist * 0.7, center.y + dist * 0.4, dist * 0.7);
+        // Square-on auto-frame: x=0, lifted slightly to take the prop in fully.
+        this._camera.position.set(0, center.y + dist * 0.4, dist);
         this._camera.lookAt(center);
         if (this._orbitControls) this._orbitControls.target.copy(center);
     }
@@ -702,13 +708,13 @@ export class ObjectBridge extends BaseBridge {
         this._rebuildProp();
     }
 
-    /** Tween camera back to the initial pose. */
+    /** Tween camera back to the initial pose (square-on, matching _buildScene). */
     resetView() {
         if (!this._orbitControls || !this._camera) return;
         this._resetCancel?.();
         this._resetCancel = tweenToPose(
             this._camera, this._orbitControls,
-            new THREE.Vector3(3, 2.5, 4),
+            new THREE.Vector3(0, 2.0, 4.0),
             new THREE.Vector3(0, 0.5, 0),
         );
     }

@@ -878,7 +878,8 @@ function _buildPropPreview(asset) {
     const editor = asset.payload?._editor;
     const colorMap = editor?.color_assignments || asset.payload?.color_assignments || {};
 
-    _camera.position.set(2.5, 2, 3);
+    // Square-on default, matching ObjectBridge editor framing.
+    _camera.position.set(0, 2.0, 4.0);
     _camera.lookAt(0, 0.5, 0);
     _camera.fov = 50;
     _camera.updateProjectionMatrix();
@@ -2024,9 +2025,9 @@ const _STORY_POS = {
     CHAR_C: [ 0.85, 0.95, -0.55],
 };
 const _STORY_ROT_Y = {
-    CHAR_B:  0.55,  // ~31° — faces inward + slightly toward camera
+    CHAR_B:  Math.PI / 4,   // 45° inward — matches CAST_LAYOUT for consistency
     CHAR_A:  0,
-    CHAR_C: -0.55,
+    CHAR_C: -Math.PI / 4,
 };
 
 function _teardownStoryPreview() {

@@ -70,18 +70,18 @@ const EMOTIONAL_ARCS = ['rising', 'falling', 'rise_then_fall', 'steady_with_spik
 
 const CAST_SLOTS = ['CHAR_A', 'CHAR_B', 'CHAR_C'];
 
-// CHAR_A sits front-and-centre; B/C are pulled back + inward so the main
-// character reads as the focus. Tighter spacing than a full BINGO cell so
-// the trio feels grouped without being crowded.
+// Heads-only conversation triangle. Tighter spacing than the full CAST_LAYOUT
+// (this is a heads-only preview, not a full-character stage), but rotations
+// match the 45° inward turn so it reads consistently with the sim render.
 const SLOT_POSITIONS = {
     CHAR_B: [-0.85, 0.95, -0.55],
     CHAR_A: [ 0.00, 0.95,  0.00],
     CHAR_C: [ 0.85, 0.95, -0.55],
 };
 const SLOT_ROT_Y = {
-    CHAR_B:  0.55,
+    CHAR_B:  Math.PI / 4,    // 45° inward — matches CAST_LAYOUT
     CHAR_A:  0,
-    CHAR_C: -0.55,
+    CHAR_C: -Math.PI / 4,
 };
 
 // Initial camera pose — matches browse preview so browse → edit feels

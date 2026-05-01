@@ -3,13 +3,13 @@ import { BridgeStack }          from './BridgeStack.js';
 import { CharacterBridge }      from './bridges/CharacterBridge.js?v=3';
 import { EnvironmentBridge }    from './bridges/EnvironmentBridge.js?v=44';
 import { MusicBridge }          from './bridges/MusicBridge.js?v=2';
-import { ObjectBridge }         from './bridges/ObjectBridge.js?v=2';
+import { ObjectBridge }         from './bridges/ObjectBridge.js?v=3';
 import { ImageBridge }          from './bridges/ImageBridge.js?v=2';
 import { VoiceBridge }          from './bridges/VoiceBridge.js?v=2';
-import { StoryBridge }          from './bridges/StoryBridge.js?v=4';
+import { StoryBridge }          from './bridges/StoryBridge.js?v=5';
 import { SimulationBridge }     from './bridges/SimulationBridge.js?v=13';
 import { loadGlobalAssets, loadUserAssets } from './assetLoader.js';
-import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewPlaySimulation, previewStopSimulation, isPreviewSimulationPlaying, previewResetView } from './previewRenderer.js?v=17';
+import { showPreview, destroyPreview, previewSpeak, previewSpeakWhenReady, previewStopVoice, setOnSpeakStateChange, isPreviewSpeaking, previewPlayMusic, previewStopMusic, isPreviewMusicPlaying, previewPlayEnvironment, previewStopEnvironment, isPreviewEnvironmentPlaying, previewPlayStory, previewStopStory, isPreviewStoryPlaying, previewPlaySimulation, previewStopSimulation, isPreviewSimulationPlaying, previewResetView } from './previewRenderer.js?v=18';
 import { generateId }                       from './db.js?v=2';
 import { generateThumbnailBatch, disposeThumbnailRenderer } from './thumbnailGenerator.js';
 

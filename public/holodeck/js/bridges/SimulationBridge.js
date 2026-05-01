@@ -22,7 +22,7 @@ import { setRef, getRef, dbGetAll } from '../db.js?v=2';
 import { EnvironmentBridge } from './EnvironmentBridge.js?v=44';
 import { CharacterBridge }   from './CharacterBridge.js?v=3';
 import { MusicBridge }       from './MusicBridge.js?v=2';
-import { StoryBridge }       from './StoryBridge.js?v=4';
+import { StoryBridge }       from './StoryBridge.js?v=5';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js';
