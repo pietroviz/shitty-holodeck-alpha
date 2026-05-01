@@ -19,7 +19,7 @@ import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents, DICE_ICON, tweenToPose } from '../shared/builderUI.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, dbGetAll } from '../db.js?v=2';
-import { EnvironmentBridge } from './EnvironmentBridge.js?v=42';
+import { EnvironmentBridge } from './EnvironmentBridge.js?v=43';
 import { CharacterBridge }   from './CharacterBridge.js?v=3';
 import { MusicBridge }       from './MusicBridge.js?v=2';
 import { StoryBridge }       from './StoryBridge.js?v=4';
@@ -47,6 +47,7 @@ import {
 } from '../shared/archetypeHead.js?v=2';
 import { buildEnvScene } from '../shared/envScene.js?v=3';
 import { buildCharacterMesh } from '../shared/characterMesh.js?v=2';
+import { DEFAULT_CAMERA } from '../shared/envGeometry.js?v=2';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 
@@ -177,10 +178,11 @@ const SLOT_POSITIONS = {
 // All face the camera (no inward turn — matches the env builder reference).
 const SLOT_ROT_Y = { CHAR_B: 0, CHAR_A: 0, CHAR_C: 0 };
 const ARCHETYPE_HEAD_LIFT_Y = 0.95;   // match previous head-only look when no char asset
-// True isometric 3/4 angle — matches the blank Scene3D pose so swapping in
-// the loaded sim doesn't jolt the camera.
-const INITIAL_CAM_POS    = new THREE.Vector3(5.2, 3.9, 5.2);
-const INITIAL_CAM_TARGET = new THREE.Vector3(0, 0.9, 0);
+// Square-on DEFAULT_CAMERA — matches the blank Scene3D pose so swapping in
+// the loaded sim doesn't jolt the camera. Single source of truth in
+// shared/envGeometry.js — change there to retune all builders at once.
+const INITIAL_CAM_POS    = new THREE.Vector3(...DEFAULT_CAMERA.pos);
+const INITIAL_CAM_TARGET = new THREE.Vector3(...DEFAULT_CAMERA.target);
 
 // Closed-mouth rest pose fed to non-speaking characters each tick so their
 // viseme shapes don't freeze mid-word when the speaker changes.

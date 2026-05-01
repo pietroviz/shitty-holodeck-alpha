@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Line2 }        from 'three/addons/lines/Line2.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { DEFAULT_CAMERA } from './shared/envGeometry.js?v=2';
 
 /**
  * Scene3D — Three.js viewport with orbit + pan + zoom controls.
@@ -34,12 +35,14 @@ export class Scene3D {
         scene.background = new THREE.Color(0x5A5A5A);
 
         /* ── Camera ────────────────────────────────────── */
-        const camera = new THREE.PerspectiveCamera(50, c.clientWidth / c.clientHeight, 0.1, 1000);
-        camera.position.set(5.2, 3.9, 5.2);
-        camera.lookAt(0, 0, 0);
+        // Square-on default — DEFAULT_CAMERA from shared/envGeometry.js.
+        // Flipping it there cascades to every builder and the home page.
+        const camera = new THREE.PerspectiveCamera(DEFAULT_CAMERA.fov, c.clientWidth / c.clientHeight, 0.1, 1000);
+        camera.position.set(...DEFAULT_CAMERA.pos);
+        camera.lookAt(...DEFAULT_CAMERA.target);
         this.camera = camera;
 
-        const cx = 5.2, cy = 3.9, cz = 5.2;
+        const [cx, cy, cz] = DEFAULT_CAMERA.pos;
         this._camDist = Math.sqrt(cx*cx + cy*cy + cz*cz);
         this._theta   = Math.atan2(cx, cz);
         this._phi     = Math.acos(cy / this._camDist);
@@ -315,7 +318,7 @@ export class Scene3D {
     }
 
     resetView() {
-        const cx = 5.2, cy = 3.9, cz = 5.2;
+        const [cx, cy, cz] = DEFAULT_CAMERA.pos;
         const toDist  = Math.sqrt(cx*cx + cy*cy + cz*cz);
         const toTheta = Math.atan2(cx, cz);
         const toPhi   = Math.acos(cy / toDist);

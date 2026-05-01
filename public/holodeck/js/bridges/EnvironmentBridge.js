@@ -36,7 +36,8 @@ import {
     cellToWorld as _cellToWorld,
     ALL_CELLS,
     inCameraCorridor as _inCameraCorridor,
-} from '../shared/envGeometry.js?v=1';
+    DEFAULT_CAMERA,
+} from '../shared/envGeometry.js?v=2';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -404,13 +405,15 @@ export class EnvironmentBridge extends BaseBridge {
         // Sky dome (gradient sphere you can look around in)
         this._buildSkySphere();
 
-        // Camera pose — matches Scene3D
-        this._camera.position.set(5.2, 3.9, 5.2);
-        this._camera.lookAt(0, 0, 0);
+        // Camera pose — DEFAULT_CAMERA from shared/envGeometry.js (square-on).
+        this._camera.position.set(...DEFAULT_CAMERA.pos);
+        this._camera.lookAt(...DEFAULT_CAMERA.target);
+        this._camera.fov = DEFAULT_CAMERA.fov;
+        this._camera.updateProjectionMatrix();
 
         // Orbit controls
         this._controls = new OrbitControls(this._camera, this._renderer.domElement);
-        this._controls.target.set(0, 0, 0);
+        this._controls.target.set(...DEFAULT_CAMERA.target);
         this._controls.enableDamping = true;
         this._controls.dampingFactor = 0.08;
         this._controls.minDistance   = 2;
@@ -3137,7 +3140,8 @@ export class EnvironmentBridge extends BaseBridge {
         this._resetCancel?.();
         this._resetCancel = tweenToPose(
             this._camera, this._controls,
-            new THREE.Vector3(5.2, 3.9, 5.2), new THREE.Vector3(0, 0, 0)
+            new THREE.Vector3(...DEFAULT_CAMERA.pos),
+            new THREE.Vector3(...DEFAULT_CAMERA.target)
         );
     }
 }

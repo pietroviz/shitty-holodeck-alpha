@@ -182,12 +182,10 @@ export const ALL_CELLS = (() => {
 // Tall ground props inside the corridor would block the audience's view, so
 // the renderer hides them.
 //
-// PR 2a NOTE: CAM_DIR_X/Z are still the legacy diamond values (5.2, 5.2)
-// because the actual cameras in EnvironmentBridge/previewRenderer haven't
-// been switched to DEFAULT_CAMERA yet. PR 2b updates these to derive from
-// DEFAULT_CAMERA.pos at the same time the cameras themselves move.
-export const CAM_DIR_X = 5.2;
-export const CAM_DIR_Z = 5.2;
+// Derives from DEFAULT_CAMERA.pos so flipping the camera (e.g. diamond →
+// square-on) automatically reshapes the corridor for every consumer.
+export const CAM_DIR_X = DEFAULT_CAMERA.pos[0];
+export const CAM_DIR_Z = DEFAULT_CAMERA.pos[2];
 export const CAM_CORRIDOR_HALF_ANGLE_RAD = Math.PI * 2 / 9;   // ±40°
 export const CAM_CORRIDOR_COS = Math.cos(CAM_CORRIDOR_HALF_ANGLE_RAD);
 

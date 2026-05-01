@@ -46,7 +46,8 @@ import {
     STAGE_SIZE as _ENV_STAGE_SIZE,
     cellToWorld as _envCellToWorld,
     inCameraCorridor as _envInCameraCorridor,
-} from './shared/envGeometry.js?v=1';
+    DEFAULT_CAMERA,
+} from './shared/envGeometry.js?v=2';
 
 let _renderer = null;
 let _scene    = null;
@@ -946,10 +947,10 @@ function _applyScene3DLook() {
     // Mid-grey scene background
     _scene.background = new THREE.Color(0x5A5A5A);
 
-    // Camera pose matching Scene3D
-    _camera.position.set(5.2, 3.9, 5.2);
-    _camera.lookAt(0, 0, 0);
-    if (_controls) _controls.target.set(0, 0, 0);
+    // Camera pose matching Scene3D — DEFAULT_CAMERA (square-on)
+    _camera.position.set(...DEFAULT_CAMERA.pos);
+    _camera.lookAt(...DEFAULT_CAMERA.target);
+    if (_controls) _controls.target.set(...DEFAULT_CAMERA.target);
 
     // 21x21 world grid
     const worldGrid = new THREE.GridHelper(21, 21, 0x2F2F2F, 0x2F2F2F);
@@ -1454,9 +1455,10 @@ function _buildEnvWalls(state) {
 }
 
 async function _buildEnvironmentPreview(asset) {
-    _camera.position.set(5.2, 3.9, 5.2);
-    _camera.lookAt(0, 0.5, 0);
-    _camera.fov = 55;
+    // Square-on default — DEFAULT_CAMERA from shared/envGeometry.js.
+    _camera.position.set(...DEFAULT_CAMERA.pos);
+    _camera.lookAt(...DEFAULT_CAMERA.target);
+    _camera.fov = DEFAULT_CAMERA.fov;
     _camera.updateProjectionMatrix();
 
     _envPreview = { walls: null, groundObjs: [], props: [], weather: null, ready: false };
@@ -2217,18 +2219,18 @@ async function _resolveSimAsset(refs, type, id) {
 }
 
 function _applySimCamera() {
-    // True isometric 3/4 — matches the blank Scene3D pose at (5.2, 3.9, 5.2)
-    // so the home-screen sim doesn't visually jolt as the placeholder gives
-    // way to the loaded simulation. Target sits at chest height of the
-    // chars (z=0 row) so the whole cast lands centered in frame.
-    _camera.position.set(5.2, 3.9, 5.2);
-    _camera.lookAt(0, 0.9, 0);
-    _camera.fov = 50;
+    // Square-on DEFAULT_CAMERA — matches the blank Scene3D pose so the
+    // home-screen sim doesn't visually jolt as the placeholder gives way
+    // to the loaded simulation. Target sits at chest height (y=0.9) so the
+    // whole cast lands centered in frame.
+    _camera.position.set(...DEFAULT_CAMERA.pos);
+    _camera.lookAt(...DEFAULT_CAMERA.target);
+    _camera.fov = DEFAULT_CAMERA.fov;
     _camera.updateProjectionMatrix();
     _autoSpin = false;
     if (_controls) {
         _controls.enabled = true;
-        _controls.target.set(0, 0.9, 0);
+        _controls.target.set(...DEFAULT_CAMERA.target);
         _controls.update();
     }
 }
