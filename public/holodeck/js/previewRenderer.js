@@ -42,6 +42,11 @@ import {
 } from './shared/charConfig.js';
 import { buildCharacterMesh } from './shared/characterMesh.js?v=2';
 import { loadGlobalAssets } from './assetLoader.js';
+import {
+    STAGE_SIZE as _ENV_STAGE_SIZE,
+    cellToWorld as _envCellToWorld,
+    inCameraCorridor as _envInCameraCorridor,
+} from './shared/envGeometry.js?v=1';
 
 let _renderer = null;
 let _scene    = null;
@@ -999,8 +1004,11 @@ function _applyScene3DLook() {
 }
 
 // ─── Environment preview shared helpers (mirror EnvironmentBridge) ──
+// Stage geometry + BINGO grid + camera corridor all live in
+// shared/envGeometry.js — imported at the top of this file as `_ENV_STAGE_SIZE`,
+// `_envCellToWorld`, `_envInCameraCorridor` so the thousand-call-site sweep
+// stays a zero-behaviour-change consolidation.
 
-const _ENV_STAGE_SIZE   = 5;
 const _ENV_WALL_THICK   = 0.25;
 const _ENV_ORB_RANGE    = 9;
 const _ENV_SKY_RADIUS   = 50;
@@ -1022,30 +1030,6 @@ const _ENV_WEATHER_CFG = {
     rain:   { size: 0.06, color: 0xaaccee, speed: 8.0, drift: 0.3, opacity: 0.5  },
     leaves: { size: 0.15, color: 0x88aa44, speed: 0.8, drift: 1.5, opacity: 0.9  },
 };
-
-// Default camera is at (5.2, 3.9, 5.2) — camera corridor wedge
-const _ENV_CAM_DIR_X = 5.2, _ENV_CAM_DIR_Z = 5.2;
-const _ENV_CAM_CORRIDOR_COS = Math.cos(Math.PI * 2 / 9);
-const _ENV_CAM_LEN  = Math.sqrt(_ENV_CAM_DIR_X * _ENV_CAM_DIR_X + _ENV_CAM_DIR_Z * _ENV_CAM_DIR_Z);
-const _ENV_CAM_NX   = _ENV_CAM_DIR_X / _ENV_CAM_LEN;
-const _ENV_CAM_NZ   = _ENV_CAM_DIR_Z / _ENV_CAM_LEN;
-
-// BINGO grid: B=left, O=right columns; 5=front, 1=back
-const _ENV_BINGO = 'BINGO';
-function _envCellToWorld(cell) {
-    if (!cell || cell.length < 2) return null;
-    const c = _ENV_BINGO.indexOf(cell[0].toUpperCase());
-    const n = parseInt(cell.slice(1), 10);
-    if (c < 0 || n < 1 || n > 5) return null;
-    return { x: c - 2, z: n - 3 };
-}
-
-function _envInCameraCorridor(x, z, stageHalf) {
-    const len = Math.sqrt(x * x + z * z);
-    if (len < stageHalf + 0.5) return false;
-    const dot = (x * _ENV_CAM_NX + z * _ENV_CAM_NZ) / (len || 1);
-    return dot > _ENV_CAM_CORRIDOR_COS;
-}
 
 // Object manifest + asset JSON caches (shared across env previews in a session)
 let _envObjectList = null;

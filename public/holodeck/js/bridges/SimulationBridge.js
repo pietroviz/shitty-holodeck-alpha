@@ -19,7 +19,7 @@ import { BaseBridge } from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents, DICE_ICON, tweenToPose } from '../shared/builderUI.js';
 import { loadGlobalAssets } from '../assetLoader.js';
 import { setRef, getRef, dbGetAll } from '../db.js?v=2';
-import { EnvironmentBridge } from './EnvironmentBridge.js?v=41';
+import { EnvironmentBridge } from './EnvironmentBridge.js?v=42';
 import { CharacterBridge }   from './CharacterBridge.js?v=3';
 import { MusicBridge }       from './MusicBridge.js?v=2';
 import { StoryBridge }       from './StoryBridge.js?v=4';
@@ -45,7 +45,7 @@ import {
     speakWithArchetype,
     animateStoryHeads,
 } from '../shared/archetypeHead.js?v=2';
-import { buildEnvScene } from '../shared/envScene.js?v=2';
+import { buildEnvScene } from '../shared/envScene.js?v=3';
 import { buildCharacterMesh } from '../shared/characterMesh.js?v=2';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };

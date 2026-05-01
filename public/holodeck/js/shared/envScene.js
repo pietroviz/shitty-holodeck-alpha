@@ -20,8 +20,12 @@
  */
 
 import * as THREE from 'three';
+import {
+    STAGE_SIZE,
+    cellToWorld as _cellToWorld,
+    inCameraCorridor as _inCameraCorridor,
+} from './envGeometry.js?v=1';
 
-const STAGE_SIZE  = 5;
 const WALL_THICK  = 0.25;
 const SKY_RADIUS  = 50;
 const ORB_RANGE   = 9;
@@ -43,28 +47,8 @@ const TILE_SPACING           = { low: 3.5, med: 2.5, high: 1.8 };
 const STAGE_SCATTER_COUNTS   = { low: 3, med: 6, high: 10 };
 const STAGE_TILE_SPACING     = { low: 2.0, med: 1.4, high: 1.0 };
 
-// Camera corridor — default camera at (5.2, 3.9, 5.2) looking at origin.
-// Anything inside ±40° of that direction beyond the stage obstructs the view.
-const _CAM_NX = 5.2 / Math.sqrt(5.2 * 5.2 + 5.2 * 5.2);
-const _CAM_NZ = 5.2 / Math.sqrt(5.2 * 5.2 + 5.2 * 5.2);
-const _CAM_CORRIDOR_COS = Math.cos(Math.PI * 2 / 9);
-
-function _inCameraCorridor(x, z, stageHalf) {
-    const len = Math.sqrt(x * x + z * z);
-    if (len < stageHalf + 0.5) return false;
-    const dot = (x * _CAM_NX + z * _CAM_NZ) / (len || 1);
-    return dot > _CAM_CORRIDOR_COS;
-}
-
-// BINGO grid — letter = column (B left … O right), number = row (5 front … 1 back)
-const _BINGO_COLS = 'BINGO';
-function _cellToWorld(cell) {
-    if (!cell || cell.length < 2) return null;
-    const letterIdx = _BINGO_COLS.indexOf(cell[0].toUpperCase());
-    const num       = parseInt(cell.slice(1), 10);
-    if (letterIdx < 0 || num < 1 || num > 5) return null;
-    return { x: letterIdx - 2, z: num - 3 };
-}
+// Camera corridor (_inCameraCorridor) and BINGO grid (_cellToWorld) live in
+// shared/envGeometry.js, imported above. Single source of truth for the grid.
 
 // ── Object asset fetch / manifest list (module-level caches) ──
 let _OBJECT_LIST = null;

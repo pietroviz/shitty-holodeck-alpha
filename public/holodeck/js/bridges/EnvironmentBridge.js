@@ -29,6 +29,14 @@ import { BaseBridge } from './BaseBridge.js?v=4';
 import { loadPalette }     from '../shared/paletteLoader.js';
 import { showColorPicker } from '../shared/colorPicker.js';
 import { renderSubtitle, renderFileTab, wireFileTabEvents, tweenToPose } from '../shared/builderUI.js';
+import {
+    STAGE_SIZE,
+    BINGO_COLS,
+    cellLabel as _cellLabel,
+    cellToWorld as _cellToWorld,
+    ALL_CELLS,
+    inCameraCorridor as _inCameraCorridor,
+} from '../shared/envGeometry.js?v=1';
 
 // Ping-pong auto-rotate tuning (matches browse preview for a consistent feel)
 const _PP_RANGE = Math.PI * 0.45;
@@ -37,7 +45,6 @@ const _PP_SPEED = 0.15;
 // Ground tab tuning
 const GROUND_SIZE_MIN = 5;
 const GROUND_SIZE_MAX = 25;
-const STAGE_SIZE      = 5;
 
 // DB32-picked defaults that feel like an "inviting little world"
 const DEFAULT_GROUND_COLOR = '#4b692f'; // DB32 dark grass
@@ -204,22 +211,8 @@ const GROUND_OBJ_HEIGHT_CAP  = 1.5;    // max height for ground plane objects
 const _STAGE_SCATTER_COUNTS = { low: 3, med: 6, high: 10 };
 const _STAGE_TILE_SPACING   = { low: 2.0, med: 1.4, high: 1.0 };
 
-// Default camera is at (5.2, 3.9, 5.2) looking at origin.
-// Camera corridor: a wedge from origin outward in the +x/+z quadrant.
-// Any ground point inside this wedge would obstruct the view.
-const _CAM_DIR_X = 5.2, _CAM_DIR_Z = 5.2;                    // camera direction
-const _CAM_CORRIDOR_COS = Math.cos(Math.PI * 2 / 9);          // ±40° half-angle
-const _camDirLen = Math.sqrt(_CAM_DIR_X * _CAM_DIR_X + _CAM_DIR_Z * _CAM_DIR_Z);
-const _camNormX  = _CAM_DIR_X / _camDirLen;
-const _camNormZ  = _CAM_DIR_Z / _camDirLen;
-
-/** True if (x,z) lies inside the camera corridor wedge (beyond the stage). */
-function _inCameraCorridor(x, z, stageHalf) {
-    const len = Math.sqrt(x * x + z * z);
-    if (len < stageHalf + 0.5) return false;   // inside stage buffer — handled separately
-    const dot = (x * _camNormX + z * _camNormZ) / (len || 1);
-    return dot > _CAM_CORRIDOR_COS;             // within ±40° of camera direction
-}
+// Camera-corridor math (CAM_DIR, CAM_CORRIDOR_COS, _inCameraCorridor) lives in
+// shared/envGeometry.js and is imported above as `_inCameraCorridor`.
 
 // ── Tabs (File · Ground · Sky · Stage · FX) ─────────────────────
 const TABS = [
@@ -252,45 +245,10 @@ const _migrateWindowStyle = (s) => {
     return s;
 };
 
-// ── BINGO grid for the 5×5 stage ────────────────────────────────
-// Viewed from the camera the stage is a diamond.  Labels sit on the
-// two visible top edges:
-//   Left edge  (bottom→apex):  B  I  N  G  O   (rows, front→back)
-//   Back edge  (apex→right):   1  2  3  4  5   (columns, left→right)
-//
-// Rows B-I-N-G-O (front to back, +z → −z).
-// Columns 1-2-3-4-5 (left to right, −x → +x).
-//   B1 = front-left (left point of diamond)
-//   O5 = back-right  (right point of diamond)
-//   O1 = back-left   (apex, farthest from camera)
-//   B5 = front-right (bottom, nearest to camera)
-//   N3 = dead centre
-const BINGO_COLS = 'BINGO';
-
-/** Return a cell label like "B5" for a (col, row) pair.
- *  Letter = column: B(0) left … O(4) right.
- *  Number = row:    5 front … 1 back.
- *  Equivalence: B=1, I=2, N=3, G=4, O=5. */
-function _cellLabel(col, row) {
-    return BINGO_COLS[col] + (row + 1);
-}
-
-/** Parse a BINGO cell label → world-space {x, z} centre, or null.
- *  Letter = column (B left … O right), Number = row (5 front … 1 back). */
-function _cellToWorld(cell) {
-    if (!cell || cell.length < 2) return null;
-    const letterIdx = BINGO_COLS.indexOf(cell[0].toUpperCase());
-    const num       = parseInt(cell.slice(1), 10);
-    if (letterIdx < 0 || num < 1 || num > 5) return null;
-    // B(0)→x=−2 (left), O(4)→x=+2 (right); 5→z=+2 (front), 1→z=−2 (back)
-    return { x: letterIdx - 2, z: num - 3 };
-}
-
-/** All 25 cell labels in row-major order. */
-const ALL_CELLS = [];
-for (let r = 0; r < 5; r++)
-    for (let c = 0; c < 5; c++)
-        ALL_CELLS.push(_cellLabel(c, r));
+// BINGO grid (BINGO_COLS, _cellLabel, _cellToWorld, ALL_CELLS) lives in
+// shared/envGeometry.js and is imported above. The next pass replaces this
+// 5×5 BINGO scheme with integer (x, y, z) coords + a square-on camera; that
+// change happens in envGeometry.js alone and ripples here for free.
 
 // DICE_ICON / renderFieldHead / renderFileTab live in shared/builderUI.js
 
