@@ -53,6 +53,7 @@ import {
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
 } from '../shared/envGeometry.js?v=5';
+import { computeShotPose, pickShot, SHOTS } from '../shared/cameraShots.js?v=1';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 
@@ -657,17 +658,33 @@ export class SimulationBridge extends BaseBridge {
         this._tweenCameraTo(INITIAL_CAM_POS.clone(), INITIAL_CAM_TARGET.clone(), 500);
     }
 
-    /** Cut the camera to a tight close-up on the given cast slot. */
-    _cutCameraToSpeaker(slot) {
+    /**
+     * Apply a named shot for a given speaking slot. Pose math lives in
+     * shared/cameraShots.js so the homepage random-sim playback uses the
+     * exact same shots. durationMs from the pose decides hard-cut (0) vs
+     * tween — close-ups hard-cut, wide returns tween.
+     */
+    _applyShot(shot, slot) {
         if (!this._camera || !this._controls) return;
-        const pos = SLOT_POSITIONS[slot] || [0, 0, 0];
-        const [sx, , sz] = pos;
-        // Camera sits in front of the speaker, lifted to chest height,
-        // pulled back ~2 units. Subtle inward bias so off-axis slots
-        // (B/C) still feel framed.
-        const camPos    = new THREE.Vector3(sx * 0.45, 1.5, sz + 2.05);
-        const camTarget = new THREE.Vector3(sx, 1.05, sz);
-        this._tweenCameraTo(camPos, camTarget, 450);
+        const pose = computeShotPose(shot, slot);
+        if (pose.fov && pose.fov !== this._camera.fov) {
+            this._camera.fov = pose.fov;
+            this._camera.updateProjectionMatrix();
+        }
+        if (pose.durationMs > 0) {
+            this._tweenCameraTo(
+                new THREE.Vector3(...pose.pos),
+                new THREE.Vector3(...pose.target),
+                pose.durationMs,
+            );
+        } else {
+            // Hard cut — kill any in-flight tween and snap.
+            this._camTweenCancel?.();
+            this._camera.position.set(...pose.pos);
+            this._camera.lookAt(...pose.target);
+            this._controls.target.set(...pose.target);
+            this._controls.update();
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -777,14 +794,31 @@ export class SimulationBridge extends BaseBridge {
                 return cast?.archetype || null;
             },
             onLine: ({ slot, text, silent }) => {
-                if (silent) { this._speakingSlot = null; hideSubtitle(); return; }
+                if (silent) {
+                    this._speakingSlot = null;
+                    hideSubtitle();
+                    // Return to wide on a silent beat — the camera doesn't
+                    // pin to a non-speaker.
+                    this._applyShot(pickShot(this._state.cameraStyle, null), null);
+                    return;
+                }
+                const prevSlot = this._speakingSlot;
                 this._speakingSlot = slot;
                 showSubtitle(text);
-                if (this._state.cameraStyle === 'speaker_cuts') {
-                    this._cutCameraToSpeaker(slot);
+                // Apply the shot only on speaker-change to avoid re-cutting
+                // mid-monologue. dolly_drift drives itself in _onTick.
+                if (slot !== prevSlot && this._state.cameraStyle !== 'dolly_drift') {
+                    this._applyShot(pickShot(this._state.cameraStyle, slot), slot);
                 }
             },
-            onIdle: () => { this._speakingSlot = null; hideSubtitle(); },
+            onIdle: () => {
+                this._speakingSlot = null;
+                hideSubtitle();
+                // Wide on idle — film convention.
+                if (this._state.cameraStyle !== 'dolly_drift') {
+                    this._applyShot(SHOTS.wide, null);
+                }
+            },
             speakLine: async (text, archetype) => {
                 if (!this._voiceReady || !this._voiceEngine) return;
                 await speakWithArchetype(this._voiceEngine, {

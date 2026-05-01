@@ -53,6 +53,7 @@ import {
     propHeightCap,
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
+import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=1';
 
 let _renderer = null;
 let _scene    = null;
@@ -2131,18 +2132,33 @@ function _startStoryPlayback() {
         },
         onLine: ({ slot, text, silent }) => {
             if (!_storyPreview) return;
+            const style = _storyPreview.cameraStyle;
             if (silent) {
                 _storyPreview.speakingSlot = null;
                 hideSubtitle();
+                // Wide on a silent beat — camera doesn't pin to a non-speaker.
+                if (_storyPreview.isSimulation) {
+                    _applyPreviewShot(SHOTS.wide, null);
+                }
                 return;
             }
+            const prev = _storyPreview.speakingSlot;
             _storyPreview.speakingSlot = slot;
             showSubtitle(text);
+            // Cut on speaker-change only — holding the same speaker through
+            // multiple lines is film convention.
+            if (_storyPreview.isSimulation && slot !== prev) {
+                _applyPreviewShot(pickShot(style, slot), slot);
+            }
         },
         onIdle: () => {
             if (!_storyPreview) return;
             _storyPreview.speakingSlot = null;
             hideSubtitle();
+            // Wide on idle — film convention.
+            if (_storyPreview.isSimulation) {
+                _applyPreviewShot(SHOTS.wide, null);
+            }
         },
         speakLine: async (text, archetype) => {
             if (_voiceConfigured) await _voiceConfigured;
@@ -2193,6 +2209,8 @@ export function previewPlaySimulation() {
 export function previewStopSimulation() {
     _stopStoryPlayback();
     if (_musicEngine) _musicEngine.stop();
+    // Return to wide so the camera doesn't pin on the last cut after stop.
+    if (_storyPreview?.isSimulation) _applySimCamera();
 }
 export function isPreviewSimulationPlaying() {
     return !!(_storyPreview && _storyPreview.isPlaying);
@@ -2236,6 +2254,28 @@ function _applySimCamera() {
     if (_controls) {
         _controls.enabled = true;
         _controls.target.set(...SIM_CAMERA.target);
+        _controls.update();
+    }
+}
+
+/**
+ * Apply a named camera shot during sim playback. Hard-cuts (durationMs=0)
+ * for close-ups; tweens for wide returns. Disables auto-spin so the cut
+ * doesn't fight the ping-pong.
+ */
+function _applyPreviewShot(shot, slot) {
+    if (!_camera) return;
+    const pose = computeShotPose(shot, slot);
+    _autoSpin = false;
+    if (pose.fov && pose.fov !== _camera.fov) {
+        _camera.fov = pose.fov;
+        _camera.updateProjectionMatrix();
+    }
+    // Hard cut for close_up / two_shot; tween only on wide returns.
+    _camera.position.set(...pose.pos);
+    _camera.lookAt(...pose.target);
+    if (_controls) {
+        _controls.target.set(...pose.target);
         _controls.update();
     }
 }
@@ -2373,6 +2413,10 @@ async function _buildSimulationPreview(asset) {
             // user hits Play. Not auto-played on build.
             musicId: state.musicId || null,
             isSimulation: true,
+            // Camera style for cuts during playback. Default to speaker_cuts
+            // so the homepage random sim feels alive. dolly_drift in sim
+            // preview falls back to wide for now (no ambient orbit here).
+            cameraStyle: state.cameraStyle || 'speaker_cuts',
         };
 
         _voiceConfigured = _ensureVoice().then(() => {
