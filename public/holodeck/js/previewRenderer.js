@@ -86,6 +86,11 @@ let _voiceEngine = null;    // VoiceEngine shared across previews
 let _voiceReady  = false;
 let _voiceConfigured = null; // Promise that resolves when voice state is applied for current preview
 
+// Closed-mouth rest pose fed to non-speaking sim heads each tick so their
+// viseme shapes don't freeze mid-word when the speaker changes. Matches
+// the same constant used in SimulationBridge.
+const _MOUTH_REST_PARAMS = { jawOpen: 0, lipWidth: 0.45, lipRound: 0, tongueUp: 0, teethShow: 0 };
+
 // ── Browse music engine (for music asset preview playback) ──
 let _musicEngine = null;
 let _musicReady  = false;
@@ -484,6 +489,18 @@ function _startLoop() {
                 visemeParams,
                 t: performance.now() * 0.001,
             });
+            // Asset-built character heads have their own mouthRig +
+            // facialHairRig (animateStoryHeads only handles archetype heads'
+            // .talk function). Drive the speaker's rigs with the live
+            // visemeParams; everyone else gets a closed-mouth rest pose so
+            // their lips don't freeze mid-shape on a previous viseme.
+            for (const h of _storyPreview.heads) {
+                if (h.isArchetype) continue;
+                const isSpeaker = h.slot === _storyPreview.speakingSlot;
+                const params = (isSpeaker && visemeParams) ? visemeParams : _MOUTH_REST_PARAMS;
+                h.mouthRig?.update(params);
+                h.facialHairRig?.update(params);
+            }
             // Floating archetype name over the speaking head + word-by-word subtitle.
             updateStoryNameTags(
                 _storyPreview.heads,
@@ -2366,6 +2383,11 @@ async function _buildSimulationPreview(asset) {
                         baseRotY: rotY,
                         label: `${c.archetype || 'Edge'}-core`,
                         talkParams: null,
+                        // Capture the mesh's mouth + facial-hair rigs so the
+                        // tick loop can drive them with viseme params. Without
+                        // this, asset-built character mouths never move.
+                        mouthRig:      mesh.mouthRig      || null,
+                        facialHairRig: mesh.facialHairRig || null,
                         dispose: () => mesh.dispose(),
                         isArchetype: false,
                     };
