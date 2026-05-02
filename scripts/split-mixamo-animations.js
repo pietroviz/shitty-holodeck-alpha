@@ -38,10 +38,18 @@ const OUT_DIR    = path.join(REPO_ROOT, 'public/holodeck/global_assets/animation
 
 // Mixamo bone → procedural-character target name. Anything not in this
 // map gets dropped on the floor. Property suffix (.quaternion) preserved.
+//
+// LeftArm / RightArm carry the upper-arm rotation (the dominant motion
+// for "wave / point / gesture"). The runtime applies a calibration
+// offset (see animationRig.js) to re-aim Mixamo's T-pose into our
+// arms-by-side rest. Forearm + hand + finger bones still drop — our
+// procedural characters don't have elbows or fingers.
 const BONE_MAP = {
-    'mixamorigHips.quaternion':   'root.quaternion',
-    'mixamorigSpine2.quaternion': 'torso.quaternion',
-    'mixamorigHead.quaternion':   'head.quaternion',
+    'mixamorigHips.quaternion':     'root.quaternion',
+    'mixamorigSpine2.quaternion':   'torso.quaternion',
+    'mixamorigHead.quaternion':     'head.quaternion',
+    'mixamorigLeftArm.quaternion':  'armL.quaternion',
+    'mixamorigRightArm.quaternion': 'armR.quaternion',
 };
 
 const source = JSON.parse(fs.readFileSync(SOURCE, 'utf8'));

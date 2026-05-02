@@ -40,7 +40,7 @@ import {
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     FACE_FEATURES, FACE_PLACEMENT_PRESETS, DEFAULT_COLORS,
 } from './shared/charConfig.js';
-import { buildCharacterMesh } from './shared/characterMesh.js?v=3';
+import { buildCharacterMesh } from './shared/characterMesh.js?v=4';
 import { loadGlobalAssets } from './assetLoader.js';
 import {
     STAGE_SIZE as _ENV_STAGE_SIZE,
@@ -54,7 +54,7 @@ import {
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
 import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=2';
-import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=1';
+import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=2';
 
 let _renderer = null;
 let _scene    = null;
@@ -2469,14 +2469,19 @@ async function _buildSimulationPreview(asset) {
                     // (about half a stylised head). Used by close-up framing
                     // so short / tall characters get the camera at face level.
                     const headY = (mesh.totalHeight ?? 1.6) - 0.3;
-                    // Per-head animation rig. root binds to the character
-                    // container (full-body sway); head binds to the head
-                    // subgroup that pivots at the neck (independent head
-                    // shake/nod/turn). Future attention/look-at systems
-                    // can write to mesh.headGroup.quaternion AFTER the rig
+                    // Per-head animation rig. root → character container
+                    // (full-body sway); head → head subgroup pivoting at
+                    // the neck (independent shake/nod); armL / armR → arm
+                    // subgroups pivoting at the shoulders (gesture, wave,
+                    // point). Future attention/look-at + reach systems
+                    // can write to these same quaternions AFTER the rig
                     // updates, layering on top of the mocap baseline.
                     const animationRig = new AnimationRig();
-                    animationRig.attach(container, { head: mesh.headGroup });
+                    animationRig.attach(container, {
+                        head: mesh.headGroup,
+                        armL: mesh.armLGroup,
+                        armR: mesh.armRGroup,
+                    });
                     entry = {
                         slot: c.slot,
                         container,

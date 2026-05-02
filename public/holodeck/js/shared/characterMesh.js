@@ -140,7 +140,16 @@ export async function buildCharacterMesh(asset) {
     group.add(body);
     disposables.push(bodyGeo, bodyMat);
 
-    // ── Hands ──
+    // ── Hands (inside arm subgroups) ──
+    // Each hand lives inside an armGroup whose pivot sits at the shoulder.
+    // At rest (group.quaternion = identity) the hand hangs at the side
+    // because the hand mesh is positioned at (0, -armLen, 0) — i.e. straight
+    // down from the shoulder pivot in armGroup-local space. Animation then
+    // rotates the armGroup, swinging the hand in an arc around the shoulder.
+    //
+    // Named 'armL' / 'armR' so AnimationRig binds Mixamo Arm bone tracks
+    // here. A future "reach for X" attention layer can also write to these
+    // quaternions after the rig — last write wins.
     const handScale = bodyW / HAND.referenceBodyWidth;
     const handGeo = new RoundedBoxGeometry(
         HAND.baseWidth * handScale, HAND.baseHeight * handScale, HAND.baseDepth * handScale,
@@ -152,13 +161,29 @@ export async function buildCharacterMesh(asset) {
     const bodyTopY = FLOAT_Y + bodyH;
     const handY = bodyTopY - bodyH * 0.35;
     const handX = bodyW / 2 + HAND.baseWidth * handScale * 0.8;
+    // Shoulder pivot sits just inside the body's top corner. Picking handX
+    // for shoulderX keeps the hand hanging straight down from the pivot,
+    // so identity quaternion = arm-by-side.
+    const shoulderY = bodyTopY - 0.05;
+    const armLen    = shoulderY - handY;
+
+    const armLGroup = new THREE.Group();
+    armLGroup.name = 'armL';
+    armLGroup.position.set(-handX, shoulderY, 0);
     const leftHand = new THREE.Mesh(handGeo, handMat);
-    leftHand.position.set(-handX, handY, 0);
-    group.add(leftHand);
+    leftHand.position.set(0, -armLen, 0);   // straight down from pivot
+    armLGroup.add(leftHand);
+    group.add(armLGroup);
+
+    const armRGroup = new THREE.Group();
+    armRGroup.name = 'armR';
+    armRGroup.position.set(handX, shoulderY, 0);
     const rightHandGeo = handGeo.clone();
     const rightHand = new THREE.Mesh(rightHandGeo, handMat);
-    rightHand.position.set(handX, handY, 0);
-    group.add(rightHand);
+    rightHand.position.set(0, -armLen, 0);
+    armRGroup.add(rightHand);
+    group.add(armRGroup);
+
     disposables.push(handGeo, rightHandGeo, handMat);
 
     // ── Head subgroup ──
@@ -313,8 +338,8 @@ export async function buildCharacterMesh(asset) {
         if (group.parent) group.parent.remove(group);
     }
 
-    // headGroup is exposed so callers (AnimationRig, future attention
-    // system) can rotate the head independently of the body without
-    // having to traverse the scene graph by name every frame.
-    return { group, headGroup, totalHeight, mouthRig, facialHairRig, dispose };
+    // headGroup + arm groups are exposed so callers (AnimationRig, future
+    // attention / look-at systems) can rotate them independently of the
+    // body without having to traverse the scene graph by name every frame.
+    return { group, headGroup, armLGroup, armRGroup, totalHeight, mouthRig, facialHairRig, dispose };
 }

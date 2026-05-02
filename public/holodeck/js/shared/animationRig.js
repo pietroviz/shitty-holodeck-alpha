@@ -33,6 +33,23 @@ import * as THREE from 'three';
 
 const _qa = new THREE.Quaternion();
 const _qb = new THREE.Quaternion();
+const _qc = new THREE.Quaternion();
+
+// ── Per-joint calibration offsets ────────────────────────────────
+// Mixamo's bind pose is T-pose: arms extending horizontally. Our characters
+// rest with arms hanging at their sides. To make Mixamo arm-bone quaternions
+// land correctly on our armGroups (whose rest pose is arm-down), we
+// pre-multiply each frame's quaternion by an offset that rotates "arm
+// horizontal" → "arm down".
+//
+// Left arm: T-pose +X (out to camera-left), rest -Y (down). Rotate -π/2 around Z.
+// Right arm: T-pose -X (out to camera-right), rest -Y (down). Rotate +π/2 around Z.
+// Head + root + torso don't need offsets — Mixamo's rest matches ours
+// (head looks +Z forward, hips upright).
+const _CALIBRATION = {
+    armL: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, -Math.PI / 2)),
+    armR: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0,  Math.PI / 2)),
+};
 
 export class AnimationRig {
     constructor() {
@@ -131,13 +148,20 @@ export class AnimationRig {
         if (property === 'quaternion') {
             const stride = 4;
             _qa.set(values[i*stride], values[i*stride+1], values[i*stride+2], values[i*stride+3]);
-            if (j === i) {
-                joint.quaternion.copy(_qa);
-            } else {
+            if (j !== i) {
                 _qb.set(values[j*stride], values[j*stride+1], values[j*stride+2], values[j*stride+3]);
                 const span = times[j] - times[i];
                 const u    = span > 0 ? (t - times[i]) / span : 0;
                 _qa.slerp(_qb, u);
+            }
+            // Per-joint calibration: take Mixamo bind orientation
+            // (T-pose) into our procedural rest orientation. No-op for
+            // joints not in the table.
+            const cal = _CALIBRATION[jointName];
+            if (cal) {
+                _qc.copy(cal).multiply(_qa);
+                joint.quaternion.copy(_qc);
+            } else {
                 joint.quaternion.copy(_qa);
             }
         }
