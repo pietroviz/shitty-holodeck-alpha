@@ -383,15 +383,17 @@ export class SimulationBridge extends BaseBridge {
     }
 
     async _loadCatalogs() {
-        const [envs, chars, music, stories, userEnvs, userChars, userMusic, userStories] = await Promise.all([
+        const [envs, chars, music, stories, voices, userEnvs, userChars, userMusic, userStories, userVoices] = await Promise.all([
             loadGlobalAssets('Environments'),
             loadGlobalAssets('Characters'),
             loadGlobalAssets('Music'),
             loadGlobalAssets('Stories'),
+            loadGlobalAssets('Voices'),
             dbGetAll('environments').catch(() => []),
             dbGetAll('characters').catch(() => []),
             dbGetAll('music').catch(() => []),
             dbGetAll('stories').catch(() => []),
+            dbGetAll('voices').catch(() => []),
         ]);
         const merge = (globalList, userList) => {
             const out = (globalList || []).slice();
@@ -405,12 +407,14 @@ export class SimulationBridge extends BaseBridge {
         this._chars   = merge(chars,   userChars);
         this._music   = merge(music,   userMusic);
         this._stories = merge(stories, userStories);
+        this._voices  = merge(voices,  userVoices);
     }
 
     _findEnv(id)   { return this._envs?.find(e => e.id === id) || null; }
     _findChar(id)  { return this._chars?.find(c => c.id === id) || null; }
     _findMusic(id) { return this._music?.find(m => m.id === id) || null; }
     _findStory(id) { return this._stories?.find(s => s.id === id) || null; }
+    _findVoice(id) { return this._voices?.find(v => v.id === id) || null; }
 
     // ── Rolling / applying ────────────────────────────────────────
     async _rollAll() {
@@ -486,6 +490,13 @@ export class SimulationBridge extends BaseBridge {
             const rotY = SLOT_ROT_Y[cast.slot] || 0;
 
             const charAsset = cast.charId ? this._findChar(cast.charId) : null;
+            // Per-character voice asset → its full payload.state becomes the
+            // baseState for this slot's lines, so the 55 stock voices each
+            // sound distinct instead of cycling through 12 archetype variants.
+            const voiceId    = charAsset?.payload?.state?.voiceId;
+            const voiceAsset = voiceId ? this._findVoice(voiceId) : null;
+            const voiceState = voiceAsset?.payload?.state || null;
+
             const container = new THREE.Group();
             container.position.set(...pos);
             container.rotation.y = rotY;
@@ -513,6 +524,7 @@ export class SimulationBridge extends BaseBridge {
                         // just above, matching the archetype-head spacing.
                         labelOffsetY: (mesh.totalHeight || 1.7) + 0.17,
                         headY,
+                        voiceState,
                         mouthRig: mesh.mouthRig,
                         facialHairRig: mesh.facialHairRig,
                         dispose: () => mesh.dispose(),
@@ -537,6 +549,7 @@ export class SimulationBridge extends BaseBridge {
                     talkParams: head.talkParams,
                     // Archetype heads sit at the lift Y (head-only volume).
                     headY: ARCHETYPE_HEAD_LIFT_Y,
+                    voiceState,
                     dispose: head.dispose,
                     isArchetype: true,
                 };
@@ -833,10 +846,15 @@ export class SimulationBridge extends BaseBridge {
                     this._applyShot(SHOTS.wide, null);
                 }
             },
-            speakLine: async (text, archetype) => {
+            speakLine: async (text, archetype, slot) => {
                 if (!this._voiceReady || !this._voiceEngine) return;
+                // Pull the speaking head's per-character voiceState. Falls
+                // back to SIM_BASE_VOICE if the character has no voice
+                // assigned (or there's no head — archetype-only sims).
+                const head = slot ? this._heads?.find(h => h.slot === slot) : null;
+                const baseState = head?.voiceState || SIM_BASE_VOICE;
                 await speakWithArchetype(this._voiceEngine, {
-                    text, archetype, baseState: SIM_BASE_VOICE,
+                    text, archetype, baseState,
                 });
             },
             loop: true,

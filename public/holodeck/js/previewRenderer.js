@@ -2177,13 +2177,15 @@ function _startStoryPlayback() {
                 _applyPreviewShot(SHOTS.wide, null);
             }
         },
-        speakLine: async (text, archetype) => {
+        speakLine: async (text, archetype, slot) => {
             if (_voiceConfigured) await _voiceConfigured;
             if (!_voiceReady || !_voiceEngine) return;
-            await speakWithArchetype(_voiceEngine, {
-                text, archetype,
-                baseState: { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' },
-            });
+            // Pull the per-character voiceState. Falls back to a neutral
+            // baseState if the character has no voice assigned.
+            const head = _storyPreview?.heads.find(h => h.slot === slot);
+            const baseState = head?.voiceState
+                || { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
+            await speakWithArchetype(_voiceEngine, { text, archetype, baseState });
         },
         loop: true,
     });
@@ -2335,6 +2337,20 @@ async function _buildSimulationPreview(asset) {
         const [envAsset, ...charAssets] = await Promise.all([envPromise, ...charPromises]);
         if (session !== _previewSession) return;
 
+        // Resolve each character's per-character voice asset. The character
+        // JSON's payload.state.voiceId points at one of ~55 stock voices —
+        // applying the voice's full state (variant, pitch, brightness,
+        // breathiness, vocalFry, etc.) gives every character a distinct
+        // sound instead of cycling through 12 archetype variants.
+        const voicePromises = charAssets.map(ca => {
+            const voiceId = ca?.payload?.state?.voiceId;
+            return voiceId
+                ? _resolveSimAsset(refs, 'Voices', voiceId).catch(() => null)
+                : Promise.resolve(null);
+        });
+        const voiceAssets = await Promise.all(voicePromises);
+        if (session !== _previewSession) return;
+
         // Music is wired to the sim but DOES NOT auto-play here — only the
         // user pressing Play (via previewPlaySimulation) starts audio. Stash
         // the musicId on _storyPreview so the play handler can find it.
@@ -2353,15 +2369,16 @@ async function _buildSimulationPreview(asset) {
         // missing or the mesh build throws.
         const builds = await Promise.all(cast.map(async (c, i) => {
             const charAsset = charAssets[i] || null;
+            const voiceState = voiceAssets[i]?.payload?.state || null;
             if (charAsset) {
                 try {
                     const mesh = await buildCharacterMesh(charAsset);
-                    return { c, mesh };
+                    return { c, mesh, voiceState };
                 } catch (e) {
                     console.warn(`[previewRenderer] sim char build failed for ${c.slot}, archetype fallback:`, e?.message);
                 }
             }
-            return { c, mesh: null };
+            return { c, mesh: null, voiceState };
         }));
         if (session !== _previewSession) {
             for (const b of builds) b.mesh?.dispose?.();
@@ -2371,7 +2388,7 @@ async function _buildSimulationPreview(asset) {
         // Place heads. Each placement is in its own try/catch so one bad
         // head can't strand the rest.
         const heads = [];
-        for (const { c, mesh } of builds) {
+        for (const { c, mesh, voiceState } of builds) {
             try {
                 const pos  = _SIM_SLOT_POSITIONS[c.slot] || [0, 0, 0];
                 const rotY = _SIM_SLOT_ROT_Y[c.slot]     || 0;
@@ -2394,6 +2411,10 @@ async function _buildSimulationPreview(asset) {
                         label: `${c.archetype || 'Edge'}-core`,
                         talkParams: null,
                         headY,
+                        // Per-character voice asset state — applied as the
+                        // baseState for this slot's lines. Falls back to
+                        // SIM_BASE_VOICE in speakLine if null.
+                        voiceState,
                         // Capture the mesh's mouth + facial-hair rigs so the
                         // tick loop can drive them with viseme params. Without
                         // this, asset-built character mouths never move.
@@ -2417,6 +2438,9 @@ async function _buildSimulationPreview(asset) {
                         // Archetype heads sit at the lift Y; that's the head
                         // centre since they're a head-only volume.
                         headY: _SIM_ARCHETYPE_LIFT_Y,
+                        // No char asset → no voiceState; speakLine falls back
+                        // to the archetype-driven SIM_BASE_VOICE.
+                        voiceState,
                         dispose: head.dispose,
                         isArchetype: true,
                     };
