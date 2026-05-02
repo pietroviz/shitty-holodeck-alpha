@@ -53,7 +53,7 @@ import {
     propHeightCap,
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
-import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=1';
+import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=2';
 
 let _renderer = null;
 let _scene    = null;
@@ -2151,12 +2151,12 @@ function _startStoryPlayback() {
             if (!_storyPreview) return;
             const style = _storyPreview.cameraStyle;
             if (silent) {
+                // Silent beat (the 260ms breather between lines): clear the
+                // mouth/subtitle but HOLD the current shot. Cutting to wide
+                // every line was film-school sloppy — wide is reserved for
+                // playback start and end (and any beat the author marks).
                 _storyPreview.speakingSlot = null;
                 hideSubtitle();
-                // Wide on a silent beat — camera doesn't pin to a non-speaker.
-                if (_storyPreview.isSimulation) {
-                    _applyPreviewShot(SHOTS.wide, null);
-                }
                 return;
             }
             const prev = _storyPreview.speakingSlot;
@@ -2278,11 +2278,17 @@ function _applySimCamera() {
 /**
  * Apply a named camera shot during sim playback. Hard-cuts (durationMs=0)
  * for close-ups; tweens for wide returns. Disables auto-spin so the cut
- * doesn't fight the ping-pong.
+ * doesn't fight the ping-pong. Reads the speaker's head Y from
+ * _storyPreview.heads so close-ups frame the actual face — short
+ * characters don't get cropped, tall ones don't get clipped.
  */
 function _applyPreviewShot(shot, slot) {
     if (!_camera) return;
-    const pose = computeShotPose(shot, slot);
+    const head = slot && _storyPreview
+        ? _storyPreview.heads.find(h => h.slot === slot)
+        : null;
+    const headY = head?.headY;
+    const pose = computeShotPose(shot, slot, { headY });
     _autoSpin = false;
     if (pose.fov && pose.fov !== _camera.fov) {
         _camera.fov = pose.fov;
@@ -2376,6 +2382,10 @@ async function _buildSimulationPreview(asset) {
                 let entry;
                 if (mesh) {
                     container.add(mesh.group);
+                    // Approximate head-centre Y: top of the head minus ~0.3 m
+                    // (about half a stylised head). Used by close-up framing
+                    // so short / tall characters get the camera at face level.
+                    const headY = (mesh.totalHeight ?? 1.6) - 0.3;
                     entry = {
                         slot: c.slot,
                         container,
@@ -2383,6 +2393,7 @@ async function _buildSimulationPreview(asset) {
                         baseRotY: rotY,
                         label: `${c.archetype || 'Edge'}-core`,
                         talkParams: null,
+                        headY,
                         // Capture the mesh's mouth + facial-hair rigs so the
                         // tick loop can drive them with viseme params. Without
                         // this, asset-built character mouths never move.
@@ -2403,6 +2414,9 @@ async function _buildSimulationPreview(asset) {
                         label: `${c.archetype || 'Edge'}-core`,
                         talk: head.talk,
                         talkParams: head.talkParams,
+                        // Archetype heads sit at the lift Y; that's the head
+                        // centre since they're a head-only volume.
+                        headY: _SIM_ARCHETYPE_LIFT_Y,
                         dispose: head.dispose,
                         isArchetype: true,
                     };

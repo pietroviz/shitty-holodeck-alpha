@@ -53,7 +53,7 @@ import {
     CAST_LAYOUT,
     ORBIT_MAX_DISTANCE,
 } from '../shared/envGeometry.js?v=5';
-import { computeShotPose, pickShot, SHOTS } from '../shared/cameraShots.js?v=1';
+import { computeShotPose, pickShot, SHOTS } from '../shared/cameraShots.js?v=2';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 
@@ -498,6 +498,10 @@ export class SimulationBridge extends BaseBridge {
                     const mesh = await buildCharacterMesh(charAsset);
                     if (epoch !== this._castEpoch) { mesh.dispose(); return null; }
                     container.add(mesh.group);
+                    // Head-centre Y for camera framing on close-ups: top of
+                    // head minus ~0.3 m. Short / tall characters get the
+                    // camera at face level instead of fixed chest height.
+                    const headY = (mesh.totalHeight || 1.7) - 0.3;
                     entry = {
                         slot: cast.slot,
                         container,
@@ -508,6 +512,7 @@ export class SimulationBridge extends BaseBridge {
                         // totalHeight. Add 0.17 clearance so the tag floats
                         // just above, matching the archetype-head spacing.
                         labelOffsetY: (mesh.totalHeight || 1.7) + 0.17,
+                        headY,
                         mouthRig: mesh.mouthRig,
                         facialHairRig: mesh.facialHairRig,
                         dispose: () => mesh.dispose(),
@@ -530,6 +535,8 @@ export class SimulationBridge extends BaseBridge {
                     label,
                     talk: head.talk,
                     talkParams: head.talkParams,
+                    // Archetype heads sit at the lift Y (head-only volume).
+                    headY: ARCHETYPE_HEAD_LIFT_Y,
                     dispose: head.dispose,
                     isArchetype: true,
                 };
@@ -663,10 +670,16 @@ export class SimulationBridge extends BaseBridge {
      * shared/cameraShots.js so the homepage random-sim playback uses the
      * exact same shots. durationMs from the pose decides hard-cut (0) vs
      * tween — close-ups hard-cut, wide returns tween.
+     *
+     * Reads the speaker's head Y from this._heads so close-ups frame
+     * short / tall characters at face level instead of always shooting
+     * at a fixed chest height.
      */
     _applyShot(shot, slot) {
         if (!this._camera || !this._controls) return;
-        const pose = computeShotPose(shot, slot);
+        const head = slot ? this._heads?.find(h => h.slot === slot) : null;
+        const headY = head?.headY;
+        const pose = computeShotPose(shot, slot, { headY });
         if (pose.fov && pose.fov !== this._camera.fov) {
             this._camera.fov = pose.fov;
             this._camera.updateProjectionMatrix();
@@ -795,11 +808,12 @@ export class SimulationBridge extends BaseBridge {
             },
             onLine: ({ slot, text, silent }) => {
                 if (silent) {
+                    // Silent beat (260ms breather between lines): clear the
+                    // mouth/subtitle but HOLD the current shot. Cutting to
+                    // wide every line is film-school sloppy — wide is for
+                    // playback start and end.
                     this._speakingSlot = null;
                     hideSubtitle();
-                    // Return to wide on a silent beat — the camera doesn't
-                    // pin to a non-speaker.
-                    this._applyShot(pickShot(this._state.cameraStyle, null), null);
                     return;
                 }
                 const prevSlot = this._speakingSlot;

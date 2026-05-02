@@ -28,13 +28,18 @@ export const SHOTS = Object.freeze({
 
 /**
  * Compute the camera pose for a shot at a given speaking slot.
+ *
+ * Optional `opts.headY` is the target head's centre-of-face Y in world
+ * units — used so close-ups frame correctly on short / tall characters
+ * instead of always shooting at a fixed chest height. Defaults to 1.05.
+ *
  * Returns { pos: [x,y,z], target: [x,y,z], fov, durationMs } where
  * durationMs is the suggested tween length for transitions (0 = hard cut).
  *
  * Falls back to wide if shot or slot is unknown so a missing slot can
  * never strand the camera.
  */
-export function computeShotPose(shot, slot) {
+export function computeShotPose(shot, slot, opts = {}) {
     if (shot === SHOTS.wide || !slot) {
         return {
             pos:    [...SIM_CAMERA.pos],
@@ -48,13 +53,18 @@ export function computeShotPose(shot, slot) {
     const layout = CAST_LAYOUT[slot] || CAST_LAYOUT.CHAR_A;
     const [sx, , sz] = layout.pos;
 
+    // Head Y for the target. The camera's own Y rides slightly above so
+    // the framing reads as "looking at" rather than "looking up at".
+    const headY = Number.isFinite(opts.headY) ? opts.headY : 1.05;
+    const camY  = headY + 0.5;
+
     if (shot === SHOTS.close_up) {
-        // Tight close-up — camera ~2 m forward of the speaker, lifted to
-        // chest height, pulled in toward stage centre on the X axis so
+        // Tight close-up — camera ~2 m forward of the speaker, head-height
+        // adjusted, pulled in toward stage centre on the X axis so
         // off-axis flank speakers (B/C) still feel framed.
         return {
-            pos:    [sx * 0.45, 1.55, sz + 2.05],
-            target: [sx,        1.05, sz],
+            pos:    [sx * 0.45, camY,  sz + 2.05],
+            target: [sx,        headY, sz],
             fov:    38,
             // Hard cut by default — instantaneous, like a film edit.
             durationMs: 0,
@@ -64,13 +74,16 @@ export function computeShotPose(shot, slot) {
     if (shot === SHOTS.two_shot) {
         // Frames the speaker + their nearest companion. CHAR_A has both
         // flanks; flank speakers (B/C) get framed together with CHAR_A
-        // since A is the focal point of the trio.
+        // since A is the focal point of the trio. Head Y still drives
+        // the vertical aim so tall characters don't get clipped.
+        const twoCamY    = camY + 0.05;
+        const twoTargetY = headY - 0.05;
         if (slot === 'CHAR_A') {
             // CHAR_A speaking — camera shoots over CHAR_B's shoulder so
             // the audience reads "A is talking, B is listening".
             return {
-                pos:    [-1.4, 1.6, 2.6],
-                target: [-0.2, 1.0, -0.5],
+                pos:    [-1.4, twoCamY,    2.6],
+                target: [-0.2, twoTargetY, -0.5],
                 fov:    50,
                 durationMs: 0,
             };
@@ -79,15 +92,15 @@ export function computeShotPose(shot, slot) {
         // the stage so the speaker AND CHAR_A are both in frame.
         const sign = slot === 'CHAR_C' ? -1 : 1;   // CHAR_C → camera left, CHAR_B → camera right
         return {
-            pos:    [sign * 1.7, 1.6, sz + 2.6],
-            target: [sx * 0.4,    1.0, sz - 0.3],
+            pos:    [sign * 1.7, twoCamY,    sz + 2.6],
+            target: [sx * 0.4,   twoTargetY, sz - 0.3],
             fov:    50,
             durationMs: 0,
         };
     }
 
     // Unknown shot — wide fallback.
-    return computeShotPose(SHOTS.wide, slot);
+    return computeShotPose(SHOTS.wide, slot, opts);
 }
 
 // ── Cut policy ────────────────────────────────────────────────────
