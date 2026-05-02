@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Converter — dev only</title>
+    <style>
+        body { margin:0; background:#14161c; color:#d8dcec; font-family:-apple-system,system-ui,sans-serif; }
+        #wrap { display:grid; grid-template-columns:420px 1fr; min-height:100vh; }
+        #side { padding:20px 22px; border-right:1px solid #262a36; }
+        h1 { font-size:16px; margin:0 0 12px; letter-spacing:0.02em; }
+        .muted { color:#8494a7; font-size:13px; line-height:1.5; }
+        button { background:#5b6cff; color:white; border:0; padding:10px 16px; border-radius:8px; cursor:pointer; font-size:14px; margin-top:14px; margin-right:8px; }
+        button.secondary { background:#2e3446; }
+        button:disabled { opacity:0.5; cursor:not-allowed; }
+        #stage { padding:20px; }
+        #progress { margin-top:18px; font-size:13px; color:#a0acc0; }
+        #log { margin-top:14px; max-height:60vh; overflow:auto; font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.6; color:#a0acc0; background:#0e1016; padding:10px 12px; border-radius:6px; }
+        #log .ok { color:#6ad68a; }
+        #log .err { color:#ff6a7a; }
+        #log .warn { color:#f0c060; }
+        #summary { font-family:ui-monospace,Menlo,monospace; font-size:12px; line-height:1.7; color:#c8d0e0; background:#1a1d27; padding:14px 16px; border-radius:8px; max-height:75vh; overflow:auto; white-space:pre-wrap; }
+        code { background:#1e222e; padding:2px 6px; border-radius:3px; font-size:12px; }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="side">
+            <h1>Animation Converter</h1>
+            <p class="muted">
+                Dev-only batch tool. Walks every FBX in
+                <code>_refs/_FBX-Animations/MixamoForSimbox/</code>, parses it
+                with Three.js's <code>FBXLoader</code>, applies the same
+                leg-strip + root-motion-strip normalization that
+                <code>animationManager.js</code> uses today, then bundles all
+                clips into a single JSON file at
+                <code>public/holodeck/global_assets/animations/mixamo-simbox.json</code>.
+            </p>
+            <p class="muted">
+                Output bundle is web-native: drop the FBXLoader at runtime,
+                <code>fetch()</code> the JSON, and use
+                <code>THREE.AnimationClip.parse(clip)</code> to rehydrate.
+            </p>
+            <button id="start">Start conversion</button>
+            <button id="stop" class="secondary" disabled>Stop</button>
+            <div id="progress"></div>
+            <div id="log"></div>
+        </div>
+        <div id="stage">
+            <div id="summary">No bundle generated yet. Click "Start conversion" to begin.</div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+        const startBtn = document.getElementById('start');
+        const stopBtn  = document.getElementById('stop');
+        const logEl    = document.getElementById('log');
+        const progEl   = document.getElementById('progress');
+        const summaryEl = document.getElementById('summary');
+
+        let stopRequested = false;
+
+        function log(msg, cls = '') {
+            const ts = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = cls;
+            line.textContent = `[${ts}] ${msg}`;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        /**
+         * Mirrors animationManager.js's normalizeTrackNames().
+         * Strips leg bone tracks and Hips/Spine/Neck/Head .position tracks
+         * so the clip drops cleanly onto our procedural (legless) characters.
+         */
+        function normalizeTrackNames(clip) {
+            const removeIndices = [];
+            for (let i = 0; i < clip.tracks.length; i++) {
+                const track = clip.tracks[i];
+                const dotIndex = track.name.indexOf('.');
+                if (dotIndex === -1) continue;
+                const nodeName = track.name.substring(0, dotIndex);
+                const property = track.name.substring(dotIndex);
+                const sanitized = THREE.PropertyBinding.sanitizeNodeName(nodeName);
+                track.name = sanitized + property;
+                if (sanitized.match(/Hips$/i) && property === '.position') removeIndices.push(i);
+                if (/Spine|Neck|Head/.test(sanitized) && property === '.position') removeIndices.push(i);
+                if (/(?:Up)?Leg|Foot|ToeBase/.test(sanitized)) removeIndices.push(i);
+            }
+            for (let i = removeIndices.length - 1; i >= 0; i--) {
+                clip.tracks.splice(removeIndices[i], 1);
+            }
+        }
+
+        /**
+         * Parses a Mixamo-style filename like "Happy-Idle-StandIdleBored.fbx"
+         * into { emotion, intent, label }. Falls back gracefully when the
+         * filename doesn't follow the convention.
+         */
+        function parseFilename(filename) {
+            const base = filename.replace(/\.fbx$/i, '').trim();
+            const parts = base.split('-');
+            // Most files follow: Emotion-Intent-Label (label may contain dashes/spaces)
+            if (parts.length >= 3) {
+                return {
+                    emotion: parts[0].trim().toLowerCase(),
+                    intent:  parts[1].trim().toLowerCase(),
+                    label:   parts.slice(2).join('-').trim(),
+                };
+            }
+            return { emotion: 'unknown', intent: 'unknown', label: base };
+        }
+
+        /** Slug for the clip id: lowercase, dashes only. */
+        function slugify(s) {
+            return s.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        async function listFbxFiles() {
+            const res = await fetch('/api/admin/fbx-animations');
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(`list failed: ${res.status} ${err.error || ''} ${err.detail || ''}`);
+            }
+            const data = await res.json();
+            return data.files;
+        }
+
+        async function fetchFbxBytes(name) {
+            const url = `/api/admin/fbx-animations?name=${encodeURIComponent(name)}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`fetch ${name} → ${res.status}`);
+            return await res.arrayBuffer();
+        }
+
+        // Chunked save: the full bundle is too big for a single POST,
+        // so we send it in three phases — init (meta), append (one
+        // animation per request), finalize (assemble the file).
+        const SAVE_URL = '/api/admin/save-animations-bundle';
+        const SAVE_NAME = 'mixamo-simbox';
+
+        async function saveCall(payload) {
+            const res = await fetch(SAVE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(
+                    `save ${payload.action} failed: ${res.status} ${data.error || ''} ${data.detail || ''}`
+                );
+            }
+            return data;
+        }
+
+        function saveInit(meta)        { return saveCall({ action: 'init',     name: SAVE_NAME, meta }); }
+        function saveAppend(animation) { return saveCall({ action: 'append',   name: SAVE_NAME, animation }); }
+        function saveFinalize()        { return saveCall({ action: 'finalize', name: SAVE_NAME }); }
+
+        async function runConversion() {
+            stopRequested = false;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            logEl.innerHTML = '';
+            summaryEl.textContent = 'Working…';
+
+            const loader = new FBXLoader();
+            // Lightweight per-clip summary kept for the on-page summary table.
+            // The big payload (each `clip` JSON) is streamed straight to the
+            // server so we never hold the whole bundle in memory at once.
+            const summaries = [];
+            let total = 0, ok = 0, skipped = 0, failed = 0;
+            let totalTracks = 0;
+            let initialised = false;
+
+            try {
+                log('Listing FBX files…');
+                const files = await listFbxFiles();
+                total = files.length;
+                log(`Found ${total} files.`, 'ok');
+                progEl.textContent = `0 / ${total}`;
+
+                // Open staging on the server: writes meta header, wipes any
+                // prior staging directory.
+                await saveInit({
+                    version: 1,
+                    source: '_refs/_FBX-Animations/MixamoForSimbox',
+                    generatedAt: new Date().toISOString(),
+                    normalization: 'strip-legs-and-root-position',
+                    threeVersion: THREE.REVISION,
+                });
+                initialised = true;
+                log('Staging opened.', 'ok');
+
+                for (let i = 0; i < files.length; i++) {
+                    if (stopRequested) { log('Stopped.', 'warn'); break; }
+
+                    const filename = files[i];
+                    progEl.textContent = `${i + 1} / ${total} — ${filename}`;
+
+                    try {
+                        const buf = await fetchFbxBytes(filename);
+                        const fbx = loader.parse(buf, '');
+
+                        if (!fbx.animations || fbx.animations.length === 0) {
+                            log(`skip ${filename}: no animations in FBX`, 'warn');
+                            skipped++;
+                            continue;
+                        }
+
+                        const meta = parseFilename(filename);
+                        const id = slugify(`${meta.emotion}-${meta.intent}-${meta.label}`);
+
+                        // Most Mixamo FBXs ship a single clip. If there are
+                        // multiples, take the first and note it.
+                        if (fbx.animations.length > 1) {
+                            log(`note ${filename}: ${fbx.animations.length} clips, using [0]`, 'warn');
+                        }
+                        const clip = fbx.animations[0];
+                        clip.name = id;
+                        normalizeTrackNames(clip);
+
+                        const animation = {
+                            id,
+                            filename,
+                            emotion: meta.emotion,
+                            intent: meta.intent,
+                            label: meta.label,
+                            duration: Number(clip.duration.toFixed(4)),
+                            trackCount: clip.tracks.length,
+                            clip: THREE.AnimationClip.toJSON(clip),
+                        };
+
+                        // Stream this animation to the server. Each request
+                        // is well under any body-size limit even for the
+                        // chattiest Mixamo clips.
+                        await saveAppend(animation);
+
+                        summaries.push({
+                            id,
+                            emotion: meta.emotion,
+                            intent: meta.intent,
+                            tracks: clip.tracks.length,
+                            duration: clip.duration,
+                        });
+                        totalTracks += clip.tracks.length;
+                        ok++;
+                        log(`ok  ${filename} → ${id} (${clip.tracks.length} tracks, ${clip.duration.toFixed(2)}s)`, 'ok');
+                    } catch (err) {
+                        failed++;
+                        log(`fail ${filename}: ${err.message}`, 'err');
+                    }
+                }
+
+                if (ok === 0) {
+                    log('Nothing converted; not finalising bundle.', 'err');
+                    summaryEl.textContent = 'No animations were successfully converted.';
+                    return;
+                }
+
+                log('Finalising bundle…');
+                const result = await saveFinalize();
+                log(`Saved ${result.path} (${(result.bytes / 1024).toFixed(1)} KB, ${result.animationCount} animations)`, 'ok');
+
+                const summary = [
+                    `Bundle saved: ${result.path}`,
+                    `Size:         ${(result.bytes / 1024).toFixed(1)} KB`,
+                    `Animations:   ${ok}`,
+                    `Skipped:      ${skipped}`,
+                    `Failed:       ${failed}`,
+                    `Total tracks: ${totalTracks}`,
+                    ``,
+                    `Animations by emotion:`,
+                    ...countBy(summaries, 'emotion'),
+                    ``,
+                    `Animations by intent:`,
+                    ...countBy(summaries, 'intent'),
+                    ``,
+                    `Sample id: ${summaries[0]?.id}`,
+                ].join('\n');
+                summaryEl.textContent = summary;
+            } catch (err) {
+                log(`fatal: ${err.message}`, 'err');
+                summaryEl.textContent = `Fatal: ${err.message}`;
+            } finally {
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                progEl.textContent = `Done. ${ok} ok, ${skipped} skipped, ${failed} failed (of ${total}).`;
+            }
+        }
+
+        function countBy(arr, key) {
+            const counts = {};
+            for (const a of arr) counts[a[key]] = (counts[a[key]] || 0) + 1;
+            return Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([k, v]) => `  ${k.padEnd(12)} ${v}`);
+        }
+
+        startBtn.addEventListener('click', runConversion);
+        stopBtn.addEventListener('click', () => { stopRequested = true; });
+    </script>
+</body>
+</html>

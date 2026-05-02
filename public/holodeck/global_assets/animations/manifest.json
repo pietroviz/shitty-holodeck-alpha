@@ -1,0 +1,84 @@
+{
+  "categories": {
+    "angry": {
+      "name": "Angry",
+      "count": 6,
+      "files": [
+        "anim_angry-idle-standidlefight3.json",
+        "anim_angry-talk-sit-action-yell.json",
+        "anim_angry-talk-stand-action-punch-combo.json",
+        "anim_angry-talk-stand-taunt.json",
+        "anim_angry-talk-standing-arguing1.json",
+        "anim_angry-talk-standyelling.json"
+      ],
+      "folder": "angry"
+    },
+    "disgust": {
+      "name": "Disgust",
+      "count": 3,
+      "files": [
+        "anim_disgust-talk-stand-loserpose.json",
+        "anim_disgust-talk-standactionarmgesture.json",
+        "anim_disgust-talk-standactioncoocoo.json"
+      ],
+      "folder": "disgust"
+    },
+    "happy": {
+      "name": "Happy",
+      "count": 10,
+      "files": [
+        "anim_happy-idle-stand-action-twist-dance.json",
+        "anim_happy-idle-standactionfistpumpwaist.json",
+        "anim_happy-idle-standidlebored.json",
+        "anim_happy-idle-standidlehappy.json",
+        "anim_happy-talk-sit-action-cheering.json",
+        "anim_happy-talk-sit-action-clap.json",
+        "anim_happy-talk-sit-action-thumbs-up.json",
+        "anim_happy-talk-stand-action-chickendance.json",
+        "anim_happy-talk-standactionrockingout.json",
+        "anim_happy-talk-standtalking1.json"
+      ],
+      "folder": "happy"
+    },
+    "neutral": {
+      "name": "Neutral",
+      "count": 5,
+      "files": [
+        "anim_neutral-idle-standidle.json",
+        "anim_neutral-idle-standidle2.json",
+        "anim_neutral-idle-standidlearmstretch.json",
+        "anim_neutral-talk-standtalking2.json",
+        "anim_neutral-talk-talking3.json"
+      ],
+      "folder": "neutral"
+    },
+    "sad": {
+      "name": "Sad",
+      "count": 1,
+      "files": [
+        "anim_sad-idle-standidlesad.json"
+      ],
+      "folder": "sad"
+    },
+    "scared": {
+      "name": "Scared",
+      "count": 2,
+      "files": [
+        "anim_scared-idle-standidlelookaround1.json",
+        "anim_scared-talk-standactionpraying.json"
+      ],
+      "folder": "scared"
+    },
+    "surprised": {
+      "name": "Surprised",
+      "count": 4,
+      "files": [
+        "anim_surprised-talk-sit-action-raise-hand.json",
+        "anim_surprised-talk-sit-action-victory.json",
+        "anim_surprised-talk-stand-action-jazz-dancing.json",
+        "anim_surprised-talk-standactionblowyouaway.json"
+      ],
+      "folder": "surprised"
+    }
+  }
+}

@@ -54,6 +54,7 @@ import {
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
 import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=2';
+import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=1';
 
 let _renderer = null;
 let _scene    = null;
@@ -90,6 +91,31 @@ let _voiceConfigured = null; // Promise that resolves when voice state is applie
 // viseme shapes don't freeze mid-word when the speaker changes. Matches
 // the same constant used in SimulationBridge.
 const _MOUTH_REST_PARAMS = { jawOpen: 0, lipWidth: 0.45, lipRound: 0, tongueUp: 0, teethShow: 0 };
+
+// Beat-emotion → Mixamo-emotion mapping. Beats use a richer vocabulary
+// (wary / tender / wry / etc.); the animation library covers seven core
+// emotions. Map to the closest match; fall back to neutral.
+const _BEAT_EMOTION_MAP = {
+    // angry-ish
+    'angry': 'angry', 'cold': 'angry', 'cruel': 'angry', 'fierce': 'angry',
+    // disgusted
+    'disgust': 'disgust', 'disgusted': 'disgust',
+    // happy / warm
+    'happy': 'happy', 'joyful': 'happy', 'warm': 'happy', 'tender': 'happy',
+    'welcoming': 'happy', 'wholesome': 'happy', 'wry': 'happy', 'arch': 'happy',
+    // sad
+    'sad': 'sad', 'ache': 'sad', 'melancholy': 'sad', 'somber': 'sad',
+    // scared / wary
+    'scared': 'scared', 'wary': 'scared', 'nervous': 'scared', 'anxious': 'scared',
+    // surprised
+    'surprised': 'surprised', 'awed': 'surprised', 'stunned': 'surprised',
+    // neutral / contemplative / deadpan / reverent / measured / curious / resolute / resigned
+    // (everything else falls through to neutral)
+};
+function _resolveBeatEmotion(beat) {
+    const e = String(beat?.emotion || '').toLowerCase();
+    return _BEAT_EMOTION_MAP[e] || 'neutral';
+}
 
 // ── Browse music engine (for music asset preview playback) ──
 let _musicEngine = null;
@@ -494,7 +520,24 @@ function _startLoop() {
             // .talk function). Drive the speaker's rigs with the live
             // visemeParams; everyone else gets a closed-mouth rest pose so
             // their lips don't freeze mid-shape on a previous viseme.
+            //
+            // Animation rig also runs here — Mixamo body/torso/head
+            // quaternion overlays the synthetic idle bob from
+            // animateStoryHeads (position-only) so they coexist cleanly.
             for (const h of _storyPreview.heads) {
+                if (h.animationRig) {
+                    h.animationRig.update(delta);
+                    // Auto-fall-back: if a one-shot talk anim just ended,
+                    // seed back to a matching idle so the head doesn't
+                    // freeze mid-pose.
+                    if (h.animationRig.isFinished()) {
+                        const fallback = pickAnimation(_storyPreview.animationLibrary, {
+                            emotion: h.animationRig.currentEmotion() || 'neutral',
+                            intent:  'idle',
+                        });
+                        if (fallback) h.animationRig.play(animationState(fallback));
+                    }
+                }
                 if (h.isArchetype) continue;
                 const isSpeaker = h.slot === _storyPreview.speakingSlot;
                 const params = (isSpeaker && visemeParams) ? visemeParams : _MOUTH_REST_PARAMS;
@@ -2147,7 +2190,7 @@ function _startStoryPlayback() {
             const entry = cast.find(c => c.slot === slot);
             return entry?.archetype || null;
         },
-        onLine: ({ slot, text, silent }) => {
+        onLine: ({ slot, text, silent, beatIdx }) => {
             if (!_storyPreview) return;
             const style = _storyPreview.cameraStyle;
             if (silent) {
@@ -2166,6 +2209,23 @@ function _startStoryPlayback() {
             // multiple lines is film convention.
             if (_storyPreview.isSimulation && slot !== prev) {
                 _applyPreviewShot(pickShot(style, slot), slot);
+            }
+            // Animation: speaker → talk anim, everyone else → idle. Pull
+            // emotion from the current beat (already carried in story beats).
+            const beat = _storyPreview.beats?.[beatIdx];
+            const emotion = _resolveBeatEmotion(beat);
+            const lib = _storyPreview.animationLibrary;
+            for (const h of _storyPreview.heads) {
+                if (!h.animationRig || !lib?.length) continue;
+                const intent = (h.slot === slot) ? 'talk' : 'idle';
+                // Hold idle if already playing a matching idle (avoids
+                // restarting the loop on every line). Always restart on
+                // talk so the animation re-fires for each line.
+                if (intent === 'idle'
+                    && h.animationRig.currentIntent() === 'idle'
+                    && h.animationRig.currentEmotion() === emotion) continue;
+                const pick = pickAnimation(lib, { emotion, intent });
+                if (pick) h.animationRig.play(animationState(pick));
             }
         },
         onIdle: () => {
@@ -2351,6 +2411,12 @@ async function _buildSimulationPreview(asset) {
         const voiceAssets = await Promise.all(voicePromises);
         if (session !== _previewSession) return;
 
+        // Animation library — load once for the whole sim. Cheap (each
+        // trimmed Mixamo anim is ~50–200 KB; the whole library is well
+        // under 4 MB). We pick semantically (emotion + intent) per line.
+        const animationLibrary = await loadGlobalAssets('Animations').catch(() => []);
+        if (session !== _previewSession) return;
+
         // Music is wired to the sim but DOES NOT auto-play here — only the
         // user pressing Play (via previewPlaySimulation) starts audio. Stash
         // the musicId on _storyPreview so the play handler can find it.
@@ -2403,6 +2469,11 @@ async function _buildSimulationPreview(asset) {
                     // (about half a stylised head). Used by close-up framing
                     // so short / tall characters get the camera at face level.
                     const headY = (mesh.totalHeight ?? 1.6) - 0.3;
+                    // Per-head animation rig. Only asset-built characters
+                    // get one — archetype floating heads have no body to
+                    // animate via root quaternion.
+                    const animationRig = new AnimationRig();
+                    animationRig.attach(container);
                     entry = {
                         slot: c.slot,
                         container,
@@ -2411,16 +2482,11 @@ async function _buildSimulationPreview(asset) {
                         label: `${c.archetype || 'Edge'}-core`,
                         talkParams: null,
                         headY,
-                        // Per-character voice asset state — applied as the
-                        // baseState for this slot's lines. Falls back to
-                        // SIM_BASE_VOICE in speakLine if null.
                         voiceState,
-                        // Capture the mesh's mouth + facial-hair rigs so the
-                        // tick loop can drive them with viseme params. Without
-                        // this, asset-built character mouths never move.
                         mouthRig:      mesh.mouthRig      || null,
                         facialHairRig: mesh.facialHairRig || null,
-                        dispose: () => mesh.dispose(),
+                        animationRig,
+                        dispose: () => { animationRig.dispose(); mesh.dispose(); },
                         isArchetype: false,
                     };
                 } else {
@@ -2435,12 +2501,9 @@ async function _buildSimulationPreview(asset) {
                         label: `${c.archetype || 'Edge'}-core`,
                         talk: head.talk,
                         talkParams: head.talkParams,
-                        // Archetype heads sit at the lift Y; that's the head
-                        // centre since they're a head-only volume.
                         headY: _SIM_ARCHETYPE_LIFT_Y,
-                        // No char asset → no voiceState; speakLine falls back
-                        // to the archetype-driven SIM_BASE_VOICE.
                         voiceState,
+                        animationRig: null,
                         dispose: head.dispose,
                         isArchetype: true,
                     };
@@ -2477,7 +2540,18 @@ async function _buildSimulationPreview(asset) {
             // so the homepage random sim feels alive. dolly_drift in sim
             // preview falls back to wide for now (no ambient orbit here).
             cameraStyle: state.cameraStyle || 'speaker_cuts',
+            // Animation library + state for per-line emotion-driven anims.
+            animationLibrary,
         };
+
+        // Seed every animatable head with a neutral idle on build so the
+        // homepage scene reads as alive even before Play is pressed.
+        const neutralIdle = pickAnimation(animationLibrary, { emotion: 'neutral', intent: 'idle' });
+        if (neutralIdle) {
+            for (const h of heads) {
+                if (h.animationRig) h.animationRig.play(animationState(neutralIdle));
+            }
+        }
 
         _voiceConfigured = _ensureVoice().then(() => {
             if (!_voiceReady || !_voiceEngine) return;

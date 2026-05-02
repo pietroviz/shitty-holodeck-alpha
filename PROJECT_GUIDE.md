@@ -353,6 +353,96 @@ public/holodeck/
 
 ---
 
+## Animation Bundle (web-native AnimationClip JSON)
+
+Mixamo FBX files in `_refs/_FBX-Animations/` are reference assets — they don't deploy with the site. To use them at runtime we convert them once to a single JSON bundle of serialized `THREE.AnimationClip`s. That bundle is what the site loads (one fetch + `JSON.parse()`), letting us drop the `FBXLoader` dependency from the client bundle entirely.
+
+### How to (re)generate the bundle
+
+The converter follows the same dev-only browser-page + API-route pattern as the env thumbnail farm.
+
+1. `npm run dev`
+2. Open `http://localhost:3000/holodeck/animation-converter.html`
+3. Click **Start conversion**
+4. Bundle is written to `public/holodeck/global_assets/animations/mixamo-simbox.json`
+5. Commit the JSON and push
+
+**When to run:** after adding, removing, or renaming files in `_refs/_FBX-Animations/MixamoForSimbox/`.
+
+### What the converter does
+
+- Lists every `.fbx` in `_refs/_FBX-Animations/MixamoForSimbox/` via `GET /api/admin/fbx-animations`
+- Fetches each file's bytes via `GET /api/admin/fbx-animations?name=…`
+- Parses with `FBXLoader.parse()` and grabs `fbx.animations[0]`
+- Applies the **same normalization as `animationManager.js`**: strips leg bone tracks (`UpLeg`/`Leg`/`Foot`/`ToeBase`) and `Hips`/`Spine*`/`Neck`/`Head` `.position` tracks (root motion). The procedural characters have no visible legs and don't translate, so these tracks are dead weight.
+- Filenames are parsed as `Emotion-Intent-Label.fbx` and become slugged ids like `happy-idle-standidlebored`
+- Bundles all clips into a single JSON via `THREE.AnimationClip.toJSON(clip)` and POSTs to `/api/admin/save-animations-bundle`, which writes it to `public/holodeck/global_assets/animations/mixamo-simbox.json`
+
+Both API routes return `403` in production — these are dev-only and never expose write access on Vercel.
+
+### Bundle shape
+
+```json
+{
+  "version": 1,
+  "source": "_refs/_FBX-Animations/MixamoForSimbox",
+  "generatedAt": "2026-…T…Z",
+  "normalization": "strip-legs-and-root-position",
+  "threeVersion": 170,
+  "animationCount": 32,
+  "totalTracks": 1234,
+  "animations": [
+    {
+      "id": "happy-idle-standidlebored",
+      "filename": "Happy-Idle-StandIdleBored.fbx",
+      "emotion": "happy",
+      "intent": "idle",
+      "label": "StandIdleBored",
+      "duration": 3.45,
+      "trackCount": 38,
+      "clip": { /* THREE.AnimationClip.toJSON(...) output */ }
+    },
+    …
+  ]
+}
+```
+
+### Loading the bundle at runtime
+
+```js
+import * as THREE from 'three';
+
+const { animations } = await fetch('/holodeck/global_assets/animations/mixamo-simbox.json')
+    .then(r => r.json());
+
+// Index by id for quick lookup, or by emotion/intent for retrieval.
+const clipsById = new Map();
+for (const a of animations) {
+    clipsById.set(a.id, THREE.AnimationClip.parse(a.clip));
+}
+
+// Then: mixer.clipAction(clipsById.get('happy-idle-standidlebored')).play();
+```
+
+`AnimationManager` (in `public/holodeck/js/shared/animationManager.js`) currently loads from FBX at runtime; once we tie these animations to characters, that path can be replaced with the bundle loader above and the `FBXLoader` import removed.
+
+### File structure
+```
+_refs/_FBX-Animations/
+  MixamoForSimbox/                # Source FBX files (not deployed)
+    Happy-Idle-StandIdleBored.fbx
+    …
+public/holodeck/
+  animation-converter.html      # Dev-only converter page
+  global_assets/animations/
+    mixamo-simbox.json            # Generated bundle (committed)
+src/app/api/admin/
+  fbx-animations/route.ts       # GET list / GET bytes (dev only, 403 in prod)
+  save-animations-bundle/route.ts  # POST bundle (dev only, 403 in prod)
+```
+
+---
+
 ## Recent Changes (April 13, 2026 sessions — Claude Code terminal + Cowork)
 
 Changes made across two sessions. The first session (Claude Code terminal) addressed feedback from the in-app Feedback tab. The second session (Cowork) resolved the thumbnail system and deployed it live.
