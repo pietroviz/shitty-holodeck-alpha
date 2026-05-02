@@ -46,7 +46,7 @@ import {
     animateStoryHeads,
 } from '../shared/archetypeHead.js?v=2';
 import { buildEnvScene } from '../shared/envScene.js?v=4';
-import { buildCharacterMesh } from '../shared/characterMesh.js?v=2';
+import { buildCharacterMesh } from '../shared/characterMesh.js?v=3';
 import {
     DEFAULT_CAMERA,
     SIM_CAMERA,

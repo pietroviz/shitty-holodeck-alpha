@@ -40,7 +40,7 @@ import {
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     FACE_FEATURES, FACE_PLACEMENT_PRESETS, DEFAULT_COLORS,
 } from './shared/charConfig.js';
-import { buildCharacterMesh } from './shared/characterMesh.js?v=2';
+import { buildCharacterMesh } from './shared/characterMesh.js?v=3';
 import { loadGlobalAssets } from './assetLoader.js';
 import {
     STAGE_SIZE as _ENV_STAGE_SIZE,
@@ -2469,11 +2469,14 @@ async function _buildSimulationPreview(asset) {
                     // (about half a stylised head). Used by close-up framing
                     // so short / tall characters get the camera at face level.
                     const headY = (mesh.totalHeight ?? 1.6) - 0.3;
-                    // Per-head animation rig. Only asset-built characters
-                    // get one — archetype floating heads have no body to
-                    // animate via root quaternion.
+                    // Per-head animation rig. root binds to the character
+                    // container (full-body sway); head binds to the head
+                    // subgroup that pivots at the neck (independent head
+                    // shake/nod/turn). Future attention/look-at systems
+                    // can write to mesh.headGroup.quaternion AFTER the rig
+                    // updates, layering on top of the mocap baseline.
                     const animationRig = new AnimationRig();
-                    animationRig.attach(container);
+                    animationRig.attach(container, { head: mesh.headGroup });
                     entry = {
                         slot: c.slot,
                         container,

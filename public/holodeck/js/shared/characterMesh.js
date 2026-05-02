@@ -161,15 +161,31 @@ export async function buildCharacterMesh(asset) {
     group.add(rightHand);
     disposables.push(handGeo, rightHandGeo, handMat);
 
-    // ── Head ──
+    // ── Head subgroup ──
+    // Everything from here down (head mesh, eyes, brows, mouth rig, facial
+    // hair, hat, glasses) lives inside a single Group named 'head' that
+    // pivots at the neck (top of body). One rotation — from AnimationRig,
+    // a future "look-at" attention system, or anything else — swings the
+    // entire head + face as a unit. Last write to headGroup.quaternion
+    // wins, so layered systems (mocap nuance + attention bias) just stack.
     const neckGap = HEAD.neckGap;
-    const headBaseY = bodyTopY + neckGap;
+    const headGroup = new THREE.Group();
+    headGroup.name = 'head';
+    headGroup.position.y = bodyTopY;   // pivot at the neck
+    group.add(headGroup);
+
+    // All Y positions below are LOCAL to headGroup (subtract bodyTopY from
+    // the original world-Y formulae). Keep `headBaseY` etc. in world coords
+    // for backwards-compat / external use — totalHeight, head-Y framing.
+    const headBaseLocal = neckGap;
+    const headBaseY     = bodyTopY + headBaseLocal;     // world (kept for return)
+
     const { geometry: headGeo, frontZ } = generateHeadGeometry(s.headShape || 'roundedBox', headW, headH);
     const scalpSplitY = headH - headH * HEAD.scalpFraction;
     const headMat = _twoZoneMaterial(s.scalpColor || '#8b2020', s.skinColor || '#ffcc88', scalpSplitY);
     const head = new THREE.Mesh(headGeo, headMat);
-    head.position.y = headBaseY;
-    group.add(head);
+    head.position.y = headBaseLocal;
+    headGroup.add(head);
     disposables.push(headGeo, headMat);
 
     // ── Face placement ──
@@ -180,10 +196,15 @@ export async function buildCharacterMesh(asset) {
     const eyo = FACE_FEATURES.eye.yOffsetByHeight[fhPreset] || FACE_FEATURES.eye.yOffsetByHeight.medium;
     const myo = FACE_FEATURES.mouth.yOffsetByHeight[fhPreset] || FACE_FEATURES.mouth.yOffsetByHeight.medium;
     const skinH = headH - headH * HEAD.scalpFraction;
-    const skinCY = headBaseY + skinH / 2;
-    const faceCY = skinCY + faceOffset;
-    const eyeY   = faceCY + eyo;
-    const mouthY = faceCY - myo;
+    // Local-to-headGroup variants of the face coords:
+    const skinCYLocal  = headBaseLocal + skinH / 2;
+    const faceCYLocal  = skinCYLocal + faceOffset;
+    const eyeYLocal    = faceCYLocal + eyo;
+    const mouthYLocal  = faceCYLocal - myo;
+    // World variants kept for external math (camera framing, etc.):
+    const skinCY = bodyTopY + skinCYLocal;
+    const eyeY   = bodyTopY + eyeYLocal;
+    const mouthY = bodyTopY + mouthYLocal;
 
     // ── Eyes ──
     const eyeTex = makeEyeTexture(s.eyeIrisColor, s.eyeShape, s.eyelashStyle, s.eyelashColor);
@@ -191,14 +212,14 @@ export async function buildCharacterMesh(asset) {
     const eyeGeo = new THREE.PlaneGeometry(eyePlaneSize, eyePlaneSize);
     const eyeMatL = new THREE.MeshBasicMaterial({ map: eyeTex, transparent: true, depthWrite: false });
     const eyeL = new THREE.Mesh(eyeGeo, eyeMatL);
-    eyeL.position.set(-exo, eyeY, frontZ + 0.005);
-    group.add(eyeL);
+    eyeL.position.set(-exo, eyeYLocal, frontZ + 0.005);
+    headGroup.add(eyeL);
     const eyeTexR = eyeTex.clone(); eyeTexR.needsUpdate = true;
     const eyeGeoR = eyeGeo.clone();
     const eyeMatR = new THREE.MeshBasicMaterial({ map: eyeTexR, transparent: true, depthWrite: false });
     const eyeR = new THREE.Mesh(eyeGeoR, eyeMatR);
-    eyeR.position.set(exo, eyeY, frontZ + 0.005);
-    group.add(eyeR);
+    eyeR.position.set(exo, eyeYLocal, frontZ + 0.005);
+    headGroup.add(eyeR);
     disposables.push(eyeGeo, eyeGeoR, eyeMatL, eyeMatR, eyeTex, eyeTexR);
 
     // ── Eyebrows ──
@@ -213,11 +234,11 @@ export async function buildCharacterMesh(asset) {
             const browL = new THREE.Mesh(browGeo, browMatL);
             const browGeoR = browGeo.clone();
             const browR = new THREE.Mesh(browGeoR, browMatR);
-            const browY = eyeY + eyePlaneSize * 0.55;
-            browL.position.set(-exo, browY, frontZ + 0.006);
-            browR.position.set(exo, browY, frontZ + 0.006);
-            group.add(browL);
-            group.add(browR);
+            const browYLocal = eyeYLocal + eyePlaneSize * 0.55;
+            browL.position.set(-exo, browYLocal, frontZ + 0.006);
+            browR.position.set(exo, browYLocal, frontZ + 0.006);
+            headGroup.add(browL);
+            headGroup.add(browR);
             disposables.push(browGeo, browGeoR, browMatL, browMatR, browTexL, browTexR);
         }
     }
@@ -226,19 +247,20 @@ export async function buildCharacterMesh(asset) {
     const mouthRig = new MouthRig();
     if (s.lipColor)     mouthRig.setLipColor(s.lipColor);
     if (s.lipThickness) mouthRig.setLipThickness(s.lipThickness);
-    mouthRig.mesh.position.set(0, mouthY, frontZ + 0.005);
-    group.add(mouthRig.mesh);
+    mouthRig.mesh.position.set(0, mouthYLocal, frontZ + 0.005);
+    headGroup.add(mouthRig.mesh);
 
     // ── Facial hair (animated — jaw open drifts moustache + drops beard) ──
     const facialHairRig = new FacialHairRig();
     facialHairRig.setColor(s.facialHairColor || s.scalpColor || '#4a3728');
-    facialHairRig.attach(group, mouthY, frontZ + 0.005, headW);
+    facialHairRig.attach(headGroup, mouthYLocal, frontZ + 0.005, headW);
     if (s.facialHairStyle && s.facialHairStyle !== 'none') {
         facialHairRig.setStyle(s.facialHairStyle);
     }
 
     // ── Accessories (async) ──
-    const headTopY = headBaseY + headH;
+    const headTopLocal = headBaseLocal + headH;
+    const headTopY     = bodyTopY + headTopLocal;
     const PROP_REF = 1.1;
     const FACE_REF = 0.55;
     const HAIR_REF = 0.18;
@@ -246,7 +268,8 @@ export async function buildCharacterMesh(asset) {
     const accessoryPromises = [];
     const accessoryGroups  = [];
 
-    // Hat / Hair (only one slot — hat takes priority)
+    // Hat / Hair (only one slot — hat takes priority). Both attach to the
+    // head subgroup so they rotate with it.
     const hatId  = s.hatStyle;
     const hairId = s.hairStyle;
     const headwearId = (hatId && hatId !== 'none') ? hatId : ((hairId && hairId !== 'none') ? hairId : null);
@@ -255,8 +278,8 @@ export async function buildCharacterMesh(asset) {
             if (!prop) return;
             const scale = headW / PROP_REF;
             const g = _renderPropGroup(prop, hatId !== 'none' ? s.hatColor : s.hairColor, scale);
-            g.position.y = headTopY;
-            group.add(g);
+            g.position.y = headTopLocal;
+            headGroup.add(g);
             accessoryGroups.push(g);
         }));
     }
@@ -265,8 +288,8 @@ export async function buildCharacterMesh(asset) {
             if (!prop) return;
             const scale = headW / FACE_REF;
             const g = _renderPropGroup(prop, s.glassesColor, scale);
-            g.position.set(0, eyeY, frontZ + 0.01);
-            group.add(g);
+            g.position.set(0, eyeYLocal, frontZ + 0.01);
+            headGroup.add(g);
             accessoryGroups.push(g);
         }));
     }
@@ -290,5 +313,8 @@ export async function buildCharacterMesh(asset) {
         if (group.parent) group.parent.remove(group);
     }
 
-    return { group, totalHeight, mouthRig, facialHairRig, dispose };
+    // headGroup is exposed so callers (AnimationRig, future attention
+    // system) can rotate the head independently of the body without
+    // having to traverse the scene graph by name every frame.
+    return { group, headGroup, totalHeight, mouthRig, facialHairRig, dispose };
 }
