@@ -57,6 +57,21 @@ import { computeShotPose, pickShot, SHOTS } from '../shared/cameraShots.js?v=2';
 
 const SIM_BASE_VOICE = { speed: 175, pitch: 50, amplitude: 100, wordgap: 0, variant: 'm3' };
 
+// Map per-line shot overrides ('wide' / 'close-up' / 'two_shot' / etc.) to
+// the canonical SHOTS enum. Tolerates underscores, hyphens, common aliases.
+const _BRIDGE_SHOT_ALIASES = {
+    'wide': SHOTS.wide, 'wideshot': SHOTS.wide,
+    'close': SHOTS.close_up, 'closeup': SHOTS.close_up,
+    'close_up': SHOTS.close_up, 'close-up': SHOTS.close_up,
+    'two': SHOTS.two_shot, 'two_shot': SHOTS.two_shot,
+    'two-shot': SHOTS.two_shot, 'twoshot': SHOTS.two_shot,
+};
+function _normaliseShotForBridge(input) {
+    if (!input) return null;
+    const key = String(input).toLowerCase().replace(/\s+/g, '');
+    return _BRIDGE_SHOT_ALIASES[key] || null;
+}
+
 const TABS = [
     { id: 'file',  label: 'File',  icon: '📄' },
     { id: 'setup', label: 'Setup', icon: '🎬' },
@@ -819,12 +834,15 @@ export class SimulationBridge extends BaseBridge {
                 const cast = this._state.cast.find(c => c.slot === slot);
                 return cast?.archetype || null;
             },
-            onLine: ({ slot, text, silent }) => {
+            // Per-line override schema (read from beat.lines[lineIdx]):
+            //   shot?: 'wide' | 'close_up' | 'two_shot'  — overrides the
+            //     cameraStyle's default for THIS line's cut. Aliases like
+            //     'close', 'closeup', 'close-up', 'two-shot' all work.
+            //   emotion?, animation?, sfx?  — read by the renderer (handled
+            //     in previewRenderer's homepage playback for now; editor
+            //     playback honours `shot` so directors can preview cuts).
+            onLine: ({ slot, text, silent, beatIdx, lineIdx }) => {
                 if (silent) {
-                    // Silent beat (260ms breather between lines): clear the
-                    // mouth/subtitle but HOLD the current shot. Cutting to
-                    // wide every line is film-school sloppy — wide is for
-                    // playback start and end.
                     this._speakingSlot = null;
                     hideSubtitle();
                     return;
@@ -832,10 +850,17 @@ export class SimulationBridge extends BaseBridge {
                 const prevSlot = this._speakingSlot;
                 this._speakingSlot = slot;
                 showSubtitle(text);
-                // Apply the shot only on speaker-change to avoid re-cutting
-                // mid-monologue. dolly_drift drives itself in _onTick.
-                if (slot !== prevSlot && this._state.cameraStyle !== 'dolly_drift') {
-                    this._applyShot(pickShot(this._state.cameraStyle, slot), slot);
+
+                const beat = this._state.beats?.[beatIdx];
+                const line = beat?.lines?.[lineIdx];
+                const lineShot = _normaliseShotForBridge(line?.shot);
+                // Cut on speaker-change OR whenever a line specifies an
+                // explicit shot — the override is the whole point.
+                const shouldCut = (slot !== prevSlot || lineShot)
+                                && this._state.cameraStyle !== 'dolly_drift';
+                if (shouldCut) {
+                    const shot = lineShot || pickShot(this._state.cameraStyle, slot);
+                    this._applyShot(shot, slot);
                 }
             },
             onIdle: () => {

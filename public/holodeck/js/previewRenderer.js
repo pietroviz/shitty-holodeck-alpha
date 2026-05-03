@@ -141,6 +141,23 @@ function _beatToMusicDials(beat) {
     return { valence, complexity };
 }
 
+// Map a per-line shot override (human or AI-emitted) to the canonical
+// SHOTS enum. Tolerates underscores, hyphens, and a few common aliases
+// so an author can write `shot: "close-up"` or `shot: "close"` without
+// the override silently falling through to the style default.
+const _SHOT_ALIASES = {
+    'wide':       SHOTS.wide,       'wideshot':       SHOTS.wide,
+    'close':      SHOTS.close_up,   'closeup':        SHOTS.close_up,
+    'close_up':   SHOTS.close_up,   'close-up':       SHOTS.close_up,
+    'two':        SHOTS.two_shot,   'two_shot':       SHOTS.two_shot,
+    'two-shot':   SHOTS.two_shot,   'twoshot':        SHOTS.two_shot,
+};
+function _normaliseShot(input) {
+    if (!input) return null;
+    const key = String(input).toLowerCase().replace(/\s+/g, '');
+    return _SHOT_ALIASES[key] || null;
+}
+
 // ── Browse music engine (for music asset preview playback) ──
 let _musicEngine = null;
 let _musicReady  = false;
@@ -2133,7 +2150,21 @@ function _startStoryPlayback() {
             const entry = cast.find(c => c.slot === slot);
             return entry?.archetype || null;
         },
-        onLine: ({ slot, text, silent, beatIdx }) => {
+        // Per-line override schema (read from beat.lines[lineIdx]):
+        //   emotion?:   string  — overrides beat emotion for THIS line's
+        //                          animation pick (one defiant line in an
+        //                          otherwise sad beat). Music dials still
+        //                          follow the beat-level emotion.
+        //   shot?:      'wide' | 'close_up' | 'two_shot' — overrides the
+        //                          camera style's default for this cut.
+        //   animation?: string  — explicit anim id (e.g. for an author who
+        //                          wants the chicken dance specifically).
+        //   sfx?:       string  — reserved for future SFX system.
+        //
+        // All fields optional. Both human authors and AI generators emit
+        // the same shape; the runtime falls back to beat-level defaults
+        // whenever a field is unspecified.
+        onLine: ({ slot, text, silent, beatIdx, lineIdx }) => {
             if (!_storyPreview) return;
             const style = _storyPreview.cameraStyle;
             if (silent) {
@@ -2145,17 +2176,26 @@ function _startStoryPlayback() {
                 hideSubtitle();
                 return;
             }
+
+            const beat = _storyPreview.beats?.[beatIdx];
+            const line = beat?.lines?.[lineIdx];
+
             const prev = _storyPreview.speakingSlot;
             _storyPreview.speakingSlot = slot;
             showSubtitle(text);
+
             // Cut on speaker-change only — holding the same speaker through
             // multiple lines is film convention. With v2 music playing, the
             // cut is QUEUED for the next musical downbeat (drums or bass)
             // instead of firing instantly — much more cinematic, since the
             // edit lands on the rhythm. A 250 ms failsafe still cuts even
             // if no beat fires (slow tempos, rests, theme transitions).
-            if (_storyPreview.isSimulation && slot !== prev) {
-                const shot = pickShot(style, slot);
+            //
+            // Per-line shot override fires whenever it's set, even on the
+            // SAME speaker — that's the whole point of an explicit override.
+            const lineShot = _normaliseShot(line?.shot);
+            if (_storyPreview.isSimulation && (slot !== prev || lineShot)) {
+                const shot = lineShot || pickShot(style, slot);
                 if (_storyPreview.musicMode === 'v2') {
                     _storyPreview.pendingCut = { shot, slot };
                     if (_storyPreview.pendingCutTimeout) clearTimeout(_storyPreview.pendingCutTimeout);
@@ -2167,17 +2207,14 @@ function _startStoryPlayback() {
                         _applyPreviewShot(q.shot, q.slot);
                     }, 250);
                 } else {
-                    // Legacy path — no beat events available, cut immediately.
                     _applyPreviewShot(shot, slot);
                 }
             }
-            // Animation: speaker → talk anim, everyone else → idle. Pull
-            // emotion from the current beat (already carried in story beats).
-            const beat = _storyPreview.beats?.[beatIdx];
-            const emotion = _resolveBeatEmotion(beat);
+
             // Music dials: on beat-change, modulate valence/complexity from
-            // the beat's emotion + tension so the music tracks the story.
-            // Only fires for v2 themes (legacy MusicEngine has no dials).
+            // the BEAT-level emotion + tension so the music tracks the story.
+            // Per-line emotion overrides do NOT modulate music — that would
+            // lurch the soundtrack on every line.
             if (_storyPreview.musicMode === 'v2' && beatIdx !== _storyPreview.lastBeatIdx) {
                 _storyPreview.lastBeatIdx = beatIdx;
                 if (beat) {
@@ -2188,10 +2225,23 @@ function _startStoryPlayback() {
                     } catch { /* silent */ }
                 }
             }
+
+            // Animation: per-line override > line.emotion > beat.emotion.
+            const emotion = line?.emotion
+                ? (_BEAT_EMOTION_MAP[String(line.emotion).toLowerCase()] || 'neutral')
+                : _resolveBeatEmotion(beat);
             const lib = _storyPreview.animationLibrary;
+            const explicitAnim = line?.animation
+                ? lib?.find(a => a.id === line.animation || a.id === `anim_${line.animation}`)
+                : null;
             for (const h of _storyPreview.heads) {
                 if (!h.animationRig || !lib?.length) continue;
-                const intent = (h.slot === slot) ? 'talk' : 'idle';
+                const isSpeaker = h.slot === slot;
+                if (isSpeaker && explicitAnim) {
+                    h.animationRig.play(animationState(explicitAnim));
+                    continue;
+                }
+                const intent = isSpeaker ? 'talk' : 'idle';
                 // Hold idle if already playing a matching idle (avoids
                 // restarting the loop on every line). Always restart on
                 // talk so the animation re-fires for each line.

@@ -25,6 +25,22 @@ const NOW  = new Date().toISOString();
 // cuts something to chew on. Each beat is a single conversational
 // exchange (3–5 lines), most beats touch CHAR_A/B/C so cuts fire
 // regularly. Function/emotion/tension match the corpus convention.
+//
+// Each line is either:
+//   ['SLOT', 'text']                              — minimal; inherits beat
+//   { speaker, text, emotion?, shot?,             — per-line overrides
+//     animation?, sfx? }
+//
+// Per-line fields (all optional; both human authors and AI generators
+// emit the same shape):
+//   emotion    — 'angry' | 'sad' | 'happy' | 'scared' | 'surprised' |
+//                'disgust' | 'neutral'  (or any beat-level emotion alias).
+//                Overrides beat emotion for THIS line's animation pick.
+//   shot       — 'wide' | 'close_up' | 'two_shot' (aliases tolerated).
+//                Overrides cameraStyle's default for this line's cut.
+//   animation  — explicit animation id (e.g. 'happy-talk-stand-action-
+//                chickendance'). For directors who want a specific gesture.
+//   sfx        — reserved for future SFX system.
 function beat(id, lines, opts = {}) {
     return {
         id,
@@ -33,7 +49,7 @@ function beat(id, lines, opts = {}) {
         function:   opts.function  || 'arrival',
         emotion:    opts.emotion   || 'curious',
         tension:    opts.tension   ?? 3,
-        lines: lines.map(([speaker, text]) => ({ speaker, text })),
+        lines: lines.map(L => Array.isArray(L) ? { speaker: L[0], text: L[1] } : L),
     };
 }
 
@@ -244,14 +260,28 @@ const TEMPLATES = [
             { slot:'CHAR_C', charId:'char_chef_ramona',        archetype:'Anchor' },
         ],
         beats: [
+            // Demo: this beat uses per-line overrides to push the
+            // direction. The beat emotion stays 'ache' (drives the music
+            // dials), but individual lines flag their own emotion + shot.
             beat('karaoke_1', [
-                ['CHAR_A', "I'm going to sing it. The one you said not to."],
-                ['CHAR_C', "Don't. He's not even here."],
-                ['CHAR_B', "Maybe that's the point."],
+                // Defiant outburst against a sad song — angry anim, hard
+                // close-up so the audience reads the resolve in her face.
+                { speaker: 'CHAR_A', text: "I'm going to sing it. The one you said not to.",
+                  emotion: 'angry', shot: 'close_up' },
+                // C pleading. No override — inherits beat's ache mood.
+                { speaker: 'CHAR_C', text: "Don't. He's not even here." },
+                // B's wry interjection — a beat of dark humour mid-tragedy.
+                { speaker: 'CHAR_B', text: "Maybe that's the point.",
+                  emotion: 'happy', shot: 'close_up' },
             ], { function:'reveal', emotion:'ache', tension:5 }),
             beat('karaoke_2', [
-                ['CHAR_A', "Three minutes. Three minutes and then I never have to sing it again."],
-                ['CHAR_C', "Okay. We'll be right here."],
+                // A's resigned acceptance — close stays tight on her face.
+                { speaker: 'CHAR_A', text: "Three minutes. Three minutes and then I never have to sing it again.",
+                  shot: 'close_up' },
+                // C's reassurance — pull back to a two-shot so we see
+                // both of them, listener-and-spoken.
+                { speaker: 'CHAR_C', text: "Okay. We'll be right here.",
+                  shot: 'two_shot' },
             ], { function:'support', emotion:'tender', tension:4 }),
         ],
     },

@@ -10,8 +10,8 @@
   ],
   "meta": {
     "origin": "template",
-    "created": "2026-05-01T18:08:31.967Z",
-    "modified": "2026-05-01T18:08:31.967Z",
+    "created": "2026-05-03T05:07:00.763Z",
+    "modified": "2026-05-03T05:07:00.763Z",
     "version": 2
   },
   "payload": {
@@ -53,7 +53,9 @@
           "lines": [
             {
               "speaker": "CHAR_A",
-              "text": "I'm going to sing it. The one you said not to."
+              "text": "I'm going to sing it. The one you said not to.",
+              "emotion": "angry",
+              "shot": "close_up"
             },
             {
               "speaker": "CHAR_C",
@@ -61,7 +63,9 @@
             },
             {
               "speaker": "CHAR_B",
-              "text": "Maybe that's the point."
+              "text": "Maybe that's the point.",
+              "emotion": "happy",
+              "shot": "close_up"
             }
           ]
         },
@@ -79,11 +83,13 @@
           "lines": [
             {
               "speaker": "CHAR_A",
-              "text": "Three minutes. Three minutes and then I never have to sing it again."
+              "text": "Three minutes. Three minutes and then I never have to sing it again.",
+              "shot": "close_up"
             },
             {
               "speaker": "CHAR_C",
-              "text": "Okay. We'll be right here."
+              "text": "Okay. We'll be right here.",
+              "shot": "two_shot"
             }
           ]
         }
