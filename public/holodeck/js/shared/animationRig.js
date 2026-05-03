@@ -94,8 +94,14 @@ export class AnimationRig {
      * snapshot the inverse of its frame-0 value — this is the rotation
      * that "subtracts" the actor's starting pose so only relative motion
      * gets layered onto our character's rest.
+     *
+     * Also resets every bound joint to its rest pose first. That way a
+     * joint that the new animation DOESN'T animate (rare in practice
+     * but possible) falls back to rest instead of freezing at the last
+     * frame of the previous animation.
      */
     play(animState) {
+        this.resetJoints();
         this._anim = animState || null;
         this._t = 0;
         this._isPlaying = !!animState;

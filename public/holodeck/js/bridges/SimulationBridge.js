@@ -44,7 +44,7 @@ import {
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from '../shared/archetypeHead.js?v=2';
+} from '../shared/archetypeHead.js?v=6';
 import { buildEnvScene } from '../shared/envScene.js?v=4';
 import { buildCharacterMesh } from '../shared/characterMesh.js?v=4';
 import {

@@ -56,9 +56,23 @@ const source = JSON.parse(fs.readFileSync(SOURCE, 'utf8'));
 console.log(`Loaded ${source.animations.length} animations from ${path.relative(REPO_ROOT, SOURCE)}`);
 console.log();
 
+// Animations we deliberately drop — measured peak arm-deviation < 0.05
+// (effectively static arm motion). The picker would otherwise occasionally
+// land on these for talk lines and the speaker would just stand there.
+const SKIP_IDS = new Set([
+    'neutral-talk-talking3',
+    'scared-talk-standactionpraying',
+]);
+
 let kept = 0, skipped = 0;
 
 for (const anim of source.animations) {
+    if (SKIP_IDS.has(anim.id)) {
+        console.warn(`  - ${anim.id}: in SKIP_IDS (low-motion talk clip) — skipped`);
+        skipped++;
+        continue;
+    }
+
     const tracks = [];
     for (const track of anim.clip.tracks) {
         const targetName = BONE_MAP[track.name];

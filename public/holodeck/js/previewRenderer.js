@@ -30,7 +30,7 @@ import {
     pickThreeBeats,
     speakWithArchetype,
     animateStoryHeads,
-} from './shared/archetypeHead.js?v=5';
+} from './shared/archetypeHead.js?v=6';
 import { makeEyeTexture, makeEyebrowTexture } from './shared/eyeTexture.js';
 import { generateHeadGeometry } from './shared/headShapes.js';
 import { generateBodyGeometry } from './shared/bodyShapes.js';
@@ -54,7 +54,7 @@ import {
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
 import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=2';
-import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=3';
+import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=4';
 
 let _renderer = null;
 let _scene    = null;

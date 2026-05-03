@@ -42,13 +42,12 @@
     },
     "neutral": {
       "name": "Neutral",
-      "count": 5,
+      "count": 4,
       "files": [
         "anim_neutral-idle-standidle.json",
         "anim_neutral-idle-standidle2.json",
         "anim_neutral-idle-standidlearmstretch.json",
-        "anim_neutral-talk-standtalking2.json",
-        "anim_neutral-talk-talking3.json"
+        "anim_neutral-talk-standtalking2.json"
       ],
       "folder": "neutral"
     },
@@ -62,10 +61,9 @@
     },
     "scared": {
       "name": "Scared",
-      "count": 2,
+      "count": 1,
       "files": [
-        "anim_scared-idle-standidlelookaround1.json",
-        "anim_scared-talk-standactionpraying.json"
+        "anim_scared-idle-standidlelookaround1.json"
       ],
       "folder": "scared"
     },

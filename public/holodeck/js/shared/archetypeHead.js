@@ -312,11 +312,19 @@ export function setSubtitleWord(idx) {
     const words = _subtitleState.words;
     if (!words || words.length === 0) return;
     if (idx == null || idx < 0) return; // keep showing current word between visemes
-    const clamped = Math.max(0, Math.min(words.length - 1, idx));
-    if (clamped === _subtitleState.idx) return;
-    _subtitleState.idx = clamped;
+    const target = Math.max(0, Math.min(words.length - 1, idx));
+    const cur    = _subtitleState.idx;
+    // Catch-up: advance ONE word per call, never go backward. Single-phoneme
+    // words ("a", "I", "the") can have visemes that finish in <16 ms — the
+    // engine's queueIndex jumps multiple words between two ticks, and a
+    // direct jump to `target` would silently skip the intermediates. By
+    // advancing one word at a time the caption walks through every word
+    // for at least one frame, catching up over a few ticks if needed.
+    if (target <= cur) return;
+    const next = cur + 1;
+    _subtitleState.idx = next;
     const el = document.getElementById(SUBTITLE_ID);
-    if (el) el.textContent = words[clamped];
+    if (el) el.textContent = words[next];
 }
 
 export function hideSubtitle() {
