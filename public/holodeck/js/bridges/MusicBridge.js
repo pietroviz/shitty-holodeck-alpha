@@ -22,7 +22,7 @@
 
 import { BaseBridge }                       from './BaseBridge.js?v=4';
 import { renderFileTab, wireFileTabEvents } from '../shared/builderUI.js';
-import { musicPlayer }                      from '../shared/musicPlayer.js?v=1';
+import { musicPlayer }                      from '../shared/musicPlayer.js?v=2';
 import { validateTheme }                    from '../shared/musicSchema.js?v=1';
 import { buildMusicVisualizer, deriveBackgroundColor } from '../shared/musicVisualizer.js?v=4';
 import * as THREE                           from 'three';

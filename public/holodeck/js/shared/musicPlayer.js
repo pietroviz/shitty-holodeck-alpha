@@ -30,6 +30,12 @@ let _initPromise = null;
 let _controller       = null;
 let _onEnd            = null;
 let _lastFireByRole   = Object.create(null);
+// Multi-subscriber event for "any layer just fired a note." Keyed off the
+// internal onLayerFire compiler callback so every subscriber sees the same
+// timing the audio actually heard. Used by beat-aware camera cuts and (in
+// future) story-level SFX triggers — anything that wants to sync to the
+// music's rhythm should subscribe here rather than poll getLastFireByRole.
+let _layerFireSubs    = [];
 
 /** Lazy-load tone + tonal + packs once. Subsequent calls await the same promise. */
 function init() {
@@ -88,6 +94,13 @@ async function play(theme, opts = {}) {
                 _lastFireByRole[role] = (typeof performance !== 'undefined')
                     ? performance.now()
                     : Date.now();
+                // Notify external subscribers (camera cuts, future SFX, etc.).
+                // Each subscriber is wrapped so a thrown handler can't kill
+                // the audio path or block other subscribers.
+                for (const sub of _layerFireSubs) {
+                    try { sub(role); }
+                    catch (e) { console.warn('[musicPlayer] subscribeLayerFire handler threw:', e?.message || e); }
+                }
             },
         });
         _onEnd = opts.onEnd ?? null;
@@ -150,6 +163,27 @@ function getLastFireByRole() {
     return { ..._lastFireByRole };
 }
 
+/**
+ * Subscribe to "any layer just fired a note" events. Handler receives
+ * the role string ('bass' | 'drums' | 'melody' | 'pad' | 'chords' | ...).
+ * Returns an unsubscribe function — callers MUST call it on teardown
+ * to avoid leaking handlers across sim builds.
+ *
+ * Use this for anything that needs to sync to the music's rhythm:
+ *   • Beat-aware camera cuts (filter to drums/bass for downbeats)
+ *   • Story-level SFX triggers (fire a stinger on a specific role)
+ *   • Visualisers, particle pulses, screen-shake on heavy hits
+ *
+ * Multiple subscribers coexist; each gets every event.
+ */
+function subscribeLayerFire(handler) {
+    if (typeof handler !== 'function') return () => {};
+    _layerFireSubs.push(handler);
+    return () => {
+        _layerFireSubs = _layerFireSubs.filter(h => h !== handler);
+    };
+}
+
 /** Diagnostic — current layer state if a controller is alive. */
 function getLayerSnapshot() {
     if (!_controller || !_controller._layerSnapshot) return [];
@@ -166,4 +200,5 @@ export const musicPlayer = {
     applyMode,
     getLastFireByRole,
     getLayerSnapshot,
+    subscribeLayerFire,
 };

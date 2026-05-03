@@ -23,7 +23,7 @@
  * isn't v2, we log and skip — there's no data path that should reach this.
  */
 
-import { musicPlayer } from './musicPlayer.js?v=1';
+import { musicPlayer } from './musicPlayer.js?v=2';
 import { assetToTheme, isV2MusicAsset } from './musicCompiler.js?v=2';
 
 export class MusicEngine {

@@ -18,7 +18,7 @@ import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
 import { MusicEngine } from './shared/musicEngine.js?v=2';
-import { musicPlayer } from './shared/musicPlayer.js?v=1';
+import { musicPlayer } from './shared/musicPlayer.js?v=2';
 import { assetToTheme } from './shared/musicCompiler.js?v=2';
 import { buildMusicVisualizer, deriveBackgroundColor } from './shared/musicVisualizer.js?v=4';
 import {
@@ -2041,6 +2041,10 @@ function _teardownStoryPreview() {
     hideSubtitle();
     removeStoryNameTags();
     if (_voiceEngine) _voiceEngine.stop();
+    // Drop the musicPlayer beat subscription before nulling state, otherwise
+    // the next sim's subscriber would race with this one's queued cuts.
+    try { _storyPreview._unsubscribeLayerFire?.(); } catch {}
+    if (_storyPreview.pendingCutTimeout) clearTimeout(_storyPreview.pendingCutTimeout);
     for (const h of _storyPreview.heads) {
         h.container.parent?.remove(h.container);
         h.dispose?.();
@@ -2145,9 +2149,27 @@ function _startStoryPlayback() {
             _storyPreview.speakingSlot = slot;
             showSubtitle(text);
             // Cut on speaker-change only — holding the same speaker through
-            // multiple lines is film convention.
+            // multiple lines is film convention. With v2 music playing, the
+            // cut is QUEUED for the next musical downbeat (drums or bass)
+            // instead of firing instantly — much more cinematic, since the
+            // edit lands on the rhythm. A 250 ms failsafe still cuts even
+            // if no beat fires (slow tempos, rests, theme transitions).
             if (_storyPreview.isSimulation && slot !== prev) {
-                _applyPreviewShot(pickShot(style, slot), slot);
+                const shot = pickShot(style, slot);
+                if (_storyPreview.musicMode === 'v2') {
+                    _storyPreview.pendingCut = { shot, slot };
+                    if (_storyPreview.pendingCutTimeout) clearTimeout(_storyPreview.pendingCutTimeout);
+                    _storyPreview.pendingCutTimeout = setTimeout(() => {
+                        if (!_storyPreview?.pendingCut) return;
+                        const q = _storyPreview.pendingCut;
+                        _storyPreview.pendingCut = null;
+                        _storyPreview.pendingCutTimeout = null;
+                        _applyPreviewShot(q.shot, q.slot);
+                    }, 250);
+                } else {
+                    // Legacy path — no beat events available, cut immediately.
+                    _applyPreviewShot(shot, slot);
+                }
             }
             // Animation: speaker → talk anim, everyone else → idle. Pull
             // emotion from the current beat (already carried in story beats).
@@ -2510,7 +2532,31 @@ async function _buildSimulationPreview(asset) {
             // every line within the same beat.
             musicMode: 'idle',
             lastBeatIdx: -1,
+            // Beat-locked camera cuts — speaker change queues a cut here;
+            // a musicPlayer layer-fire subscriber pops it on the next
+            // downbeat (drums or bass). Subscriber handle is stashed so
+            // teardown can unsubscribe and avoid leaking handlers.
+            pendingCut: null,
+            pendingCutTimeout: null,
+            _unsubscribeLayerFire: null,
         };
+
+        // Subscribe to musicPlayer beat events. Filter to downbeat roles
+        // (drums + bass) so cuts land on the strong beat, not on melody
+        // noodles. Same hook is the future home for SFX triggers — when
+        // story SFX land, they register an additional subscriber here.
+        _storyPreview._unsubscribeLayerFire = musicPlayer.subscribeLayerFire((role) => {
+            if (!_storyPreview) return;
+            if (role !== 'drums' && role !== 'bass') return;
+            const queued = _storyPreview.pendingCut;
+            if (!queued) return;
+            _storyPreview.pendingCut = null;
+            if (_storyPreview.pendingCutTimeout) {
+                clearTimeout(_storyPreview.pendingCutTimeout);
+                _storyPreview.pendingCutTimeout = null;
+            }
+            _applyPreviewShot(queued.shot, queued.slot);
+        });
 
         // Seed every animatable head with a neutral idle on build so the
         // homepage scene reads as alive even before Play is pressed.
