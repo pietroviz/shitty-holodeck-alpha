@@ -52,7 +52,7 @@ const TEMPLATES = [
         tags: ['fantasy','nature','elder','council'],
         description: 'Three forest folk weigh in on a problem the trees have been gossiping about.',
         envId:   'env_giant_mushroom_forest',
-        musicId: 'mus_forest_canopy',
+        musicId: 'curious_wandering',
         cast: [
             { slot:'CHAR_A', charId:'char_oakbeard',         archetype:'Anchor' },
             { slot:'CHAR_B', charId:'char_pixie_dust',       archetype:'Bloom'  },
@@ -79,7 +79,7 @@ const TEMPLATES = [
         tags: ['cyberpunk','urban','tense','noir'],
         description: 'Three operators in a rain-slick alley, working out who got burned.',
         envId:   'env_neon_district',
-        musicId: 'mus_neon_pulse',
+        musicId: 'tense_standoff',
         cast: [
             { slot:'CHAR_A', charId:'char_hacker_zero',     archetype:'Edge'   },
             { slot:'CHAR_B', charId:'char_cyborg_kai',      archetype:'Glitch' },
@@ -106,7 +106,7 @@ const TEMPLATES = [
         tags: ['cozy','home','friendship','quiet'],
         description: 'Old friends, new tea, one small confession that changes the room.',
         envId:   'env_cozy_living_room',
-        musicId: 'mus_late_night_lofi',
+        musicId: 'cozy_fireside',
         cast: [
             { slot:'CHAR_A', charId:'char_influencer_aria', archetype:'Edge'  },
             { slot:'CHAR_B', charId:'char_sitcom_steve',    archetype:'Bloom' },
@@ -132,7 +132,7 @@ const TEMPLATES = [
         tags: ['underwater','mystical','prophecy','awe'],
         description: 'Three pilgrims at the edge of a kelp cathedral. Something ancient is listening.',
         envId:   'env_kelp_cathedral',
-        musicId: 'mus_crystal_cave',
+        musicId: 'ocean_deep',
         cast: [
             { slot:'CHAR_A', charId:'char_coral_the_merfolk',  archetype:'Anchor' },
             { slot:'CHAR_B', charId:'char_brother_cedric',     archetype:'Bloom'  },
@@ -157,7 +157,7 @@ const TEMPLATES = [
         tags: ['scifi','comedy','bureaucracy','deadpan'],
         description: 'Three thawed-out humans waiting in line at a frozen department of motor vehicles.',
         envId:   'env_cryo_dmv',
-        musicId: 'mus_synthwave_sunset',
+        musicId: 'industrial_pulse',
         cast: [
             { slot:'CHAR_A', charId:'char_unit_7_android',    archetype:'Anchor' },
             { slot:'CHAR_B', charId:'char_judge_fontaine',    archetype:'Edge'   },
@@ -184,7 +184,7 @@ const TEMPLATES = [
         tags: ['fantasy','market','scrappy','comedy'],
         description: 'Three travellers trying not to get fleeced by a goblin selling questionable wares.',
         envId:   'env_goblin_market',
-        musicId: 'mus_celtic_meadow',
+        musicId: 'sneaky_operator',
         cast: [
             { slot:'CHAR_A', charId:'char_gronk_the_goblin',   archetype:'Edge'   },
             { slot:'CHAR_B', charId:'char_paladin_auric',      archetype:'Anchor' },
@@ -211,7 +211,7 @@ const TEMPLATES = [
         tags: ['office','dystopian','tension','corporate'],
         description: 'Three colleagues in a windowless conference room. Someone is about to be fired.',
         envId:   'env_dystopian_call_centre',
-        musicId: 'mus_tension_rising',
+        musicId: 'frantic_pursuit',
         cast: [
             { slot:'CHAR_A', charId:'char_commander_vasquez',  archetype:'Edge'   },
             { slot:'CHAR_B', charId:'char_tech_bro_tyler',     archetype:'Glitch' },
@@ -237,7 +237,7 @@ const TEMPLATES = [
         tags: ['urban','melancholy','confession','late-night'],
         description: 'Three regulars at a haunted karaoke bar. Someone\'s about to sing the wrong song on purpose.',
         envId:   'env_haunted_karaoke_bar',
-        musicId: 'mus_vinyl_memories',
+        musicId: 'distant_memory',
         cast: [
             { slot:'CHAR_A', charId:'char_soap_star_sandra',   archetype:'Bloom'  },
             { slot:'CHAR_B', charId:'char_streamerking',       archetype:'Edge'   },

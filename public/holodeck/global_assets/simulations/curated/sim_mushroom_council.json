@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_giant_mushroom_forest",
-      "musicId": "mus_forest_canopy",
+      "musicId": "curious_wandering",
       "storyId": null,
       "cast": [
         {

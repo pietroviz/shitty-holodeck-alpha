@@ -19,6 +19,7 @@ import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
 import { MusicEngine } from './shared/musicEngine.js?v=2';
 import { musicPlayer } from './shared/musicPlayer.js?v=1';
+import { assetToTheme } from './shared/musicCompiler.js?v=2';
 import { buildMusicVisualizer, deriveBackgroundColor } from './shared/musicVisualizer.js?v=4';
 import {
     buildArchetypeHead,
@@ -117,6 +118,27 @@ const _BEAT_EMOTION_MAP = {
 function _resolveBeatEmotion(beat) {
     const e = String(beat?.emotion || '').toLowerCase();
     return _BEAT_EMOTION_MAP[e] || 'neutral';
+}
+
+// Map a beat's mixamo-emotion + tension to musicPlayer dials (valence ∈ [0,1]
+// = sad↔happy; complexity ∈ [0,1] = sparse↔dense). Speed stays fixed for now —
+// the theme's tempo carries musical character; modulating it tends to lurch.
+const _EMOTION_VALENCE = {
+    happy:     0.85,
+    surprised: 0.75,
+    neutral:   0.50,
+    scared:    0.30,
+    disgust:   0.25,
+    angry:     0.20,
+    sad:       0.15,
+};
+function _beatToMusicDials(beat) {
+    const emotion   = _resolveBeatEmotion(beat);
+    const valence   = _EMOTION_VALENCE[emotion] ?? 0.5;
+    // Tension 1..6 → complexity 0.15..0.85 (calm → busy).
+    const t = Math.max(1, Math.min(6, Number(beat?.tension) || 3));
+    const complexity = 0.15 + ((t - 1) / 5) * 0.70;
+    return { valence, complexity };
 }
 
 // ── Browse music engine (for music asset preview playback) ──
@@ -2131,6 +2153,19 @@ function _startStoryPlayback() {
             // emotion from the current beat (already carried in story beats).
             const beat = _storyPreview.beats?.[beatIdx];
             const emotion = _resolveBeatEmotion(beat);
+            // Music dials: on beat-change, modulate valence/complexity from
+            // the beat's emotion + tension so the music tracks the story.
+            // Only fires for v2 themes (legacy MusicEngine has no dials).
+            if (_storyPreview.musicMode === 'v2' && beatIdx !== _storyPreview.lastBeatIdx) {
+                _storyPreview.lastBeatIdx = beatIdx;
+                if (beat) {
+                    const { valence, complexity } = _beatToMusicDials(beat);
+                    try {
+                        musicPlayer.setParam('valence', valence);
+                        musicPlayer.setParam('complexity', complexity);
+                    } catch { /* silent */ }
+                }
+            }
             const lib = _storyPreview.animationLibrary;
             for (const h of _storyPreview.heads) {
                 if (!h.animationRig || !lib?.length) continue;
@@ -2204,7 +2239,9 @@ export function previewPlaySimulation() {
 }
 export function previewStopSimulation() {
     _stopStoryPlayback();
+    // Either path may have started — stop both to be safe.
     if (_musicEngine) _musicEngine.stop();
+    try { musicPlayer.stop(); } catch {}
     // Return to wide so the camera doesn't pin on the last cut after stop.
     if (_storyPreview?.isSimulation) _applySimCamera();
 }
@@ -2467,6 +2504,12 @@ async function _buildSimulationPreview(asset) {
             cameraStyle: state.cameraStyle || 'speaker_cuts',
             // Animation library + state for per-line emotion-driven anims.
             animationLibrary,
+            // Music: tracks which playback path was used (v2 = new themes
+            // with realtime dials, legacy = old MusicEngine) and which beat
+            // the dials were last set for, so we don't re-fire setParam on
+            // every line within the same beat.
+            musicMode: 'idle',
+            lastBeatIdx: -1,
         };
 
         // Seed every animatable head with a neutral idle on build so the
@@ -2502,7 +2545,9 @@ async function _buildSimulationPreview(asset) {
 async function _autoPlaySimulationMusic(musicId, session) {
     if (!musicId) return;
     try {
-        const folders = ['ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
+        // Look in `themes/` first (new v2 format with valence / complexity /
+        // speed dials). Fall back to legacy mood folders for older mus_* ids.
+        const folders = ['themes', 'ambient', 'world', 'nature', 'lofi', 'electronic', 'action', 'cinematic', 'retro'];
         let track = null;
         for (const folder of folders) {
             if (session !== _previewSession) return;
@@ -2514,9 +2559,28 @@ async function _autoPlaySimulationMusic(musicId, session) {
         }
         if (session !== _previewSession) return;
         if (!track) return;
+
+        // v2 themes go through the shared musicPlayer (Tone.js pipeline,
+        // realtime dials, single-source-of-truth). Legacy mus_* tracks
+        // stay on the simple oscillator MusicEngine.
+        const theme = assetToTheme(track);
+        if (theme) {
+            try {
+                await musicPlayer.play(theme);
+                // Stash on _storyPreview so the onLine handler can dial
+                // valence/complexity per beat.
+                if (_storyPreview) _storyPreview.musicMode = 'v2';
+            } catch (e) {
+                console.warn('[previewRenderer] sim music play failed:', e?.message);
+            }
+            return;
+        }
+
+        // Legacy fallback.
         if (!_musicReady) await _ensureMusic();
         if (session !== _previewSession) return;
         if (!_musicReady || !_musicEngine) return;
         _musicEngine.play(track);
+        if (_storyPreview) _storyPreview.musicMode = 'legacy';
     } catch { /* silent */ }
 }

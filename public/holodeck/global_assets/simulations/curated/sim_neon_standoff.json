@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_neon_district",
-      "musicId": "mus_neon_pulse",
+      "musicId": "tense_standoff",
       "storyId": null,
       "cast": [
         {

@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_cozy_living_room",
-      "musicId": "mus_late_night_lofi",
+      "musicId": "cozy_fireside",
       "storyId": null,
       "cast": [
         {

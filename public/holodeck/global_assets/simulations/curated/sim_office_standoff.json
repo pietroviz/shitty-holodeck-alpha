@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_dystopian_call_centre",
-      "musicId": "mus_tension_rising",
+      "musicId": "frantic_pursuit",
       "storyId": null,
       "cast": [
         {

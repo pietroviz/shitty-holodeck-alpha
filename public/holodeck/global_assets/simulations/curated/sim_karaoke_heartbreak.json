@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_haunted_karaoke_bar",
-      "musicId": "mus_vinyl_memories",
+      "musicId": "distant_memory",
       "storyId": null,
       "cast": [
         {

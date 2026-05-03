@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_cryo_dmv",
-      "musicId": "mus_synthwave_sunset",
+      "musicId": "industrial_pulse",
       "storyId": null,
       "cast": [
         {

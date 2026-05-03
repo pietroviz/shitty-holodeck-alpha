@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_kelp_cathedral",
-      "musicId": "mus_crystal_cave",
+      "musicId": "ocean_deep",
       "storyId": null,
       "cast": [
         {

@@ -19,7 +19,7 @@
     "format": "simulation_state",
     "state": {
       "envId": "env_goblin_market",
-      "musicId": "mus_celtic_meadow",
+      "musicId": "sneaky_operator",
       "storyId": null,
       "cast": [
         {
