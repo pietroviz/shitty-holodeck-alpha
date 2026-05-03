@@ -1,0 +1,125 @@
+{
+  "id": "env_witches_book_club",
+  "type": "environment",
+  "name": "Witches' Book Club",
+  "tags": [
+    "fantasy",
+    "cozy",
+    "purple",
+    "occult"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "Bubbling cauldrons between tall bookshelves, candles dripping onto thick purple rugs.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a1a3a",
+      "stageColor": "#3a254a",
+      "wallColor": "#4a3560",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#a060c8",
+      "windowOpacity": 0.5,
+      "skyTop": "#100418",
+      "skyMid": "#240a34",
+      "skyBot": "#482060",
+      "fxPreset": "night",
+      "ambientColor": "#8040b8",
+      "ambientIntensity": 0.8,
+      "dirColor": "#c070ff",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#1a0824",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#a060ff",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.5,
+      "orbFlicker": true,
+      "scaleClass": 0.9,
+      "props": [
+        {
+          "assetId": "prop_cauldron_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.99,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 0.99,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1.17,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 0.9
+        },
+        {
+          "assetId": "prop_potion_bottle_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 0.9
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 0.9
+        }
+      ]
+    }
+  }
+}

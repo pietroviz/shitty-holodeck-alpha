@@ -1,0 +1,119 @@
+{
+  "id": "env_lightning_meadow",
+  "type": "environment",
+  "name": "Lightning-Struck Meadow",
+  "tags": [
+    "nature",
+    "storm",
+    "wildflowers",
+    "drama"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A windswept field of crooked dead trees between fresh purple wildflowers, a storm still rolling off.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#4a6848",
+      "stageColor": "#6a8850",
+      "wallColor": "#3a4830",
+      "groundSize": 27,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#202838",
+      "skyMid": "#484a60",
+      "skyBot": "#80708a",
+      "fxPreset": "dusk",
+      "ambientColor": "#7088a0",
+      "ambientIntensity": 0.9,
+      "dirColor": "#d8c8f0",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#3a4050",
+      "fogDensity": 0.03,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.3,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_boulder",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_dead_tree",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

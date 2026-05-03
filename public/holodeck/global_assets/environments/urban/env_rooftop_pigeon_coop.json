@@ -67,9 +67,9 @@
           "assetId": "prop_fire_pit",
           "mode": "place",
           "cell": {
-            "x": 0,
+            "x": 1,
             "y": 0,
-            "z": 0
+            "z": -2
           },
           "scale": 1,
           "density": "med"

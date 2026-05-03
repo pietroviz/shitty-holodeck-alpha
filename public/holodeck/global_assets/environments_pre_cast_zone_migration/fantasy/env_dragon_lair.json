@@ -1,0 +1,123 @@
+{
+  "id": "env_dragon_lair",
+  "type": "environment",
+  "name": "Dragon's Lair",
+  "tags": [
+    "fantasy",
+    "cave",
+    "dark",
+    "treasure"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A smouldering black cavern piled with gold, bones, and guttering torches.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#1a0c0c",
+      "stageColor": "#3a1a12",
+      "wallColor": "#2a1410",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#0a0404",
+      "skyMid": "#1a0a06",
+      "skyBot": "#5a2010",
+      "fxPreset": "night",
+      "ambientColor": "#5a1a08",
+      "ambientIntensity": 0.5,
+      "dirColor": "#ff6020",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#1a0806",
+      "fogDensity": 0.07,
+      "orbVisible": true,
+      "orbColor": "#ff8030",
+      "orbIntensity": 2.2,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_treasure_chest_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_gravestone_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1.1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_rock_large_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

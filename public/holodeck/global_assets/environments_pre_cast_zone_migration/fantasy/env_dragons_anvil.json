@@ -1,0 +1,125 @@
+{
+  "id": "env_dragons_anvil",
+  "type": "environment",
+  "name": "Dragon's Anvil",
+  "tags": [
+    "fantasy",
+    "dragon",
+    "forge",
+    "obsidian"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A black-obsidian forge floor cracked by cinder-red light under a starless ember sky.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#0e0a0a",
+      "stageColor": "#2a0a06",
+      "wallColor": "#1a0f0f",
+      "groundSize": 21,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#ff4820",
+      "windowOpacity": 0.7,
+      "skyTop": "#080404",
+      "skyMid": "#440a06",
+      "skyBot": "#a04020",
+      "fxPreset": "night",
+      "ambientColor": "#3c1810",
+      "ambientIntensity": 0.6,
+      "dirColor": "#ff5020",
+      "dirIntensity": 0.9,
+      "fogEnabled": true,
+      "fogColor": "#1a0a06",
+      "fogDensity": 0.07,
+      "orbVisible": true,
+      "orbColor": "#ff4820",
+      "orbIntensity": 2.6,
+      "orbHeight": 2.2,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_fire_pit",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.4,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_treasure_chest_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_torch_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_boulder",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

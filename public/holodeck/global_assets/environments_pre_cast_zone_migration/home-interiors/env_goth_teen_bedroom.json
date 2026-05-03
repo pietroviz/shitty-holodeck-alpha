@@ -1,0 +1,125 @@
+{
+  "id": "env_goth_teen_bedroom",
+  "type": "environment",
+  "name": "Goth Teen Bedroom",
+  "tags": [
+    "home",
+    "goth",
+    "dark",
+    "teen"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "Black-walled refuge of dripping candles, a shrine of skulls, and a bed dressed entirely in mourning.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#181418",
+      "stageColor": "#281a28",
+      "wallColor": "#201820",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#a060c0",
+      "windowOpacity": 0.45,
+      "skyTop": "#06040a",
+      "skyMid": "#1a0820",
+      "skyBot": "#3a1448",
+      "fxPreset": "night",
+      "ambientColor": "#602080",
+      "ambientIntensity": 0.7,
+      "dirColor": "#8040a0",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#100814",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#8040c0",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.2,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_bed_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_skull_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "env_potters_clay_hut",
+  "type": "environment",
+  "name": "Potter's Clay Hut",
+  "tags": [
+    "work",
+    "studio",
+    "terracotta",
+    "dust"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A sun-warmed clay studio: wheel and shelves of pots in every shade of red earth.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#a85830",
+      "stageColor": "#884020",
+      "wallColor": "#d4906c",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffd8a0",
+      "windowOpacity": 0.5,
+      "skyTop": "#6a2010",
+      "skyMid": "#c05828",
+      "skyBot": "#f0a868",
+      "fxPreset": "dusk",
+      "sunColor": "#ffb470",
+      "sunElevation": 25,
+      "sunVisible": true,
+      "ambientColor": "#c48058",
+      "ambientIntensity": 1,
+      "dirColor": "#ffc488",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#a86840",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "tile",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

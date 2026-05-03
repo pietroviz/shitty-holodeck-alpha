@@ -1,0 +1,122 @@
+{
+  "id": "env_waterlily_dell",
+  "type": "environment",
+  "name": "Waterlily Dell",
+  "tags": [
+    "nature",
+    "pond",
+    "still",
+    "green"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A sheltered hollow of mossy stones and a wide pond scattered with pale pink lilies.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a5a2a",
+      "stageColor": "#5a7a3a",
+      "wallColor": "#2a3a1e",
+      "groundSize": 21,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#70a8d0",
+      "skyMid": "#a8d0e4",
+      "skyBot": "#dcecf0",
+      "fxPreset": "dawn",
+      "sunColor": "#fff8d8",
+      "sunElevation": 50,
+      "sunVisible": true,
+      "ambientColor": "#b0d8a8",
+      "ambientIntensity": 1.2,
+      "dirColor": "#f0ffd8",
+      "dirIntensity": 1,
+      "fogEnabled": true,
+      "fogColor": "#c8dcd0",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_pond_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.5,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rock_large_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_oak_tree_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1.2,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rock_small_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

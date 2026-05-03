@@ -1,0 +1,121 @@
+{
+  "id": "env_rooftop_bar",
+  "type": "environment",
+  "name": "Rooftop Bar",
+  "tags": [
+    "urban",
+    "rooftop",
+    "night",
+    "warm"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A candlelit rooftop with a skyline of pinpoint lights glittering under a deep indigo sky.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a2028",
+      "stageColor": "#8a6848",
+      "wallColor": "#5a4038",
+      "groundSize": 19,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#08081c",
+      "skyMid": "#1c1838",
+      "skyBot": "#483054",
+      "fxPreset": "night",
+      "ambientColor": "#7048a0",
+      "ambientIntensity": 0.7,
+      "dirColor": "#ffb060",
+      "dirIntensity": 0.4,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb870",
+      "orbIntensity": 1.7,
+      "orbHeight": 2.6,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

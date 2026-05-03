@@ -1,0 +1,123 @@
+{
+  "id": "env_hoarder_living_room",
+  "type": "environment",
+  "name": "Hoarder Grandma's Living Room",
+  "tags": [
+    "home",
+    "clutter",
+    "warm",
+    "chaotic"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "Towers of frames, teetering lamps, every surface stacked — warm, suffocating, beloved.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#6a4e34",
+      "stageColor": "#a48060",
+      "wallColor": "#b8967c",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffc868",
+      "windowOpacity": 0.5,
+      "skyTop": "#4a3020",
+      "skyMid": "#805030",
+      "skyBot": "#c08058",
+      "fxPreset": "dusk",
+      "ambientColor": "#d49878",
+      "ambientIntensity": 1.1,
+      "dirColor": "#ffb868",
+      "dirIntensity": 0.8,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb060",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.2,
+      "orbFlicker": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

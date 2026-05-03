@@ -1,0 +1,119 @@
+{
+  "id": "env_ai_therapist_pod",
+  "type": "environment",
+  "name": "AI Therapist Pod",
+  "tags": [
+    "sci-fi",
+    "minimalist",
+    "calm",
+    "white"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A seamless white pod with a soft floating orb and exactly one very uncomfortable chair.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#e8e8ec",
+      "stageColor": "#f4f4f8",
+      "wallColor": "#d0d0d8",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "single",
+      "windowColor": "#b0d8ff",
+      "windowOpacity": 0.55,
+      "skyTop": "#c8d4e8",
+      "skyMid": "#e0e8f0",
+      "skyBot": "#f8f8fc",
+      "fxPreset": "dawn",
+      "ambientColor": "#f4f4f8",
+      "ambientIntensity": 1.4,
+      "dirColor": "#ffffff",
+      "dirIntensity": 1.1,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#a0e0ff",
+      "orbIntensity": 2,
+      "orbHeight": 2.5,
+      "orbFlicker": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_desklamp_batch",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_rug_batch",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

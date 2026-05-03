@@ -1,0 +1,121 @@
+{
+  "id": "env_ink_basement",
+  "type": "environment",
+  "name": "Ink Basement",
+  "tags": [
+    "work",
+    "basement",
+    "lamp",
+    "noir"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A mint-green banker-lamp basement stacked with manuscripts, beige walls, one desk.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#2a2410",
+      "stageColor": "#6a5840",
+      "wallColor": "#8c7848",
+      "groundSize": 15,
+      "walls": 3,
+      "windowStyle": "none",
+      "skyTop": "#080c08",
+      "skyMid": "#1a2818",
+      "skyBot": "#3a5030",
+      "fxPreset": "night",
+      "ambientColor": "#40603c",
+      "ambientIntensity": 0.7,
+      "dirColor": "#68c46c",
+      "dirIntensity": 0.5,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#68e46c",
+      "orbIntensity": 1.8,
+      "orbHeight": 1.6,
+      "orbFlicker": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_desklamp_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

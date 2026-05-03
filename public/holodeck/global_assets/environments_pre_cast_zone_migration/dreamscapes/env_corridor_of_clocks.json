@@ -1,0 +1,121 @@
+{
+  "id": "env_corridor_of_clocks",
+  "type": "environment",
+  "name": "Corridor of Clocks",
+  "tags": [
+    "dream",
+    "surreal",
+    "sepia",
+    "cyan"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "An endless sepia hallway ticking under cyan-bulb lamps; time pools on the floor.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#6a5038",
+      "stageColor": "#a88048",
+      "wallColor": "#4c3a24",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#44eaf0",
+      "windowOpacity": 0.55,
+      "skyTop": "#1a1208",
+      "skyMid": "#5a3818",
+      "skyBot": "#b07838",
+      "fxPreset": "night",
+      "ambientColor": "#b88850",
+      "ambientIntensity": 0.8,
+      "dirColor": "#44eaf0",
+      "dirIntensity": 0.7,
+      "fogEnabled": true,
+      "fogColor": "#2a1a08",
+      "fogDensity": 0.05,
+      "orbVisible": true,
+      "orbColor": "#44eaf0",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chestdrawers_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_bookshelf_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

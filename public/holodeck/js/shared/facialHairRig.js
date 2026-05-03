@@ -142,9 +142,13 @@ function _makePathTexture(svgPath, color, cvW, cvH) {
 
 function _makePlane(planeW, planeH) {
     const geo = new THREE.PlaneGeometry(planeW, planeH);
-    const mat = new THREE.MeshBasicMaterial({
+    // Lit + emissive — see characterMesh.js eye material for rationale.
+    // Beard dims naturally with scene lighting but never goes pure-black.
+    // Note: emissiveMap is set later in setStyle() once a texture is bound.
+    const mat = new THREE.MeshLambertMaterial({
+        emissive: 0xffffff, emissiveIntensity: 0.35,
         transparent: true, depthWrite: false, side: THREE.FrontSide,
-        toneMapped: false,  // keep flat canvas colours — scene uses ACES tone mapping
+        toneMapped: false,
     });
     const mesh = new THREE.Mesh(geo, mat);
     return mesh;
@@ -215,6 +219,7 @@ export class FacialHairRig {
             const tex    = _makePathTexture(cfg.moustachePath, this.color, CANVAS_PX, cvH);
             const mesh   = _makePlane(planeW, planeH);
             mesh.material.map = tex;
+            mesh.material.emissiveMap = tex;
             mesh.material.needsUpdate = true;
             mesh.name = 'facialHairMoustache';
             this._baseMoustacheY = this.mouthY + MOUSTACHE_BASE_Y_OFFSET * s;
@@ -231,6 +236,7 @@ export class FacialHairRig {
             const tex    = _makePathTexture(cfg.beardPath, this.color, CANVAS_PX, cvH);
             const mesh   = _makePlane(planeW, planeH);
             mesh.material.map = tex;
+            mesh.material.emissiveMap = tex;
             mesh.material.needsUpdate = true;
             mesh.name = 'facialHairBeard';
             this._baseBeardY = this.mouthY + BEARD_BASE_Y_OFFSET * s;

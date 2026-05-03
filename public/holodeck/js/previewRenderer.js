@@ -42,7 +42,7 @@ import {
     HEAD_HEIGHT_PRESETS, HEAD_WIDTH_PRESETS,
     FACE_FEATURES, FACE_PLACEMENT_PRESETS, DEFAULT_COLORS,
 } from './shared/charConfig.js';
-import { buildCharacterMesh } from './shared/characterMesh.js?v=4';
+import { buildCharacterMesh } from './shared/characterMesh.js?v=5';
 import { loadGlobalAssets } from './assetLoader.js';
 import {
     STAGE_SIZE as _ENV_STAGE_SIZE,

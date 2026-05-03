@@ -1,0 +1,121 @@
+{
+  "id": "env_rift_of_whispers",
+  "type": "environment",
+  "name": "Rift of Whispers",
+  "tags": [
+    "fantasy",
+    "bioluminescent",
+    "violet",
+    "teal"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A mossy chasm floor glowing bioluminescent violet and teal — every rock sings quietly.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#1a0830",
+      "stageColor": "#6020a0",
+      "wallColor": "#300a50",
+      "groundSize": 19,
+      "walls": 2,
+      "windowStyle": "double",
+      "windowColor": "#20f0c8",
+      "windowOpacity": 0.7,
+      "skyTop": "#080418",
+      "skyMid": "#2a0840",
+      "skyBot": "#7020c8",
+      "fxPreset": "night",
+      "ambientColor": "#6820a8",
+      "ambientIntensity": 0.9,
+      "dirColor": "#20f0c8",
+      "dirIntensity": 0.8,
+      "fogEnabled": true,
+      "fogColor": "#180828",
+      "fogDensity": 0.06,
+      "orbVisible": true,
+      "orbColor": "#20f0c8",
+      "orbIntensity": 2.4,
+      "orbHeight": 2.8,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.4,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

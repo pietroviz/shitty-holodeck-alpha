@@ -1,0 +1,125 @@
+{
+  "id": "env_robot_repair_shop",
+  "type": "environment",
+  "name": "Robot Repair Shop",
+  "tags": [
+    "sci-fi",
+    "grimy",
+    "industrial",
+    "tools"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A grease-streaked workshop of scaffolds and crates, a half-built chassis slumped on the floor.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a3a40",
+      "stageColor": "#5a5a60",
+      "wallColor": "#4a4850",
+      "groundSize": 19,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#ff8030",
+      "windowOpacity": 0.45,
+      "skyTop": "#0a0a10",
+      "skyMid": "#18181c",
+      "skyBot": "#302828",
+      "fxPreset": "night",
+      "ambientColor": "#ff7030",
+      "ambientIntensity": 0.7,
+      "dirColor": "#ffa060",
+      "dirIntensity": 0.4,
+      "fogEnabled": true,
+      "fogColor": "#18181c",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#ff8040",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.4,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crate",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

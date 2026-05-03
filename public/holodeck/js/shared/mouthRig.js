@@ -16,9 +16,15 @@ export class MouthRig {
         this.texture.magFilter = THREE.LinearFilter;
 
         this.geometry = new THREE.PlaneGeometry(MOUTH_RIG.planeSize, MOUTH_RIG.planeSize);
-        this.material = new THREE.MeshBasicMaterial({
-            map: this.texture, transparent: true, depthWrite: false, side: THREE.FrontSide,
-            toneMapped: false,  // keep canvas colours flat — the scene renderer uses ACES tone mapping
+        // Lit + emissive — see characterMesh.js eye material for rationale.
+        // Diffuse responds to scene lighting (mouth dims with the env mood);
+        // emissiveMap at 0.35 intensity floors the brightness so lips stay
+        // readable even at night.
+        this.material = new THREE.MeshLambertMaterial({
+            map: this.texture, emissive: 0xffffff, emissiveMap: this.texture,
+            emissiveIntensity: 0.35,
+            transparent: true, depthWrite: false, side: THREE.FrontSide,
+            toneMapped: false,
         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.name = 'mouthRigPlane';

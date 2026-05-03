@@ -1,0 +1,119 @@
+{
+  "id": "env_gravity_well",
+  "type": "environment",
+  "name": "Gravity Well",
+  "tags": [
+    "dream",
+    "surreal",
+    "gradient",
+    "purple"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A floor of violet glass spirals downward into a mint-green event horizon.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a1a5c",
+      "stageColor": "#6a30a8",
+      "wallColor": "#a860e0",
+      "groundSize": 19,
+      "walls": 2,
+      "windowStyle": "none",
+      "skyTop": "#1a0530",
+      "skyMid": "#7030b8",
+      "skyBot": "#8cffc8",
+      "fxPreset": "night",
+      "ambientColor": "#9050d8",
+      "ambientIntensity": 1,
+      "dirColor": "#c0ffe8",
+      "dirIntensity": 0.6,
+      "fogEnabled": true,
+      "fogColor": "#3a1060",
+      "fogDensity": 0.04,
+      "orbVisible": true,
+      "orbColor": "#8cffc8",
+      "orbIntensity": 2,
+      "orbHeight": 2.8,
+      "orbFlicker": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_magic_portal_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.4,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_orb_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "none",
+          "mode": "place",
+          "cell": null,
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crystal_cluster_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

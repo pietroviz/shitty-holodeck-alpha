@@ -1,0 +1,121 @@
+{
+  "id": "env_taco_truck_lot",
+  "type": "environment",
+  "name": "Taco Truck Parking Lot",
+  "tags": [
+    "urban",
+    "food",
+    "night",
+    "warm"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A cracked asphalt lot ringed with strung lights, a grease-stained truck and folding chairs around a fire pit.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a3a38",
+      "stageColor": "#5a5048",
+      "wallColor": "#484438",
+      "groundSize": 21,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#0c0818",
+      "skyMid": "#1c1830",
+      "skyBot": "#483058",
+      "fxPreset": "night",
+      "ambientColor": "#8060a0",
+      "ambientIntensity": 0.8,
+      "dirColor": "#ffb060",
+      "dirIntensity": 0.4,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffa840",
+      "orbIntensity": 1.8,
+      "orbHeight": 2.6,
+      "orbFlicker": true,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_fire_pit",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_trash_can",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

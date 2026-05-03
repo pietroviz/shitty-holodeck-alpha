@@ -1,0 +1,122 @@
+{
+  "id": "env_city_plaza",
+  "type": "environment",
+  "name": "City Plaza",
+  "tags": [
+    "urban",
+    "plaza",
+    "stone",
+    "fountain"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.985Z",
+    "modified": "2026-05-01T16:06:23.985Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A wide granite plaza with a central fountain, benches, and a warm late-afternoon glow.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#8a8a8c",
+      "stageColor": "#c0b8a8",
+      "wallColor": "#a0968a",
+      "groundSize": 23,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#d0b088",
+      "skyMid": "#f0c890",
+      "skyBot": "#ffdcb0",
+      "fxPreset": "dusk",
+      "sunColor": "#ffb870",
+      "sunElevation": 25,
+      "sunVisible": true,
+      "ambientColor": "#e0c8a0",
+      "ambientIntensity": 1,
+      "dirColor": "#ffd090",
+      "dirIntensity": 1.1,
+      "fogEnabled": true,
+      "fogColor": "#c0a888",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_fountain",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stone_statue",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_lamppost_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_park_bench",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_planter",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

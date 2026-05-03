@@ -1,0 +1,123 @@
+{
+  "id": "env_grandmas_gilded_den",
+  "type": "environment",
+  "name": "Grandma's Gilded Den",
+  "tags": [
+    "home",
+    "vintage",
+    "rust",
+    "gold"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A rust-velvet sitting room dripping with gold trim, doilies, and the smell of butter.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#7a3828",
+      "stageColor": "#c88040",
+      "wallColor": "#a04028",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "double",
+      "windowColor": "#ffd880",
+      "windowOpacity": 0.45,
+      "skyTop": "#2a1008",
+      "skyMid": "#5a2818",
+      "skyBot": "#a85024",
+      "fxPreset": "night",
+      "ambientColor": "#c06030",
+      "ambientIntensity": 0.9,
+      "dirColor": "#ffb860",
+      "dirIntensity": 0.7,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffb458",
+      "orbIntensity": 1.4,
+      "orbHeight": 2.2,
+      "orbFlicker": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_chair_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_floorlamp_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pictureframe_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "env_catio_sunporch",
+  "type": "environment",
+  "name": "Catio Sunporch",
+  "tags": [
+    "home",
+    "cosy",
+    "plants",
+    "cats"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A glassed-in sunporch thick with plants and cushions, motes of dust drifting through afternoon light.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#c8a880",
+      "stageColor": "#e0c494",
+      "wallColor": "#a88a5c",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#fff0c0",
+      "windowOpacity": 0.55,
+      "skyTop": "#a0c8e8",
+      "skyMid": "#d0e4f0",
+      "skyBot": "#fff0d8",
+      "fxPreset": "dawn",
+      "sunColor": "#fffce0",
+      "sunElevation": 50,
+      "sunVisible": true,
+      "ambientColor": "#f0d8b0",
+      "ambientIntensity": 1.3,
+      "dirColor": "#fff0c0",
+      "dirIntensity": 1.1,
+      "fogEnabled": false,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_table_batch",
+          "mode": "place",
+          "cell": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_rug_batch",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_mug_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

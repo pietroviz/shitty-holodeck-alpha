@@ -1,0 +1,120 @@
+{
+  "id": "env_graffiti_skate_park",
+  "type": "environment",
+  "name": "Graffiti Skate Park",
+  "tags": [
+    "urban",
+    "skate",
+    "graffiti",
+    "day"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "Concrete bowls painted neon and tagged twice over, cones and barrels stacked for makeshift ramps.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#5a5a60",
+      "stageColor": "#787882",
+      "wallColor": "#8a5090",
+      "groundSize": 23,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#88a8d8",
+      "skyMid": "#b8d0e8",
+      "skyBot": "#e8ecf4",
+      "fxPreset": "dawn",
+      "sunColor": "#fff4d0",
+      "sunElevation": 55,
+      "sunVisible": true,
+      "ambientColor": "#d0d4dc",
+      "ambientIntensity": 1.2,
+      "dirColor": "#ffffff",
+      "dirIntensity": 1.1,
+      "fogEnabled": false,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_traffic_cone",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_barrel",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_fence_post",
+          "mode": "tile",
+          "density": "low",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

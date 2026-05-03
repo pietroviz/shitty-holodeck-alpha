@@ -1,0 +1,122 @@
+{
+  "id": "env_giant_mushroom_forest",
+  "type": "environment",
+  "name": "Giant Mushroom Forest",
+  "tags": [
+    "nature",
+    "mushrooms",
+    "vivid",
+    "whimsical"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "Towering red-capped mushrooms taller than pines, dappled light spilling through their stems.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a4820",
+      "stageColor": "#5a6c28",
+      "wallColor": "#2a3818",
+      "groundSize": 25,
+      "walls": 0,
+      "windowStyle": "none",
+      "skyTop": "#60a048",
+      "skyMid": "#a0c868",
+      "skyBot": "#d8e4b8",
+      "fxPreset": "dawn",
+      "sunColor": "#f8ffd8",
+      "sunElevation": 40,
+      "sunVisible": true,
+      "ambientColor": "#a0c870",
+      "ambientIntensity": 1.1,
+      "dirColor": "#f0ffd0",
+      "dirIntensity": 0.9,
+      "fogEnabled": true,
+      "fogColor": "#5a7030",
+      "fogDensity": 0.02,
+      "orbVisible": false,
+      "scaleClass": 2,
+      "props": [
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 3.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 2.8,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_magic_mushroom_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": -1
+          },
+          "scale": 2.8,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_log_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_stump_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 2,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_mushroom_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 2
+        },
+        {
+          "assetId": "prop_grass_patch_batch",
+          "mode": "scatter",
+          "density": "high",
+          "scale": 2
+        },
+        {
+          "assetId": "prop_flower_batch",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 2
+        }
+      ]
+    }
+  }
+}

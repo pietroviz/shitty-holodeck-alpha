@@ -1,0 +1,122 @@
+{
+  "id": "env_rooftop_pigeon_coop",
+  "type": "environment",
+  "name": "Rooftop Pigeon Coop",
+  "tags": [
+    "urban",
+    "rooftop",
+    "pigeons",
+    "tar"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:24.009Z",
+    "modified": "2026-05-01T16:06:24.009Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A tar-paper rooftop crowded with wire coops, a cracked fire pit, and a forest of TV antennas.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#3a3832",
+      "stageColor": "#5a5048",
+      "wallColor": "#4a4038",
+      "groundSize": 19,
+      "walls": 1,
+      "windowStyle": "none",
+      "skyTop": "#b0a0b0",
+      "skyMid": "#d0c0c8",
+      "skyBot": "#e8d8c8",
+      "fxPreset": "dusk",
+      "sunColor": "#ffb880",
+      "sunElevation": 20,
+      "sunVisible": true,
+      "ambientColor": "#d0b8b0",
+      "ambientIntensity": 1.1,
+      "dirColor": "#ffd0a0",
+      "dirIntensity": 0.9,
+      "fogEnabled": true,
+      "fogColor": "#b8a898",
+      "fogDensity": 0.03,
+      "orbVisible": false,
+      "scaleClass": 1,
+      "props": [
+        {
+          "assetId": "prop_nest",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 1.2,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_scaffold",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_fire_pit",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_tent",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_crate",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 1,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_crate",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_trash_can",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 1
+        },
+        {
+          "assetId": "prop_nest",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

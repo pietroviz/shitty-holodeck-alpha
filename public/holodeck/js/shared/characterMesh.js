@@ -232,16 +232,25 @@ export async function buildCharacterMesh(asset) {
     const mouthY = bodyTopY + mouthYLocal;
 
     // ── Eyes ──
+    // Lit + emissive: the texture is both the diffuse map (responds to scene
+    // lighting) AND the emissive map at low intensity (so eyes never go fully
+    // dark in dim scenes). This tracks the env's mood — bright eyes in
+    // daylight, dimmer at night — without ever blowing out the way a pure
+    // unlit material did.
     const eyeTex = makeEyeTexture(s.eyeIrisColor, s.eyeShape, s.eyelashStyle, s.eyelashColor);
     const eyePlaneSize = FACE_FEATURES.eye.scleraDiameter * 1.3;
     const eyeGeo = new THREE.PlaneGeometry(eyePlaneSize, eyePlaneSize);
-    const eyeMatL = new THREE.MeshBasicMaterial({ map: eyeTex, transparent: true, depthWrite: false });
+    const _faceMat = (tex) => new THREE.MeshLambertMaterial({
+        map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.35,
+        transparent: true, depthWrite: false,
+    });
+    const eyeMatL = _faceMat(eyeTex);
     const eyeL = new THREE.Mesh(eyeGeo, eyeMatL);
     eyeL.position.set(-exo, eyeYLocal, frontZ + 0.005);
     headGroup.add(eyeL);
     const eyeTexR = eyeTex.clone(); eyeTexR.needsUpdate = true;
     const eyeGeoR = eyeGeo.clone();
-    const eyeMatR = new THREE.MeshBasicMaterial({ map: eyeTexR, transparent: true, depthWrite: false });
+    const eyeMatR = _faceMat(eyeTexR);
     const eyeR = new THREE.Mesh(eyeGeoR, eyeMatR);
     eyeR.position.set(exo, eyeYLocal, frontZ + 0.005);
     headGroup.add(eyeR);
@@ -254,8 +263,8 @@ export async function buildCharacterMesh(asset) {
         if (browTexL && browTexR) {
             const browSize = eyePlaneSize * 1.3;
             const browGeo = new THREE.PlaneGeometry(browSize, browSize * 0.5);
-            const browMatL = new THREE.MeshBasicMaterial({ map: browTexL, transparent: true, depthWrite: false });
-            const browMatR = new THREE.MeshBasicMaterial({ map: browTexR, transparent: true, depthWrite: false });
+            const browMatL = _faceMat(browTexL);
+            const browMatR = _faceMat(browTexR);
             const browL = new THREE.Mesh(browGeo, browMatL);
             const browGeoR = browGeo.clone();
             const browR = new THREE.Mesh(browGeoR, browMatR);

@@ -1,0 +1,123 @@
+{
+  "id": "env_pillow_fort_nebula",
+  "type": "environment",
+  "name": "Pillow Fort Nebula",
+  "tags": [
+    "playful",
+    "cozy",
+    "pastel",
+    "fairy-lights"
+  ],
+  "meta": {
+    "created": "2026-05-01T16:06:23.958Z",
+    "modified": "2026-05-01T16:06:23.958Z",
+    "origin": "template",
+    "version": 2
+  },
+  "payload": {
+    "description": "A marshmallow-pastel blanket fort glimmering with warm fairy lights — forever snug.",
+    "format": "environment_state",
+    "state": {
+      "groundColor": "#ffd4e0",
+      "stageColor": "#d88cb0",
+      "wallColor": "#f8b8d0",
+      "groundSize": 17,
+      "walls": 3,
+      "windowStyle": "triple",
+      "windowColor": "#ffe4b0",
+      "windowOpacity": 0.55,
+      "skyTop": "#603868",
+      "skyMid": "#d080a8",
+      "skyBot": "#ffd0dc",
+      "fxPreset": "dusk",
+      "ambientColor": "#f4a8c8",
+      "ambientIntensity": 1.2,
+      "dirColor": "#ffd8a0",
+      "dirIntensity": 0.8,
+      "fogEnabled": false,
+      "orbVisible": true,
+      "orbColor": "#ffd890",
+      "orbIntensity": 1.6,
+      "orbHeight": 2.2,
+      "orbFlicker": true,
+      "scaleClass": 0.9,
+      "props": [
+        {
+          "assetId": "prop_bed_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": -2
+          },
+          "scale": 0.99,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_sofa_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 2
+          },
+          "scale": 0.9,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_rug_batch",
+          "mode": "place",
+          "cell": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 1.08,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": -2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.81,
+          "density": "med"
+        },
+        {
+          "assetId": "prop_candle_batch",
+          "mode": "place",
+          "cell": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": 0.81,
+          "density": "med"
+        }
+      ],
+      "groundObjects": [
+        {
+          "assetId": "prop_pottedplant_batch",
+          "mode": "scatter",
+          "density": "low",
+          "scale": 0.9
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        },
+        {
+          "assetId": "none",
+          "mode": "scatter",
+          "density": "med",
+          "scale": 1
+        }
+      ]
+    }
+  }
+}

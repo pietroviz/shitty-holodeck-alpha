@@ -28,6 +28,30 @@ function toCell(input) {
     return { x: letterIdx - 2, y: 0, z: num - 3 };
 }
 
+// ── Cast-zone avoidance ──────────────────────────────────────────
+// CAST_LAYOUT places three characters in the inner 3×3 of the BINGO grid.
+// Stage props 'placed' into that zone end up between or in front of cast.
+// Any inner cell maps to a perimeter equivalent that preserves thematic
+// position (centre → back-centre, char-spot → far flank, etc.).
+const CAST_ZONE_MAP = {
+    '0,0':   [ 0, -2],
+    '0,-1':  [ 0, -2],
+    '0,1':   [ 0,  2],
+    '-1,-1': [-2, -2],
+    '-1,0':  [-2,  0],
+    '-1,1':  [-2,  2],
+    '1,-1':  [ 2, -2],
+    '1,0':   [ 2,  0],
+    '1,1':   [ 2,  2],
+};
+
+function avoidCastZone(cell) {
+    if (!cell) return cell;
+    const remap = CAST_ZONE_MAP[`${cell.x},${cell.z}`];
+    if (!remap) return cell;
+    return { x: remap[0], y: 0, z: remap[1] };
+}
+
 // ─── Scale class ──────────────────────────────────────────────────
 // Scan the env name + tags for size keywords and pick a multiplier.
 // Multiplier is applied to default prop / ground-object scales so the
@@ -71,20 +95,55 @@ function getScaleClass({ name = '', tags = [] }) {
 
 function propArr(items = [], scaleClass = 1.0) {
     const out = [];
+    const usedPerimeter = new Set();   // track collisions when relocating
     for (let i = 0; i < PROP_SLOTS; i++) {
         const it = items[i];
-        out.push(it
-            ? {
-                assetId: it.id,
-                mode: it.mode ?? 'place',
-                cell: toCell(it.cell),
-                scale: +(((it.scale ?? 1.0) * scaleClass).toFixed(2)),
-                density: it.density ?? 'med',
-            }
-            : {
+        if (!it) {
+            out.push({
                 assetId: 'none', mode: 'place', cell: null,
                 scale: 1.0, density: 'med',
             });
+            continue;
+        }
+        const mode = it.mode ?? 'place';
+        let cell = toCell(it.cell);
+        // Auto-relocate cast-zone cells in 'place' mode.
+        if (mode === 'place' && cell) {
+            const relocated = avoidCastZone(cell);
+            if (relocated !== cell) {
+                let key = `${relocated.x},${relocated.z}`;
+                if (usedPerimeter.has(key)) {
+                    // Walk perimeter clockwise to find a free cell.
+                    const PERIM = [
+                        [-2,-2],[-1,-2],[0,-2],[1,-2],[2,-2],
+                        [2,-1],[2,0],[2,1],[2,2],
+                        [1,2],[0,2],[-1,2],[-2,2],[-2,1],[-2,0],[-2,-1],
+                    ];
+                    const idx = PERIM.findIndex(([x,z]) => x === relocated.x && z === relocated.z);
+                    for (let s = 1; s < PERIM.length; s++) {
+                        const [nx, nz] = PERIM[(idx + s) % PERIM.length];
+                        const nKey = `${nx},${nz}`;
+                        if (!usedPerimeter.has(nKey)) {
+                            cell = { x: nx, y: 0, z: nz };
+                            key = nKey;
+                            break;
+                        }
+                    }
+                } else {
+                    cell = relocated;
+                }
+                usedPerimeter.add(key);
+            } else {
+                usedPerimeter.add(`${cell.x},${cell.z}`);
+            }
+        }
+        out.push({
+            assetId: it.id,
+            mode,
+            cell,
+            scale: +(((it.scale ?? 1.0) * scaleClass).toFixed(2)),
+            density: it.density ?? 'med',
+        });
     }
     return out;
 }
