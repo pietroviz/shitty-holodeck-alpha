@@ -1,0 +1,86 @@
+{
+  "id":   "romantic_slow_dance",
+  "type": "music",
+  "name": "Romantic Slow Dance",
+  "tags": ["romantic", "intimate", "candlelit", "slow", "jazz"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D major, 65 BPM. Classic jazz turnaround Imaj7 → vi7 → ii7 → V7 (Dmaj7-Bm7-Em7-A7). Melody is slow lyrical sax phrases — long held notes that gently bend to a chord tone, lots of breathing space.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "D",
+      "scaleMode":  "major",
+      "cps":        0.32,
+      "valence":    0.78,
+      "complexity": 0.7,
+      "speed":      0.95,
+      "variety":    0.4,
+      "groove":     "swing",
+      "texture":    "lofi",
+      "coverColor": "#c87090",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d2 a1 d2 f#1] [b1 f#2 b2 d2] [e2 b1 e2 g1] [a1 e2 a2 choose(c#2,e2)]>",
+          "feel":        ["walking-jazz", "warm", "intimate"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[f#5 ~ ~ a5 ~ ~ ~ ~] [d5 ~ ~ b4 ~ ~ ~ ~] [e5 ~ ~ g5 ~ ~ ~ ~] [c#5 ~ ~ a4 ~ ~ choose(d5,~) ~]>",
+          "feel":        ["sax-long-tones", "very-slow", "lyrical"],
+          "register":    0,
+          "densityBase": 0.3
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f#3 a3 c#4] [b2 d3 f#3 a3] [e3 g3 b3 d4] [a2 c#3 e3 choose(g3,c#3)]>",
+          "feel":        ["jazz-7th-stacks", "lush", "embrace"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<a4 d5 b4 choose(c#5,e5)>",
+          "feel":        ["7th-color", "soft-mark", "ii-V"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ ~ ~ e3 ~ ~ ~ choose(e3,~)",
+          "feel":        ["brushed-hat", "no-kick", "intimate"],
+          "register":    0,
+          "densityBase": 0.2
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ ~ ~ ~ ~ choose(c6,~)",
+          "feel":        ["distant-bell", "rare", "warmth"],
+          "register":    0,
+          "densityBase": 0.1
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "pad", "chords", "drums", "texture"] }
+      ],
+      "seeds": { "pattern": 14, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.8, 0.2, 0.95, 0.2, 0.05, 0.15],
+        "modes": {
+          "intro":   { "valence": 0.78, "complexity": 0.2,  "speed": 0.9,  "layers": ["bass"] },
+          "waiting": { "valence": 0.78, "complexity": 0.4,  "speed": 0.95, "layers": ["bass", "pad"] },
+          "active":  { "valence": 0.78, "complexity": 0.7,  "speed": 0.95, "layers": ["bass", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.82, "complexity": 0.95, "speed": 1.0,  "layers": ["bass", "pad", "melody", "chords", "drums", "texture"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id":   "tense_standoff",
+  "type": "music",
+  "name": "Tense Standoff",
+  "tags": ["tense", "minor", "suspenseful", "stalking"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D minor, 120 BPM. Progression Dm → A7 → Dm → Bb (i-V7-i-VI). Melody is short tense bursts: chromatic 3-note climbs on offbeats with long held silence between, like 'breath caught — then climb — then frozen again'.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "D",
+      "scaleMode":  "minor",
+      "cps":        0.5,
+      "valence":    0.22,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#5a3344",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d2 a1 d2 a1] [a1 e2 a2 e2] [d2 a1 d2 a1] [bb1 f2 bb2 choose(d2,f2)]>",
+          "feel":        ["pulsing", "root-fifth", "stalking"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ ~ ~ d3 ~ ~ choose(d3,~) c3 ~ ~ ~ d3 ~ choose(c3,~) choose(d3,~)",
+          "feel":        ["heartbeat-snare", "menacing", "patient"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[~ ~ ~ ~ a4 bb4 c5 ~] [~ ~ ~ ~ c#5 d5 e5 ~] [~ ~ ~ ~ a4 bb4 c5 ~] [~ ~ ~ ~ choose(d5,c#5) bb4 a4 ~]>",
+          "feel":        ["short-bursts", "chromatic-climb", "frozen-silence"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f4 c#5 f4 choose(d4,bb4)>",
+          "feel":        ["3rd-of-chord", "stab", "tension"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f3 a3 f3] [a2 c#3 e3 c#3] [d3 f3 a3 f3] [bb2 d3 f3 choose(a3,d3)]>",
+          "feel":        ["chord-arpeggio", "minor-tension", "low-pressure"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ ~ choose(c6,~) ~ ~ ~",
+          "feel":        ["scrape", "rare", "tense"],
+          "register":    0,
+          "densityBase": 0.15
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "chords", "pad", "melody", "texture"] }
+      ],
+      "seeds": { "pattern": 23, "variation": 2 },
+      "modulation": {
+        "feelVector": [0.25, 0.7, 0.2, 0.4, 0.85, 0.05],
+        "modes": {
+          "intro":   { "valence": 0.3,  "complexity": 0.2,  "speed": 0.95, "layers": ["bass"] },
+          "waiting": { "valence": 0.25, "complexity": 0.45, "speed": 1.0,  "layers": ["bass", "drums"] },
+          "active":  { "valence": 0.22, "complexity": 0.8,  "speed": 1.0,  "layers": ["bass", "drums", "chords", "pad"] },
+          "peak":    { "valence": 0.18, "complexity": 1.0,  "speed": 1.1,  "layers": ["bass", "drums", "chords", "pad", "melody", "texture"] }
+        }
+      }
+    }
+  }
+}

@@ -1666,6 +1666,184 @@ svg    { display: block; flex-shrink: 0; }
     background: rgba(0,217,217,0.2);
     border-color: var(--accent);
 }
+.cb-play-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    border-color: rgba(255,255,255,0.08);
+}
+.cb-play-btn.playing {
+    color: #e05050;
+    background: rgba(224,80,80,0.12);
+    border-color: rgba(224,80,80,0.25);
+}
+.cb-play-btn.playing:hover {
+    background: rgba(224,80,80,0.2);
+    border-color: rgba(224,80,80,0.4);
+}
+
+/* Music Bridge audition section — thin separator above the Play button */
+.mb-audition {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+/* Music Bridge — Shape tab director-hint badge */
+.mb-director-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: rgba(0,217,217,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(0,217,217,0.3);
+    text-transform: uppercase;
+}
+
+/* Music Bridge — Sound tab Pack picker grid */
+.mb-pack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 4px;
+}
+.mb-pack-card {
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.mb-pack-card:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.15);
+}
+.mb-pack-card.active {
+    background: rgba(0,217,217,0.1);
+    border-color: var(--accent);
+}
+.mb-pack-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.mb-pack-blurb {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.3;
+}
+
+/* Music Bridge — Sound tab Layers list rows */
+.mb-layer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03);
+    margin-bottom: 4px;
+}
+.mb-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    min-width: 90px;
+}
+.mb-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+.mb-layer-role {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: capitalize;
+}
+.mb-layer-meta {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.mb-layer-meta input[type="range"] {
+    flex: 1;
+    min-width: 60px;
+}
+.mb-layer-reg-val {
+    font-size: 10px;
+    color: var(--accent);
+    min-width: 22px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Music Bridge — Shape tab slider rows give the value span
+   some consistent vertical breathing room */
+.mb-slider-section .cb-range { margin-top: 2px; }
+
+/* Music Bridge — visible status line under the Play button.
+   Surfaces audio errors without forcing a devtools dive. */
+.mb-status {
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: 11px;
+    line-height: 1.4;
+    font-family: 'SF Mono', Menlo, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.mb-status-loading {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.mb-status-playing {
+    background: rgba(0,217,217,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(0,217,217,0.2);
+}
+.mb-status-error {
+    background: rgba(224,89,90,0.12);
+    color: #ff8585;
+    border: 1px solid rgba(224,89,90,0.3);
+}
+
+/* Music Bridge — per-role activity dots. Each badge represents a section-A
+   role and lights up briefly when that role fires a note. Useful for
+   verifying every layer is actually playing without a devtools dive. */
+.mb-activity {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+.mb-activity-dot {
+    font-size: 10px;
+    font-family: 'SF Mono', Menlo, monospace;
+    padding: 3px 7px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    text-transform: capitalize;
+}
+.mb-activity-dot.active {
+    background: rgba(0,217,217,0.18);
+    color: var(--accent);
+    border-color: rgba(0,217,217,0.4);
+    box-shadow: 0 0 6px rgba(0,217,217,0.25);
+}
 
 /* ── Voice Card (Character Builder Gear tab) ── */
 .cb-voice-card {

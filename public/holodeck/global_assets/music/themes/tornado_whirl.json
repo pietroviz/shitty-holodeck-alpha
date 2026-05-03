@@ -1,0 +1,86 @@
+{
+  "id":   "tornado_whirl",
+  "type": "music",
+  "name": "Tornado Whirl",
+  "tags": ["tornado", "swirling", "chaos", "rapid", "spiral"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "E minor, 130 BPM. Swirling chaotic spiral. Progression Em → D → C → B (i-bVII-bVI-V) — descending bassline reinforces the downward funnel. Melody is rapid arpeggios that sweep UP then DOWN within each chord — the spiral motion. Driving drums, whirling pad, riser textures.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "E",
+      "scaleMode":  "minor",
+      "cps":        0.6,
+      "valence":    0.4,
+      "complexity": 0.95,
+      "speed":      1.05,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#607080",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[e1 e2 e1 e2] [d1 d2 d1 d2] [c1 c2 c1 c2] [b0 b1 b0 choose(f#1,b1)]>",
+          "feel":        ["descending-funnel", "octave-pulse", "driving"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(d3,c3)",
+          "feel":        ["driving-backbeat", "whirlwind-hats", "fast"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[e5 g5 b5 e6 b5 g5 e5 g5] [d5 f#5 a5 d6 a5 f#5 d5 f#5] [c5 e5 g5 c6 g5 e5 c5 e5] [b4 d#5 f#5 b5 ~ ~ choose(e5,~) ~]>",
+          "feel":        ["spiral-up-down", "rapid-arpeggio", "swirl"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<g4 a4 e5 choose(d#5,b4)>",
+          "feel":        ["3rd-stab", "downbeat", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[e3 g3 b3 g3] [d3 f#3 a3 f#3] [c3 e3 g3 e3] [b2 d#3 f#3 choose(a3,d#3)]>",
+          "feel":        ["whirling-pad", "wind-haze", "wide"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ choose(e6,~) ~ choose(f#6,~)",
+          "feel":        ["riser", "wind-howl", "high-noise"],
+          "register":    0,
+          "densityBase": 0.6
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1017, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.4, 0.95, 0.3, 0.55, 0.7, 0.4],
+        "modes": {
+          "intro":   { "valence": 0.4,  "complexity": 0.4, "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.4,  "complexity": 0.6, "speed": 1.0,  "layers": ["bass", "drums", "pad"] },
+          "active":  { "valence": 0.4,  "complexity": 0.9, "speed": 1.05, "layers": ["bass", "drums", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.45, "complexity": 1.0, "speed": 1.1,  "layers": ["bass", "drums", "pad", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

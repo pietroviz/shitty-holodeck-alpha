@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Smoke — Tone.js Pipeline End-to-End</title>
+<style>
+  :root {
+    --bg:       #0b1020;
+    --panel:    #141a2d;
+    --border:   rgba(255,255,255,0.08);
+    --text:     #e6ecf5;
+    --muted:    #8494a7;
+    --accent:   #4ae7bf;
+    --danger:   #e0595a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', Menlo, monospace;
+    min-height: 100vh;
+    padding: 24px;
+    font-size: 14px;
+  }
+  h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    max-width: 640px;
+  }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  label { color: var(--muted); min-width: 90px; font-size: 12px; }
+  select, input[type="range"] {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font: inherit;
+  }
+  input[type="range"] { padding: 0; }
+  .value { color: var(--accent); min-width: 48px; text-align: right; font-size: 12px; }
+  button {
+    padding: 10px 18px;
+    background: rgba(74,231,191,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(74,231,191,0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  button:hover { background: rgba(74,231,191,0.2); }
+  button.playing {
+    color: var(--danger);
+    background: rgba(224,89,90,0.12);
+    border-color: rgba(224,89,90,0.3);
+  }
+  button.playing:hover { background: rgba(224,89,90,0.2); }
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border-color: var(--border);
+  }
+  .buttons { display: flex; gap: 8px; margin-top: 12px; }
+  pre {
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .error { color: var(--danger); }
+  .status-row { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+  .status-row span strong { color: var(--text); }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "tone":           "./js/vendor/tone.js",
+    "@tonaljs/tonal": "./js/vendor/tonal.js"
+  }
+}
+</script>
+
+</head>
+<body>
+
+<h1>♫ Music Smoke Test</h1>
+<p class="subtitle">
+  End-to-end validation of the Tone.js music pipeline:
+  parser → evaluator → compiler → Tone.Transport, via the vendor-bundled Tone + Tonal modules.
+</p>
+
+<div class="card">
+  <div class="row">
+    <label for="theme">Theme</label>
+    <select id="theme">
+      <optgroup label="— NEW PIPELINE (compiler + Tone.js) —">
+        <option value="new:cheerful_chiptune">Cheerful Chiptune — C major, bright</option>
+        <option value="new:mysterious_dungeon">Mysterious Dungeon — A minor, sparse</option>
+        <option value="new:boss_rush">Boss Rush — E minor, fast + dense</option>
+      </optgroup>
+      <optgroup label="— LEGACY ENGINE (stock templates via new Tone.js core) —">
+        <option value="legacy:lofi/mus_late_night_lofi">Late Night Lofi — 80 bpm</option>
+        <option value="legacy:retro/mus_8bit_adventure">8-Bit Adventure — 145 bpm</option>
+        <option value="legacy:action/mus_battle_arena">Battle Arena — 155 bpm</option>
+        <option value="legacy:cinematic/mus_epic_dawn">Epic Dawn — cinematic</option>
+        <option value="legacy:ambient/mus_deep_space_drift">Deep Space Drift — ambient</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="row">
+    <label for="speed">Speed</label>
+    <input id="speed" type="range" min="0.5" max="2.0" step="0.05" value="1.0">
+    <span class="value" id="speedVal">1.00×</span>
+  </div>
+  <div class="buttons">
+    <button id="playBtn">▶ Play</button>
+    <button id="stopBtn" disabled>■ Stop</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="status-row">
+    <span>state: <strong id="state">idle</strong></span>
+    <span>bpm:   <strong id="bpm">—</strong></span>
+    <span>seed:  <strong id="seed">—</strong></span>
+  </div>
+</div>
+
+<div class="card">
+  <pre id="log">ready.</pre>
+</div>
+
+<script type="module">
+import { compileTheme }  from './js/shared/musicCompiler.js';
+import { MusicEngine }   from './js/shared/musicEngine.js';
+
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+function logLine(msg, isErr = false) {
+    const ts = new Date().toLocaleTimeString();
+    const line = `[${ts}] ${msg}`;
+    log.textContent = (log.textContent + '\n' + line).split('\n').slice(-40).join('\n');
+    if (isErr) log.classList.add('error');
+}
+
+let Tone, Tonal, packsDoc;
+let controller = null;  // compileTheme() result OR MusicEngine instance
+let controllerKind = null;  // 'new' | 'legacy'
+
+async function boot() {
+    logLine('loading tone + tonal + packs…');
+    [Tone, Tonal, packsDoc] = await Promise.all([
+        import('tone'),
+        import('@tonaljs/tonal'),
+        fetch('./global_assets/music/packs.json').then(r => r.json()),
+    ]);
+    logLine(`Tone ${Tone.version ?? '?'} + Tonal loaded, ${Object.keys(packsDoc.packs).length} pack(s)`);
+}
+
+async function loadNewTheme(id) {
+    return fetch(`./global_assets/music/themes/${id}.json`).then(r => r.json());
+}
+async function loadLegacyAsset(relPath) {
+    return fetch(`./global_assets/music/${relPath}.json`).then(r => r.json());
+}
+
+async function play() {
+    try {
+        $('playBtn').disabled = true;
+        if (!Tone) await boot();
+        const selection = $('theme').value;
+        const [kind, id] = selection.split(':', 2);
+        const speed = parseFloat($('speed').value);
+
+        if (kind === 'new') {
+            const theme = await loadNewTheme(id);
+            logLine(`[new] compiling '${theme.name}' @ speed ${speed.toFixed(2)}×…`);
+            controller = compileTheme({
+                theme, packs: packsDoc,
+                params: { speed }, Tone, Tonal,
+            });
+            await controller.start();
+            controllerKind = 'new';
+            $('state').textContent = 'playing (new pipeline)';
+            $('bpm').textContent   = (theme.defaults.cps * speed * 60 * 4).toFixed(1);
+            $('seed').textContent  = theme.seeds.pattern;
+            logLine(`playing: ${theme.layers.length} layer(s) via compileTheme()`);
+        } else if (kind === 'legacy') {
+            const asset = await loadLegacyAsset(id);
+            const engine = new MusicEngine();
+            await engine.init();
+            // Legacy engine uses its own BPM from asset; speed multiplier
+            // isn't wired into it. Show the raw BPM.
+            const baseBpm = asset.payload?.bpm || 120;
+            logLine(`[legacy] '${asset.name ?? id}' @ ${baseBpm} bpm via new Tone.js engine…`);
+            engine.onEnd = () => { /* natural-end already handled by smoke UI */ };
+            await engine.play(asset);
+            controller = engine;
+            controllerKind = 'legacy';
+            $('state').textContent = 'playing (legacy engine)';
+            $('bpm').textContent   = baseBpm.toFixed(1);
+            $('seed').textContent  = '—';
+            logLine(`playing: ${asset.payload?.layers?.length ?? 0} layer(s) via MusicEngine v2`);
+        } else {
+            throw new Error(`unknown selection kind '${kind}'`);
+        }
+
+        $('playBtn').classList.add('playing');
+        $('playBtn').textContent = '▶ Playing…';
+        $('stopBtn').disabled = false;
+    } catch (e) {
+        $('playBtn').disabled = false;
+        $('state').textContent = 'error';
+        logLine(`error: ${e.message}`, true);
+        console.error(e);
+    }
+}
+
+function stop() {
+    if (!controller) return;
+    if (controllerKind === 'new') controller.dispose();
+    else if (controllerKind === 'legacy') controller.destroy();
+    controller = null;
+    controllerKind = null;
+    $('state').textContent = 'stopped';
+    $('bpm').textContent   = '—';
+    $('seed').textContent  = '—';
+    $('playBtn').disabled = false;
+    $('playBtn').classList.remove('playing');
+    $('playBtn').textContent = '▶ Play';
+    $('stopBtn').disabled = true;
+    logLine('stopped.');
+}
+
+$('playBtn').addEventListener('click', play);
+$('stopBtn').addEventListener('click', stop);
+
+$('speed').addEventListener('input', () => {
+    const val = parseFloat($('speed').value);
+    $('speedVal').textContent = `${val.toFixed(2)}×`;
+    // Speed only applies to the new pipeline — legacy engine uses its own BPM.
+    if (controllerKind === 'new' && controller?.isPlaying?.()) {
+        controller.setParam('speed', val);
+        const selection = $('theme').value;
+        const [, id] = selection.split(':', 2);
+        fetch(`./global_assets/music/themes/${id}.json`).then(r => r.json()).then(t => {
+            $('bpm').textContent = (t.defaults.cps * val * 60 * 4).toFixed(1);
+        });
+    }
+});
+
+$('theme').addEventListener('change', () => {
+    if (controller) stop();
+});
+</script>
+
+</body>
+</html>

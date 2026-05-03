@@ -1,0 +1,86 @@
+{
+  "id":   "heroic_rise",
+  "type": "music",
+  "name": "Heroic Rise",
+  "tags": ["heroic", "action", "rising", "hero-moment", "fm"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D major, 100 BPM. The hero rises. Progression D → A → Bm → G (I-V-vi-IV). Melody is rising chord-tone arpeggios that crescendo toward a held high note at phrase end — 'D-F#-A-D held'. Different from Triumphant Fanfare (which leaps): this one CLIMBS step-by-step then plants the flag.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "D",
+      "scaleMode":  "major",
+      "cps":        0.45,
+      "valence":    0.8,
+      "complexity": 0.9,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#d09040",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d1 d2 a1 d2] [a1 e2 a2 e2] [b1 f#2 b2 f#2] [g1 d2 g2 choose(b1,d2)]>",
+          "feel":        ["power-chord", "octave-drop", "anchored"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 e3 e3 d3 e3 e3 d3 c3 e3 e3 e3 d3 d3 d3 choose(c3,d3)",
+          "feel":        ["full-backbeat", "snare-rolls", "ceremonial"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d5 f#5 a5 d6 ~ ~ ~ ~] [a4 c#5 e5 a5 ~ ~ ~ ~] [b4 d5 f#5 b5 ~ ~ ~ ~] [g4 b4 d5 g5 ~ ~ choose(d6,~) ~]>",
+          "feel":        ["climb-and-plant", "rising-arpeggio-with-hold", "heroic"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f#5 c#5 d5 choose(b4,d5)>",
+          "feel":        ["3rd-of-chord", "downbeat", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 a3 d4 a3] [a2 e3 a3 e3] [b2 f#3 b3 f#3] [g2 d3 g3 choose(b3,d3)]>",
+          "feel":        ["sustained-brass", "wide", "heroic"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,~) ~ ~ ~ ~ choose(d6,c6)",
+          "feel":        ["cymbal-shimmer", "crown", "lift"],
+          "register":    0,
+          "densityBase": 0.35
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 555, "variation": 3 },
+      "modulation": {
+        "feelVector": [0.85, 0.85, 0.5, 0.85, 0.3, 0.3],
+        "modes": {
+          "intro":   { "valence": 0.7,  "complexity": 0.3,  "speed": 0.95, "layers": ["pad", "bass"] },
+          "waiting": { "valence": 0.75, "complexity": 0.55, "speed": 1.0,  "layers": ["pad", "bass", "drums"] },
+          "active":  { "valence": 0.8,  "complexity": 0.85, "speed": 1.0,  "layers": ["pad", "bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.85, "complexity": 1.0,  "speed": 1.05, "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

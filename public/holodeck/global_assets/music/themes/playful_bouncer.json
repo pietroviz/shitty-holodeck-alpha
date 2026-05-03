@@ -1,0 +1,86 @@
+{
+  "id":   "playful_bouncer",
+  "type": "music",
+  "name": "Playful Bouncer",
+  "tags": ["playful", "bouncy", "bright", "upbeat", "chiptune"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C major, 132 BPM. Classic pop progression I-vi-IV-V (C-Am-F-G). Pure NES-style chiptune: the chord layer plays a fast arpeggio (C-E-G-E pattern, like NES did to fake sustained chords), bass walks root-fifth-octave, melody hits chord tones on strong beats with stepwise passing, parallel-third counter-line on chord layer.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "C",
+      "scaleMode":  "major",
+      "cps":        0.55,
+      "valence":    0.88,
+      "complexity": 0.9,
+      "speed":      1.05,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#f0c050",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c2 g2 c3 g2] [a1 e2 a2 e2] [f1 c2 f2 c2] [g1 d2 g2 choose(b1,d2)]>",
+          "feel":        ["root-fifth-octave", "anchor", "bouncy"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 e3 e3 d3 e3 e3 e3 c3 e3 e3 e3 d3 e3 d3 choose(d3,e3)",
+          "feel":        ["backbeat", "kick-snare-hat", "tight"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c5 e5 g5 ~ e5 c5 ~ g4] [a4 c5 e5 ~ c5 a4 ~ g4] [f5 a5 c6 ~ a5 f5 ~ c5] [g5 b5 d5 ~ b4 g4 ~ choose(d5,b4)]>",
+          "feel":        ["pop-hook", "bouncy-with-breath", "8th-note-zigzag"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<[c4 e4 g4 e4] [a3 c4 e4 c4] [f3 a3 c4 a3] [g3 b3 d4 choose(b3,f4)]>",
+          "feel":        ["arpeggio-as-chord", "NES-chiptune-trick", "16ths"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<e4 c5 c5 choose(d5,b4)>",
+          "feel":        ["3rd-of-chord", "parallel-counter", "support"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ choose(c6,~) ~ ~ ~ choose(d6,~)",
+          "feel":        ["sparkle", "occasional", "high"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 5, "variation": 1 },
+      "modulation": {
+        "feelVector": [0.85, 0.7, 0.6, 0.15, 0.1, 0.95],
+        "modes": {
+          "intro":   { "valence": 0.85, "complexity": 0.3,  "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.85, "complexity": 0.55, "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.88, "complexity": 0.85, "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.92, "complexity": 1.0,  "speed": 1.15, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

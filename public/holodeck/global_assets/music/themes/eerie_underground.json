@@ -1,0 +1,86 @@
+{
+  "id":   "eerie_underground",
+  "type": "music",
+  "name": "Eerie Underground",
+  "tags": ["eerie", "drone", "creepy", "ambient", "phrygian"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "B phrygian, 77 BPM. Drone-and-neighbors structure rather than a real progression — bass holds B and slides to the b2 (C natural). Pad voices a B-C-F dissonant cluster. Melody is just a single sliding note per cycle, irregular, like 'something heard but not seen'.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "B",
+      "scaleMode":  "phrygian",
+      "cps":        0.32,
+      "valence":    0.1,
+      "complexity": 0.7,
+      "speed":      0.9,
+      "variety":    0.65,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#3a2a4a",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[b1 ~ ~ ~] [c2 ~ ~ ~] [b1 ~ ~ ~] [b1 ~ ~ choose(c2,b1)]>",
+          "feel":        ["drone-with-neighbor", "phrygian-b2", "subterranean"],
+          "register":    0,
+          "densityBase": 0.3
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[b3 d4 f4 d4] [c4 e4 g4 e4] [b3 d4 f4 d4] [b3 c4 f4 choose(g4,c4)]>",
+          "feel":        ["dissonant-cluster", "chord-arpeggio", "haunting"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "chords",
+          "pattern":     "~ ~ ~ choose(<b3 f4>,<c4 f#4>)",
+          "feel":        ["tritone", "rare", "stab"],
+          "register":    0,
+          "densityBase": 0.15
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c5,~) ~ ~ ~ choose(b5,~) ~ choose(g5,~)",
+          "feel":        ["scrape", "irregular", "creep"],
+          "register":    0,
+          "densityBase": 0.3
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ ~ ~ ~ ~ ~ ~ choose(d3,~)",
+          "feel":        ["jump-scare-snare", "rare", "tense"],
+          "register":    0,
+          "densityBase": 0.1
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[~ ~ ~ d5] [~ ~ ~ c5] [~ ~ ~ b4] [~ ~ ~ choose(c5,b4)]>",
+          "feel":        ["one-tone-per-cycle", "irregular", "haunting"],
+          "register":    0,
+          "densityBase": 0.2
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "pad", "texture", "chords", "drums", "melody"] }
+      ],
+      "seeds": { "pattern": 666, "variation": 4 },
+      "modulation": {
+        "feelVector": [0.05, 0.3, 0.05, 0.2, 0.75, 0.05],
+        "modes": {
+          "intro":   { "valence": 0.15, "complexity": 0.2,  "speed": 0.9,  "layers": ["bass"] },
+          "waiting": { "valence": 0.12, "complexity": 0.4,  "speed": 0.9,  "layers": ["bass", "pad"] },
+          "active":  { "valence": 0.1,  "complexity": 0.7,  "speed": 0.9,  "layers": ["bass", "pad", "texture", "melody"] },
+          "peak":    { "valence": 0.08, "complexity": 0.95, "speed": 0.95, "layers": ["bass", "pad", "texture", "chords", "drums", "melody"] }
+        }
+      }
+    }
+  }
+}

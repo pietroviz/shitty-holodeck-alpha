@@ -1,0 +1,86 @@
+{
+  "id":   "rocket_launch",
+  "type": "music",
+  "name": "Rocket Launch",
+  "tags": ["rocket", "launch", "sci-fi", "ascending", "intense"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C# minor, 120 BPM. Sci-fi rocket lift-off. Progression C#m → B → A → G# (i-bVII-bVI-V) — descending bassline against an ASCENDING melody creates the sensation of countering forces (engines push down, ship pushes up). Melody is a chord-tone arpeggio that climbs each cycle. Driving drums, riser texture for the whoosh.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "C#",
+      "scaleMode":  "minor",
+      "cps":        0.55,
+      "valence":    0.55,
+      "complexity": 0.95,
+      "speed":      1.05,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#7060c0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c#2 c#3 c#2 c#3] [b1 b2 b1 b2] [a1 a2 a1 a2] [g#1 g#2 g#1 choose(d#2,g#2)]>",
+          "feel":        ["pumping-octave", "thrust", "driving"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(d3,c3)",
+          "feel":        ["driving-backbeat", "tight-hats", "engines"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c#5 e5 g#5 c#6 ~ ~ ~ ~] [b4 d5 f#5 b5 ~ ~ ~ ~] [a4 c#5 e5 a5 ~ ~ ~ ~] [g#4 c5 d#5 g#5 ~ ~ choose(c#6,~) ~]>",
+          "feel":        ["climbing-arpeggio", "ascend-each-cycle", "lift"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<e5 d5 c#5 choose(d#5,b4)>",
+          "feel":        ["3rd-of-chord", "downbeat", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c#3 e3 g#3 e3] [b2 d3 f#3 d3] [a2 c#3 e3 c#3] [g#2 c3 d#3 choose(g#3,d#3)]>",
+          "feel":        ["wide-pad", "thrust-haze", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c#6,~) ~ choose(d#6,~) ~ choose(e6,~) ~ choose(g#6,~)",
+          "feel":        ["whoosh-rise", "engine-roar", "high-noise"],
+          "register":    0,
+          "densityBase": 0.65
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1019, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.65, 0.95, 0.4, 0.85, 0.65, 0.4],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.4, "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.55, "complexity": 0.6, "speed": 1.0,  "layers": ["bass", "drums", "pad"] },
+          "active":  { "valence": 0.55, "complexity": 0.9, "speed": 1.05, "layers": ["bass", "drums", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.6,  "complexity": 1.0, "speed": 1.1,  "layers": ["bass", "drums", "pad", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

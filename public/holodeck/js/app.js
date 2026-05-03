@@ -1868,6 +1868,15 @@ function init() {
                             _setPlayBtnState(false);
                         };
                     }
+                    // Parallel hookup for music: reset outer button when a
+                    // play-once / fade-out track finishes naturally.
+                    if (b._musicEngine) {
+                        const prevEnd = b._musicEngine.onEnd;
+                        b._musicEngine.onEnd = () => {
+                            if (prevEnd) prevEnd();
+                            _setPlayBtnState(false);
+                        };
+                    }
                 }
             }
         } else if (S.previewAsset) {

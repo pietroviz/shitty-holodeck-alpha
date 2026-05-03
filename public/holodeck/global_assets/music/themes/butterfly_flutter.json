@@ -1,0 +1,86 @@
+{
+  "id":   "butterfly_flutter",
+  "type": "music",
+  "name": "Butterfly Flutter",
+  "tags": ["butterfly", "light", "fluttering", "delicate", "graceful"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D major, 110 BPM. Light fluttering — wings beat in quick bursts then glide. Progression D → F#m → G → A (I-iii-IV-V). Melody is 'flutter-flutter-hold' — three quick grace notes followed by a sustained tone, repeating as the butterfly lands and lifts. Soft brushy drums, airy pad.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "D",
+      "scaleMode":  "major",
+      "cps":        0.5,
+      "valence":    0.78,
+      "complexity": 0.7,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#f0a8d0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d2 ~ a2 ~] [f#2 ~ c#3 ~] [g2 ~ d3 ~] [a2 ~ e3 choose(d3,a2)]>",
+          "feel":        ["light-pluck", "airy", "support"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ e3 ~ e3 ~ e3 d3 e3 ~ e3 ~ e3 ~ e3 ~ choose(e3,f3)",
+          "feel":        ["brushy", "soft-wing-beat", "light"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[f#5 a5 d6 ~ ~ ~ ~ ~] [a5 c#6 e6 ~ ~ ~ ~ ~] [b5 d6 g6 ~ ~ ~ ~ ~] [c#6 e6 a6 ~ ~ ~ choose(d6,~) ~]>",
+          "feel":        ["flutter-flutter-hold", "grace-then-glide", "delicate"],
+          "register":    0,
+          "densityBase": 0.45
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<a4 c#5 b4 choose(c#5,e5)>",
+          "feel":        ["3rd-of-chord", "soft-touch", "rare"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f#3 a3 f#3] [f#3 a3 c#4 a3] [g3 b3 d4 b3] [a3 c#4 e4 choose(g4,c#4)]>",
+          "feel":        ["airy-pad", "wing-haze", "warm"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(d6,~) ~ ~ ~ choose(f#6,~) ~",
+          "feel":        ["sparkle", "petal-dust", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1004, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.85, 0.4, 0.7, 0.1, 0.05, 0.7],
+        "modes": {
+          "intro":   { "valence": 0.78, "complexity": 0.3, "speed": 0.9,  "layers": ["pad"] },
+          "waiting": { "valence": 0.78, "complexity": 0.5, "speed": 0.95, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.78, "complexity": 0.7, "speed": 1.0,  "layers": ["pad", "bass", "drums", "melody"] },
+          "peak":    { "valence": 0.82, "complexity": 0.9, "speed": 1.05, "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

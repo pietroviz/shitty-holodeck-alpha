@@ -1,0 +1,86 @@
+{
+  "id":   "thunderstorm",
+  "type": "music",
+  "name": "Thunderstorm",
+  "tags": ["storm", "thunder", "lightning", "dramatic", "dark"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "F# minor, 95 BPM. Dark dramatic storm. Progression F#m → D → E → C# (i-VI-bVII-V). Bass rumbles continuously with octave pulse — thunder rolling in the distance. Melody is sudden lightning stabs — single high held tones that strike then vanish. Heavy drums with snare rolls. Texture layer is the rain hiss.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "F#",
+      "scaleMode":  "minor",
+      "cps":        0.43,
+      "valence":    0.3,
+      "complexity": 0.85,
+      "speed":      0.95,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#404858",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[f#1 f#2 f#1 f#2 f#1 f#2 f#1 f#2] [d1 d2 d1 d2 d1 d2 d1 d2] [e1 e2 e1 e2 e1 e2 e1 e2] [c#1 c#2 c#1 c#2 c#1 c#2 c#1 choose(g#1,c#2)]>",
+          "feel":        ["thunder-rumble", "octave-pulse", "rolling"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 d3 d3 d3 choose(c3,d3)",
+          "feel":        ["heavy-rolls", "snare-storm", "dramatic"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a5 ~ ~ ~ ~ ~ ~ ~] [d5 ~ ~ ~ ~ ~ ~ ~] [g5 ~ ~ ~ ~ ~ ~ ~] [c#6 ~ ~ ~ ~ ~ choose(a5,~) ~]>",
+          "feel":        ["lightning-stab", "single-high-strike", "sudden"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<a4 f#4 g4 choose(f4,c#5)>",
+          "feel":        ["3rd-of-chord", "ominous-stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[f#3 a3 c#4 a3] [d3 f#3 a3 f#3] [e3 g3 b3 g3] [c#3 f3 g#3 choose(b3,f3)]>",
+          "feel":        ["dark-sustain", "storm-cloud", "ominous"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ choose(e6,~) ~ choose(f#6,~)",
+          "feel":        ["rain-hiss", "static", "high-noise"],
+          "register":    0,
+          "densityBase": 0.65
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1011, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.2, 0.85, 0.2, 0.7, 0.85, 0.05],
+        "modes": {
+          "intro":   { "valence": 0.3,  "complexity": 0.4,  "speed": 0.9,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.3,  "complexity": 0.6,  "speed": 0.95, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.3,  "complexity": 0.85, "speed": 0.95, "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.35, "complexity": 1.0,  "speed": 1.0,  "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

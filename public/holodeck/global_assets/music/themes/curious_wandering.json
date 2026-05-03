@@ -1,0 +1,86 @@
+{
+  "id":   "curious_wandering",
+  "type": "music",
+  "name": "Curious Wandering",
+  "tags": ["mysterious", "curious", "dorian", "exploring", "library"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A dorian, 92 BPM. Progression Am → D → Am → G (i-IV-i-VII — dorian's signature major IV). Melody is question-shaped: rises stepwise then pauses, like wondering 'what's behind that door?'. Asymmetric phrase lengths.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "A",
+      "scaleMode":  "dorian",
+      "cps":        0.45,
+      "valence":    0.45,
+      "complexity": 0.7,
+      "speed":      1.0,
+      "variety":    0.55,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#7a9580",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 e2 a2 e2] [d2 a2 d3 a2] [a1 e2 a2 e2] [g1 d2 g2 choose(b1,d2)]>",
+          "feel":        ["walking", "dorian-IV", "curious"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a4 ~ b4 c5 ~ ~ ~ ~] [d5 ~ e5 f#5 ~ ~ ~ ~] [c5 ~ b4 a4 ~ ~ ~ ~] [b4 ~ ~ d5 ~ ~ choose(b4,d5) ~]>",
+          "feel":        ["question-rise-pause", "stepwise-then-rest", "exploring"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [d4 f#4 a4 f#4] [a3 c4 e4 c4] [g3 b3 d4 choose(f#4,b3)]>",
+          "feel":        ["chord-arpeggio", "dorian-color", "warm"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 f#5 c5 choose(b4,d5)>",
+          "feel":        ["3rd-of-chord", "soft-mark", "harmonic"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ ~ ~ ~ ~ choose(d3,~) ~",
+          "feel":        ["sparse-kick", "ghost-snare", "exploring"],
+          "register":    0,
+          "densityBase": 0.3
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c5,~) ~ ~ ~ choose(d5,~) ~",
+          "feel":        ["mid-blip", "occasional", "curious"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "pad", "chords", "drums", "texture"] }
+      ],
+      "seeds": { "pattern": 17, "variation": 4 },
+      "modulation": {
+        "feelVector": [0.4, 0.4, 0.3, 0.3, 0.5, 0.4],
+        "modes": {
+          "intro":   { "valence": 0.45, "complexity": 0.2,  "speed": 0.95, "layers": ["bass"] },
+          "waiting": { "valence": 0.45, "complexity": 0.4,  "speed": 1.0,  "layers": ["bass", "pad"] },
+          "active":  { "valence": 0.45, "complexity": 0.7,  "speed": 1.0,  "layers": ["bass", "pad", "melody", "drums"] },
+          "peak":    { "valence": 0.45, "complexity": 0.95, "speed": 1.05, "layers": ["bass", "pad", "melody", "drums", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

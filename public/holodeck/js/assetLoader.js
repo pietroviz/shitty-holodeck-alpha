@@ -122,7 +122,10 @@ async function _loadFromManifest(folder, subFilter) {
 
     if (!_manifestCache[folder]) {
         try {
-            const res = await fetch(manifestPath);
+            // cache:'no-cache' forces revalidation each load so manifest edits
+            // (e.g. slimming the music library) take effect on next refresh
+            // without needing the user to clear browser caches manually.
+            const res = await fetch(manifestPath, { cache: 'no-cache' });
             if (!res.ok) return [];
             _manifestCache[folder] = await res.json();
         } catch {

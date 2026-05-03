@@ -1,0 +1,86 @@
+{
+  "id":   "unicorn_magic",
+  "type": "music",
+  "name": "Unicorn Magic",
+  "tags": ["unicorn", "magical", "sparkly", "twinkling", "lush"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "E major, 105 BPM. Magical, sparkly. Progression Emaj7 → G#m7 → C#m7 → B (Imaj7-iii7-vi7-V) — the maj7s give it the dreamy fairytale chord color. Melody is twinkling high arpeggios that ascend through the chord — like dust trailing off a horn as it gallops. Lush wide pad, light drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "E",
+      "scaleMode":  "major",
+      "cps":        0.48,
+      "valence":    0.85,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#f0c0e8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[e2 ~ b2 ~] [g#2 ~ d#3 ~] [c#3 ~ g#3 ~] [b2 ~ f#3 choose(e3,b2)]>",
+          "feel":        ["light-pluck", "supportive", "dreamy"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 ~ e3 d3 e3 ~ e3 c3 e3 ~ e3 d3 e3 ~ choose(e3,d3)",
+          "feel":        ["soft-backbeat", "shimmery-hats", "light"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[e6 g#6 b6 e7 ~ g#6 e6 ~] [g#6 b6 d#7 ~ ~ b6 g#6 ~] [c#7 e7 g#7 ~ ~ e7 c#7 ~] [b6 d#7 f#7 ~ ~ ~ choose(e7,~) ~]>",
+          "feel":        ["twinkling-arpeggio-up", "fairy-dust", "high-sparkle"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<g#5 b5 e6 choose(d#6,b5)>",
+          "feel":        ["3rd-of-maj7", "dreamy-stab", "soft"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[e3 g#3 b3 g#3] [g#3 b3 d#4 b3] [c#4 e4 g#4 e4] [b3 d#4 f#4 choose(e4,d#4)]>",
+          "feel":        ["lush-wide-pad", "rainbow-haze", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(e7,~) ~ choose(g#7,~) ~ choose(b7,~) ~ choose(e7,~)",
+          "feel":        ["bell-sparkle", "fairy-dust", "very-high"],
+          "register":    0,
+          "densityBase": 0.55
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1009, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.95, 0.55, 0.85, 0.45, 0.05, 0.75],
+        "modes": {
+          "intro":   { "valence": 0.85, "complexity": 0.3, "speed": 0.9,  "layers": ["pad"] },
+          "waiting": { "valence": 0.85, "complexity": 0.5, "speed": 0.95, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.85, "complexity": 0.8, "speed": 1.0,  "layers": ["pad", "bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.9,  "complexity": 1.0, "speed": 1.05, "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

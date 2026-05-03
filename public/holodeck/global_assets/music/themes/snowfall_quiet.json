@@ -1,0 +1,79 @@
+{
+  "id":   "snowfall_quiet",
+  "type": "music",
+  "name": "Snowfall Quiet",
+  "tags": ["snow", "quiet", "crystalline", "sparse", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A minor, 70 BPM. Crystalline winter quiet — flakes drift one at a time. Progression Am → F → G → Am (i-bVI-bVII-i). NO drums. Bass is held whole-notes, almost a drone. Melody is sparse high bell tones — one or two per cycle, falling like the next snowflake. Lush pad underneath like a held breath.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "A",
+      "scaleMode":  "minor",
+      "cps":        0.32,
+      "valence":    0.55,
+      "complexity": 0.4,
+      "speed":      0.8,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#d8e0e8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 ~ ~ ~ ~ ~ ~ ~] [f1 ~ ~ ~ ~ ~ ~ ~] [g1 ~ ~ ~ ~ ~ ~ ~] [a1 ~ ~ ~ ~ ~ choose(e1,~) ~]>",
+          "feel":        ["whole-note-drone", "held-low", "still"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[~ ~ ~ a5 ~ ~ ~ ~] [~ ~ ~ ~ ~ ~ c6 ~] [~ ~ ~ d6 ~ ~ ~ ~] [~ ~ ~ ~ ~ ~ choose(e6,a5) ~]>",
+          "feel":        ["sparse-bell", "single-flake", "high-cold"],
+          "register":    0,
+          "densityBase": 0.35
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 a4 b4 choose(c5,e5)>",
+          "feel":        ["3rd-of-chord", "soft-touch", "rare"],
+          "register":    0,
+          "densityBase": 0.45
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [f3 a3 c4 a3] [g3 b3 d4 b3] [a3 c4 e4 choose(g4,c4)]>",
+          "feel":        ["held-breath-pad", "icy-warmth", "dim"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(e7,~) ~ ~ ~ choose(a7,~) ~",
+          "feel":        ["crystal-sparkle", "very-high", "tiny"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1013, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.85, 0.1, 0.5, 0.1, 0.05, 0.15],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.2, "speed": 0.75, "layers": ["pad"] },
+          "waiting": { "valence": 0.55, "complexity": 0.3, "speed": 0.8,  "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.55, "complexity": 0.4, "speed": 0.8,  "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.6,  "complexity": 0.55, "speed": 0.85, "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

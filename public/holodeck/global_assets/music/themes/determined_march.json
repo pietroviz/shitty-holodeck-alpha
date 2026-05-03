@@ -1,0 +1,86 @@
+{
+  "id":   "determined_march",
+  "type": "music",
+  "name": "Determined March",
+  "tags": ["determined", "marching", "committed", "hero-quest", "fm"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C minor, 110 BPM. Heroic minor march progression Cm → Bb → Ab → G (i-bVII-bVI-V). Melody is short dotted-rhythm fanfare phrases — three short notes then a long, like a bugle calling. 'Da-da-da DAAAH'.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "C",
+      "scaleMode":  "minor",
+      "cps":        0.46,
+      "valence":    0.45,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#5a6890",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c2 g2 c3 g2] [bb1 f2 bb2 f2] [ab1 eb2 ab2 eb2] [g1 d2 g2 choose(b1,d2)]>",
+          "feel":        ["marching", "root-fifth-octave", "committed"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 d3 c3 e3 d3 choose(d3,e3)",
+          "feel":        ["military-backbeat", "kick-every-beat", "snare-rolls"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c5 c5 c5 eb5 ~ ~ ~ ~] [bb4 bb4 bb4 d5 ~ ~ ~ ~] [ab4 ab4 ab4 c5 ~ ~ ~ ~] [g4 g4 b4 d5 ~ ~ choose(g5,~) ~]>",
+          "feel":        ["bugle-call", "dotted-rhythm", "da-da-da-DAAH"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<eb5 d5 c5 choose(b4,d5)>",
+          "feel":        ["3rd-of-chord", "fanfare-stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c3 g3 c4 g3] [bb2 f3 bb3 f3] [ab2 eb3 ab3 eb3] [g2 d3 g3 choose(b3,d3)]>",
+          "feel":        ["sustained-brass", "wide", "march"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ choose(c6,~) ~ ~ ~ choose(d6,~)",
+          "feel":        ["cymbal-tap", "ceremonial", "rare"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 76, "variation": 1 },
+      "modulation": {
+        "feelVector": [0.6, 0.7, 0.4, 0.65, 0.4, 0.1],
+        "modes": {
+          "intro":   { "valence": 0.5,  "complexity": 0.3,  "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.45, "complexity": 0.55, "speed": 1.0,  "layers": ["bass", "drums", "pad"] },
+          "active":  { "valence": 0.45, "complexity": 0.85, "speed": 1.0,  "layers": ["bass", "drums", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.4,  "complexity": 1.0,  "speed": 1.05, "layers": ["bass", "drums", "pad", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

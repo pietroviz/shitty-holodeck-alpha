@@ -1,0 +1,86 @@
+{
+  "id":   "whimsical_toybox",
+  "type": "music",
+  "name": "Whimsical Toybox",
+  "tags": ["whimsical", "playful", "magical", "fairytale", "chiptune"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G major, 120 BPM. Stuffed animals come alive at midnight. Progression G → C → D → C (I-IV-V-IV). Melody is fast 16th-note chromatic flourishes that scamper around chord tones — like a toy mouse darting between hiding spots. Cartoon-style.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "G",
+      "scaleMode":  "major",
+      "cps":        0.5,
+      "valence":    0.85,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.6,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#f5b8d8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g1 g2 d2 g2] [c2 c3 g2 c3] [d2 d3 a2 d3] [c2 c3 g2 choose(b2,c3)]>",
+          "feel":        ["bouncing-octaves", "playful", "skipping"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g5 a5 b5 c6 b5 a5 g5 d5] [c6 d6 e6 c6 a5 g5 e5 c5] [d6 e6 f#6 g6 d6 a5 f#5 d5] [c6 b5 a5 g5 a5 b5 choose(d6,g5) g5]>",
+          "feel":        ["scampering-16ths", "chromatic-flourish", "cartoon"],
+          "register":    0,
+          "densityBase": 1.0
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<[g4 b4 d5 b4] [c4 e4 g4 e4] [d4 f#4 a4 f#4] [c4 e4 g4 choose(b4,e4)]>",
+          "feel":        ["arpeggio-as-chord", "NES-trick", "16ths"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<b4 e5 f#5 choose(g5,e5)>",
+          "feel":        ["3rd-of-chord", "parallel-counter", "support"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 ~ e3 d3 e3 c3 e3 c3 e3 ~ e3 d3 e3 choose(c3,d3) choose(e3,f3)",
+          "feel":        ["light-skipping", "snare-on-2-4", "playful"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ ~ choose(e6,~) ~",
+          "feel":        ["sparkle", "twinkle", "magic"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "drums", "texture"] }
+      ],
+      "seeds": { "pattern": 31, "variation": 2 },
+      "modulation": {
+        "feelVector": [0.85, 0.6, 0.5, 0.15, 0.15, 0.95],
+        "modes": {
+          "intro":   { "valence": 0.85, "complexity": 0.3,  "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.85, "complexity": 0.5,  "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.85, "complexity": 0.85, "speed": 1.0,  "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.9,  "complexity": 1.0,  "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

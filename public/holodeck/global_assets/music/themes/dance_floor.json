@@ -1,0 +1,86 @@
+{
+  "id":   "dance_floor",
+  "type": "music",
+  "name": "Dance Floor",
+  "tags": ["dance", "club", "synthwave", "neon", "energetic"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A minor, 124 BPM. Classic synthwave club. Progression Am → F → C → G (i-VI-III-VII). Melody is swooping leads with vibrato bends — long high held tones that swell in then drop to a chord tone. Like a Jan Hammer guitar lead, not a tune you'd whistle.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "A",
+      "scaleMode":  "minor",
+      "cps":        0.52,
+      "valence":    0.6,
+      "complexity": 0.95,
+      "speed":      1.0,
+      "variety":    0.55,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#d040c0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 a2 a1 a2] [f1 f2 f1 f2] [c2 c3 c2 c3] [g1 g2 g1 choose(d2,g2)]>",
+          "feel":        ["pumping-saw", "octave-pulse", "club"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(e3,f3)",
+          "feel":        ["four-on-floor", "snare-on-2-4", "club-beat"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[e5 ~ ~ a5 ~ ~ ~ c6] [a5 ~ ~ c6 ~ ~ ~ f6] [g5 ~ ~ c6 ~ ~ ~ e6] [b5 ~ ~ d5 ~ ~ choose(g5,~) ~]>",
+          "feel":        ["swooping-held-leads", "vibrato-bends", "neon"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 a4 e5 choose(d5,b4)>",
+          "feel":        ["3rd-of-chord", "stab", "wide"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [f3 a3 c4 a3] [c3 e3 g3 e3] [g3 b3 d4 choose(f4,b3)]>",
+          "feel":        ["wide-saw", "chord-arpeggio", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,~) ~ ~ ~ choose(d6,~) ~",
+          "feel":        ["riser", "neon", "sparkle"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 84, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.75, 0.85, 0.55, 0.5, 0.25, 0.6],
+        "modes": {
+          "intro":   { "valence": 0.6, "complexity": 0.4,  "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.6, "complexity": 0.6,  "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.6, "complexity": 0.9,  "speed": 1.0,  "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.65, "complexity": 1.0, "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id":   "mouse_scamper",
+  "type": "music",
+  "name": "Mouse Scamper",
+  "tags": ["mouse", "tiny", "scurrying", "dart", "chiptune"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G major, 130 BPM. Tiny scurrying creature — dart and freeze. Progression G → Em → C → D (I-vi-IV-V). Melody is bursts of 16th notes followed by sudden rests, mimicking a mouse darting forward then freezing to listen. Tiny pluck bass, hi-hat-only drums (no heavy kicks — this creature weighs nothing).",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "G",
+      "scaleMode":  "major",
+      "cps":        0.6,
+      "valence":    0.7,
+      "complexity": 0.85,
+      "speed":      1.05,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#c8b090",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g3 ~ ~ d4 ~ ~ ~ ~] [e3 ~ ~ b3 ~ ~ ~ ~] [c3 ~ ~ g3 ~ ~ ~ ~] [d3 ~ ~ a3 ~ ~ choose(b3,~) ~]>",
+          "feel":        ["tiny-pluck", "dart", "weightless"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ e3 ~ e3 ~ e3 ~ e3 ~ e3 ~ e3 ~ e3 ~ choose(e3,f3)",
+          "feel":        ["hi-hat-only", "tiny-feet", "no-kicks"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g5 a5 b5 d6 ~ ~ ~ ~] [e5 g5 b5 e6 ~ ~ ~ ~] [c5 e5 g5 c6 ~ ~ ~ ~] [d5 f#5 a5 d6 ~ ~ choose(b5,~) ~]>",
+          "feel":        ["dart-and-freeze", "16th-burst-then-rest", "high"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<b4 g4 e5 choose(f#5,a4)>",
+          "feel":        ["light-stab", "tiny", "support"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[g4 b4 d5 b4] [e4 g4 b4 g4] [c4 e4 g4 e4] [d4 f#4 a4 choose(c5,a4)]>",
+          "feel":        ["light-pad", "background", "soft"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ choose(g6,~) ~ ~ choose(b6,~) ~",
+          "feel":        ["squeak", "high-pip", "tiny"],
+          "register":    0,
+          "densityBase": 0.35
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1002, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.85, 0.6, 0.4, 0.05, 0.35, 0.85],
+        "modes": {
+          "intro":   { "valence": 0.7,  "complexity": 0.3,  "speed": 0.95, "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.7,  "complexity": 0.55, "speed": 1.0,  "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.7,  "complexity": 0.85, "speed": 1.05, "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.75, "complexity": 0.95, "speed": 1.1,  "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

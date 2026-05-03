@@ -1,0 +1,86 @@
+{
+  "id":   "party_pop",
+  "type": "music",
+  "name": "Party Pop",
+  "tags": ["party", "celebration", "joyful", "pop", "energetic"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G major, 120 BPM. Pure celebration. Progression G → D → Em → C (I-V-vi-IV) — the classic feel-good pop progression. Melody is BIG joyful hooks with octave leaps that fall back through the chord tones — like a balloon shooting up and ribbons drifting down. Bouncy bass octaves, full active drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "G",
+      "scaleMode":  "major",
+      "cps":        0.55,
+      "valence":    0.92,
+      "complexity": 0.95,
+      "speed":      1.05,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#f0a040",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g2 g3 g2 g3] [d2 d3 d2 d3] [e2 e3 e2 e3] [c2 c3 c2 choose(b2,d3)]>",
+          "feel":        ["pumping-octave", "bouncy", "celebratory"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(d3,c3)",
+          "feel":        ["full-backbeat", "tight-hats", "celebration"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g5 b5 d6 g6 d6 b5 g5 ~] [f#5 a5 d6 f#6 d6 a5 f#5 ~] [e5 g5 b5 e6 b5 g5 e5 ~] [c5 e5 g5 c6 ~ ~ choose(d6,~) ~]>",
+          "feel":        ["balloon-up-ribbons-down", "octave-leap", "joyful-hook"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<b4 f#5 g5 choose(e5,c5)>",
+          "feel":        ["3rd-of-chord", "downbeat", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[g3 b3 d4 b3] [d3 f#3 a3 f#3] [e3 g3 b3 g3] [c3 e3 g3 choose(b3,e3)]>",
+          "feel":        ["wide-pad", "celebratory-haze", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(g6,~) ~ choose(b6,~) ~ choose(d7,~) ~ choose(g7,~)",
+          "feel":        ["confetti-sparkle", "high-pop", "shimmer"],
+          "register":    0,
+          "densityBase": 0.6
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1024, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.95, 0.9, 0.7, 0.4, 0.05, 0.95],
+        "modes": {
+          "intro":   { "valence": 0.92, "complexity": 0.4, "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.92, "complexity": 0.6, "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.92, "complexity": 0.9, "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.95, "complexity": 1.0, "speed": 1.1,  "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

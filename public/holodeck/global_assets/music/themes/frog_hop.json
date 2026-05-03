@@ -1,0 +1,86 @@
+{
+  "id":   "frog_hop",
+  "type": "music",
+  "name": "Frog Hop",
+  "tags": ["frog", "bouncy", "plucky", "leap", "wet"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D major, 95 BPM. Bouncy plucky frog leaping pad to pad. Progression D → G → A → D (I-IV-V-I). Bass mimics the hop — low note then octave-up answer (boing-boing). Melody is staccato leaps that drop and rebound (5th down to root then back), every cycle a different pad. Crisp backbeat drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "D",
+      "scaleMode":  "major",
+      "cps":        0.43,
+      "valence":    0.78,
+      "complexity": 0.8,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#70b850",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d2 d3 d2 d3] [g2 g3 g2 g3] [a2 a3 a2 a3] [d2 d3 d2 choose(a2,d3)]>",
+          "feel":        ["hop-pattern", "octave-leap", "boing"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(d3,e3)",
+          "feel":        ["crisp-backbeat", "kick-snare-hat", "tight"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a5 d5 a5 d5 ~ a5 ~ ~] [d6 g5 d6 g5 ~ d6 ~ ~] [e6 a5 e6 a5 ~ e6 ~ ~] [a5 d5 a5 d5 ~ ~ choose(d6,~) ~]>",
+          "feel":        ["leap-and-rebound", "5th-to-root", "staccato"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f#4 b4 c#5 choose(a4,f#4)>",
+          "feel":        ["3rd-of-chord", "stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f#3 a3 f#3] [g3 b3 d4 b3] [a3 c#4 e4 c#4] [d3 f#3 a3 choose(c#4,f#3)]>",
+          "feel":        ["wet-pad", "lily-pad-ripple", "warm"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(d6,~) ~ ~ ~ choose(a6,~) ~",
+          "feel":        ["plop", "bubble", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1006, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.8, 0.65, 0.55, 0.1, 0.1, 0.85],
+        "modes": {
+          "intro":   { "valence": 0.78, "complexity": 0.3,  "speed": 0.9,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.78, "complexity": 0.55, "speed": 0.95, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.78, "complexity": 0.8,  "speed": 1.0,  "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.82, "complexity": 0.95, "speed": 1.05, "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

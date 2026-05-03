@@ -6,20 +6,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "music:vendor": "esbuild node_modules/tone/build/esm/index.js --bundle --format=esm --minify --outfile=public/holodeck/js/vendor/tone.js && esbuild node_modules/@tonaljs/tonal/dist/index.mjs --bundle --format=esm --minify --outfile=public/holodeck/js/vendor/tonal.js",
+    "music:test": "node public/holodeck/js/shared/miniNotationParser.test.mjs && node public/holodeck/js/shared/patternEvaluator.test.mjs && node public/holodeck/js/shared/musicSchema.test.mjs && node public/holodeck/js/shared/packsSchema.test.mjs && node public/holodeck/js/shared/musicCompiler.test.mjs && node public/holodeck/js/shared/themeCorpus.test.mjs && node public/holodeck/js/shared/diffBrowseVsEdit.test.mjs && node public/holodeck/js/shared/drumKitRouting.test.mjs && node public/holodeck/js/shared/themeDensity.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
+    "@tonaljs/tonal": "^4.10.0",
     "next": "16.2.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tone": "^15.1.22"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "tailwindcss": "^4",

@@ -1,0 +1,79 @@
+{
+  "id":   "underwater_dive",
+  "type": "music",
+  "name": "Underwater Dive",
+  "tags": ["underwater", "dive", "muffled", "bubbly", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C minor, 60 BPM. Diving deep — muffled, slow, bubbly. Progression Cm → Ab → Bb → G (i-bVI-bVII-V) — the descending bassline mirrors the dive. NO drums — sound doesn't travel that way underwater. Melody is muffled long-held tones, like a far-off whale. Texture layer is the bubbles — random short high stabs against the deep pad.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "C",
+      "scaleMode":  "minor",
+      "cps":        0.27,
+      "valence":    0.45,
+      "complexity": 0.5,
+      "speed":      0.85,
+      "variety":    0.35,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#3060a0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c1 ~ ~ ~ c2 ~ ~ ~] [ab1 ~ ~ ~ ab2 ~ ~ ~] [bb1 ~ ~ ~ bb2 ~ ~ ~] [g1 ~ ~ ~ g2 ~ ~ choose(d2,~)]>",
+          "feel":        ["deep-swell", "octave-dive", "low"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c5 ~ ~ ~ ~ ~ ~ ~] [eb5 ~ ~ ~ ~ ~ ~ ~] [d5 ~ ~ ~ ~ ~ ~ ~] [g4 ~ ~ ~ ~ ~ choose(c5,~) ~]>",
+          "feel":        ["muffled-whale", "long-held", "distant"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<eb5 c5 d5 choose(b4,d5)>",
+          "feel":        ["3rd-of-chord", "soft-veil", "warm"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c3 eb3 g3 eb3] [ab2 c3 eb3 c3] [bb2 d3 f3 d3] [g2 b2 d3 choose(f3,b2)]>",
+          "feel":        ["thick-water-pad", "deep-immersion", "wide"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "texture",
+          "pattern":     "choose(c6,~) ~ choose(eb6,~) ~ choose(g6,~) ~ choose(c7,~) choose(g6,~)",
+          "feel":        ["bubbles", "high-bloop", "irregular"],
+          "register":    0,
+          "densityBase": 0.6
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1028, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.4, 0.3, 0.55, 0.4, 0.2, 0.3],
+        "modes": {
+          "intro":   { "valence": 0.45, "complexity": 0.25,"speed": 0.8,  "layers": ["pad"] },
+          "waiting": { "valence": 0.45, "complexity": 0.4, "speed": 0.85, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.45, "complexity": 0.5, "speed": 0.85, "layers": ["pad", "bass", "melody", "texture"] },
+          "peak":    { "valence": 0.5,  "complexity": 0.7, "speed": 0.9,  "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

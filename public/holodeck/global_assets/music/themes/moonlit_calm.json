@@ -1,0 +1,79 @@
+{
+  "id":   "moonlit_calm",
+  "type": "music",
+  "name": "Moonlit Calm",
+  "tags": ["moon", "night", "contemplative", "drift", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "Eb major, 75 BPM. Quiet contemplative night — the moon is up, you're alone with your thoughts. Progression Eb → Gm → Ab → Bb (I-iii-IV-V). NO drums. Melody is slow piano-like descending three-note phrases — the kind a hand plays when it's thinking. Lush pad, held bass.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "Eb",
+      "scaleMode":  "major",
+      "cps":        0.35,
+      "valence":    0.65,
+      "complexity": 0.55,
+      "speed":      0.85,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#7090b0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[eb1 ~ ~ ~ eb2 ~ ~ ~] [g1 ~ ~ ~ g2 ~ ~ ~] [ab1 ~ ~ ~ ab2 ~ ~ ~] [bb1 ~ ~ ~ bb2 ~ ~ choose(f1,~)]>",
+          "feel":        ["held-low", "deep-breath", "still"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g5 f5 eb5 ~ ~ ~ ~ ~] [bb5 g5 d5 ~ ~ ~ ~ ~] [c6 ab5 eb5 ~ ~ ~ ~ ~] [d6 bb5 f5 ~ ~ ~ choose(eb5,~) ~]>",
+          "feel":        ["piano-descending-three", "thinking-hand", "slow"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<g4 d5 c5 choose(d5,bb4)>",
+          "feel":        ["3rd-of-chord", "soft-touch", "warm"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[eb3 g3 bb3 g3] [g3 bb3 d4 bb3] [ab3 c4 eb4 c4] [bb3 d4 f4 choose(ab4,d4)]>",
+          "feel":        ["lush-night-pad", "moon-haze", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(eb6,~) ~ ~ ~ choose(g6,~) ~",
+          "feel":        ["distant-chime", "star-blip", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1018, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.65, 0.2, 0.7, 0.15, 0.05, 0.25],
+        "modes": {
+          "intro":   { "valence": 0.65, "complexity": 0.25,"speed": 0.8,  "layers": ["pad"] },
+          "waiting": { "valence": 0.65, "complexity": 0.4, "speed": 0.85, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.65, "complexity": 0.55,"speed": 0.85, "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.7,  "complexity": 0.75,"speed": 0.9,  "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

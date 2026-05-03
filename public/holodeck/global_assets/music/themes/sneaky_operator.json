@@ -1,0 +1,86 @@
+{
+  "id":   "sneaky_operator",
+  "type": "music",
+  "name": "Sneaky Operator",
+  "tags": ["mischievous", "sneaky", "playful-minor", "tip-toe", "scheming"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "E natural minor, 105 BPM. Cartoon-villain music. Progression Em → Am → B7 → Em (i-iv-V7-i — the classic minor cadence). Melody is staccato pizzicato notes with chromatic flourishes and rests — like 'tip — toe — pause — sneer'. Notes are short jabs, not flowing.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "E",
+      "scaleMode":  "minor",
+      "cps":        0.55,
+      "valence":    0.5,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.55,
+      "groove":     "swing",
+      "texture":    "crunchy",
+      "coverColor": "#7050a8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[e2 ~ b2 ~] [a1 ~ e2 ~] [b1 ~ f#2 ~] [e2 ~ b2 choose(d#2,b2)]>",
+          "feel":        ["tip-toe", "stepping", "scheming"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[e4 ~ g4 ~ b4 ~ ~ a#4] [a4 ~ c5 ~ e5 ~ ~ d#5] [b4 ~ d5 ~ f#5 ~ ~ choose(e#5,~)] [e5 ~ d5 ~ b4 ~ ~ choose(g4,e4)]>",
+          "feel":        ["pizzicato-jabs", "chromatic-sneer", "staccato"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[e3 g3 b3 g3] [a3 c4 e4 c4] [b3 d#4 f#4 d#4] [e3 g3 b3 choose(d4,b3)]>",
+          "feel":        ["chord-arpeggio", "i-iv-V7-i", "scheming"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<g4 c5 d#5 choose(b4,d5)>",
+          "feel":        ["3rd-of-chord", "wink", "off-beat"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ e3 ~ d3 ~ e3 ~ c3 ~ e3 ~ d3 ~ e3 choose(d3,e3)",
+          "feel":        ["tip-toe-backbeat", "kick-hat-snare-hat", "tight"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,~) ~ ~ ~ choose(d6,~) ~",
+          "feel":        ["snicker", "high", "wink"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "pad", "chords", "drums", "texture"] }
+      ],
+      "seeds": { "pattern": 13, "variation": 1 },
+      "modulation": {
+        "feelVector": [0.5, 0.6, 0.3, 0.2, 0.5, 0.85],
+        "modes": {
+          "intro":   { "valence": 0.5, "complexity": 0.2,  "speed": 0.95, "layers": ["bass"] },
+          "waiting": { "valence": 0.5, "complexity": 0.5,  "speed": 1.0,  "layers": ["bass", "drums"] },
+          "active":  { "valence": 0.5, "complexity": 0.85, "speed": 1.0,  "layers": ["bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.55, "complexity": 1.0, "speed": 1.05, "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

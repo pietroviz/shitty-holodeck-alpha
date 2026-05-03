@@ -1,0 +1,86 @@
+{
+  "id":   "cozy_fireside",
+  "type": "music",
+  "name": "Cozy Fireside",
+  "tags": ["cozy", "warm", "slow", "jazz", "lounge"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "F major, 96 BPM. 4-cycle progression Fmaj7 → Am7 → Dm7 → C7 (I-iii-vi-V — the smooth jazz turnaround). All chord-aware layers share the same outer-cycle rotation so they agree on what chord we're in. Walking bass, chord-tone-on-strong-beats melody, single sustained tones in pad/chords.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "F",
+      "scaleMode":  "major",
+      "cps":        0.4,
+      "valence":    0.7,
+      "complexity": 0.8,
+      "speed":      0.85,
+      "variety":    0.4,
+      "groove":     "swing",
+      "texture":    "lofi",
+      "coverColor": "#c2885a",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[f1 c2 f2 a1] [a1 e2 a2 c2] [d2 a1 d2 f2] [c2 g2 c3 choose(e2,bb1)]>",
+          "feel":        ["walking-jazz", "root-fifth-octave", "cycle-aware"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[f5 ~ ~ a4 c5 ~ ~ ~] [e5 ~ c5 ~ a4 ~ g4 ~] [d5 ~ a4 ~ f4 ~ a4 ~] [c5 ~ d5 e5 ~ ~ choose(g4,bb4) ~]>",
+          "feel":        ["sax-lyrical", "long-tones-with-breath", "descending-arc"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<a4 c5 a4 choose(c5,bb4)>",
+          "feel":        ["3rd-of-chord", "soft-color", "supportive"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[f3 a3 c4 a3] [a3 c4 e4 c4] [d3 f3 a3 f3] [c3 e3 g3 choose(bb3,e3)]>",
+          "feel":        ["chord-arpeggio", "sustained-feel", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ ~ ~ e3 ~ ~ ~ choose(e3,~)",
+          "feel":        ["soft-hat", "off-beat", "subliminal"],
+          "register":    0,
+          "densityBase": 0.2
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ ~ ~ ~ ~ choose(c6,~)",
+          "feel":        ["airy", "rare", "atmospheric"],
+          "register":    0,
+          "densityBase": 0.1
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "pad", "chords", "drums", "texture"] }
+      ],
+      "seeds": { "pattern": 11, "variation": 3 },
+      "modulation": {
+        "feelVector": [0.7, 0.2, 0.95, 0.1, 0.05, 0.3],
+        "modes": {
+          "intro":   { "valence": 0.7, "complexity": 0.2,  "speed": 0.85, "layers": ["bass"] },
+          "waiting": { "valence": 0.7, "complexity": 0.4,  "speed": 0.85, "layers": ["bass", "pad"] },
+          "active":  { "valence": 0.7, "complexity": 0.7,  "speed": 0.85, "layers": ["bass", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.72,"complexity": 0.95, "speed": 0.9,  "layers": ["bass", "pad", "melody", "chords", "drums", "texture"] }
+        }
+      }
+    }
+  }
+}

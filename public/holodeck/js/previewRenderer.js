@@ -18,6 +18,8 @@ import { BUILDERS } from './shared/primitives.js';
 import { MouthRig } from './shared/mouthRig.js';
 import { VoiceEngine } from './shared/voiceEngine.js';
 import { MusicEngine } from './shared/musicEngine.js?v=2';
+import { musicPlayer } from './shared/musicPlayer.js?v=1';
+import { buildMusicVisualizer, deriveBackgroundColor } from './shared/musicVisualizer.js?v=4';
 import {
     buildArchetypeHead,
     runStoryPlayback,
@@ -306,6 +308,7 @@ export function showPreview(container, asset, opts = {}) {
 
     // Tear down previous preview if any
     _stopLoop();
+    if (_musicViz?.viz) { try { _musicViz.viz.dispose(); } catch {} }
     _musicViz = null;
     _envPreview = null;
     _teardownStoryPreview();
@@ -389,7 +392,8 @@ export function showPreview(container, asset, opts = {}) {
         if (_controls) _controls.target.set(0, 0.3, 0);
     } else if (type === 'music') {
         _buildMusicPreview(asset);
-        if (_controls) _controls.target.set(0, 0.5, 0);
+        _autoSpin = false;  // clumped cluster — no rotation, see musicVisualizer.js
+        if (_controls) _controls.target.set(0, 1.0, 0);
     } else if (type === 'voice') {
         _buildVoicePreview(asset);
         _autoSpin = false;  // voice heads face forward, no spin
@@ -436,6 +440,7 @@ export function showPreview(container, asset, opts = {}) {
 export function destroyPreview() {
     _previewSession++;
     _stopLoop();
+    if (_musicViz?.viz) { try { _musicViz.viz.dispose(); } catch {} }
     _musicViz = null;
     _envPreview = null;
     _teardownStoryPreview();
@@ -556,31 +561,15 @@ function _startLoop() {
             }
         }
 
-        // Update music visualizer animation
+        // Update music visualizer — pulses driven by REAL per-role
+        // fire times from the shared musicPlayer singleton. When no
+        // music is playing the cluster sits still.
         if (_musicViz) {
-            _musicViz.time += delta;
-            const t = _musicViz.time;
-            const beat = _musicViz.beatSec;
-
-            // Pulse core on beat
-            const beatPhase = (t % beat) / beat;
-            const pulse = 1 + 0.12 * Math.exp(-beatPhase * 6);
-            _musicViz.core.scale.setScalar(pulse);
-            _musicViz.core.rotation.y = t * 0.3;
-            _musicViz.coreMat.emissiveIntensity = 0.15 + 0.35 * Math.exp(-beatPhase * 4);
-
-            // Pulse glow ring
-            _musicViz.glowMat.opacity = 0.3 + 0.3 * Math.exp(-beatPhase * 5);
-
-            // Orbit layer rings
-            for (const ring of _musicViz.layerRings) {
-                for (const orb of ring.orbs) {
-                    const a = orb.baseAngle + t * ring.speed * 0.5 + ring.angleOffset;
-                    orb.mesh.position.x = Math.cos(a) * ring.radius;
-                    orb.mesh.position.z = Math.sin(a) * ring.radius;
-                    orb.mesh.position.y = 0.8 + Math.sin(a * 2 + t) * 0.15;
-                }
-            }
+            const playing = musicPlayer.isPlaying();
+            _musicViz.viz.tick({
+                isPlaying:   playing,
+                firesByRole: playing ? musicPlayer.getLastFireByRole() : null,
+            });
         }
 
         } catch (e) {
@@ -1813,111 +1802,39 @@ export function renderNow() {
 //  MUSIC PREVIEW (enhanced BPM-driven visualiser)
 // ─────────────────────────────────────────────────────────────────
 
-// Animation state for music visualizer
+// Animation state for music visualizer (still-life via shared module)
 let _musicViz = null;
 
-// Layer color palette (used to give each layer a unique hue)
-const _LAYER_COLORS = ['#00D9D9', '#FF6B9D', '#C084FC', '#FCD34D', '#34D399', '#F97316', '#60A5FA', '#F472B6'];
-
 function _buildMusicPreview(asset) {
-    _camera.position.set(0, 2.2, 4.5);
-    _camera.lookAt(0, 0.8, 0);
+    _camera.position.set(0, 1.8, 5.8);
+    _camera.lookAt(0, 1.0, 0);
     _camera.fov = 55;
     _camera.updateProjectionMatrix();
 
-    const payload = asset.payload?.state || asset.payload || {};
-    const moodColor = payload.mood_color || asset.payload?.mood_color || '#00D9D9';
-    const bpm = payload.bpm || asset.payload?.bpm || 120;
-    const layers = payload.layers || asset.payload?.layers || [];
-    const beatSec = 60 / bpm;
-
-    // ── Central pulsing shape ──
-    const coreGeo = new THREE.OctahedronGeometry(0.45, 1);
-    const coreMat = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(moodColor),
-        emissive: new THREE.Color(moodColor),
-        emissiveIntensity: 0.3,
-        roughness: 0.2,
-        metalness: 0.4,
-    });
-    const core = new THREE.Mesh(coreGeo, coreMat);
-    core.position.y = 1.2;
-    core.castShadow = true;
-    _previewGroup.add(core);
-
-    // ── Glow ring around core (mood color) ──
-    const glowGeo = new THREE.TorusGeometry(0.7, 0.03, 8, 48);
-    const glowMat = new THREE.MeshBasicMaterial({
-        color: new THREE.Color(moodColor),
-        transparent: true,
-        opacity: 0.5,
-    });
-    const glow = new THREE.Mesh(glowGeo, glowMat);
-    glow.position.y = 1.2;
-    glow.rotation.x = Math.PI / 2;
-    _previewGroup.add(glow);
-
-    // ── One orbiting ring per layer ──
-    const layerRings = [];
-    const layerCount = Math.min(layers.length, 6);
-    for (let i = 0; i < layerCount; i++) {
-        const layer = layers[i];
-        const color = _LAYER_COLORS[i % _LAYER_COLORS.length];
-        const radius = 1.0 + i * 0.4;
-        const noteCount = (layer.pattern || '').split(/\s+/).filter(Boolean).length;
-        const orbCount = Math.max(2, Math.min(noteCount, 8));
-
-        const ring = { orbs: [], radius, speed: (1 + i * 0.3), angleOffset: (i / layerCount) * Math.PI * 2 };
-
-        // Ring path (subtle visual guide)
-        const ringGeo = new THREE.TorusGeometry(radius, 0.01, 8, 48);
-        const ringMat = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(color), transparent: true, opacity: 0.15,
-        });
-        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-        ringMesh.position.y = 0.8;
-        ringMesh.rotation.x = Math.PI / 2;
-        _previewGroup.add(ringMesh);
-
-        // Orbiting notes
-        for (let j = 0; j < orbCount; j++) {
-            const angle = (j / orbCount) * Math.PI * 2;
-            const size = 0.06 + (layer.gain ?? 0.5) * 0.06;
-            const orb = new THREE.Mesh(
-                new THREE.SphereGeometry(size, 12, 12),
-                new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(color),
-                    emissive: new THREE.Color(color),
-                    emissiveIntensity: 0.2,
-                    roughness: 0.3,
-                }),
-            );
-            orb.position.set(
-                Math.cos(angle) * radius,
-                0.8 + Math.sin(angle * 2) * 0.15,
-                Math.sin(angle) * radius,
-            );
-            _previewGroup.add(orb);
-            ring.orbs.push({ mesh: orb, baseAngle: angle });
+    // Per-track background — each theme paints its own stage.
+    const coverColor = asset?.payload?.state?.coverColor
+                    ?? asset?.payload?.mood_color
+                    ?? asset?.payload?.coverColor
+                    ?? '#5b9bd5';
+    if (_scene) {
+        _scene.background = deriveBackgroundColor(coverColor);
+        // Hide ground + grid added in showPreview — the music view is
+        // the floating cluster against the tinted void only.
+        for (const child of _scene.children) {
+            if (child.type === 'Mesh' && child.geometry?.type === 'PlaneGeometry') child.visible = false;
+            if (child.type === 'GridHelper') child.visible = false;
         }
-        layerRings.push(ring);
     }
 
-    // ── BPM indicator dots on the ground ──
-    const bpmDots = Math.min(Math.round(bpm / 30), 8);
-    for (let i = 0; i < bpmDots; i++) {
-        const angle = (i / bpmDots) * Math.PI * 2;
-        const dot = new THREE.Mesh(
-            new THREE.CircleGeometry(0.04, 16),
-            new THREE.MeshBasicMaterial({ color: new THREE.Color(moodColor), transparent: true, opacity: 0.4 }),
-        );
-        dot.rotation.x = -Math.PI / 2;
-        dot.position.set(Math.cos(angle) * 0.5, 0.005, Math.sin(angle) * 0.5);
-        _previewGroup.add(dot);
-    }
+    // Clumped cluster — no rotation. Reactive to real per-role note
+    // fires from the shared musicPlayer singleton (see render-loop).
+    const viz = buildMusicVisualizer({
+        scene:   _previewGroup,
+        theme:   asset,
+        anchorY: 0,
+    });
 
-    // Store animation state
-    _musicViz = { core, coreMat, glow, glowMat, layerRings, beatSec, time: 0 };
+    _musicViz = { viz, time: 0 };
 }
 
 // ─────────────────────────────────────────────────────────────────

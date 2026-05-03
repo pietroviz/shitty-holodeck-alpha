@@ -1,0 +1,86 @@
+{
+  "id":   "volcano_erupt",
+  "type": "music",
+  "name": "Volcano Erupt",
+  "tags": ["volcano", "explosive", "primal", "rising-tension", "intense"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "Bb minor, 110 BPM. Explosive primal eruption. Progression Bbm → Gb → Ab → F (i-bVI-bVII-V). Bass pulses hard 16ths — magma boiling. Melody is rising tension scales that climax on a held high note (eruption!). Heavy aggressive drums, tremolo texture for the rumble before each blast.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "Bb",
+      "scaleMode":  "minor",
+      "cps":        0.5,
+      "valence":    0.35,
+      "complexity": 0.95,
+      "speed":      1.0,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#a04020",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[bb1 bb2 bb1 bb2 bb1 bb2 bb1 bb2] [gb1 gb2 gb1 gb2 gb1 gb2 gb1 gb2] [ab1 ab2 ab1 ab2 ab1 ab2 ab1 ab2] [f1 f2 f1 f2 f1 f2 f1 choose(c2,f2)]>",
+          "feel":        ["magma-boil", "hard-16th", "low-pulse"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 d3 d3 d3 choose(c3,d3)",
+          "feel":        ["aggressive-rolls", "snare-storm", "intense"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[bb4 c5 db5 eb5 f5 ~ ~ ~] [db5 eb5 f5 gb5 ab5 ~ ~ ~] [eb5 f5 gb5 ab5 bb5 ~ ~ ~] [c5 d5 eb5 f5 ~ ~ choose(ab5,bb5) ~]>",
+          "feel":        ["rising-eruption", "scale-climb-then-blast", "tension"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<db5 bb4 eb5 choose(ab4,db5)>",
+          "feel":        ["3rd-of-chord", "downbeat-blast", "anchor"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[bb3 db4 f4 db4] [gb3 bb3 db4 bb3] [ab3 c4 eb4 c4] [f3 a3 c4 choose(eb4,a3)]>",
+          "feel":        ["sustained-rumble", "molten", "low-warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "choose(bb6,~) ~ choose(db7,~) choose(eb6,~) ~ choose(f7,~) choose(ab6,~) choose(bb7,~)",
+          "feel":        ["spark-shower", "ash-crackle", "high-burst"],
+          "register":    0,
+          "densityBase": 0.7
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1016, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.4, 0.95, 0.3, 0.7, 0.85, 0.15],
+        "modes": {
+          "intro":   { "valence": 0.35, "complexity": 0.4,  "speed": 0.9,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.35, "complexity": 0.6,  "speed": 0.95, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.35, "complexity": 0.9,  "speed": 1.0,  "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.4,  "complexity": 1.0,  "speed": 1.05, "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

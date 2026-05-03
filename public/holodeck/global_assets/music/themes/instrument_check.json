@@ -1,0 +1,86 @@
+{
+  "id":   "instrument_check",
+  "type": "music",
+  "name": "Instrument Check",
+  "tags": ["reference", "diagnostic", "all-instruments"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  2,
+    "created":  "2026-04-24T00:00:00.000Z",
+    "modified": "2026-04-24T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "Diagnostic theme — every section-A role plays a recognizably distinct pattern in its own register and time slot so each instrument can be heard individually. Use this to confirm wiring.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "C",
+      "scaleMode":  "major",
+      "cps":        0.4,
+      "valence":    0.7,
+      "complexity": 1.0,
+      "speed":      1.0,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#7eb8c9",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "c2 ~ choose(c2,g1) ~",
+          "feel":        ["solid", "low", "spaced"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "melody",
+          "pattern":     "~ <c5 e5 g5 c6> ~ choose(d5,g5,a5)",
+          "feel":        ["bright", "high", "obvious"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ ~ ~ choose(c3,c3) ~ ~ ~",
+          "feel":        ["four-on-floor", "punchy", "spaced"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c4 f4 g4> ~ choose(c4,a3) ~",
+          "feel":        ["mid", "stab", "harmonic"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "c4 choose(e4,g4)",
+          "feel":        ["sustained", "warm", "background"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,c6) ~",
+          "feel":        ["sparse", "atmospheric", "high"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "drums", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 7, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.6, 0.5, 0.5, 0.5, 0.3, 0.5],
+        "modes": {
+          "intro":   { "valence": 0.7, "complexity": 0.2, "speed": 1.0, "layers": ["bass"] },
+          "waiting": { "valence": 0.7, "complexity": 0.4, "speed": 1.0, "layers": ["bass", "melody"] },
+          "active":  { "valence": 0.7, "complexity": 0.7, "speed": 1.0, "layers": ["bass", "melody", "drums", "chords"] },
+          "peak":    { "valence": 0.7, "complexity": 1.0, "speed": 1.0, "layers": ["bass", "melody", "drums", "chords", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id":   "train_chug",
+  "type": "music",
+  "name": "Train Chug",
+  "tags": ["train", "locomotive", "chugging", "rhythmic", "whistle"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A minor, 110 BPM. Chugging steam locomotive. Progression Am → Am → Dm → E (i-i-iv-V) — sits on the root for 2 cycles before the iv-V cadence, mirroring how a train spends most of its time just rolling. Bass is continuous 8th-note pulse (the engine). Melody is the train whistle — long held high tones. Steady chuga-chuga drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "A",
+      "scaleMode":  "minor",
+      "cps":        0.5,
+      "valence":    0.6,
+      "complexity": 0.75,
+      "speed":      1.0,
+      "variety":    0.35,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#806040",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 a1 a1 a1 a1 a1 a1 a1] [a1 a1 a1 a1 a1 a1 a1 a1] [d2 d2 d2 d2 d2 d2 d2 d2] [e2 e2 e2 e2 e2 e2 e2 choose(a1,e2)]>",
+          "feel":        ["locomotive-pulse", "8th-engine", "continuous"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 e3 e3 d3 e3 e3 e3 c3 e3 e3 e3 d3 e3 e3 choose(c3,d3)",
+          "feel":        ["chug-chug", "tight-rhythm", "steady"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[e5 ~ ~ ~ ~ ~ ~ ~] [a5 ~ ~ ~ ~ ~ ~ ~] [d5 ~ ~ ~ ~ ~ ~ ~] [e5 ~ ~ ~ ~ ~ choose(g#5,~) ~]>",
+          "feel":        ["train-whistle", "long-held-high", "single-tone"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 c5 f5 choose(g#5,e5)>",
+          "feel":        ["3rd-of-chord", "stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [a3 c4 e4 c4] [d3 f3 a3 f3] [e3 g#3 b3 choose(d4,g#3)]>",
+          "feel":        ["sustained-warm", "engine-haze", "wide"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,~) ~ ~ ~ choose(e6,~) ~",
+          "feel":        ["steam-release", "puff", "high-hiss"],
+          "register":    0,
+          "densityBase": 0.5
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1022, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.5, 0.8, 0.5, 0.3, 0.2, 0.4],
+        "modes": {
+          "intro":   { "valence": 0.6, "complexity": 0.4, "speed": 0.9,  "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.6, "complexity": 0.6, "speed": 0.95, "layers": ["bass", "drums", "pad"] },
+          "active":  { "valence": 0.6, "complexity": 0.8, "speed": 1.0,  "layers": ["bass", "drums", "pad", "melody", "chords"] },
+          "peak":    { "valence": 0.65,"complexity": 0.95,"speed": 1.05, "layers": ["bass", "drums", "pad", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

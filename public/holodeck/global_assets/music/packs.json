@@ -1,0 +1,304 @@
+{
+  "$schema_version": 1,
+  "description": "Instrument packs per plan §6. Per-role gains are tuned for unison playback against compileTheme's master gain (0.45). Goal: every section-A role should be individually distinguishable when all 6 play together. Adjust master gain in musicCompiler.js if you change targets here.",
+  "packs": {
+    "fm_90s": {
+      "id": "fm_90s",
+      "name": "FM-Era 90s",
+      "description": "Sega Genesis-style FM synthesis. Bell-like leads, FM-brass chords, harmonically rich tones — totally different timbre from gameboy chiptune.",
+      "roles": {
+        "bass": {
+          "synth": "Tone.FMSynth",
+          "options": {
+            "harmonicity":     1.5,
+            "modulationIndex": 8,
+            "oscillator":      { "type": "sine" },
+            "envelope":        { "attack": 0.005, "decay": 0.15, "sustain": 0.35, "release": 0.15 },
+            "modulation":      { "type": "square" },
+            "modulationEnvelope": { "attack": 0.005, "decay": 0.1, "sustain": 0.3, "release": 0.1 }
+          },
+          "gain": 0.55
+        },
+        "melody": {
+          "synth": "Tone.FMSynth",
+          "options": {
+            "harmonicity":     3,
+            "modulationIndex": 10,
+            "oscillator":      { "type": "sine" },
+            "envelope":        { "attack": 0.002, "decay": 0.12, "sustain": 0.5, "release": 0.1 },
+            "modulation":      { "type": "sine" },
+            "modulationEnvelope": { "attack": 0.005, "decay": 0.15, "sustain": 0.5, "release": 0.15 }
+          },
+          "gain": 0.65
+        },
+        "chords": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.FMSynth",
+          "options": {
+            "harmonicity":     2,
+            "modulationIndex": 6,
+            "envelope":        { "attack": 0.02, "decay": 0.25, "sustain": 0.55, "release": 0.3 }
+          },
+          "gain": 0.55
+        },
+        "pad": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.FMSynth",
+          "options": {
+            "harmonicity":     1,
+            "modulationIndex": 4,
+            "envelope":        { "attack": 0.4, "decay": 0.5, "sustain": 0.8, "release": 1.0 }
+          },
+          "gain": 0.5
+        },
+        "drums": {
+          "recipes": {
+            "kick":       { "synth": "Tone.MembraneSynth", "options": { "pitchDecay": 0.05, "octaves": 2.5, "envelope": { "attack": 0.001, "decay": 0.16, "sustain": 0, "release": 0.16 } }, "note": "C3", "trigger_note": "C3", "gain": 1.0 },
+            "snare":      { "synth": "Tone.NoiseSynth",    "options": { "noise": { "type": "white" }, "envelope": { "attack": 0.001, "decay": 0.12, "sustain": 0, "release": 0.06 } }, "trigger_note": "D3", "gain": 0.75 },
+            "hat_closed": { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.05, "sustain": 0, "release": 0.02 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "E3", "gain": 0.9 },
+            "hat_open":   { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.22, "sustain": 0, "release": 0.08 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "F3", "gain": 0.8 }
+          },
+          "default_recipe": "kick"
+        },
+        "texture": {
+          "synth": "Tone.NoiseSynth",
+          "options": {
+            "noise":    { "type": "pink" },
+            "envelope": { "attack": 0.05, "decay": 0.4, "sustain": 0, "release": 0.3 }
+          },
+          "gain": 0.4
+        }
+      }
+    },
+    "synthwave": {
+      "id": "synthwave",
+      "name": "Synthwave",
+      "description": "1980s synth-noir. Detuned supersaw bass + chords (DuoSynth at 1.005 harmonicity = 5-cent detune for that classic chorused width), saw lead, lush pad. Pink-noise atmospheric texture.",
+      "roles": {
+        "bass": {
+          "synth": "Tone.DuoSynth",
+          "options": {
+            "vibratoAmount": 0.02,
+            "vibratoRate":   5,
+            "harmonicity":   1.005,
+            "voice0":        { "oscillator": { "type": "sawtooth" }, "envelope": { "attack": 0.005, "decay": 0.15, "sustain": 0.4, "release": 0.2 } },
+            "voice1":        { "oscillator": { "type": "sawtooth" }, "envelope": { "attack": 0.005, "decay": 0.15, "sustain": 0.4, "release": 0.2 } }
+          },
+          "gain": 0.55
+        },
+        "melody": {
+          "synth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "sawtooth" },
+            "envelope":   { "attack": 0.005, "decay": 0.1, "sustain": 0.55, "release": 0.15 }
+          },
+          "gain": 0.6
+        },
+        "chords": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.DuoSynth",
+          "options": {
+            "vibratoAmount": 0.02,
+            "harmonicity":   1.005,
+            "voice0":        { "oscillator": { "type": "sawtooth" } },
+            "voice1":        { "oscillator": { "type": "sawtooth" } }
+          },
+          "gain": 0.55
+        },
+        "pad": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.DuoSynth",
+          "options": {
+            "vibratoAmount": 0.03,
+            "harmonicity":   1.005,
+            "voice0":        { "oscillator": { "type": "sawtooth" }, "envelope": { "attack": 0.5, "decay": 0.5, "sustain": 0.85, "release": 1.5 } },
+            "voice1":        { "oscillator": { "type": "sawtooth" }, "envelope": { "attack": 0.5, "decay": 0.5, "sustain": 0.85, "release": 1.5 } }
+          },
+          "gain": 0.5
+        },
+        "drums": {
+          "recipes": {
+            "kick":       { "synth": "Tone.MembraneSynth", "options": { "pitchDecay": 0.06, "octaves": 3, "envelope": { "attack": 0.001, "decay": 0.2, "sustain": 0, "release": 0.2 } }, "note": "C3", "trigger_note": "C3", "gain": 1.0 },
+            "snare":      { "synth": "Tone.NoiseSynth",    "options": { "noise": { "type": "white" }, "envelope": { "attack": 0.001, "decay": 0.18, "sustain": 0, "release": 0.1 } }, "trigger_note": "D3", "gain": 0.75 },
+            "hat_closed": { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.05, "sustain": 0, "release": 0.02 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "E3", "gain": 0.85 },
+            "hat_open":   { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.25, "sustain": 0, "release": 0.1 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "F3", "gain": 0.8 }
+          },
+          "default_recipe": "kick"
+        },
+        "texture": {
+          "synth": "Tone.NoiseSynth",
+          "options": {
+            "noise":    { "type": "pink" },
+            "envelope": { "attack": 0.1, "decay": 0.6, "sustain": 0, "release": 0.5 }
+          },
+          "gain": 0.45
+        }
+      }
+    },
+    "acid_jazz": {
+      "id": "acid_jazz",
+      "name": "Acid Jazz",
+      "description": "Lounge cafe. Warm AM-modulated walking bass, mellow triangle melody, piano-like triangle chord stacks, sine pad, brushed drum kit.",
+      "roles": {
+        "bass": {
+          "synth": "Tone.AMSynth",
+          "options": {
+            "harmonicity": 1.0,
+            "oscillator":  { "type": "sine" },
+            "modulation":  { "type": "sine" },
+            "envelope":    { "attack": 0.01, "decay": 0.18, "sustain": 0.5, "release": 0.25 },
+            "modulationEnvelope": { "attack": 0.01, "decay": 0.2, "sustain": 0.5, "release": 0.25 }
+          },
+          "gain": 0.6
+        },
+        "melody": {
+          "synth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "triangle" },
+            "envelope":   { "attack": 0.005, "decay": 0.3, "sustain": 0.4, "release": 0.5 }
+          },
+          "gain": 0.6
+        },
+        "chords": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "triangle" },
+            "envelope":   { "attack": 0.003, "decay": 0.4, "sustain": 0.5, "release": 0.6 }
+          },
+          "gain": 0.55
+        },
+        "pad": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "sine" },
+            "envelope":   { "attack": 0.4, "decay": 0.5, "sustain": 0.7, "release": 1.0 }
+          },
+          "gain": 0.45
+        },
+        "drums": {
+          "recipes": {
+            "kick":       { "synth": "Tone.MembraneSynth", "options": { "pitchDecay": 0.04, "octaves": 2,   "envelope": { "attack": 0.002, "decay": 0.14, "sustain": 0, "release": 0.14 } }, "note": "C3", "trigger_note": "C3", "gain": 0.85 },
+            "snare":      { "synth": "Tone.NoiseSynth",    "options": { "noise": { "type": "pink" },        "envelope": { "attack": 0.002, "decay": 0.1,  "sustain": 0, "release": 0.05 } }, "trigger_note": "D3", "gain": 0.55 },
+            "hat_closed": { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.04, "sustain": 0, "release": 0.02 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "E3", "gain": 0.65 },
+            "hat_open":   { "synth": "Tone.MetalSynth",    "options": { "frequency": 200, "envelope": { "attack": 0.001, "decay": 0.18, "sustain": 0, "release": 0.06 }, "harmonicity": 5.1, "modulationIndex": 32, "resonance": 4000, "octaves": 1.5 }, "note": "C5", "trigger_note": "F3", "gain": 0.6 }
+          },
+          "default_recipe": "kick"
+        },
+        "texture": {
+          "synth": "Tone.NoiseSynth",
+          "options": {
+            "noise":    { "type": "pink" },
+            "envelope": { "attack": 0.08, "decay": 0.3, "sustain": 0, "release": 0.25 }
+          },
+          "gain": 0.35
+        }
+      }
+    },
+    "game_boy": {
+      "id": "game_boy",
+      "name": "Game Boy / NES",
+      "description": "Pulse leads, triangle bass, noise-based drums, crisp staccato. Chiptune reference pack (plan §6).",
+      "roles": {
+        "bass": {
+          "synth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "triangle" },
+            "envelope":   { "attack": 0.005, "decay": 0.12, "sustain": 0.4,  "release": 0.1 }
+          },
+          "gain": 0.55
+        },
+        "melody": {
+          "synth": "Tone.Synth",
+          "options": {
+            "oscillator": { "type": "square" },
+            "envelope":   { "attack": 0.002, "decay": 0.12, "sustain": 0.55, "release": 0.08 }
+          },
+          "gain": 0.65
+        },
+        "chords": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.Synth",
+          "voices":    4,
+          "options": {
+            "oscillator": { "type": "square" },
+            "envelope":   { "attack": 0.01,  "decay": 0.25, "sustain": 0.5,  "release": 0.25 }
+          },
+          "gain": 0.55
+        },
+        "pad": {
+          "synth":     "Tone.PolySynth",
+          "baseSynth": "Tone.Synth",
+          "voices":    4,
+          "options": {
+            "oscillator": { "type": "triangle" },
+            "envelope":   { "attack": 0.3,   "decay": 0.4,  "sustain": 0.7,  "release": 0.8 }
+          },
+          "gain": 0.5
+        },
+        "drums": {
+          "recipes": {
+            "kick": {
+              "synth": "Tone.MembraneSynth",
+              "options": {
+                "pitchDecay": 0.05,
+                "octaves":    2.5,
+                "envelope":   { "attack": 0.001, "decay": 0.16, "sustain": 0, "release": 0.16 }
+              },
+              "note":         "C3",
+              "trigger_note": "C3",
+              "gain":         1.0
+            },
+            "snare": {
+              "synth": "Tone.NoiseSynth",
+              "options": {
+                "noise":    { "type": "white" },
+                "envelope": { "attack": 0.001, "decay": 0.12, "sustain": 0, "release": 0.06 }
+              },
+              "trigger_note": "D3",
+              "gain":         0.75
+            },
+            "hat_closed": {
+              "synth": "Tone.MetalSynth",
+              "options": {
+                "frequency":       200,
+                "envelope":        { "attack": 0.001, "decay": 0.05, "sustain": 0, "release": 0.02 },
+                "harmonicity":     5.1,
+                "modulationIndex": 32,
+                "resonance":       4000,
+                "octaves":         1.5
+              },
+              "note":         "C5",
+              "trigger_note": "E3",
+              "gain":         0.9
+            },
+            "hat_open": {
+              "synth": "Tone.MetalSynth",
+              "options": {
+                "frequency":       200,
+                "envelope":        { "attack": 0.001, "decay": 0.22, "sustain": 0, "release": 0.08 },
+                "harmonicity":     5.1,
+                "modulationIndex": 32,
+                "resonance":       4000,
+                "octaves":         1.5
+              },
+              "note":         "C5",
+              "trigger_note": "F3",
+              "gain":         0.8
+            }
+          },
+          "default_recipe": "kick"
+        },
+        "texture": {
+          "synth": "Tone.NoiseSynth",
+          "options": {
+            "noise":    { "type": "pink" },
+            "envelope": { "attack": 0.05,  "decay": 0.4,  "sustain": 0,    "release": 0.3 }
+          },
+          "gain": 0.4
+        }
+      }
+    }
+  }
+}

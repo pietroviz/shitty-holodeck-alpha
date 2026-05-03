@@ -1,0 +1,86 @@
+{
+  "id":   "pumpkin_prank",
+  "type": "music",
+  "name": "Pumpkin Prank",
+  "tags": ["halloween", "pumpkin", "prank", "playful-spooky", "chiptune"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D minor, 105 BPM. Halloween prank — eerie but playful, not actually scary. Progression Dm → A → Bb → A (i-V-bVI-V) with the bVI giving that 'monster-mash' chromatic surprise. Melody is bouncy minor 6th leaps with chromatic spice (D-F-A-F-D-E-F dancing) — like trick-or-treaters skipping. Snappy chiptune drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "D",
+      "scaleMode":  "minor",
+      "cps":        0.48,
+      "valence":    0.55,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#e07020",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d2 d3 d2 d3] [a2 a3 a2 a3] [bb2 bb3 bb2 bb3] [a2 a3 a2 choose(c#3,a3)]>",
+          "feel":        ["bouncy-octave", "minor-pulse", "playful"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 d3 e3 d3 choose(d3,e3)",
+          "feel":        ["snappy-backbeat", "chiptune-hats", "playful"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d5 f5 a5 f5 d5 e5 f5 ~] [a5 c#6 e6 c#6 a5 b5 c#6 ~] [bb5 d6 f6 d6 bb5 c6 d6 ~] [a5 ~ c#6 ~ ~ ~ choose(e6,~) ~]>",
+          "feel":        ["6th-leap-with-spice", "skipping", "chromatic-surprise"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f5 c#5 d5 choose(c#5,a4)>",
+          "feel":        ["3rd-of-chord", "stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f3 a3 f3] [a2 c#3 e3 c#3] [bb2 d3 f3 d3] [a2 c#3 e3 choose(g3,c#3)]>",
+          "feel":        ["organ-pad", "spooky-warmth", "support"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(d6,~) ~ choose(f6,~) ~ choose(a6,~) ~ choose(c#6,~)",
+          "feel":        ["prank-sting", "boo-blip", "high"],
+          "register":    0,
+          "densityBase": 0.55
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1026, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.6, 0.75, 0.4, 0.2, 0.4, 0.85],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.4, "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.55, "complexity": 0.6, "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.55, "complexity": 0.85,"speed": 1.0,  "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.6,  "complexity": 1.0, "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

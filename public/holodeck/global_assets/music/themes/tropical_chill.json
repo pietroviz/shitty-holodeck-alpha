@@ -1,0 +1,86 @@
+{
+  "id":   "tropical_chill",
+  "type": "music",
+  "name": "Tropical Chill",
+  "tags": ["tropical", "island", "laid-back", "chill", "jazzy"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "Bb major, 90 BPM. Laid-back island. Progression Bbmaj7 → Gm7 → Cm7 → F7 (Imaj7-vi7-ii7-V7) — the classic ii-V-I jazz progression looped. Walking bass with chord-tone steps, brushy drums (no kicks — the breeze does the work), melody is laid-back vocal phrases that hang on the 3rd of each chord. Wave-like pad.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "Bb",
+      "scaleMode":  "major",
+      "cps":        0.42,
+      "valence":    0.8,
+      "complexity": 0.7,
+      "speed":      0.9,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#60c0a0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[bb1 d2 f2 d2] [g1 bb1 d2 bb1] [c2 eb2 g2 eb2] [f1 a1 c2 choose(eb2,a1)]>",
+          "feel":        ["walking-chord-tone", "laid-back", "warm"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "drums",
+          "pattern":     "~ e3 d3 e3 ~ e3 d3 e3 ~ e3 d3 e3 ~ e3 d3 choose(d3,e3)",
+          "feel":        ["brushy", "no-kick", "breeze"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d5 f5 a5 ~ ~ ~ ~ ~] [bb4 d5 f5 ~ ~ ~ ~ ~] [eb5 g5 bb5 ~ ~ ~ ~ ~] [a4 c5 eb5 ~ ~ ~ choose(d5,~) ~]>",
+          "feel":        ["vocal-phrase", "hangs-on-3rd", "lazy"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f5 d5 g5 choose(eb5,c5)>",
+          "feel":        ["7th-color", "soft-stab", "jazzy"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[bb3 d4 f4 d4] [g3 bb3 d4 bb3] [c4 eb4 g4 eb4] [f3 a3 c4 choose(eb4,a3)]>",
+          "feel":        ["wave-pad", "warm-haze", "tropical"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(d6,~) ~ ~ ~ choose(f6,~) ~",
+          "feel":        ["bird-call", "distant-percussion", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1020, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.85, 0.45, 0.85, 0.15, 0.05, 0.6],
+        "modes": {
+          "intro":   { "valence": 0.8, "complexity": 0.3, "speed": 0.85, "layers": ["pad", "bass"] },
+          "waiting": { "valence": 0.8, "complexity": 0.5, "speed": 0.9,  "layers": ["pad", "bass", "drums"] },
+          "active":  { "valence": 0.8, "complexity": 0.7, "speed": 0.9,  "layers": ["pad", "bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.85, "complexity": 0.85, "speed": 0.95,"layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

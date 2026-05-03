@@ -1,0 +1,79 @@
+{
+  "id":   "ghost_drift",
+  "type": "music",
+  "name": "Ghost Drift",
+  "tags": ["ghost", "spooky", "drifting", "wavering", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "Eb minor, 70 BPM. Spooky drifting ghost. Progression Ebm → B → Db → Bb (i-bVI-bVII-V, with bVI spelled enharmonically). NO drums — ghosts have no footsteps. Melody is wavering between two adjacent tones (a half-step bend, like a moan that can't decide its pitch). Bass is a held drone-low, pad is dim.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "Eb",
+      "scaleMode":  "minor",
+      "cps":        0.32,
+      "valence":    0.3,
+      "complexity": 0.55,
+      "speed":      0.85,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#9098b0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[eb1 ~ ~ ~ ~ ~ ~ ~] [b0 ~ ~ ~ ~ ~ ~ ~] [db1 ~ ~ ~ ~ ~ ~ ~] [bb1 ~ ~ ~ ~ ~ choose(eb1,~) ~]>",
+          "feel":        ["drone-low", "held-forever", "still"],
+          "register":    0,
+          "densityBase": 0.45
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[bb5 a5 bb5 a5 ~ ~ ~ ~] [gb5 f5 gb5 f5 ~ ~ ~ ~] [ab5 g5 ab5 g5 ~ ~ ~ ~] [eb5 d5 eb5 ~ ~ ~ choose(bb4,~) ~]>",
+          "feel":        ["wavering-half-step", "moan-bend", "uncertain"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<gb5 d5 f5 choose(d5,bb4)>",
+          "feel":        ["3rd-of-chord", "rare-veil", "soft"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[eb3 gb3 bb3 gb3] [b2 d3 gb3 d3] [db3 f3 ab3 f3] [bb2 d3 f3 choose(ab3,d3)]>",
+          "feel":        ["dim-pad", "fog", "low-warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(eb6,~) ~ ~ ~ choose(gb6,~) ~ ~",
+          "feel":        ["distant-moan", "high-howl", "rare"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1025, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.25, 0.3, 0.2, 0.2, 0.7, 0.25],
+        "modes": {
+          "intro":   { "valence": 0.3, "complexity": 0.25,"speed": 0.8,  "layers": ["pad"] },
+          "waiting": { "valence": 0.3, "complexity": 0.4, "speed": 0.85, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.3, "complexity": 0.55,"speed": 0.85, "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.35,"complexity": 0.75,"speed": 0.9,  "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

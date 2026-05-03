@@ -1,0 +1,86 @@
+{
+  "id":   "turtle_plod",
+  "type": "music",
+  "name": "Turtle Plod",
+  "tags": ["turtle", "slow", "plodding", "lazy", "sleepy"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D major, 60 BPM. The slowest creature. Progression D → A → Bm → A (I-V-vi-V) — minimal harmonic motion to mirror the lack of urgency. Bass is heavy half-notes only (one footfall every two beats). Melody is a descending three-note sigh, like a yawn that gives up halfway. Lazy 4-on-floor with no fills.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "D",
+      "scaleMode":  "major",
+      "cps":        0.27,
+      "valence":    0.55,
+      "complexity": 0.55,
+      "speed":      0.8,
+      "variety":    0.25,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#90a070",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d1 ~ d2 ~] [a1 ~ a2 ~] [b1 ~ b2 ~] [a1 ~ a2 choose(d2,a1)]>",
+          "feel":        ["half-note-plod", "single-step", "lazy"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ d3 ~ c3 ~ d3 ~ c3 ~ d3 ~ c3 ~ d3 choose(c3,d3)",
+          "feel":        ["lazy-4-floor", "no-fills", "sleepy"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a4 f#4 d4 ~ ~ ~ ~ ~] [c#5 a4 e4 ~ ~ ~ ~ ~] [d5 b4 f#4 ~ ~ ~ ~ ~] [c#5 a4 e4 ~ ~ choose(d4,~) ~ ~]>",
+          "feel":        ["descending-sigh", "yawn-gives-up", "half-notes"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f#4 c#5 d5 choose(c#5,a4)>",
+          "feel":        ["3rd-of-chord", "rare-touch", "soft"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f#3 a3 f#3] [a2 c#3 e3 c#3] [b2 d3 f#3 d3] [a2 c#3 e3 choose(g3,c#3)]>",
+          "feel":        ["mossy-pad", "still-water", "dim"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ ~ choose(d6,~) ~ ~ ~ choose(a5,~)",
+          "feel":        ["pond-blip", "rare", "high"],
+          "register":    0,
+          "densityBase": 0.3
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1008, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.5, 0.25, 0.7, 0.05, 0.05, 0.4],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.25, "speed": 0.75, "layers": ["pad"] },
+          "waiting": { "valence": 0.55, "complexity": 0.4,  "speed": 0.8,  "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.55, "complexity": 0.55, "speed": 0.8,  "layers": ["pad", "bass", "drums", "melody"] },
+          "peak":    { "valence": 0.6,  "complexity": 0.75, "speed": 0.85, "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

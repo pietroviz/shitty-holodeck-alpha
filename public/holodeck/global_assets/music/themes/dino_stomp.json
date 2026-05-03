@@ -1,0 +1,86 @@
+{
+  "id":   "dino_stomp",
+  "type": "music",
+  "name": "Dino Stomp",
+  "tags": ["dinosaur", "prehistoric", "stomp", "primal", "blast-horn"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "F minor, 75 BPM. Prehistoric stomp — every footfall shakes the ground. Progression Fm → Db → Eb → Fm (i-bVI-bVII-i). Massive bass hits with octave drops, drums with big space between kicks (this thing is enormous). Melody is a distant blast-horn bellow — held whole-notes that bend down — like a T. rex calling across the valley.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "F",
+      "scaleMode":  "minor",
+      "cps":        0.34,
+      "valence":    0.3,
+      "complexity": 0.7,
+      "speed":      0.85,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#604838",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[f1 ~ f2 ~] [db1 ~ db2 ~] [eb1 ~ eb2 ~] [f1 ~ f2 choose(c2,f2)]>",
+          "feel":        ["massive-hit", "octave-drop", "earthshake"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ ~ e3 d3 ~ ~ e3 c3 ~ ~ e3 d3 ~ ~ choose(d3,c3)",
+          "feel":        ["spacious-kicks", "heavy-thud", "big-creature"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[f4 ~ ~ ~ ~ ~ ~ ~] [ab4 ~ ~ ~ ~ ~ ~ ~] [bb4 ~ ~ ~ ~ ~ ~ ~] [c5 ~ ~ ~ ~ ~ choose(ab4,~) ~]>",
+          "feel":        ["blast-horn-bellow", "held-whole-note", "distant"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<ab4 f4 g4 choose(c5,f4)>",
+          "feel":        ["3rd-of-chord", "low-stab", "ominous"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[f3 ab3 c4 ab3] [db3 f3 ab3 f3] [eb3 g3 bb3 g3] [f3 ab3 c4 choose(eb4,ab3)]>",
+          "feel":        ["sustained-low-brass", "wide", "primal"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c5,~) ~ ~ ~ choose(eb5,~) ~",
+          "feel":        ["distant-roar", "tremolo", "low"],
+          "register":    0,
+          "densityBase": 0.35
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1007, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.15, 0.75, 0.3, 0.7, 0.5, 0.05],
+        "modes": {
+          "intro":   { "valence": 0.3, "complexity": 0.4,  "speed": 0.8,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.3, "complexity": 0.55, "speed": 0.85, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.3, "complexity": 0.75, "speed": 0.85, "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.35,"complexity": 0.9,  "speed": 0.9,  "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id":   "circus_wacky",
+  "type": "music",
+  "name": "Circus Wacky",
+  "tags": ["circus", "carnival", "wacky", "oompah", "silly"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C major, 115 BPM. Wacky carnival oompah. Progression C → G7 → C → G7 (I-V7-I-V7) — the classic two-chord oompah loop. Bass is the 'oomp-pah' pattern — root on 1, octave-up on 2 (the tuba bounce). Melody is a melodramatic descending fanfare that exaggerates each leap (G-E-C-G-E pattern). Marching drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "game_boy",
+      "scaleKey":   "C",
+      "scaleMode":  "major",
+      "cps":        0.52,
+      "valence":    0.85,
+      "complexity": 0.8,
+      "speed":      1.0,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "clean",
+      "coverColor": "#f04060",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c2 c3 c2 c3] [g2 g3 g2 g3] [c2 c3 c2 c3] [g2 g3 g2 choose(b2,g2)]>",
+          "feel":        ["oompah-tuba", "octave-bounce", "carnival"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ e3 ~ d3 ~ e3 ~ c3 ~ e3 ~ d3 ~ e3 choose(d3,e3)",
+          "feel":        ["marching-snare", "tight-2-and-4", "carnival"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g5 ~ e5 ~ c5 g5 e5 ~] [b5 ~ g5 ~ d5 b5 g5 ~] [g5 ~ e5 ~ c5 g5 e5 ~] [d5 ~ b4 ~ g4 d5 choose(b4,~) ~]>",
+          "feel":        ["fanfare-descending", "exaggerated-leaps", "trumpet"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<e5 b5 c5 choose(d5,b5)>",
+          "feel":        ["3rd-of-chord", "stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c4 e4 g4 e4] [b3 d4 g4 d4] [c4 e4 g4 e4] [b3 d4 g4 choose(f4,d4)]>",
+          "feel":        ["organ-pad", "carnival-warmth", "support"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(g5,~) ~ choose(e6,~) ~ choose(d6,~)",
+          "feel":        ["zany-blip", "calliope", "high"],
+          "register":    0,
+          "densityBase": 0.55
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1021, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.9, 0.75, 0.55, 0.2, 0.1, 0.95],
+        "modes": {
+          "intro":   { "valence": 0.85, "complexity": 0.3, "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.85, "complexity": 0.55,"speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.85, "complexity": 0.8, "speed": 1.0,  "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.9,  "complexity": 0.95,"speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

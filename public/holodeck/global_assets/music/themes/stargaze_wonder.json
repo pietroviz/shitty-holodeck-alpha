@@ -1,0 +1,79 @@
+{
+  "id":   "stargaze_wonder",
+  "type": "music",
+  "name": "Stargaze Wonder",
+  "tags": ["wonder", "vast", "cosmic", "ambient", "synthwave"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "E major, 70 BPM. Looking up at the milky way. Progression Emaj7 → C#m7 → F#m7 → B (Imaj7-vi7-ii7-V). Melody is a single soaring tone per cycle that holds for the entire chord — like a comet arc, drawn out and luminous. NO drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "E",
+      "scaleMode":  "major",
+      "cps":        0.35,
+      "valence":    0.78,
+      "complexity": 0.7,
+      "speed":      0.9,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#5078b8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[e1 ~ b1 ~] [c#2 ~ g#1 ~] [f#1 ~ c#2 ~] [b1 ~ f#2 choose(d#2,b1)]>",
+          "feel":        ["long-hold", "cosmic-anchor", "patient"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[e3 g#3 b3 g#3] [c#3 e3 g#3 e3] [f#3 a3 c#4 a3] [b2 d#3 f#3 choose(a3,d#3)]>",
+          "feel":        ["massive-detuned-saw", "chord-arpeggio", "cosmic"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g#5 ~ ~ ~] [b5 ~ ~ ~] [a5 ~ ~ ~] [f#5 ~ ~ choose(d#5,~)]>",
+          "feel":        ["one-soaring-tone", "comet-arc", "luminous"],
+          "register":    0,
+          "densityBase": 0.25
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<g#5 e5 a5 choose(d#5,b4)>",
+          "feel":        ["3rd-of-chord", "soft-mark", "color"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ choose(e6,~) ~ choose(g6,~)",
+          "feel":        ["stardust", "twinkle", "cosmic"],
+          "register":    0,
+          "densityBase": 0.5
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "pad", "melody", "chords", "texture"] }
+      ],
+      "seeds": { "pattern": 1001, "variation": 4 },
+      "modulation": {
+        "feelVector": [0.85, 0.3, 0.5, 0.85, 0.05, 0.15],
+        "modes": {
+          "intro":   { "valence": 0.78, "complexity": 0.2,  "speed": 0.85, "layers": ["pad"] },
+          "waiting": { "valence": 0.78, "complexity": 0.4,  "speed": 0.9,  "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.78, "complexity": 0.7,  "speed": 0.9,  "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.82, "complexity": 0.95, "speed": 0.95, "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

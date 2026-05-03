@@ -1,0 +1,86 @@
+{
+  "id":   "frantic_pursuit",
+  "type": "music",
+  "name": "Frantic Pursuit",
+  "tags": ["frantic", "fast", "chase", "intense"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A minor, 180 × 1.4 = ~252 BPM effective. Progression Am → F → G → E (i-VI-VII-V). Melody is panicked descending 16th-note runs in very high register — like sirens echoing. Each cycle's melody descends from the high tonic of that chord.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "A",
+      "scaleMode":  "minor",
+      "cps":        0.75,
+      "valence":    0.4,
+      "complexity": 0.95,
+      "speed":      1.4,
+      "variety":    0.6,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#a83232",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 a1 e2 a1] [f1 f1 c2 f1] [g1 g1 d2 g1] [e1 e1 b1 choose(g#1,e1)]>",
+          "feel":        ["galloping", "i-VI-VII-V", "low"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 c3 e3 d3 e3 c3 e3 c3 e3 c3 e3 d3 e3 choose(c3,d3) choose(e3,f3)",
+          "feel":        ["kick-on-every-beat", "full-kit", "relentless"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a6 g6 f6 e6 d6 c6 b5 a5] [c6 bb5 a5 g5 f5 e5 d5 c5] [d6 c6 b5 a5 g5 f5 e5 d5] [b5 a5 g#5 f#5 e5 d5 choose(c5,b4) a4]>",
+          "feel":        ["panicked-16ths", "siren-descent", "very-high"],
+          "register":    0,
+          "densityBase": 1.0
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 a4 b4 choose(g#4,d5)>",
+          "feel":        ["3rd-of-chord", "stab", "pulse"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [f3 a3 c4 a3] [g3 b3 d4 b3] [e3 g#3 b3 choose(d4,g#3)]>",
+          "feel":        ["pumping-saw", "chord-arpeggio", "pressure"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ ~ choose(e6,~) ~",
+          "feel":        ["chase-atmosphere", "sirens", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 88, "variation": 3 },
+      "modulation": {
+        "feelVector": [0.4, 0.95, 0.2, 0.5, 0.85, 0.3],
+        "modes": {
+          "intro":   { "valence": 0.4,  "complexity": 0.4,  "speed": 1.1, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.4,  "complexity": 0.6,  "speed": 1.2, "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.38, "complexity": 0.9,  "speed": 1.4, "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.32, "complexity": 1.0,  "speed": 1.5, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

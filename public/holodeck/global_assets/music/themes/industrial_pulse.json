@@ -1,0 +1,86 @@
+{
+  "id":   "industrial_pulse",
+  "type": "music",
+  "name": "Industrial Pulse",
+  "tags": ["industrial", "mechanical", "factory", "rhythmic", "fm"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A natural minor, 130 BPM. Two-chord oscillation Am → Em → Am → Em (i-v-i-v) like machinery cycling. Melody is angular mechanical fragments — same 4-note shape every cycle but transposed, mimicking a machine repeating with slight variations as it runs.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "A",
+      "scaleMode":  "minor",
+      "cps":        0.55,
+      "valence":    0.4,
+      "complexity": 0.9,
+      "speed":      1.0,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#806050",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 a1 a1 a1] [e2 e2 e2 e2] [a1 a1 a1 a1] [e2 e2 e2 choose(d2,e2)]>",
+          "feel":        ["8th-pulse", "pumping", "mechanical"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 e3 e3 d3 e3 e3 e3 c3 e3 e3 e3 d3 e3 e3 choose(d3,e3)",
+          "feel":        ["industrial-backbeat", "16th-hats", "machine"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a4 c5 e5 c5] [e4 g4 b4 g4] [a4 c5 e5 c5] [e4 g4 b4 choose(d5,b4)]>",
+          "feel":        ["mechanical-loop", "same-shape-transposed", "angular"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c5 g4 c5 choose(g4,b4)>",
+          "feel":        ["3rd-of-chord", "stab", "machine"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c4 e4 c4] [e3 g3 b3 g3] [a3 c4 e4 c4] [e3 g3 b3 choose(d4,g3)]>",
+          "feel":        ["sustained-fm", "chord-arpeggio", "support"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,~) ~ choose(d6,~) ~ choose(e6,~) ~ choose(g6,~)",
+          "feel":        ["steam-hiss", "machine-vent", "high"],
+          "register":    0,
+          "densityBase": 0.6
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1984, "variation": 1 },
+      "modulation": {
+        "feelVector": [0.4, 0.85, 0.2, 0.4, 0.6, 0.2],
+        "modes": {
+          "intro":   { "valence": 0.4, "complexity": 0.4,  "speed": 0.95, "layers": ["bass", "drums"] },
+          "waiting": { "valence": 0.4, "complexity": 0.6,  "speed": 1.0,  "layers": ["bass", "drums", "chords"] },
+          "active":  { "valence": 0.4, "complexity": 0.9,  "speed": 1.0,  "layers": ["bass", "drums", "chords", "melody", "pad"] },
+          "peak":    { "valence": 0.4, "complexity": 1.0,  "speed": 1.05, "layers": ["bass", "drums", "chords", "melody", "pad", "texture"] }
+        }
+      }
+    }
+  }
+}

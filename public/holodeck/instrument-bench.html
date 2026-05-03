@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrument Bench — Tone.js Per-Synth Diagnostic</title>
+<style>
+  :root {
+    --bg:       #0b1020;
+    --panel:    #141a2d;
+    --border:   rgba(255,255,255,0.08);
+    --text:     #e6ecf5;
+    --muted:    #8494a7;
+    --accent:   #4ae7bf;
+    --good:     #60d394;
+    --bad:      #e0595a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', Menlo, monospace;
+    padding: 24px;
+    font-size: 14px;
+  }
+  h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 12px; margin-bottom: 20px; max-width: 720px; line-height: 1.4; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 200px 1fr 90px;
+    gap: 16px;
+    align-items: center;
+  }
+  .role {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+    text-transform: capitalize;
+  }
+  .role .blurb {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  .status {
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.06);
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    word-break: break-word;
+  }
+  .status.ok  { color: var(--good); border-color: rgba(96,211,148,0.3); background: rgba(96,211,148,0.08); }
+  .status.bad { color: var(--bad);  border-color: rgba(224,89,90,0.3);  background: rgba(224,89,90,0.10); }
+  button {
+    padding: 8px 14px;
+    background: rgba(74,231,191,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(74,231,191,0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+  button:hover { background: rgba(74,231,191,0.2); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  pre {
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+    max-width: 720px;
+    margin-top: 16px;
+  }
+  .group-header {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 16px 0 8px;
+  }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "tone":           "./js/vendor/tone.js",
+    "@tonaljs/tonal": "./js/vendor/tonal.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<h1>♪ Instrument Bench</h1>
+<p class="subtitle">
+  Per-synth diagnostic. Each row instantiates one Tone.js synth from the active
+  pack config, plays a single note for 1 second, and disposes. No theme, no
+  scheduling, no patterns. <strong>If a button produces silence, that synth
+  class is broken in the bundle.</strong>
+</p>
+
+<div class="group-header">Tonal roles</div>
+<div id="tonal-rows"></div>
+
+<div class="group-header">Drum recipes</div>
+<div id="drum-rows"></div>
+
+<pre id="log">ready.</pre>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+function logLine(msg, isErr = false) {
+    const ts = new Date().toLocaleTimeString();
+    log.textContent = (log.textContent + '\n' + `[${ts}] ${msg}`).split('\n').slice(-30).join('\n');
+    if (isErr) console.error(msg);
+}
+
+let Tone, packsDoc;
+async function boot() {
+    if (Tone) return;
+    [Tone, packsDoc] = await Promise.all([
+        import('tone'),
+        fetch('./global_assets/music/packs.json').then(r => r.json()),
+    ]);
+    logLine(`booted — ${Object.keys(packsDoc.packs).length} pack(s) loaded`);
+}
+
+function resolveClass(name) {
+    if (typeof name !== 'string' || !name.startsWith('Tone.')) {
+        throw new Error(`bad synth name '${name}'`);
+    }
+    const short = name.slice(5);
+    const cls = Tone[short];
+    if (typeof cls !== 'function') throw new Error(`Tone.${short} not exported`);
+    return cls;
+}
+
+function buildSynth(config) {
+    const cls = resolveClass(config.synth);
+    if (config.synth === 'Tone.PolySynth') {
+        const voiceCls = resolveClass(config.baseSynth);
+        return new cls(voiceCls, config.options ?? {});
+    }
+    return new cls(config.options ?? {});
+}
+
+async function testInstrument({ label, config, note, statusEl }) {
+    statusEl.className = 'status';
+    statusEl.textContent = 'loading…';
+    try {
+        await boot();
+        if (Tone.context?.state !== 'running') await Tone.start();
+
+        const synth = buildSynth(config);
+        const gain  = new Tone.Gain(config.gain ?? 0.5).toDestination();
+        synth.connect(gain);
+
+        const isNoise = config.synth === 'Tone.NoiseSynth';
+        const dur = 0.8;
+        const t   = Tone.now() + 0.05;
+
+        if (isNoise) {
+            synth.triggerAttackRelease(dur, t);
+        } else {
+            synth.triggerAttackRelease(note, dur, t);
+        }
+        statusEl.className = 'status ok';
+        statusEl.textContent = `OK · played ${isNoise ? 'noise burst' : note} for ${dur}s`;
+        logLine(`✓ ${label} (${config.synth}) triggered`);
+
+        // Dispose after the note has finished + envelope tail.
+        setTimeout(() => {
+            try { synth.dispose(); gain.dispose(); } catch {}
+        }, (dur + 0.5) * 1000);
+    } catch (e) {
+        statusEl.className = 'status bad';
+        statusEl.textContent = `FAIL · ${e?.message || e}`;
+        logLine(`✗ ${label}: ${e?.message || e}`, true);
+    }
+}
+
+const TONAL_ROLES = [
+    { role: 'bass',    note: 'C2', blurb: 'Triangle, low' },
+    { role: 'melody',  note: 'C5', blurb: 'Square, high' },
+    { role: 'chords',  note: 'C4', blurb: 'PolySynth, mid' },
+    { role: 'pad',     note: 'C4', blurb: 'PolySynth triangle, mid' },
+    { role: 'texture', note: 'C5', blurb: 'NoiseSynth (no note)' },
+];
+
+function renderTonal() {
+    const pack = packsDoc?.packs?.game_boy;
+    const container = $('tonal-rows');
+    container.innerHTML = '';
+    for (const { role, note, blurb } of TONAL_ROLES) {
+        const config = pack?.roles?.[role];
+        if (!config || config.recipes) continue;  // skip drums
+        const row = document.createElement('div');
+        row.className = 'card';
+        row.innerHTML = `
+            <div class="role">${role}<span class="blurb">${config.synth} — ${blurb}</span></div>
+            <div class="status" id="status-${role}">idle</div>
+            <button>▶ Test</button>`;
+        const statusEl = row.querySelector('.status');
+        row.querySelector('button').addEventListener('click', () =>
+            testInstrument({ label: role, config, note, statusEl }));
+        container.appendChild(row);
+    }
+}
+
+function renderDrums() {
+    const pack = packsDoc?.packs?.game_boy;
+    const drums = pack?.roles?.drums;
+    const container = $('drum-rows');
+    container.innerHTML = '';
+    if (!drums?.recipes) return;
+    for (const [recipeName, config] of Object.entries(drums.recipes)) {
+        const note = config.note ?? 'C3';
+        const row = document.createElement('div');
+        row.className = 'card';
+        row.innerHTML = `
+            <div class="role">drums:${recipeName}<span class="blurb">${config.synth}</span></div>
+            <div class="status" id="status-drum-${recipeName}">idle</div>
+            <button>▶ Test</button>`;
+        const statusEl = row.querySelector('.status');
+        row.querySelector('button').addEventListener('click', () =>
+            testInstrument({ label: `drums:${recipeName}`, config, note, statusEl }));
+        container.appendChild(row);
+    }
+}
+
+// Boot once on page load so the UI populates from the live pack config.
+(async () => {
+    await boot();
+    renderTonal();
+    renderDrums();
+})();
+</script>
+</body>
+</html>

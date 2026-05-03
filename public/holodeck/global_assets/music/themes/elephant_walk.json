@@ -1,0 +1,86 @@
+{
+  "id":   "elephant_walk",
+  "type": "music",
+  "name": "Elephant Walk",
+  "tags": ["elephant", "heavy", "ponderous", "stomp", "low-brass"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C minor, 70 BPM. Heavy lumbering walk. Progression Cm → Bb → Ab → G (i-bVII-bVI-V). Bass is octave-alternating walking — root low, root-up-octave — creating the lumbering left-right gait. Melody is low brass calls held over the top — half-note declarations, like an elephant's distant rumble. Spacious drums with kick on every beat.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "C",
+      "scaleMode":  "minor",
+      "cps":        0.32,
+      "valence":    0.35,
+      "complexity": 0.7,
+      "speed":      0.85,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#806858",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c1 c2 c1 c2] [bb0 bb1 bb0 bb1] [ab0 ab1 ab0 ab1] [g1 g2 g1 choose(d2,g2)]>",
+          "feel":        ["lumbering-octaves", "left-right-gait", "heavy"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 ~ ~ e3 d3 ~ ~ e3 c3 ~ ~ e3 d3 ~ choose(c3,~) e3",
+          "feel":        ["spacious-stomp", "kick-on-beat", "heavy"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c4 ~ ~ ~ eb4 ~ ~ ~] [d4 ~ ~ ~ f4 ~ ~ ~] [c4 ~ ~ ~ eb4 ~ ~ ~] [d4 ~ ~ ~ choose(b3,~) ~ ~ ~]>",
+          "feel":        ["low-brass-calls", "held-tones", "distant"],
+          "register":    0,
+          "densityBase": 0.45
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<eb4 d4 c4 choose(b3,d4)>",
+          "feel":        ["3rd-of-chord", "low-stab", "ponderous"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c3 eb3 g3 eb3] [bb2 d3 f3 d3] [ab2 c3 eb3 c3] [g2 b2 d3 choose(f3,d3)]>",
+          "feel":        ["sustained-brass", "wide", "heavy"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c5,~) ~ ~ ~ choose(eb5,~) ~",
+          "feel":        ["distant-rumble", "horn-overtone", "low"],
+          "register":    0,
+          "densityBase": 0.35
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1001, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.2, 0.7, 0.4, 0.6, 0.4, 0.1],
+        "modes": {
+          "intro":   { "valence": 0.35, "complexity": 0.4,  "speed": 0.8,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.35, "complexity": 0.55, "speed": 0.85, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.35, "complexity": 0.75, "speed": 0.85, "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.4,  "complexity": 0.9,  "speed": 0.9,  "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

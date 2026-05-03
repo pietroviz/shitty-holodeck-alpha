@@ -1,0 +1,86 @@
+{
+  "id":   "castle_grand",
+  "type": "music",
+  "name": "Castle Grand",
+  "tags": ["castle", "regal", "medieval", "stately", "brass"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G minor, 90 BPM. Stately medieval castle. Progression Gm → Eb → Bb → D (i-bVI-III-V) — the modal medieval cadence, that mix of dark + noble. Different from determined_march (bugle call) — this one is RECEIVING-the-king ceremony, not marching to war. Brass declarations, big snare rolls, no rush. Wide pad like banners hanging.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "G",
+      "scaleMode":  "minor",
+      "cps":        0.4,
+      "valence":    0.55,
+      "complexity": 0.85,
+      "speed":      0.95,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#806060",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g1 ~ d2 ~] [eb2 ~ bb1 ~] [bb1 ~ f2 ~] [d2 ~ a2 choose(d3,a2)]>",
+          "feel":        ["regal-half-note", "stately-step", "anchored"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 ~ e3 d3 e3 ~ e3 c3 e3 d3 e3 d3 d3 d3 choose(c3,d3)",
+          "feel":        ["ceremonial-rolls", "snare-fanfare", "stately"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d5 ~ g5 ~ ~ d5 ~ ~] [bb4 ~ eb5 ~ ~ g5 ~ ~] [d5 ~ bb4 ~ ~ d5 ~ ~] [f#5 ~ a5 ~ ~ ~ choose(d5,~) ~]>",
+          "feel":        ["brass-declaration", "stately-leap", "noble"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<bb4 g4 d5 choose(c5,a4)>",
+          "feel":        ["3rd-of-chord", "downbeat", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[g3 bb3 d4 bb3] [eb3 g3 bb3 g3] [bb3 d4 f4 d4] [d3 f#3 a3 choose(d4,f#3)]>",
+          "feel":        ["banner-pad", "wide-brass", "regal"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(g6,~) ~ ~ ~ choose(d7,~) ~",
+          "feel":        ["distant-fanfare-echo", "high-bell", "lift"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1023, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.55, 0.7, 0.55, 0.85, 0.4, 0.2],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.4, "speed": 0.9,  "layers": ["pad", "bass"] },
+          "waiting": { "valence": 0.55, "complexity": 0.6, "speed": 0.95, "layers": ["pad", "bass", "drums"] },
+          "active":  { "valence": 0.55, "complexity": 0.85,"speed": 0.95, "layers": ["pad", "bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.6,  "complexity": 1.0, "speed": 1.0,  "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

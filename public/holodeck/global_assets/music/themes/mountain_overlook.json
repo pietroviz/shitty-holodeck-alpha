@@ -1,0 +1,86 @@
+{
+  "id":   "mountain_overlook",
+  "type": "music",
+  "name": "Mountain Overlook",
+  "tags": ["epic", "cinematic", "vast", "wonder", "synthwave"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "C major, 100 BPM. Cinematic I-V-vi-IV (C-G-Am-F). Melody is wide-leap arpeggios with held high notes — climbs to a chord-tone peak then sustains, like the camera holding on a vista. Range spans nearly 2 octaves.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "C",
+      "scaleMode":  "major",
+      "cps":        0.5,
+      "valence":    0.85,
+      "complexity": 0.95,
+      "speed":      1.0,
+      "variety":    0.5,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#7090c8",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[c1 c2 g2 c2] [g1 d2 g2 d2] [a1 e2 a2 e2] [f1 c2 f2 choose(a2,c2)]>",
+          "feel":        ["octave-power", "root-fifth", "vast"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 e3 e3 d3 e3 e3 d3 c3 e3 e3 c3 d3 d3 e3 choose(c3,d3)",
+          "feel":        ["backbeat-rolls", "cinematic", "driving"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[c5 e5 g5 c6 ~ ~ ~ ~] [d5 g5 b5 d6 ~ ~ ~ ~] [c5 e5 a5 c6 ~ ~ ~ ~] [a4 c5 f5 a5 ~ ~ choose(c6,~) ~]>",
+          "feel":        ["wide-arpeggio-with-sustain", "climb-and-hold", "cinematic"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<e5 d5 c5 choose(a4,f5)>",
+          "feel":        ["3rd-of-chord", "color", "anchor"],
+          "register":    0,
+          "densityBase": 0.65
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[c3 e3 g3 e3] [g2 b2 d3 b2] [a2 c3 e3 c3] [f2 a2 c3 choose(e3,c3)]>",
+          "feel":        ["wide-string-pad", "chord-arpeggio", "embrace"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(c6,~) ~ ~ ~ ~ choose(d6,~)",
+          "feel":        ["cymbal-wash", "crown", "rare"],
+          "register":    0,
+          "densityBase": 0.35
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 200, "variation": 5 },
+      "modulation": {
+        "feelVector": [0.85, 0.85, 0.5, 0.95, 0.4, 0.2],
+        "modes": {
+          "intro":   { "valence": 0.7,  "complexity": 0.3,  "speed": 0.9,  "layers": ["pad"] },
+          "waiting": { "valence": 0.8,  "complexity": 0.55, "speed": 0.95, "layers": ["pad", "bass", "drums"] },
+          "active":  { "valence": 0.85, "complexity": 0.85, "speed": 1.0,  "layers": ["pad", "bass", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.9,  "complexity": 1.0,  "speed": 1.05, "layers": ["pad", "bass", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

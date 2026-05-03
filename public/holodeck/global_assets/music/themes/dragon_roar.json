@@ -1,0 +1,86 @@
+{
+  "id":   "dragon_roar",
+  "type": "music",
+  "name": "Dragon Roar",
+  "tags": ["dragon", "fierce", "ancient", "power-chord", "menacing"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "D minor, 90 BPM. Fierce ancient beast. Progression Dm → Gm → Eb → A (i-iv-bII-V) — the bII is the menacing tritone-adjacent chord that says 'something terrible'. Power-chord stomp bass, blast-horn melody with jagged leaps that flare out then drop low. Heavy ceremonial drums.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "D",
+      "scaleMode":  "minor",
+      "cps":        0.4,
+      "valence":    0.3,
+      "complexity": 0.9,
+      "speed":      0.95,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#a04030",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[d1 d2 d1 d2] [g1 g2 g1 g2] [eb1 eb2 eb1 eb2] [a1 a2 a1 choose(e2,a2)]>",
+          "feel":        ["power-chord-stomp", "octave-pulse", "menacing"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 ~ e3 d3 e3 ~ e3 c3 e3 ~ e3 d3 e3 ~ choose(c3,d3)",
+          "feel":        ["heavy-ceremonial", "snare-rolls", "ominous"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d4 ~ a4 ~ ~ d5 ~ ~] [g4 ~ d5 ~ ~ g5 ~ ~] [bb4 ~ eb5 ~ ~ g5 ~ ~] [a4 ~ e5 ~ ~ ~ choose(c#5,~) ~]>",
+          "feel":        ["blast-horn", "jagged-leap", "flare-then-drop"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<f4 d4 g4 choose(c#5,a4)>",
+          "feel":        ["3rd-of-chord", "downbeat-stab", "anchor"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[d3 f3 a3 f3] [g3 bb3 d4 bb3] [eb3 g3 bb3 g3] [a3 c#4 e4 choose(g4,c#4)]>",
+          "feel":        ["sustained-brass", "wide-menace", "ancient"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(d6,~) ~ ~ ~ choose(c#6,~) ~",
+          "feel":        ["roar-tail", "high-howl", "tremolo"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1010, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.25, 0.9, 0.25, 0.85, 0.85, 0.1],
+        "modes": {
+          "intro":   { "valence": 0.3,  "complexity": 0.4,  "speed": 0.9,  "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.3,  "complexity": 0.6,  "speed": 0.95, "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.3,  "complexity": 0.9,  "speed": 0.95, "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.35, "complexity": 1.0,  "speed": 1.0,  "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

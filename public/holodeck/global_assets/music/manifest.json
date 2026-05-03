@@ -1,75 +1,60 @@
 {
+  "_note": "Slimmed manifest — only v2-pipeline themes visible in browse. Legacy templates parked in manifest.legacy.json. instrument_check.json is on disk but intentionally omitted here — kept as a regression-test asset, not a real theme.",
   "categories": {
-    "ambient": {
-      "name": "Ambient",
-      "count": 3,
+    "themes": {
+      "name": "Themes (v2)",
+      "count": 50,
       "files": [
-        "mus_deep_space_drift.json",
-        "mus_morning_fog.json",
-        "mus_crystal_cave.json"
-      ]
-    },
-    "electronic": {
-      "name": "Electronic",
-      "count": 3,
-      "files": [
-        "mus_neon_pulse.json",
-        "mus_cyber_chase.json",
-        "mus_glitch_groove.json"
-      ]
-    },
-    "cinematic": {
-      "name": "Cinematic",
-      "count": 3,
-      "files": [
-        "mus_epic_dawn.json",
-        "mus_tension_rising.json",
-        "mus_peaceful_ending.json"
-      ]
-    },
-    "lofi": {
-      "name": "Lo-Fi",
-      "count": 3,
-      "files": [
-        "mus_late_night_lofi.json",
-        "mus_rainy_window.json",
-        "mus_vinyl_memories.json"
-      ]
-    },
-    "retro": {
-      "name": "Retro",
-      "count": 3,
-      "files": [
-        "mus_8bit_adventure.json",
-        "mus_synthwave_sunset.json",
-        "mus_chiptune_boss.json"
-      ]
-    },
-    "action": {
-      "name": "Action",
-      "count": 3,
-      "files": [
-        "mus_high_speed_pursuit.json",
-        "mus_battle_arena.json",
-        "mus_stealth_infiltration.json"
-      ]
-    },
-    "nature": {
-      "name": "Nature",
-      "count": 3,
-      "files": [
-        "mus_forest_canopy.json",
-        "mus_ocean_waves.json",
-        "mus_mountain_wind.json"
-      ]
-    },
-    "world": {
-      "name": "World",
-      "count": 3,
-      "files": [
-        "mus_desert_caravan.json",
-        "mus_tokyo_nights.json",
-        "mus_celtic_meadow.json"
+        "lullaby_soft.json",
+        "garden_hush.json",
+        "cozy_fireside.json",
+        "letter_home.json",
+        "romantic_slow_dance.json",
+        "cloud_drift.json",
+        "stargaze_wonder.json",
+        "curious_wandering.json",
+        "last_light.json",
+        "distant_memory.json",
+        "tense_standoff.json",
+        "sneaky_operator.json",
+        "whimsical_toybox.json",
+        "playful_bouncer.json",
+        "determined_march.json",
+        "dance_floor.json",
+        "mountain_overlook.json",
+        "heroic_rise.json",
+        "triumphant_fanfare.json",
+        "industrial_pulse.json",
+        "frantic_pursuit.json",
+        "eerie_underground.json",
+        "elephant_walk.json",
+        "mouse_scamper.json",
+        "snake_slither.json",
+        "butterfly_flutter.json",
+        "bee_buzz.json",
+        "frog_hop.json",
+        "dino_stomp.json",
+        "turtle_plod.json",
+        "unicorn_magic.json",
+        "dragon_roar.json",
+        "thunderstorm.json",
+        "rainbow_glow.json",
+        "snowfall_quiet.json",
+        "bonfire_crackle.json",
+        "ocean_deep.json",
+        "volcano_erupt.json",
+        "tornado_whirl.json",
+        "moonlit_calm.json",
+        "rocket_launch.json",
+        "tropical_chill.json",
+        "circus_wacky.json",
+        "train_chug.json",
+        "castle_grand.json",
+        "party_pop.json",
+        "ghost_drift.json",
+        "pumpkin_prank.json",
+        "winter_warmth.json",
+        "underwater_dive.json"
       ]
     }
   }

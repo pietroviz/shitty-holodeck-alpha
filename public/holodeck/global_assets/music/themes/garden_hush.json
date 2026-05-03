@@ -1,0 +1,79 @@
+{
+  "id":   "garden_hush",
+  "type": "music",
+  "name": "Garden Hush",
+  "tags": ["peaceful", "meditative", "pentatonic", "ambient", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G major pentatonic, 70 BPM. Progression G → Em → C → G (I-vi-IV-I) at glacial tempo. Melody is just two pentatonic notes per cycle, very widely spaced — like wind chimes that catch a breeze every few seconds. NO drums by design.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "acid_jazz",
+      "scaleKey":   "G",
+      "scaleMode":  "major",
+      "cps":        0.32,
+      "valence":    0.7,
+      "complexity": 0.6,
+      "speed":      0.85,
+      "variety":    0.4,
+      "groove":     "straight",
+      "texture":    "lofi",
+      "coverColor": "#a8c896",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g1 d2 g2 d2] [e2 b1 e2 b1] [c2 g2 c3 g2] [g1 d2 g2 choose(b1,d2)]>",
+          "feel":        ["root-fifth-octave", "long-tones", "meditative"],
+          "register":    0,
+          "densityBase": 0.6
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[d5 ~ b4 ~] [e5 ~ b4 ~] [g5 ~ e5 ~] [d5 ~ a4 choose(g4,d5)]>",
+          "feel":        ["two-tones-per-cycle", "wind-chime", "spacious"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[g3 b3 d4 b3] [e3 g3 b3 g3] [c3 e3 g3 e3] [g3 b3 d4 choose(b3,a3)]>",
+          "feel":        ["chord-arpeggio", "embrace", "sustained"],
+          "register":    0,
+          "densityBase": 0.75
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<b4 g4 e4 choose(g4,b4)>",
+          "feel":        ["3rd-of-chord", "rare", "gentle"],
+          "register":    0,
+          "densityBase": 0.55
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ choose(c6,d6) ~ ~ choose(e6,g6) ~ ~ choose(b5,~)",
+          "feel":        ["birds", "garden", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "pad", "chords", "texture"] }
+      ],
+      "seeds": { "pattern": 8, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.7, 0.1, 0.85, 0.1, 0.0, 0.2],
+        "modes": {
+          "intro":   { "valence": 0.7,  "complexity": 0.2, "speed": 0.8,  "layers": ["pad"] },
+          "waiting": { "valence": 0.7,  "complexity": 0.4, "speed": 0.85, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.7,  "complexity": 0.6, "speed": 0.85, "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.75, "complexity": 0.9, "speed": 0.9,  "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

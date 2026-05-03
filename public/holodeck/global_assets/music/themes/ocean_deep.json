@@ -1,0 +1,79 @@
+{
+  "id":   "ocean_deep",
+  "type": "music",
+  "name": "Ocean Deep",
+  "tags": ["ocean", "deep", "vast", "swell", "no-drums"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "A major, 75 BPM. Vast deep ocean. Progression A → F#m → D → E (I-vi-IV-V). NO drums. Bass swells in and out — single low octaves with rests between, mimicking the ebb of a wave. Melody is long held tones that gently shift on each chord — sustained whale-call. Lush wide pad always present, like the body of the sea.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "synthwave",
+      "scaleKey":   "A",
+      "scaleMode":  "major",
+      "cps":        0.34,
+      "valence":    0.6,
+      "complexity": 0.45,
+      "speed":      0.85,
+      "variety":    0.3,
+      "groove":     "straight",
+      "texture":    "widescreen",
+      "coverColor": "#3070a0",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[a1 ~ ~ a2 ~ ~ ~ ~] [f#1 ~ ~ f#2 ~ ~ ~ ~] [d1 ~ ~ d2 ~ ~ ~ ~] [e1 ~ ~ e2 ~ ~ choose(a1,~) ~]>",
+          "feel":        ["wave-swell", "ebb-and-flow", "deep"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[a4 ~ ~ ~ ~ ~ ~ ~] [c#5 ~ ~ ~ ~ ~ ~ ~] [d5 ~ ~ ~ ~ ~ ~ ~] [b4 ~ ~ ~ ~ ~ choose(e5,~) ~]>",
+          "feel":        ["whale-call", "long-held", "slow-shift"],
+          "register":    0,
+          "densityBase": 0.4
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<c#5 a4 f#4 choose(g#4,b4)>",
+          "feel":        ["3rd-of-chord", "soft-swell", "warm"],
+          "register":    0,
+          "densityBase": 0.5
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[a3 c#4 e4 c#4] [f#3 a3 c#4 a3] [d3 f#3 a3 f#3] [e3 g#3 b3 choose(d4,g#3)]>",
+          "feel":        ["body-of-sea", "wide-sustain", "deep-warm"],
+          "register":    0,
+          "densityBase": 0.95
+        },
+        {
+          "role":        "texture",
+          "pattern":     "~ ~ choose(a5,~) ~ ~ ~ ~ choose(e6,~)",
+          "feel":        ["distant-shimmer", "spray", "high"],
+          "register":    0,
+          "densityBase": 0.4
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1015, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.65, 0.25, 0.65, 0.45, 0.05, 0.15],
+        "modes": {
+          "intro":   { "valence": 0.6, "complexity": 0.2, "speed": 0.8,  "layers": ["pad"] },
+          "waiting": { "valence": 0.6, "complexity": 0.35,"speed": 0.85, "layers": ["pad", "bass"] },
+          "active":  { "valence": 0.6, "complexity": 0.5, "speed": 0.85, "layers": ["pad", "bass", "melody"] },
+          "peak":    { "valence": 0.65,"complexity": 0.7, "speed": 0.9,  "layers": ["pad", "bass", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}

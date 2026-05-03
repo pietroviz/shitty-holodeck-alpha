@@ -1,0 +1,86 @@
+{
+  "id":   "bonfire_crackle",
+  "type": "music",
+  "name": "Bonfire Crackle",
+  "tags": ["fire", "warm", "crackle", "intense", "minor"],
+  "meta": {
+    "origin":   "v2_template",
+    "version":  4,
+    "created":  "2026-05-02T00:00:00.000Z",
+    "modified": "2026-05-02T00:00:00.000Z"
+  },
+  "payload": {
+    "description": "G minor, 105 BPM. Warm intense fire — different from cozy_fireside (jazz turnaround) — this one CRACKLES. Progression Gm → Cm → D7 → Gm (i-iv-V7-i, classic minor cadence). Pulsing warm bass octaves, melody is held warm tones with sudden pop-flare embellishments. Texture layer is the actual crackle — random short stabs.",
+    "format": "music_state_v2",
+    "state": {
+      "pack":       "fm_90s",
+      "scaleKey":   "G",
+      "scaleMode":  "minor",
+      "cps":        0.48,
+      "valence":    0.55,
+      "complexity": 0.85,
+      "speed":      1.0,
+      "variety":    0.45,
+      "groove":     "straight",
+      "texture":    "crunchy",
+      "coverColor": "#d06030",
+      "layers": [
+        {
+          "role":        "bass",
+          "pattern":     "<[g1 g2 g1 g2] [c2 c3 c2 c3] [d2 d3 d2 d3] [g1 g2 g1 choose(d2,g2)]>",
+          "feel":        ["pulsing-octave", "warm-pump", "low"],
+          "register":    0,
+          "densityBase": 0.9
+        },
+        {
+          "role":        "drums",
+          "pattern":     "c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 e3 c3 e3 d3 choose(d3,c3)",
+          "feel":        ["steady-backbeat", "crackling-hats", "warm"],
+          "register":    0,
+          "densityBase": 0.85
+        },
+        {
+          "role":        "melody",
+          "pattern":     "<[g4 ~ bb4 ~ d5 ~ bb4 g4] [c5 ~ eb5 ~ g5 ~ eb5 c5] [d5 ~ f#5 ~ a5 ~ f#5 d5] [g4 ~ bb4 ~ d5 ~ choose(bb4,d5) ~]>",
+          "feel":        ["warm-held-with-flare", "pop-embellish", "rising-then-fall"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "chords",
+          "pattern":     "<bb4 eb5 f#5 choose(d5,bb4)>",
+          "feel":        ["3rd-of-chord", "stab", "warm"],
+          "register":    0,
+          "densityBase": 0.7
+        },
+        {
+          "role":        "pad",
+          "pattern":     "<[g3 bb3 d4 bb3] [c3 eb3 g3 eb3] [d3 f#3 a3 f#3] [g3 bb3 d4 choose(f4,bb3)]>",
+          "feel":        ["warm-glow-pad", "ember", "low"],
+          "register":    0,
+          "densityBase": 0.8
+        },
+        {
+          "role":        "texture",
+          "pattern":     "choose(c6,~) ~ choose(eb6,~) choose(g6,~) ~ choose(bb6,~) choose(d7,~) ~",
+          "feel":        ["crackle-pop", "spark-flare", "irregular"],
+          "register":    0,
+          "densityBase": 0.7
+        }
+      ],
+      "sections": [
+        { "id": "A", "layers": ["bass", "drums", "melody", "chords", "pad", "texture"] }
+      ],
+      "seeds": { "pattern": 1014, "variation": 0 },
+      "modulation": {
+        "feelVector": [0.55, 0.7, 0.85, 0.3, 0.4, 0.45],
+        "modes": {
+          "intro":   { "valence": 0.55, "complexity": 0.4, "speed": 0.95, "layers": ["bass", "pad"] },
+          "waiting": { "valence": 0.55, "complexity": 0.6, "speed": 1.0,  "layers": ["bass", "pad", "drums"] },
+          "active":  { "valence": 0.55, "complexity": 0.85,"speed": 1.0,  "layers": ["bass", "pad", "drums", "melody", "chords"] },
+          "peak":    { "valence": 0.6,  "complexity": 1.0, "speed": 1.05, "layers": ["bass", "pad", "drums", "melody", "chords", "texture"] }
+        }
+      }
+    }
+  }
+}
