@@ -35,25 +35,32 @@ const _qa = new THREE.Quaternion();
 const _qb = new THREE.Quaternion();
 const _qc = new THREE.Quaternion();
 
-// ── Per-joint calibration offsets ────────────────────────────────
-// Mixamo's bind pose is T-pose: arms extending horizontally. Our characters
-// rest with arms hanging at their sides. To make Mixamo arm-bone quaternions
-// land correctly on our armGroups (whose rest pose is arm-down), we
-// pre-multiply each frame's quaternion by an offset that rotates "arm
-// horizontal" → "arm down".
+// ── Calibration approach ─────────────────────────────────────────
+// Mixamo bone tracks are LOCAL rotations relative to a parent chain
+// (Hips → Spine × N → Shoulder → Arm). Without that chain we can't
+// reproduce Mixamo's world-space arm/head poses directly — applying
+// LeftArm.quaternion alone makes the arm shoot off in some non-rest
+// direction because the spine + shoulder rotations aren't there.
 //
-// Left arm: T-pose +X (out to camera-left), rest -Y (down). Rotate -π/2 around Z.
-// Right arm: T-pose -X (out to camera-right), rest -Y (down). Rotate +π/2 around Z.
-// Head + root + torso don't need offsets — Mixamo's rest matches ours
-// (head looks +Z forward, hips upright).
-const _CALIBRATION = {
-    armL: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, -Math.PI / 2)),
-    armR: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0,  Math.PI / 2)),
-};
+// Trick: every animation's FRAME 0 represents the actor's starting pose.
+// inverse(frame0) * frame_t = the relative motion within the animation,
+// independent of where the actor was standing. We then layer that
+// relative motion on top of OUR character's rest pose:
+//
+//     joint.quaternion = jointRest * inverse(frame0) * frame_t
+//
+// At frame 0: relative motion is identity → joint stays at jointRest
+// (our character's natural pose: arms by side, head forward, container
+// turned 45° inward, etc.). Animation only contributes the actor's
+// motion delta, never their absolute body orientation.
+//
+// This works for ALL joints uniformly — no per-joint hardcoded offsets.
 
 export class AnimationRig {
     constructor() {
         this._joints   = {};   // name → THREE.Object3D
+        this._rests    = {};   // name → THREE.Quaternion (joint's rest quaternion at attach)
+        this._baseInv  = {};   // track-name → inverse(frame0 quaternion), per anim
         this._anim     = null; // current animation state
         this._t        = 0;    // current time in seconds
         this._isPlaying = false;
@@ -62,24 +69,53 @@ export class AnimationRig {
     /**
      * Bind to a character. The 'root' joint is the target group itself.
      * Optional namedJoints map supplies additional handles ('head',
-     * 'torso', etc.) — pass whatever subgroups exist on this character.
-     * For v1 procedural meshes we just use root.
+     * 'torso', 'armL', 'armR', etc.) — pass whatever subgroups exist
+     * on this character.
+     *
+     * Each joint's CURRENT quaternion is snapshotted as its "rest" pose
+     * (e.g. the container's inward 45° rotation, the arm group's identity).
+     * Animation deltas compose onto this rest, so authoring rotations
+     * (CHAR_B turned inward) survive playback.
      */
     attach(targetGroup, namedJoints = null) {
         this._joints = { root: targetGroup };
-        if (namedJoints) Object.assign(this._joints, namedJoints);
+        this._rests  = { root: targetGroup.quaternion.clone() };
+        if (namedJoints) {
+            for (const [name, joint] of Object.entries(namedJoints)) {
+                if (!joint) continue;
+                this._joints[name] = joint;
+                this._rests[name]  = joint.quaternion.clone();
+            }
+        }
     }
 
-    /** Begin playing an animation from t=0. Pass the asset's payload.state. */
+    /**
+     * Begin playing an animation from t=0. For each quaternion track,
+     * snapshot the inverse of its frame-0 value — this is the rotation
+     * that "subtracts" the actor's starting pose so only relative motion
+     * gets layered onto our character's rest.
+     */
     play(animState) {
         this._anim = animState || null;
         this._t = 0;
         this._isPlaying = !!animState;
+        this._baseInv = {};
+        if (this._isPlaying) {
+            for (const track of (this._anim.tracks || [])) {
+                if (!track.values || track.values.length < 4) continue;
+                if (!track.name?.endsWith('.quaternion')) continue;
+                const q0 = new THREE.Quaternion(
+                    track.values[0], track.values[1], track.values[2], track.values[3],
+                );
+                this._baseInv[track.name] = q0.invert();
+            }
+        }
     }
 
     stop() {
         this._isPlaying = false;
         this._anim = null;
+        this._baseInv = {};
     }
 
     isPlaying() { return this._isPlaying; }
@@ -113,15 +149,21 @@ export class AnimationRig {
         }
     }
 
-    /** Reset every bound joint to identity quaternion. */
+    /** Reset every bound joint to its rest quaternion (the snapshot from attach). */
     resetJoints() {
-        for (const joint of Object.values(this._joints)) {
-            if (joint && joint.quaternion) joint.quaternion.identity();
+        for (const [name, joint] of Object.entries(this._joints)) {
+            const rest = this._rests[name];
+            if (joint && joint.quaternion) {
+                if (rest) joint.quaternion.copy(rest);
+                else      joint.quaternion.identity();
+            }
         }
     }
 
     dispose() {
         this._joints = {};
+        this._rests = {};
+        this._baseInv = {};
         this._anim = null;
         this._isPlaying = false;
     }
@@ -154,16 +196,16 @@ export class AnimationRig {
                 const u    = span > 0 ? (t - times[i]) / span : 0;
                 _qa.slerp(_qb, u);
             }
-            // Per-joint calibration: take Mixamo bind orientation
-            // (T-pose) into our procedural rest orientation. No-op for
-            // joints not in the table.
-            const cal = _CALIBRATION[jointName];
-            if (cal) {
-                _qc.copy(cal).multiply(_qa);
-                joint.quaternion.copy(_qc);
-            } else {
-                joint.quaternion.copy(_qa);
-            }
+            // Compose: rest * inverse(frame0) * frame_t. The middle term
+            // is the relative motion within the animation; multiplying
+            // by rest preserves authored rotations (inward-turned cast
+            // containers, arm groups in arm-down orientation, etc.).
+            const baseInv = this._baseInv[track.name];
+            const rest    = this._rests[jointName];
+            _qc.copy(_qa);
+            if (baseInv) _qc.copy(baseInv).multiply(_qa);
+            if (rest)    joint.quaternion.copy(rest).multiply(_qc);
+            else         joint.quaternion.copy(_qc);
         }
         // position.x/y/z and scale.x/y/z support can drop in here when
         // animations carrying them ship.

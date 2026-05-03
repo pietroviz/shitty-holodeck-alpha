@@ -54,7 +54,7 @@ import {
     groundObjHeightCap,
 } from './shared/envGeometry.js?v=5';
 import { computeShotPose, pickShot, SHOTS } from './shared/cameraShots.js?v=2';
-import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=2';
+import { AnimationRig, pickAnimation, animationState } from './shared/animationRig.js?v=3';
 
 let _renderer = null;
 let _scene    = null;
